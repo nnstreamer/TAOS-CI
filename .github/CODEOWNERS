@@ -1,0 +1,202 @@
+# This is a comment.
+# Each line is a file pattern followed by one or more owners.
+# For more details, visit https://help.github.com/articles/about-codeowners/
+
+# Note that the current version of github.sec.samsung.net does not translate
+# @org/team-name (e.g., @RS7-STAR/audri_maintainers), even though
+# https://help.github.com/articles/about-codeowners/ depicts @org/team-name
+# as well as @username format.
+# So, We must write all IDs of @RS7-STAR/audri_maintainers manually.
+*                                             @byoungo-kim @yuna1-kim
+
+# These owners own files in the /ROS/autodrive/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/autodrive/                               @byoungo-kim
+
+# These owners own files in the /ROS/autodrivingdemo/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/autodrivingdemo/                         @byoungo-kim @vinnam-kim
+
+# These owners own files in the /ROS/catkin/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/catkin/                                  @byoungo-kim
+
+# These owners own files in the /ROS/DataLogging/autodrive_logger/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/DataLogging/autodrive_logger/            @byoungo-kim @dodam-kim
+
+# These owners own files in the /ROS/DataLogging/rosbag_recorder/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/DataLogging/rosbag_recorder/             @byoungo-kim @dodam-kim
+
+# These owners own files in the /ROS/DataLogging/rqt_adlog/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/DataLogging/rqt_adlog/                   @byoungo-kim @dodam-kim
+
+# These owners own files in the /ROS/Detection/detection/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Detection/detection/                     @byoungo-kim
+
+# These owners own files in the /ROS/Detection/tensordriving/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Detection/tensordriving/                 @hwoo-han @th0320-kim
+
+# These owners own files in the /ROS/Drivers/ethzasl_xsens_driver/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Drivers/ethzasl_xsens_driver/            @byoungo-kim @minsung-jang
+
+# These owners own files in the /ROS/Drivers/lcm_interface/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Drivers/lcm_interface/                   @byoungo-kim @minsung-jang
+
+# These owners own files in the /ROS/Drivers/points_publisher/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Drivers/points_publisher/                @jewoong-ryu
+
+# These owners own files in the /ROS/Drivers/velodyne/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Drivers/velodyne/                        @jewoong-ryu
+
+# These owners own files in the /ROS/Evaluation/ld_evaluation/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Evaluation/ld_evaluation/                @youmin-ha @kyuhaeng-lee
+
+# These owners own files in the /ROS/Localization/camera_localization/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Localization/camera_localization/        @djun-choi @byoungo-kim
+
+# These owners own files in the /ROS/Localization/gnss/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Localization/gnss/                       @jewoong-ryu
+
+# These owners own files in the /ROS/Localization/gps_pose_publisher/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Localization/gps_pose_publisher/         @jewoong-ryu
+
+# These owners own files in the /ROS/Localization/gps_waypoint/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Localization/gps_waypoint/               @minsung-jang
+
+# These owners own files in the /ROS/Localization/map_file/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Localization/map_file/                   @jewoong-ryu
+
+# These owners own files in the /ROS/Localization/ndt_localizer/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Localization/ndt_localizer/              @jewoong-ryu
+
+# These owners own files in the /ROS/Localization/santafe_ekf/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Localization/santafe_ekf/                @minsung-jang
+
+# These owners own files in the /ROS/Mapping/camera_mapping/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Mapping/camera_mapping/                  @myungyum-kim @inho0212-lim
+
+# These owners own files in the /ROS/Monitoring/module_status_monitor/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Monitoring/module_status_monitor/        @byoungo-kim @vinnam-kim
+
+# These owners own files in the /ROS/Odometry/VIO/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Odometry/VIO/                            @kibeom-lee @gyutae-park @jwoo-yoo @cssoo-park @skyzami-park @taeyoon0-lee
+
+# These owners own files in the /ROS/Perception/camera_klt_tracker/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Perception/camera_klt_tracker/           @a-tejeswar
+
+# These owners own files in the /ROS/Perception/camera_lane_detection/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Perception/camera_lane_detection/        @youmin-ha @kyuhaeng-lee
+
+# These owners own files in the /ROS/Perception/camera_object_tracking/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Perception/camera_object_tracking/       @a-tejeswar @youmin-ha
+
+# These owners own files in the /ROS/Perception/camera_visual_tracking/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Perception/camera_visual_tracking/       @a-tejeswar @youmin-ha
+
+# These owners own files in the /ROS/Perception/cv_lane_publisher/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Perception/cv_lane_publisher/            @woojin-jung
+
+# These owners own files in the /ROS/Perception/fastvirtualscan/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Perception/fastvirtualscan/              @cssoo-park @minsung-jang
+
+# These owners own files in the /ROS/Perception/free_space_detect/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Perception/free_space_detect/            @cssoo-park @minsung-jang
+
+# These owners own files in the /ROS/Perception/lidar_free_space_detection/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Perception/lidar_free_space_detection/   @cssoo-park @minsung-jang
+
+# These owners own files in the /ROS/Perception/multicamera_object_detection/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Perception/multicamera_object_detection/ @ad-singh @woojin-jung
+
+# These owners own files in the /ROS/Perception/rosinterface/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Perception/rosinterface/ @woojin-jung    @youmin-ha
+
+# These owners own files in the /ROS/Perception/traffic_light/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Perception/traffic_light/                @woojin-jung @youmin-ha
+
+# These owners own files in the /ROS/Perception/camera_visual_tracking/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Perception/camera_visual_tracking/       @a-tejeswar @youmin-ha
+
+# These owners own files in the /ROS/Planning/decision_make/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Planning/decision_make/                  @cssoo-park @jwoo-yoo
+
+# These owners own files in the /ROS/Planning/lks_control/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Planning/lks_control/                    @minsung-jang @dw1007-park
+
+# These owners own files in the /ROS/Planning/lqr_planner/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Planning/lqr_planner/                    @minsung-jang @dw1007-park
+
+# These owners own files in the /ROS/Planning/route_generation/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Planning/route_generation/               @byoungo-kim @djun-choi
+
+# These owners own files in the /ROS/Planning/waypoint_follower/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Planning/waypoint_follower/              @jwoo-yoo
+
+# These owners own files in the /ROS/Sensor/sensor/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Sensor/sensor/                           @byoungo-kim @vinnam-kim
+
+# These owners own files in the /ROS/Visualization/audri_hmi/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Visualization/audri_hmi/                 @byoungo-kim @vinnam-kim
+
+# These owners own files in the /ROS/Visualization/audri_node_runner/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Visualization/audri_node_runner/         @byoungo-kim @vinnam-kim
+
+# These owners own files in the /ROS/Visualization/camera_visualizer/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/Visualization/camera_visualizer/         @byoungo-kim @vinnam-kim
+
+# These owners own files in the /ROS/local_map_generation/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/local_map_generation/                    @byoungo-kim @myungyum-kim
+
+# These owners own files in the /ROS/local_path_planning/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/local_path_planning/                     @inho0212-lim @byoungo-kim
+
+# These owners own files in the /ROS/msg_handler/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/msg_handler/                             @inho0212-lim
+
+# These owners own files in the /ROS/segmentation/ directory
+# at the root of the repository and any of its subdirectories.
+/ROS/segmentation/                            @th0320-kim

@@ -1,0 +1,22 @@
+<html>
+<body>
+<div style="width: 100%; font-size: 40px; font-weight: bold; text-align:center;">
+<?php
+
+/**
+ *  @file   test.taos
+ *  @brief  test script to evaluate Github webhook operation
+ *
+ *  It is a test file to evaluate REST APIs based on Github webhooks to automatically
+ *  control and maintain issues and PRs consistently.
+ *  @param None
+ */
+
+// This script is just to check packet communication between github.sec.samsung.net and CI server.
+print date("Y/m/d");
+phpinfo();
+
+?>
+</div>
+</body>
+</html>
