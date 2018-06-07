@@ -11,7 +11,7 @@ When you push your commits, ALWAYS run clang-format & cpplint to submit a commit
 - commit with your code change only (i.e., contents only).
 
 ### clang-format (https://clang.llvm.org/docs/ClangFormat.html)
-clang-format automatically formats your code. For more information about this tool, see https://github.com/davetcoleman/roscpp_code_format.
+clang-format automatically formats your code.
 Please, refer to http://releases.llvm.org/3.9.0/tools/clang/docs/ClangFormatStyleOptions.html for more details.
 1. Install the latest clang-format (>= 3.8)
 ```bash

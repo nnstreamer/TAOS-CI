@@ -10,7 +10,6 @@ You need firewall access (use IT4U) to 10.113.136.204, 10.113.136.201, 10.113.13
 - [SPIN-TRBS OBS Build Mgt. / Tizen:5.0:AutoDriving Ubuntu Tools](http://10.113.136.201/project/show/Tizen:5.0:AutoDriving:UbuntuTools)
 - [RPM-repo / Build Results of Tizen:5.0:AutoDriving](http://10.113.136.32/download_trbs/newlive/Tizen:/5.0:/AutoDriving/standard/): Need Spin Account
 - [DEB-repo / Build Results of Tizen:5.0:AutoDriving Ubuntu 16.04 Tools](http://10.113.136.32/download_trbs/newlive/Tizen:/5.0:/AutoDriving:/UbuntuTools/Ubuntu16.04/)
-- [DEB-repo / Build Results of Tizen:5.0:AutoDriving Ubuntu 14.04 Tools](http://10.113.136.32/download_trbs/newlive/Tizen:/5.0:/AutoDriving:/UbuntuTools/Ubuntu14.04/)
 - [Account Creation Process (confluence page)](http://suprem.sec.samsung.net/confluence/display/NEWCOMM/Account)
 
 ## Manual Download from RPM/DEB-repo

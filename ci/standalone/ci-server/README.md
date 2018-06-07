@@ -18,7 +18,7 @@ $ sudo apt-get install sed, ps, cat, aha, git, which grep, touch, find, wca, cpp
 $ sudo vi /etc/apt/sources.list.d/tizen.list
   deb [trusted=yes] http://download.tizen.org/tools/latest-release/Ubuntu_16.04/ / # upgraded to xenial
 $ sudo apt-get update
-$ sudo apt-get install mic lthor gbs
+$ sudo apt-get install mic gbs
 ```
 
 Install Apache+PHP for CI Server
@@ -72,6 +72,25 @@ or
 # User privilege specification for robust security
 www-data    ALL=(ALL) NOPASSWD: /usr/bin/git
 
+```
+
+Then, let's enable www-data as system account.
+```bash
+$ su -
+# vi /etc/passwd
+www-data:x:33:33:www-data:/var/www:/bin/bash
+# cd /var/
+# chown -R www-data:www-data /var/www/
+# cp /root/.bashrc /var/www/
+# chwon www-data:www-data  /var/www/.bashrc
+# su - www-data
+$ vi ~/.netrc
+machine github.sec.samsung.net
+        login git.bot.sec
+        password bdd8f27d1e718f878ff5c7120a45440ff63fxxxx
+machine 10.113.136.32
+        login git.bot.sec
+        password npuxxxx
 ```
 
 Setting gbs configuration file

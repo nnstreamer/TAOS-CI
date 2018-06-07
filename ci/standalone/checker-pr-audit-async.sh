@@ -146,10 +146,18 @@ fi
 mkdir ./report
 
 # run "git clone" command to download git source
+# options of 'sudo' command: 
+# 1) The -H (HOME) option sets the HOME environment variable to the home directory of the target user (root by default)
+# as specified in passwd. By default, sudo does not modify HOME.
+# 2) The -u (user) option causes sudo to run the specified command as a user other than root. To specify a uid instead of a username, use #uid.
 pwd
 sudo -Hu www-data git clone --reference ${REFERENCE_REPOSITORY} $input_repo
 if [[ $? != 0 ]]; then
-    echo "[DEBUG] ERROR: 'git clone' command is failed."
+    echo "[DEBUG] ERROR: 'git clone' command is failed because of incorrect setting of CI server."
+    echo "[DEBUG] Please check /var/www/ permission, /var/www/html/.netrc, and /var/www/html/.gbs.conf."
+    echo "[DEBUG] current id: $(id)"
+    echo "[DEBUG] current path: $(pwd)"
+    echo "[DEBUG] $ sudo -Hu www-data git clone --reference ${REFERENCE_REPOSITORY} $input_repo"
     exit 1
 fi
 
@@ -251,10 +259,14 @@ echo "1. [MODULE] CI/pr-audit-build: Check if 'gbs build' can be successfully pa
 
 # DEBUG_CONSOLE is created in order that developers can do debugging easily in console after adding new CI facility.
 # Note that ../report/build_log_${input_pr}_output.txt includes both stdout(1) and stderr(2) in case of DEBUG_CONSOLE=1.
-DEBUG_CONSOLE=99
+# DEBUG_CONSOLE=0 : run "gbs build" command without generating debugging information.
+# DEBUG_CONSOLE=1 : run "gbs build" command with generation of debugging contents.
+# DEBUG_CONSOLE=99: skip "gbs build" procedures to do debugging of another CI function.
+
+DEBUG_CONSOLE=0
 if [[ $DEBUG_CONSOLE == 99 ]]; then
     echo  -e "DEBUG_CONSOLE = 99"
-    echo  -e "Skipping build procedure temporarily to do CI debugging."
+    echo  -e "Skipping 'gbs build' procedure temporarily to inspect other CI facilities."
 elif [[ $DEBUG_CONSOLE == 1 ]]; then
     echo  -e "DEBUG_CONSOLE = 1"
     sudo -Hu www-data gbs build \
