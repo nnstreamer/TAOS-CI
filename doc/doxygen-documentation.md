@@ -26,12 +26,12 @@ Doxygen is the de facto regular tool for generating documentation from annotated
 * If you want to automatically generate documentation from source code in Linux by using doxygen, proceed as follows:
 
     ```
-    # below are in relative of AuDri folder
-    $ cd ./AuDri
+    # below are in relative of project folder
+    $ cd ./<your_prj_name>
 
-    # for ROS app
-    $ cd ./ROS
-    $ doxygen ../Doxyfile.ros
+    # for src app
+    $ cd ./src
+    $ doxygen ../Doxyfile.src
 
     # for ci
     $ cd ./ci
@@ -91,7 +91,6 @@ $ vi ./taos.py
 # @retval  FALSE Oops, did something.
 # @bug     No know bugs.
 # @todo    Make it do something.
-# @see     http://github.sec.samsung.com/RS7-STAR/AuDri
 #
 # Example Usage:
 # @code
@@ -155,7 +154,6 @@ $ vi ./taos.c
  *  @retval  FALSE Oops, did something.
  *  @bug     No know bugs.
  *  @todo    Make it do something.
- *  @see     http://github.sec.samsung.com/RS7-STAR/AuDri
  *
  *  Example Usage:
  *  @code

@@ -129,7 +129,7 @@ $ gbs build --define "testcoverage 1"
 ```
 will analyze unit test coverage with gcov and lcov.
 
-With ```testcoverage 1``` option, there will be an additional RPM subpackage, ```audri-unittest-coverage```, which installs the resulting web pages to /usr/share/audri/unittest/result/.
+With ```testcoverage 1``` option, there will be an additional RPM subpackage, ```<your_prj_name>-unittest-coverage```, which installs the resulting web pages to /usr/share/<your_prj_name>/unittest/result/.
 
 Note that this option may be used along with --define "app APPNAME" option.
 
@@ -174,12 +174,12 @@ $ cd AuDri
 $ pdebuild
 ...
 $ ls /var/cache/pbuilder/result/ -l
--rw-r--r-- 1 mzx  mzx       1343 Nov 14 16:05 audri_2017.11.7_amd64.changes
--rw-r--r-- 1 mzx  mzx     169934 Nov 14 16:05 audri_2017.11.7_amd64.deb
--rw-rw-r-- 1 mzx  mzx       1060 Nov 14 16:04 audri_2017.11.7.dsc
--rw-r--r-- 1 mzx  mzx  777126748 Nov 14 16:04 audri_2017.11.7.tar.gz
+-rw-r--r-- 1 mzx  mzx       1343 Nov 14 16:05 your_prj_name_2017.11.7_amd64.changes
+-rw-r--r-- 1 mzx  mzx     169934 Nov 14 16:05 your_prj_name_2017.11.7_amd64.deb
+-rw-rw-r-- 1 mzx  mzx       1060 Nov 14 16:04 your_prj_name_2017.11.7.dsc
+-rw-r--r-- 1 mzx  mzx  777126748 Nov 14 16:04 your_prj_name_2017.11.7.tar.gz
 ...
-$ dpkg -i /var/cache/pbuilder/audri_2017.11.7_amd64.deb
+$ dpkg -i /var/cache/pbuilder/your_prj_name_2017.11.7_amd64.deb
 ...
 ```
 
@@ -201,7 +201,6 @@ Note that you need to run ```$ sudo -c "dpkg-scanpackages . /dev/null | gzip -9c
 
 For ```sudo pbuilder```, use ```xenial``` if you want 16.04 deb packages. use ```trusty``` if you want 14.04 deb package.
 (You can create any Ubuntu packages regardless of the installed Ubuntu version)
-After building other packages that are required by audri.
 
 2. If you want to use deb files available in SPIN/TRBS (Need firewall access to Seoul-RnD)
 ```
@@ -235,21 +234,23 @@ $ debuild -uc -us
 The resulting .deb files will appear at ```../```
 
 
-## manual build, if the component is too messy for deb packaging.
+## Case study: AuDri Project
+
+manual build, if the component is too messy for deb packaging.
 
 Developers of each component should make sure that their component is gbs buildable.
 However, for manual build, each component must be able to be built with:
 
 If you use Ubuntu14.04+ROS-Indigo (Docker-AD)
-```
+```bash
 $ CIP=/opt/ros/indigo/
 ```
 If you use Tizen + ROS-Kinetic (gbs chroot or target machine with Tizen)
-```
+```bash
 $ CIP=/usr/lib/ros/kinetic/
 ```
 
-```
+```bash
 AuDri$ . ${CIP}setup.sh
 AuDri$ cd ROS/component_name
 AuDri/ROS/component_name$ rm -Rf build
@@ -262,14 +263,15 @@ AuDri/ROS/component_name/build$ make -j8
 
 Then, you can install by:
 
-```
+```bash
 AuDri/ROS/component_name/build$ sudo sh -c ". ${CIP}setup.sh; make install"
 ```
 
 
 Here is a shell script I'm using for Ubuntu 14.04 Docker-AD (ROS Indigo):
-```
-developer@85f0aaee30f6:~/AuDri/ROS$ cat run.sh 
+```bash
+$ cd AuDri/ROS
+$ cat run.sh 
 . /opt/ros/indigo/setup.sh
 pushd $1
 echo $1

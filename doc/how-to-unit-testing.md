@@ -22,7 +22,7 @@
     - Try to cover all public methods
     - Try to cover major branches (if/switch/...)
   - Modify CMakeLists.txt to build the unittest (refer to the examples)
-  - Modify [audri.spec](../packaging/audri.spec) to activate unit test during GBS build
+  - Modify ./packaging/<your_prj_name>.spec to activate unit test during GBS build
     - Add ```runtests``` option to ```%cond_build MODULENAME```. Refer to the example modules
   - Then, any unit test failure will cause GBS build error; thus failing per-PR CI.
 
@@ -32,12 +32,12 @@
   - Create "stub" objects or methods to cover up such dependencies.
 - Do not depend on other classes (classes out of the module)
 
-# How to review unit test coverage
+# Case study: How to review unit test coverage with AuDri project
 
 - [Audri Unit Test Statistics](http://aaci.mooo.com/AuDri/)
   - Updated every 15 min
   - Analyze PMB accepted commits only ([Tizen PMB](http://10.113.136.67/index.code))
 - Unit Test Coverage Objectives
   - 2018.10: 60%
-  - 2018.8: 40%
-  - 2018.6: 10%
+  - 2018.08: 40%
+  - 2018.06: 10%

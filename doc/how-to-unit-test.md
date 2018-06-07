@@ -1,16 +1,15 @@
-# How to add unit test for an AuDri application component
+# How to add unit test
+
+In this section, we describe how to add a unit test for an application component from AuDri project.
 
 ## Example
-
-- [Unit Test Case for Config](https://github.sec.samsung.net/RS7-STAR/AuDri/commit/9913b8dab5578b81a7d5ffeb97d6b62e5589cf28)
-
 
 ## Preface
 
 Mandatory
 
 - A unit test case MUST be testing a unit and **independent** from other units.
-  - A unit test MUST NOT depend on other external libraries or services (e.g., other ROS modules) except for the libraries required by the build.
+  - A unit test MUST NOT depend on other external libraries or services except for the libraries required by the build.
   - A unit test MUST be able to be **executed during the build** without starting/launching any other executables.
   - A unit test MUST be testing the **corresponding unit only**.
 
@@ -57,7 +56,7 @@ install(TARGETS autodrive_unittest_Config
 )
 ```
 
-## Configure packaging/audri.spec
+## Configure packaging/<your_prj_name>.spec
 
 Step 1. In ```%build``` section, replace
 ```
