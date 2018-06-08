@@ -7,7 +7,7 @@
 ##
 
 # --------------------------- Pre-setting module --------------------------------------------------------
-source ./config/botenv.sh
+source ./config/config-environment.sh
 
 # check if input argument is correct. 
 if [[ $1 == "" ]]; then

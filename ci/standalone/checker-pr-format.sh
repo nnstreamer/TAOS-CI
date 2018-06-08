@@ -27,9 +27,9 @@ input_branch=$4
 input_pr=$5
 input_delivery_id=$6
 
-# Note the "source ./config/botenv.sh" file can be called in another script
+# Note the "source ./config/config-environment.sh" file can be called in another script
 # instead of in this file in order to support asynchronous operation from CI manager
-source ./config/botenv.sh
+source ./config/config-environment.sh
 
 # check if dependent packages are installed
 source ./common/inspect_dependency.sh

@@ -31,7 +31,7 @@ Doxygen is the de facto regular tool for generating documentation from annotated
 
     # for src app
     $ cd ./src
-    $ doxygen ../Doxyfile.src
+    $ doxygen ../Doxyfile.prj
 
     # for ci
     $ cd ./ci

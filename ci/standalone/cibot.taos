@@ -49,7 +49,7 @@ function configuration(){
  */
 function read_json_config(){
     // read JSON file
-    $string = file_get_contents("./config/config.json");
+    $string = file_get_contents("./config/config-cibot.json");
     $json_config = json_decode($string);
 
     // get id and toke from json file

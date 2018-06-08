@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ######################################################################################
-## @file botenv.sh
+## @file config-environment.sh
 ## @brief Environment file to control all scripts commonly for CI bot
 ##
 ## This script to maintain consistently all scripts files via this file. 

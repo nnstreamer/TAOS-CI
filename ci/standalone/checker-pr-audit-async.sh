@@ -30,9 +30,9 @@ input_branch=$4
 input_pr=$5
 input_delivery_id=$6
 
-# Note the "source ./config/botenv.sh" file can be called in another script
+# Note the "source ./config/config-environment.sh" file can be called in another script
 # instead of in this file in order to support asynchronous operation from cibot.php
-source ./config/botenv.sh
+source ./config/config-environment.sh
 
 # check if input argument is correct.
 if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; then
@@ -324,21 +324,10 @@ fi
 
 
 ##################################################################################################################
-echo "2. [MODULE] plugins-good: Plugin group that follow Apache license with good quality"
-# Please append your plugin modules here.
-
-echo "[MODULE] CI/pr-audit-resource: Check if not-installed resources exist."
+echo "12. [MODULE] plugins-good: Plugin group that follow Apache license with good quality"
+echo "13. [MODULE] plugins-ugly: Plugin group that does not have evaluation and aging test enough"
 echo "Current path: $(pwd)."
-source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-ugly/pr-audit-resource.sh
-pr-audit-resource
-echo "Completed  all modules in plugins-good folder."
-
-##################################################################################################################
-echo "3. [MODULE] plugins-ugly: Plugin group that does not have evaluation and aging test enough"
-# Please append your plugin modules here.
-echo "Completed  all modules in plugins-ugly folder."
-
-
+source ${REFERENCE_REPOSITORY}/ci/standalone/config/enable-plugins-audit.sh
 
 
 ##################################################################################################################

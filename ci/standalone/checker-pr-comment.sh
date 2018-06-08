@@ -7,7 +7,7 @@
 ##
 
 # --------------------------- Pre-setting module --------------------------------------------------------
-source ./config/botenv.sh
+source ./config/config-environment.sh
 
 # check if input argument is correct. 
 if [[ $1 == "" ]]; then
@@ -30,7 +30,7 @@ message="Thank you for submitting PR #${input_pr}. Note that you **don't must me
 
 
 # inform the developers of the webpage address in order that they can monitor the current status of their PR.
-message="If you want to monitor the current build status of your PR, Please refer to ${CISERVER}/AuDri/ci/standalone/ci-server/monitor.php"
+message="If you want to monitor the current build status of your PR, Please refer to ${CISERVER}/${PROJECT}/ci/standalone/ci-server/monitor.php"
 
 /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
