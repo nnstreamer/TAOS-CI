@@ -82,8 +82,15 @@ $ cd /var/www/html/
 $ git clone https://github.sec.samsung.net/STAR/<your_prj_name>.git
 $ git clone https://github.sec.samsung.net/STAR/TAOS-CI.git
 $ cd <your_prj_name>
+
+(Method1)
 $ cp -arfp ../TAOS-CI/{.github|doc|ci|UnitTestCoverageAssessment| ./
-$ vi ./ci/standalone/config/botenv.sh
+
+(Method2)
+$ git submodule https://github.sec.samsung.net/STAR/TAOS-CI.git
+$ ln -s ./TAOS-CI/ci ./ci
+
+$ vi ./ci/standalone/config/config-environment.sh
   Modify configuration variables appropriately.
 ```
 That's all. Enjoy TAOS-CI after setting-up webhook API.
