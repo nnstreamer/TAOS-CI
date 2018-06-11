@@ -1,6 +1,3 @@
-TAOS-CI
-=======
-
 
 # Introduction
 The Continuous Integration (CI) system is to prevent a regression and to find bugs due to incorrect PRs.
@@ -79,14 +76,16 @@ $ time gbs build -A aarch64 --clean --include-all
 # How to apply TAOS-CI into your project
 ```bash
 $ cd /var/www/html/
+
+(Method1)
 $ git clone https://github.sec.samsung.net/STAR/<your_prj_name>.git
 $ git clone https://github.sec.samsung.net/STAR/TAOS-CI.git
 $ cd <your_prj_name>
-
-(Method1)
 $ cp -arfp ../TAOS-CI/{.github|doc|ci|UnitTestCoverageAssessment| ./
 
 (Method2)
+$ git clone https://github.sec.samsung.net/STAR/<your_prj_name>.git
+$ cd <your_prj_name>
 $ git submodule https://github.sec.samsung.net/STAR/TAOS-CI.git
 $ ln -s ./TAOS-CI/ci ./ci
 
