@@ -48,9 +48,10 @@ CISERVER="http://aaci.mooo.com/"
 
 ################### Format Area (pr-format) ##############################################
 
-# Check prohibited hardcoded paths (e.g., /home/* for now).
-HARDCODED_PATH_LIST=`echo "${FILELIST}" | grep "ROS/.*/" | sed -e "s|.*ROS/\([a-zA-Z0-9_]*\)/.*|\1|" | sort -u`
-
+# Specify a path of source code
+# 1) to check prohibited hardcoded paths (e.g., /home/* for now)
+# 2) to check code formatting sytele with clang-format
+SRC_PATH="ROS"
 
 
 ################### Audit Area (pr-audit) ################################################

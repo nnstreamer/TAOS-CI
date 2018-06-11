@@ -698,9 +698,9 @@ if [[ -f ../report/${hardcoded_file}.tmp ]]; then
     rm -f ../report/${hardcoded_file}.tmp
     touch ../report/${hardcoded_file}.tmp
 fi
-for X in $HARDCODED_PATH_LIST; do
+for X in `echo "${FILELIST}" | grep "$SRC_PATH/.*/" | sed -e "s|.*$SRC_PATH/\([a-zA-Z0-9_]*\)/.*|\1|" | sort -u`; do
     # README.md is added because grep waits for indefinite time if find gives you NULL.
-    grep "\"\/home\/" `find ROS/$X -name "*.cpp" -o -name "*.c" -o -name "*.hpp" -o -name "*.h"` README.md >> ../report/${hardcoded_file}.tmp
+    grep "\"\/home\/" `find $SRC_PATH/$X -name "*.cpp" -o -name "*.c" -o -name "*.hpp" -o -name "*.h"` README.md >> ../report/${hardcoded_file}.tmp
 done
 cat ../report/${hardcoded_file}.tmp | tr '\n' '\r' | sed -e "s|[^\r]*//[^\r]*\"/home/[^\r]*\r||g" | tr '\r' '\n' > ../report/${hardcoded_file}
 rm -f ../report/${hardcoded_file}.tmp
@@ -744,10 +744,10 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-FILES_IN_COMPILER=$(find ROS/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*.hpp')
+FILES_IN_COMPILER=$(find $SRC_PATH/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*.hpp')
 FILES_TO_BE_TESTED=$(git ls-files $FILES_IN_COMPILER)
 
-ln -sf ROS/catkin/style/.clang-format .clang-format
+ln -sf ./doc/.clang-format .clang-format
 ${CLANG_COMMAND} -i $FILES_TO_BE_TESTED
 clang_format_file="clang-format.patch"
 git diff > ../report/${clang_format_file}

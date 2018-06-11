@@ -27,6 +27,11 @@ input_branch=$4
 input_pr=$5
 input_delivery_id=$6
 
+# Save a log file for debugging
+log_file="${dir_ci}/${dir_commit}/checker-pr-format-async.log"
+echo -e "[DEBUG] Initializing...                          "                       | tee    $log_file
+echo -e "[DEBUG] ./checker-pr-format.sh $1 $2 $3 $4 $5 $6 "                       | tee -a $log_file
+
 # Note the "source ./config/config-environment.sh" file can be called in another script
 # instead of in this file in order to support asynchronous operation from CI manager
 source ./config/config-environment.sh
@@ -62,12 +67,11 @@ fi
 mkdir -p $dir_commit
 
 # --------------------------- Run module ----------------------------------------------------------------------
-# Run, and save a log file for debugging
-log_file="${dir_ci}/${dir_commit}/checker-pr-format-async.log"
-pwd
+echo -e "[DEBUG] current path: $(pwd)."                                           | tee -a $log_file
 cd ./standalone/
-./checker-pr-format-async.sh $1 $2 $3 $4 $5 $6                                    | tee    $log_file
-echo -e "[DEBUG] Starting...                                                    " | tee -a $log_file
+./checker-pr-format-async.sh $1 $2 $3 $4 $5 $6                                    | tee -a $log_file
+echo -e "[DEBUG] ./checker-pr-format-async.sh $1 $2 $3 $4 $5 $6 | tee $log_file " | tee -a $log_file
+echo -e "[DEBUG] Starting asynchronously...                                     " | tee -a $log_file
 echo -e "[DEBUG]                                                                " | tee -a $log_file
 echo -e "[DEBUG] ./checker-pr-format-async.sh $1 $2 $3 $4 $5 $6 | tee $log_file " | tee -a $log_file
 echo -e "[DEBUG] Completed ......."                                               | tee -a $log_file
