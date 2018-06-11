@@ -1,18 +1,17 @@
+# Administrator guide for standalone CI server
 
-Administrator guide for standalone CI server
-============================================
+## Configuration of current CI server
 
-Configuration of current CI server
-----------------------------------
 - Server address: http://localhost/
 - Ubuntu 16.04
+
 ```
 $ cat /etc/os-release |grep VERSION_ID
 VERSION_ID="16.04.3"
 ```
 
-Install prerequisites
----------------------
+## Install prerequisites
+
 ```bash
 $ sudo apt-get install sed, ps, cat, aha, git, which grep, touch, find, wca, cppcheck
 $ sudo vi /etc/apt/sources.list.d/tizen.list
@@ -21,12 +20,13 @@ $ sudo apt-get update
 $ sudo apt-get install mic gbs
 ```
 
-Install Apache+PHP for CI Server
----------------------------------
+## Install Apache+PHP for CI Server
+
 NPUT Compiler's CI server is equipped with Apache and PHP script language to run lightwegith automation server
 instead of Jenkins. Builds has been triggered by last commit number by scheduling a Pull Request (PR) with NPU bot, that is based on Webhooks API and JASON format.
 
 **for Ubuntu 16.04**
+
 ```bash
 $ sudo apt-get update
 $ sudo apt-get install apache2
@@ -46,11 +46,12 @@ $ firefox http://localhost/index.php
 
 Note. If you have a firewall in your network, please make sure that ports for CI server are opened and can accept requests.
 
-Install clang-format-4.0 for format checker
--------------------------------------------
+## Install clang-format-4.0 for format checker
+
 You have to install clang-format-4.0 (official version to check C++ formatting).
 
 **for Ubuntu 16.04**
+
 ```bash
 $ sudo vi /etc/apt/sources.list.d/clang.list
   # clang/llvm 4.0 repository for Ubuntu 16.04 (Xenial)
@@ -60,10 +61,11 @@ $ sudo apt update
 $ sudo apt install clang-format-4.0
 ```
 
-Setting sudo privilege of www-data
-----------------------------------
-You have to update /etc/sudoers for sudo access of www-data with no password  in order to run "git clone" command normally
+## Setting sudo privilege of www-data
+
+You have to update /etc/sudoers for sudo access of www-data with no password in order to run "git clone" command normally
 in Apahce/Php environment as following:
+
 ```bash
 $ sudo visudo
 # User privilege specification for development step
@@ -71,10 +73,10 @@ www-data    ALL=(ALL) NOPASSWD:ALL
 or
 # User privilege specification for robust security
 www-data    ALL=(ALL) NOPASSWD: /usr/bin/git
-
 ```
 
 Then, let's enable www-data as system account.
+
 ```bash
 $ su -
 # vi /etc/passwd
@@ -93,10 +95,11 @@ machine 10.113.136.32
         password npuxxxx
 ```
 
-Setting gbs configuration file
-------------------------------
+## Setting gbs configuration file
+
 You have to write `~/.gbs.conf` in order that `www-data` id can build a pakcage with **gbs build** command.
-We assume that you are using `git.bot.sec` samsung id as a default id of a repository webserver. 
+We assume that you are using `git.bot.sec` samsung id as a default id of a repository webserver.
+
 ```bash
 [general]
 #Current profile name which should match a profile section name
@@ -136,30 +139,33 @@ url = http://git.bot.sec:npuxxxx@165.213.149.200/download/public_mirror/tizen/un
 url = http://git.bot.sec:npuxxxx@165.213.149.200/download/snapshots/tizen/5.0-taos/latest/repos/standard/packages/
 ```
 
-Cron Job to auto delete folder older than 15 days
-------------------------------------------------
+## Cron Job to auto delete folder older than 15 days
+
 For example, the description of crontab for deleting files older than 15 days
 under the `/var/www/html/<your_prj_name>/ci/repo-workers/` every day at 5:30 AM is as follows.
-mtime means the last modification timestamp and the results of find may not be 
+mtime means the last modification timestamp and the results of find may not be
 the expected files depending on the backup method. Note that too many inodes
 results in "No space left on device" issue despite available storage spaces.
+
 ```bash
 $ sudo vi /etc/crontab
 30 5 * * * root find /var/www/html/<your_prj_name>/ci/repo-workers/ -maxdepth 2 -type d -mtime +15 -exec rm -rf {} \;
 ```
 
-Please make sure before executing rm whether targets are intended files. 
-You can check the target folders by specifying __maxdepth__ option as the argument of find.
+Please make sure before executing rm whether targets are intended files.
+You can check the target folders by specifying **maxdepth** option as the argument of find.
+
 ```bash
 $ find /var/www/html/<your_prj_name>/ci/repo-workers/ -maxdepth 2 -type d -mtime +15
 ```
 
-How to speed up build time
---------------------------
+## How to speed up build time
+
 we recommend that you enable a temporary filesystem (tmpfs) to improve build time and
 avoid a situation that the number of inodes exceeds that of maximum inodes.
 To monitor # of free inodes, run `$ sudo tune2fs -l /dev/sdax | grep Free` command.
 For more details about tmpfs, please refer to https://www.kernel.org/doc/Documentation/filesystems/tmpfs.txt
+
 ```bash
 $ sudo mount -t tmpfs -o size=5G tmpfs  /tmp
 OR
@@ -171,10 +177,11 @@ $ df | grep tmpfs
 tmpfs            5242880      2520   5240360   1% /tmp
 ```
 
-How to enable swap memory space to avoid OOM
---------------------------------------------
+## How to enable swap memory space to avoid OOM
+
 In order to avoid OOM operations while running a build process, You may enable swap space with swapfile.
 Note that it does not speed up the build time.
+
 ```bash
 $ cd /data
 $ sudo dd if=/dev/zero of=./swapfile-50gb bs=100M count=512
@@ -184,28 +191,31 @@ $ sudo swapon ./swapfile-50gb
 $ free
 ```
 
-How to create a single PDF document from doxygen
--------------------------------------------------
+## How to create a single PDF document from doxygen
+
 First of all, you have to install latex packages to generate PDF file from latex as follows.
+
 ```bash
-sudo apt install texlive-latex-base
+sudo apt install texlive-latex-base texlive-latex-extra
 sudo apt install latex-xcolor
 sudo apt install unoconv pdfunite  pdftk
 sudo apt install libreoffice
 ```
 
-Then, generate a single PDF file by running the below script in __Documentation__ folder.
+Then, generate a single PDF file by running the below script in **Documentation** folder.
+
 ```bash
-$ cd /var/www/html/<prj_name>/Documentation
+$ cd /var/www/html/<prj_name>/doc
 $ ./book-hard-copy-prj-generate.sh
 $ evince ./latex/book.pdf
 ```
 
 Finally, let's generate automatically PDF book per 1 hour with cron table (e.g., /etc/crontab).
+
 ```bash
 $ sudo vi /etc/crontab
 # Generate doxygen document
 20 * * * * www-data cd /var/www/html/<prj_name>/             ; git pull
-30 * * * * www-data /var/www/html/<prj_name>/Documentation/book-hard-copy-prj-generate.sh
-35 * * * * www-data /var/www/html/<prj_name>/Documentation/book-hard-copy-ci-generate.sh
+30 * * * * www-data /var/www/html/<prj_name>/doc/book-hard-copy-prj-generate.sh
+35 * * * * www-data /var/www/html/<prj_name>/doc/book-hard-copy-ci-generate.sh
 ```
