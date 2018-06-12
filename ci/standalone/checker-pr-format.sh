@@ -3,7 +3,6 @@
 ##
 # @file checker-pr-format.sh
 # @brief It checks format rules whenever a PR is submitted.
-# @dependency: tee
 # @param arguments are received from CI manager
 #  arg1: date(Ymdhms)
 #  arg2: commit number
@@ -31,6 +30,7 @@ input_delivery_id=$6
 # instead of in this file in order to support asynchronous operation from CI manager
 source ./config/config-environment.sh
 
+# @dependency: tee
 # Check if dependent packages are installed
 source ./common/inspect_dependency.sh
 check_package tee

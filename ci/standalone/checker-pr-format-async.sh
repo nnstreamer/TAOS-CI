@@ -3,7 +3,6 @@
 ##
 # @file checker-pr-format-async.sh
 # @brief It checks format rules whenever a PR is submitted.
-# @dependency: git, which, grep, touch, find, wc, cat, basename, tail, clang-format-4.0, cppcheck, rpmlint, aha, stat
 # @param arguments are received from CI manager
 #  arg1: date(Ymdhms)
 #  arg2: commit number
@@ -18,19 +17,18 @@
 #  $dir_commit   directory is commit folder
 #
 # @modules:
-# "01. [MODULE] CI/pr-format-file-size      Check the file size to not include big binary files"
-# "02. [MODULE] CI/pr-format-newline        Check the illegal newline handlings in text files"
-# "03. [MODULE] CI/pr-format-doxygen        Check documenting code using doxygen in text files"
-# "04. [MODULE] CI/pr-format-cppcheck       Check dangerous coding constructs in source codes (*.c, *.cpp) with cppcheck"
-# "05. [MODULE] CI/pr-format-pylint         Check dangerous coding constructs in source codes (*.py) with pylint"
-# "06. [MODULE] CI/pr-format-rpm-spec       Check the spec file with rpmlint"
-# "07. [MODULE] CI/pr-format-nobody         Check the commit message body"
-# "08. [MODULE] CI/pr-format-timestamp      Check the timestamp of the commit"
-# "09. [MODULE] CI/pr-format-executable     Check executable bits for .cpp, .h, .hpp, .c, .caffemodel, .prototxt, .txt."
-# "10. [MODULE] CI/pr-format-hardcoded-path Check prohibited hardcoded paths (/home/* for now)"
-# "11. [MODULE] CI/pr-format-clang          Check the code formatting style with clang-format"
-# "12. [MODULE] plugins-good                Plugin group that follow Apache license with good quality"
-# "13. [MODULE] plugins-ugly                Plugin group that does not have evaluation and aging test enough"
+# "[MODULE] CI/pr-format-file-size      Check the file size to not include big binary files"
+# "[MODULE] CI/pr-format-newline        Check the illegal newline handlings in text files"
+# "[MODULE] CI/pr-format-doxygen        Check documenting code using doxygen in text files"
+# "[MODULE] CI/pr-format-cppcheck       Check dangerous coding constructs in source codes (*.c, *.cpp) with cppcheck"
+# "[MODULE] CI/pr-format-pylint         Check dangerous coding constructs in source codes (*.py) with pylint"
+# "[MODULE] CI/pr-format-rpm-spec       Check the spec file with rpmlint"
+# "[MODULE] CI/pr-format-nobody         Check the commit message body"
+# "[MODULE] CI/pr-format-timestamp      Check the timestamp of the commit"
+# "[MODULE] CI/pr-format-executable     Check executable bits for .cpp, .h, .hpp, .c, .caffemodel, .prototxt, .txt."
+# "[MODULE] CI/pr-format-hardcoded-path Check prohibited hardcoded paths (/home/* for now)"
+# "[MODULE] plugins-good                Plugin group that follow Apache license with good quality"
+# "[MODULE] plugins-ugly                Plugin group that does not have evaluation and aging test enough"
 #
 
 # --------------------------- Pre-setting module ----------------------------------------------------------------------
@@ -53,8 +51,8 @@ if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; t
     exit 1
 fi
 
-
-## @dependency: git, which, grep, touch, find, wc, cat, basename, tail, clang-format-4.0, cppcheck, rpmlint, aha, stat
+# @dependency
+# git, which, grep, touch, find, wc, cat, basename, tail, clang-format-4.0, cppcheck, rpmlint, aha, stat
 # check if dependent packages are installed
 source ./common/inspect_dependency.sh
 check_package git
@@ -153,7 +151,7 @@ check_result="success"
 global_check_result="success"
 
 echo "########################################################################################"
-echo "01. [MODULE] CI/pr-format-file-size: Check the file size to not include big binary files"
+echo "[MODULE] CI/pr-format-file-size: Check the file size to not include big binary files"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for i in ${FILELIST}; do
@@ -198,7 +196,7 @@ else
 fi
 
 echo "########################################################################################"
-echo "02. [MODULE] CI/pr-format-newline: Check the illegal newline handlings in text files"
+echo "[MODULE] CI/pr-format-newline: Check the illegal newline handlings in text files"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for i in ${FILELIST}; do
@@ -252,7 +250,7 @@ else
 fi
 
 echo "########################################################################################"
-echo "03. [MODULE] CI/pr-format-doxygen: Check documenting code using doxygen in text files"
+echo "[MODULE] CI/pr-format-doxygen: Check documenting code using doxygen in text files"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for i in ${FILELIST}; do
@@ -346,7 +344,7 @@ else
 fi
 
 echo "########################################################################################"
-echo "04. [MODULE] CI/pr-format-cppcheck: Check dangerous coding constructs in source codes (*.c, *.cpp) with cppcheck"
+echo "[MODULE] CI/pr-format-cppcheck: Check dangerous coding constructs in source codes (*.c, *.cpp) with cppcheck"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for i in ${FILELIST}; do
@@ -418,7 +416,7 @@ fi
 
 
 echo "########################################################################################"
-echo "05. [MODULE] CI/pr-format-pylint: Check dangerous coding constructs in source codes (*.py) with pylint"
+echo "[MODULE] CI/pr-format-pylint: Check dangerous coding constructs in source codes (*.py) with pylint"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for i in ${FILELIST}; do
@@ -501,7 +499,7 @@ else
 fi
 
 echo "########################################################################################"
-echo "06. [MODULE] CI/pr-format-rpm-spec: Check the spec file with rpmlint"
+echo "[MODULE] CI/pr-format-rpm-spec: Check the spec file with rpmlint"
 spec_modified="false"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
@@ -569,7 +567,7 @@ else
 fi
 
 echo "########################################################################################"
-echo "07. [MODULE] CI/pr-format-nobody: Check the commit message body"
+echo "[MODULE] CI/pr-format-nobody: Check the commit message body"
 check_result="success"
 for filename in ../report/000*.patch; do
     line_count=0
@@ -630,7 +628,7 @@ fi
 
 
 echo "########################################################################################"
-echo "08. [MODULE] CI/pr-format-timestamp: Check the timestamp of the commit"
+echo "[MODULE] CI/pr-format-timestamp: Check the timestamp of the commit"
 check_result="success"
 TIMESTAMP=`git show --pretty="%ct" --no-notes -s`
 TIMESTAMP_READ=`git show --pretty="%cD" --no-notes -s`
@@ -664,7 +662,7 @@ else
 fi
 
 echo "########################################################################################"
-echo "09. [MODULE] CI/pr-format-executable: Check executable bits for .cpp, .h, .hpp, .c, .caffemodel, .prototxt, .txt."
+echo "[MODULE] CI/pr-format-executable: Check executable bits for .cpp, .h, .hpp, .c, .caffemodel, .prototxt, .txt."
 # Please add more types if you feel proper.
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for X in $FILELIST; do
@@ -695,7 +693,7 @@ else
 fi
 
 echo "########################################################################################"
-echo "10. [MODULE] CI/pr-format-hardcoded-path: Check prohibited hardcoded paths (/home/* for now)"
+echo "[MODULE] CI/pr-format-hardcoded-path: Check prohibited hardcoded paths (/home/* for now)"
 hardcoded_file="hardcoded-path.txt"
 if [[ -f ../report/${hardcoded_file}.tmp ]]; then
     rm -f ../report/${hardcoded_file}.tmp
@@ -730,59 +728,12 @@ else
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 fi
 
-echo "########################################################################################"
-echo "11. [MODULE] CI/pr-format-clang: Check the code formatting style with clang-format"
-# Note that you have to install up-to-date clang-format package from llvm project.
-# The clang-format-4.0 package includes git-clang-format as well as clang-format.
-# It has been included by http://archive.ubuntu.com/ubuntu/ by default since Oct-25-2017.
-# $ sudo apt install clang-format-4.0
-# In case that we need to change clang-format with latest version, refer to https://apt.llvm.org
-CLANGFORMAT=NA
-CLANG_COMMAND="clang-format-4.0"
-
-which ${CLANG_COMMAND}
-if [[ $? -ne 0 ]]; then
-    echo "Error: ${CLANG_COMMAND} is not available."
-    echo "       Please install ${CLANG_COMMAND}."
-    exit 1
-fi
-
-FILES_IN_COMPILER=$(find $SRC_PATH/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*.hpp')
-FILES_TO_BE_TESTED=$(git ls-files $FILES_IN_COMPILER)
-
-ln -sf ci/doc/.clang-format .clang-format
-${CLANG_COMMAND} -i $FILES_TO_BE_TESTED
-clang_format_file="clang-format.patch"
-git diff > ../report/${clang_format_file}
-PATCHFILE_SIZE=$(stat -c%s ../report/${clang_format_file})
-if [[ $PATCHFILE_SIZE -ne 0 ]]; then
-        echo "[DEBUG] Format checker is failed. Update your code to follow convention after reading ${clang_format_file}."
-        check_result="failure"
-        global_check_result="failure"
-else
-        check_result="success"
-fi
-
-if [[ $check_result == "success" ]]; then
-    echo "[DEBUG] Passed. A clang-formatting style."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-clang\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/report/${clang_format_file}\"}" \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
-else
-    echo "[DEBUG] Failed. A clang-formatting style."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-clang\",\"description\":\"Oooops. The component you are submitting with incorrect clang-format style.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/report/${clang_format_file}\"}" \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
-fi
 
 ##################################################################################################################
-echo "12. [MODULE] plugins-good: Plugin group that follow Apache license with good quality"
-echo "13. [MODULE] plugins-ugly: Plugin group that does not have evaluation and aging test enough"
+echo "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
+echo "[MODULE] plugins-ugly: Plugin group that does not have evaluation and aging test enough"
 echo "Current path: $(pwd)."
 source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-format.sh
-
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-format.sh"
 
 ##################################################################################################################

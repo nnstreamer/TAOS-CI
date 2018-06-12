@@ -231,7 +231,7 @@ ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 echo "[DEBUG] Make sure commit all changes before running this checker."
 pwd
 
-echo "1. [MODULE] CI/pr-audit-build: Check if 'gbs build' can be successfully passed."
+echo "[MODULE] CI/pr-audit-build: Check if 'gbs build' can be successfully passed."
 
 if [[ $BUILD_MODE == 99 ]]; then
     echo  -e "BUILD_MODE = 99"
@@ -318,8 +318,8 @@ else
 fi
 
 ##################################################################################################################
-echo "2. [MODULE] plugins-good: Plugin group that follow Apache license with good quality"
-echo "3. [MODULE] plugins-ugly: Plugin group that does not have evaluation and aging test enough"
+echo "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
+echo "[MODULE] plugins-ugly: Plugin group that does not have evaluation and aging test enough"
 echo "Current path: $(pwd)."
 source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-audit.sh
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-audit.sh"
