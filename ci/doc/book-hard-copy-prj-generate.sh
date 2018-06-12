@@ -5,8 +5,9 @@
 #  @date May-13-2018
 #  @dependency: doxygen, make, unoconv, libreoffice, pdftk, pdfunite
 
-# It should be edited.
-src_path="/var/www/html/nnstreamer/"
+source ../standalone/config/config-environment.sh
+src_path="/var/www/html/$PROJECT/ci/doc/"
+
 
 # Generate original book with doxygen tags
 function generate_original(){

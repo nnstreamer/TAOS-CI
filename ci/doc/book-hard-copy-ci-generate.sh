@@ -5,8 +5,8 @@
 #  @date May-13-2018
 #  @dependency: doxygen, make
 
-# It should be edited.
-$ci_path="/var/www/html/TAOS-CI/ci/"
+source ../standalone/config/config-environment.sh
+$ci_path="/var/www/html/$PROJECT/ci/doc/" 
 
 ##
 # @brief  Generate PDF-based CI manual with doxygen tags
