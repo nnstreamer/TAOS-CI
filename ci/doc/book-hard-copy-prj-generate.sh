@@ -5,7 +5,9 @@
 #  @date May-13-2018
 #  @dependency: doxygen, make, unoconv, libreoffice, pdftk, pdfunite
 
-src_path="/var/www/html/AuDri-doxygen/ROS/" # It should be edited.
+source ../standalone/config/config-environment.sh
+
+src_path="/var/www/html/$PROJECT/ci/doc/"
 
 # Generate original book with doxygen tags
 function generate_original(){

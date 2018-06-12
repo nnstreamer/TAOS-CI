@@ -5,7 +5,9 @@
 #  @date May-13-2018
 #  @dependency: doxygen, make
 
-$ci_path="/var/www/html/AuDri-doxygen/ci/" # It should be edited.
+source ../standalone/config/config-environment.sh
+
+$ci_path="/var/www/html/$PROJECT/ci/doc/" 
 
 ##
 # @brief  Generate PDF-based CI manual with doxygen tags
