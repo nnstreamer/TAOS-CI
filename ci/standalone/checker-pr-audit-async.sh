@@ -122,11 +122,6 @@ ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 --data "{\"state\":\"pending\",\"context\":\"CI/pr-audit-build\",\"description\":\"Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/\"}" \
 ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
-/usr/bin/curl -H "Content-Type: application/json" \
--H "Authorization: token "$TOKEN"  " \
---data "{\"state\":\"pending\",\"context\":\"CI/pr-audit-resource\",\"description\":\"Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/\"}" \
-${GITHUB_WEBHOOK_API}/statuses/$input_commit
-
 # --------------------------- git-clone module: clone git repository -------------------------------------------------
 echo "[DEBUG] Starting pr-audit....\n"
 
@@ -175,48 +170,25 @@ git branch
 echo "[MODULE] Exception Handling: Let's skip CI-Build/UnitTest in case of no buildable files. "
 
 # Check if PR-build can be skipped.
+# BUILD_MODE is created in order that developers can do debugging easily in console after adding new CI facility.
+#
+# Note that ../report/build_log_${input_pr}_output.txt includes both stdout(1) and stderr(2) in case of BUILD_MODE=1.
+# BUILD_MODE=0 : run "gbs build" command without generating debugging information.
+# BUILD_MODE=1 : run "gbs build" command with generation of debugging contents.
+# BUILD_MODE=99: skip "gbs build" procedures to do debugging of another CI function.
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
-SKIP=true
+BUILD_MODE=99
 for file in $FILELIST
 do
     if [[ "$file" =~ ($SKIP_CI_PATHS)$ ]]; then
         echo "[DEBUG] $file may be skipped."
     else
         echo "[DEBUG] $file cannot be skipped."
-        SKIP=false
+        BUILD_MODE=0
         break
     fi
 done
 
-# Do not run "gbs build" command in order to skip unnecessary examination if there are no buildable files.
-if [ "$SKIP" = true ]; then
-    echo "[DEBUG] Let's skip the 'gbs build' procedure because there is not source code. All files may be skipped."
-    echo "[DEBUG] So, we stop remained all tasks at this time."
-    echo "[DEBUG] 'exit 0' command will be executed right now."
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"success","context":"CI/pr-audit-build","description":"Skipped gbs build procedure. No buildable files found. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
-    ${GITHUB_WEBHOOK_API}/statuses/$input_commit
-
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"success","context":"CI/pr-audit-resource","description":"Skipped gbs build procedure. No buildable files found. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
-    ${GITHUB_WEBHOOK_API}/statuses/$input_commit
-
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"success","context":"(INFO)CI/pr-audit-all","description":"Skipped gbs build procedure. Successfully all audit modules are passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
-    ${GITHUB_WEBHOOK_API}/statuses/$input_commit
-
-    # Let's inform developers of CI test result to go to a review process as a final step before merging a PR
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"body\":\":octocat: **cibot**: :+1: **(INFO)CI/pr-audit-all**: All audit modules are passed (gbs build procedure is skipped) - it is ready to review! :shipit: Note that CI bot has two sub-bots such as CI/pr-audit-all and CI/pr-format-all.\"}" \
-     ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
-
-    # Stop to don't execute remaind tasks
-    exit 0
-fi
 
 # declare default variables
 check_result="success"
@@ -261,18 +233,11 @@ pwd
 
 echo "1. [MODULE] CI/pr-audit-build: Check if 'gbs build' can be successfully passed."
 
-# DEBUG_CONSOLE is created in order that developers can do debugging easily in console after adding new CI facility.
-# Note that ../report/build_log_${input_pr}_output.txt includes both stdout(1) and stderr(2) in case of DEBUG_CONSOLE=1.
-# DEBUG_CONSOLE=0 : run "gbs build" command without generating debugging information.
-# DEBUG_CONSOLE=1 : run "gbs build" command with generation of debugging contents.
-# DEBUG_CONSOLE=99: skip "gbs build" procedures to do debugging of another CI function.
-
-DEBUG_CONSOLE=0
-if [[ $DEBUG_CONSOLE == 99 ]]; then
-    echo  -e "DEBUG_CONSOLE = 99"
-    echo  -e "Skipping 'gbs build' procedure temporarily to inspect other CI facilities."
-elif [[ $DEBUG_CONSOLE == 1 ]]; then
-    echo  -e "DEBUG_CONSOLE = 1"
+if [[ $BUILD_MODE == 99 ]]; then
+    echo  -e "BUILD_MODE = 99"
+    echo  -e "Skipping 'gbs build' procedure temporarily."
+elif [[ $BUILD_MODE == 1 ]]; then
+    echo  -e "BUILD_MODE = 1"
     sudo -Hu www-data gbs build \
     -A x86_64 \
     --clean \
@@ -284,7 +249,7 @@ elif [[ $DEBUG_CONSOLE == 1 ]]; then
     --define "_skip_debug_rpm 1" \
     --buildroot ./GBS-ROOT/  | tee ../report/build_log_${input_pr}_output.txt
 else
-    echo  -e "DEBUG_CONSOLE = 0"
+    echo  -e "BUILD_MODE = 0"
     sudo -Hu www-data gbs build \
     -A x86_64 \
     --clean \
@@ -296,36 +261,61 @@ else
     --define "_skip_debug_rpm 1" \
     --buildroot ./GBS-ROOT/ 2> ../report/build_log_${input_pr}_error.txt 1> ../report/build_log_${input_pr}_output.txt
 fi
-
 result=$?
-echo  -e "[DEBUG] The return value of gbs build command is $result."
-if [[ $result -ne 0 ]]; then
-        echo "[DEBUG][FAILED] Oooops!!!!!! build checker is failed. Return value is ($result). You may refer to the execution results of 'gbs build'."
-        check_result="failure"
-        global_check_result="failure"
-else
-        echo "[DEBUG][PASSED] Successfully build checker is passed. Return value is ($result)."
-        check_result="success"
-fi
 
-if [[ $check_result == "success" ]]; then
+if [[ $BUILD_MODE == 99 ]]; then
+    # Do not run "gbs build" command in order to skip unnecessary examination if there are no buildable files.
+    echo  -e "BUILD_MODE == 99"
+    echo "[DEBUG] Let's skip the 'gbs build' procedure because there is not source code. All files may be skipped."
+    echo "[DEBUG] So, we stop remained all tasks at this time."
+
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"success","context":"CI/pr-audit-build","description":"Successfully a build checker is passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
-    ${GITHUB_WEBHOOK_API}/statuses/$input_commit
-else
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"failure","context":"CI/pr-audit-build","description":"Oooops. A build checker is failed. Resubmit the PR after fixing correctly. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+    --data '{"state":"success","context":"CI/pr-audit-build","description":"Skipped gbs build procedure. No buildable files found. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
-    # comment a hint on failed PR to author.
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
-    --data '{"body":":octocat: **cibot**: '$user_id', A builder checker could not be completed because one of the checkers is not completed. In order to find out a reason, please go to '${CISERVER}${PROJECT}/ci/${dir_commit}/'."}' \
-    ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
-fi
+    --data '{"state":"success","context":"(INFO)CI/pr-audit-all","description":"Skipped gbs build procedure. Successfully all audit modules are passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+    ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
+    # Let's inform developers of CI test result to go to a review process as a final step before merging a PR
+    /usr/bin/curl -H "Content-Type: application/json" \
+     -H "Authorization: token "$TOKEN"  " \
+     --data "{\"body\":\":octocat: **cibot**: :+1: **(INFO)CI/pr-audit-all**: All audit modules are passed (gbs build procedure is skipped) - it is ready to review! :shipit: Note that CI bot has two sub-bots such as CI/pr-audit-all and CI/pr-format-all.\"}" \
+     ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+else
+    echo  -e "BUILD_MODE != 99"
+    echo  -e "[DEBUG] The return value of gbs build command is $result."
+    # Let's check if build procedure is normally done.
+    if [[ $result -eq 0 ]]; then
+            echo "[DEBUG][PASSED] Successfully build checker is passed. Return value is ($result)."
+            check_result="success"
+    else
+            echo "[DEBUG][FAILED] Oooops!!!!!! build checker is failed. Return value is ($result)."
+            check_result="failure"
+            global_check_result="failure"
+    fi
+   
+    # Let's report build result of source code 
+    if [[ $check_result == "success" ]]; then
+        /usr/bin/curl -H "Content-Type: application/json" \
+        -H "Authorization: token "$TOKEN"  " \
+        --data '{"state":"success","context":"CI/pr-audit-build","description":"Successfully a build checker is passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+        ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    else
+        /usr/bin/curl -H "Content-Type: application/json" \
+        -H "Authorization: token "$TOKEN"  " \
+        --data '{"state":"failure","context":"CI/pr-audit-build","description":"Oooops. A build checker is failed. Resubmit the PR after fixing correctly. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+        ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    
+        # comment a hint on failed PR to author.
+        /usr/bin/curl -H "Content-Type: application/json" \
+        -H "Authorization: token "$TOKEN"  " \
+        --data '{"body":":octocat: **cibot**: '$user_id', A builder checker could not be completed because one of the checkers is not completed. In order to find out a reason, please go to '${CISERVER}${PROJECT}/ci/${dir_commit}/'."}' \
+        ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+    fi
+fi
 
 ##################################################################################################################
 echo "2. [MODULE] plugins-good: Plugin group that follow Apache license with good quality"
