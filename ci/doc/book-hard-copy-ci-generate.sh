@@ -6,7 +6,6 @@
 #  @dependency: doxygen, make
 
 source ../standalone/config/config-environment.sh
-
 $ci_path="/var/www/html/$PROJECT/ci/doc/" 
 
 ##
