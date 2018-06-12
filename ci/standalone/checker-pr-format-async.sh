@@ -750,7 +750,7 @@ fi
 FILES_IN_COMPILER=$(find $SRC_PATH/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*.hpp')
 FILES_TO_BE_TESTED=$(git ls-files $FILES_IN_COMPILER)
 
-ln -sf ./doc/.clang-format .clang-format
+ln -sf ci/doc/.clang-format .clang-format
 ${CLANG_COMMAND} -i $FILES_TO_BE_TESTED
 clang_format_file="clang-format.patch"
 git diff > ../report/${clang_format_file}
