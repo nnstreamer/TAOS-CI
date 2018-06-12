@@ -34,6 +34,7 @@ source ./config/config-environment.sh
 # Check if dependent packages are installed
 source ./common/inspect_dependency.sh
 check_package tee
+echo "[DEBUG] Checked dependency packages.\n"
 
 # Check if input argument is correct.
 if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; then

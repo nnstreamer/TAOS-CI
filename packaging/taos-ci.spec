@@ -28,7 +28,7 @@ cp %{SOURCE1001} .
 
 %install
 mkdir -p %{buildroot}%{_bindir}
-install -m 0755 UnittestCoverageAssessment/unittestcoverage.py %{buildroot}%{_bindir}/
+install -m 0755 ci/gcov/unittestcoverage.py %{buildroot}%{_bindir}/
 
 %files unittest-coverage-assessment
 %manifest taos-ci.manifest

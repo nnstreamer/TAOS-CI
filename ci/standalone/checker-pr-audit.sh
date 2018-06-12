@@ -19,7 +19,7 @@
 #
 
 # --------------------------- Pre-setting module --------------------------------------------------------------
-# arguments
+# Arguments
 input_date=$1
 input_commit=$2
 input_repo=$3
@@ -38,9 +38,10 @@ if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; t
     exit 1
 fi
 
-# check if dependent packages are installed
+# Check if dependent packages are installed
 source ./common/inspect_dependency.sh
 check_package tee
+echo "[DEBUG] Checked dependency packages.\n"
 
 # Set folder name uniquely to run CI in different folder per a PR.
 cd ..
