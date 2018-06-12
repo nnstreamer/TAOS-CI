@@ -76,21 +76,12 @@ $ time gbs build -A aarch64 --clean --include-all
 # How to apply TAOS-CI into your project
 ```bash
 $ cd /var/www/html/
-
-(Method1)
-$ git clone https://github.sec.samsung.net/STAR/<your_prj_name>.git
-$ git clone https://github.sec.samsung.net/STAR/TAOS-CI.git
-$ cd <your_prj_name>
-$ cp -arfp ../TAOS-CI/{.github|ci} ./
-
-(Method2)
 $ git clone https://github.sec.samsung.net/STAR/<your_prj_name>.git
 $ cd <your_prj_name>
 $ git submodule https://github.sec.samsung.net/STAR/TAOS-CI.git
 $ ln -s ./TAOS-CI/ci ./ci
-
 $ vi ./ci/standalone/config/config-environment.sh
-  Modify configuration variables appropriately.
+  (You have to modify configuration variables appropriately.)
 ```
 That's all. Enjoy TAOS-CI after setting-up webhook API.
 

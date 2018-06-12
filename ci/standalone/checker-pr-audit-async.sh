@@ -119,12 +119,12 @@ ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
 /usr/bin/curl -H "Content-Type: application/json" \
 -H "Authorization: token "$TOKEN"  " \
---data "{\"state\":\"pending\",\"context\":\"CI/pr-audit-build\",\"description\":\"Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/${PROJECT_REPO}/\"}" \
+--data "{\"state\":\"pending\",\"context\":\"CI/pr-audit-build\",\"description\":\"Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/\"}" \
 ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
 /usr/bin/curl -H "Content-Type: application/json" \
 -H "Authorization: token "$TOKEN"  " \
---data "{\"state\":\"pending\",\"context\":\"CI/pr-audit-resource\",\"description\":\"Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/${PROJECT_REPO}/\"}" \
+--data "{\"state\":\"pending\",\"context\":\"CI/pr-audit-resource\",\"description\":\"Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/\"}" \
 ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
 # --------------------------- git-clone module: clone git repository -------------------------------------------------
@@ -142,7 +142,7 @@ pwd
 cd $dir_commit
 if [[ -d ${PROJECT_REPO} ]]; then
     echo "[DEBUG] WARN: ${PROJECT_REPO} already exists and is not an empty directory."
-    echo "[DEBUG] WARN: So removing the existing directory..."
+    echo "[DEBUG] WARN: Removing the existing directory..."
     rm -rf ./${PROJECT_REPO}
 fi
 
@@ -195,12 +195,12 @@ if [ "$SKIP" = true ]; then
     echo "[DEBUG] 'exit 0' command will be executed right now."
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"success","context":"CI/pr-audit-build","description":"Skipped gbs build procedure. No buildable files found. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/${PROJECT_REPO}/'"}' \
+    --data '{"state":"success","context":"CI/pr-audit-build","description":"Skipped gbs build procedure. No buildable files found. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"success","context":"CI/pr-audit-resource","description":"Skipped gbs build procedure. No buildable files found. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/${PROJECT_REPO}/'"}' \
+    --data '{"state":"success","context":"CI/pr-audit-resource","description":"Skipped gbs build procedure. No buildable files found. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
     /usr/bin/curl -H "Content-Type: application/json" \
@@ -253,7 +253,7 @@ done
 echo "[DEBUG] Starting CI trigger to run 'gbs build' command actually."
 /usr/bin/curl -H "Content-Type: application/json" \
 -H "Authorization: token "$TOKEN"  " \
---data '{"state":"pending","context":"CI/pr-audit-build","description":"Triggered and started. The commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/${PROJECT_REPO}/'"}' \
+--data '{"state":"pending","context":"CI/pr-audit-build","description":"Triggered and started. The commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
 ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
 echo "[DEBUG] Make sure commit all changes before running this checker."
@@ -311,18 +311,18 @@ fi
 if [[ $check_result == "success" ]]; then
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"success","context":"CI/pr-audit-build","description":"Successfully a build checker is passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/${PROJECT_REPO}/'"}' \
+    --data '{"state":"success","context":"CI/pr-audit-build","description":"Successfully a build checker is passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 else
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"failure","context":"CI/pr-audit-build","description":"Oooops. A build checker is failed. Resubmit the PR after fixing correctly. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/${PROJECT_REPO}/'"}' \
+    --data '{"state":"failure","context":"CI/pr-audit-build","description":"Oooops. A build checker is failed. Resubmit the PR after fixing correctly. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
     # comment a hint on failed PR to author.
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
-    --data '{"body":":octocat: **cibot**: '$user_id', A builder checker could not be completed because one of the checkers is not completed. In order to find out a reason, please go to '${CISERVER}${PROJECT}/ci/${dir_commit}/${PROJECT_REPO}/'."}' \
+    --data '{"body":":octocat: **cibot**: '$user_id', A builder checker could not be completed because one of the checkers is not completed. In order to find out a reason, please go to '${CISERVER}${PROJECT}/ci/${dir_commit}/'."}' \
     ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
 fi
 

@@ -82,7 +82,7 @@ user_id="@${Array[3]}"
 dir_worker="repo-workers/pr-format"
 
 # Set project repo name
-PROJECT_REPO=`echo ${input_repo##*/} | cut -d '.' -f1`
+PROJECT_REPO=`echo $(basename "${input_repo%.*}")`
 
 cd ..
 export dir_ci=`pwd`
@@ -101,7 +101,7 @@ export dir_commit=${dir_worker}/${input_date}-${input_pr}-${input_commit}
 # --------------------------- CI Trigger ----------------------------------------------------------------------
 /usr/bin/curl -H "Content-Type: application/json" \
 -H "Authorization: token "$TOKEN"  " \
---data '{"state":"pending","context":"(INFO)CI/pr-format-all","description":"Triggered. The commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/${PROJECT_REPO}/'"}' \
+--data '{"state":"pending","context":"(INFO)CI/pr-format-all","description":"Triggered. The commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
 ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
 # --------------------------- git-clone module: clone git repository -------------------------------------------------
@@ -181,13 +181,13 @@ if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. File size."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"success","context":"CI/pr-format-filesize","description":"Successfully all files are passed without any issue of file size.","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/${PROJECT_REPO}/'"}' \
+     --data '{"state":"success","context":"CI/pr-format-filesize","description":"Successfully all files are passed without any issue of file size.","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 else
     echo "[DEBUG] Failed. File size."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"failure","context":"CI/pr-format-filesize","description":"Oooops. File size checker is failed at '$i_filename'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/${PROJECT_REPO}/'"}' \
+     --data '{"state":"failure","context":"CI/pr-format-filesize","description":"Oooops. File size checker is failed at '$i_filename'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
     # inform PR submitter of a hint in more detail
@@ -684,13 +684,13 @@ if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A executable bits."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-executable\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/${PROJECT_REPO}/ \"}" \
+     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-executable\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/ \"}" \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 else
     echo "[DEBUG] Failed. A executable bits."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-executable\",\"description\":\"Oooops. The commit has an invalid executable: ${X}. Please turn the executable bits off.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/${PROJECT_REPO}/\"}" \
+     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-executable\",\"description\":\"Oooops. The commit has an invalid executable: ${X}. Please turn the executable bits off.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/\"}" \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 fi
 
@@ -720,7 +720,7 @@ if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A hardcoded paths."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-hardcoded-path\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/${PROJECT_REPO}/\"}" \
+     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-hardcoded-path\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/\"}" \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 else
     echo "[DEBUG] Failed. A hardcoded paths."
