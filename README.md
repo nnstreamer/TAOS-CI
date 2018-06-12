@@ -81,7 +81,7 @@ $ cd /var/www/html/
 $ git clone https://github.sec.samsung.net/STAR/<your_prj_name>.git
 $ git clone https://github.sec.samsung.net/STAR/TAOS-CI.git
 $ cd <your_prj_name>
-$ cp -arfp ../TAOS-CI/{.github|doc|ci|UnitTestCoverageAssessment| ./
+$ cp -arfp ../TAOS-CI/{.github|ci} ./
 
 (Method2)
 $ git clone https://github.sec.samsung.net/STAR/<your_prj_name>.git

@@ -18,7 +18,7 @@
 #  $dir_commit   directory is commit folder
 #
 
-# --------------------------- Pre-setting module ----------------------------------------------------------------------
+# --------------------------- Pre-setting module --------------------------------------------------------------
 # arguments
 input_date=$1
 input_commit=$2
@@ -27,13 +27,14 @@ input_branch=$4
 input_pr=$5
 input_delivery_id=$6
 
+
 # Note the "source ./config/config-environment.sh" file can be called in another script
 # instead of in this file in order to support asynchronous operation from CI manager
 source ./config/config-environment.sh
 
 # check if input argument is correct.
 if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; then
-    printf "[DEBUG] ERROR: Please, input correct arguments.\n"
+    echo "[DEBUG] ERROR: Please, input correct arguments."
     exit 1
 fi
 
@@ -58,19 +59,21 @@ if [[ -d $dir_commit ]]; then
     echo "[DEBUG] WARN: So removing the existing directory..."
     rm -rf ./${dir_commit}
 fi
-mkdir -p $dir_commit
-echo "[DEBUG] dir_commit is $dir_commit. This folder is created."
+
 
 # Save a log file for debugging
-log_file="${dir_ci}/${dir_commit}/checker-pr-audit-async.log"
-echo -e "[DEBUG] Initializing...                         "       | tee    $log_file
-echo -e "[DEBUG] ./checker-pr-audit.sh $1 $2 $3 $4 $5 $6 "       | tee -a $log_file
+mkdir -p $dir_commit
+log_file="${dir_ci}/${dir_commit}/checker-pr-audit.log"
+echo -e "[DEBUG] dir_commit is $dir_commit. This folder is created." | tee    $log_file
+echo -e "[DEBUG] Initializing...                         "           | tee -a $log_file
+echo -e "[DEBUG] ./checker-pr-audit.sh $1 $2 $3 $4 $5 $6 "           | tee -a $log_file
 
 # --------------------------- Run module ----------------------------------------------------------------------
-echo -e "[DEBUG] current path: $(pwd)."                          | tee -a $log_file
+echo -e "[DEBUG] current path: $(pwd)."                              | tee -a $log_file
+echo -e "[DEBUG] ./checker-pr-audit-async.sh $1 $2 $3 $4 $5 $6 "     | tee -a $log_file
+echo -e "[DEBUG] Starting asynchronouly...               "           | tee -a $log_file
 cd ./standalone/
-./checker-pr-audit-async.sh $1 $2 $3 $4 $5 $6                    | tee -a $log_file
-echo -e "[DEBUG] ./checker-pr-audit-async.sh $1 $2 $3 $4 $5 $6 " | tee -a $log_file
-echo -e "[DEBUG] Starting asynchronouly...               "       | tee -a $log_file
-echo -e "[DEBUG] "                                               | tee -a $log_file
-echo -e "[DEBUG] Completed ......."                              | tee -a $log_file
+./checker-pr-audit-async.sh $1 $2 $3 $4 $5 $6                        | tee -a $log_file
+echo -e "[DEBUG] Running"                                            | tee -a $log_file
+echo -e "[DEBUG] ......"                                             | tee -a $log_file
+echo -e "[DEBUG] Completed"                                          | tee -a $log_file

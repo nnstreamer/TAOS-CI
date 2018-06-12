@@ -18,8 +18,8 @@
 #  $dir_commit   directory is commit folder
 #
 
-# --------------------------- Pre-setting module ----------------------------------------------------------------------
-# arguments
+# --------------------------- Pre-setting module --------------------------------------------------------------
+# Arguments
 input_date=$1
 input_commit=$2
 input_repo=$3
@@ -31,14 +31,13 @@ input_delivery_id=$6
 # instead of in this file in order to support asynchronous operation from CI manager
 source ./config/config-environment.sh
 
-# check if dependent packages are installed
+# Check if dependent packages are installed
 source ./common/inspect_dependency.sh
 check_package tee
 
-
-# check if input argument is correct.
+# Check if input argument is correct.
 if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; then
-    printf "[DEBUG] ERROR: Please, input correct arguments.\n"
+    echo -e "[DEBUG] ERROR: Please, input correct arguments."
     exit 1
 fi
 
@@ -55,23 +54,25 @@ export dir_commit=${dir_worker}/${input_date}-${input_pr}-${input_commit}
 
 # Remove existing folders
 if [[ -d $dir_commit ]]; then
-    echo "[DEBUG] WARN: mkdir command is failed because $dir_commit directory already exists."
-    echo "[DEBUG] WARN: So removing the existing directory..."
+    echo -e "[DEBUG] WARN: mkdir command is failed because $dir_commit directory already exists."
+    echo -e "[DEBUG] WARN: So removing the existing directory..."
     rm -rf ./${dir_commit}
 fi
-mkdir -p $dir_commit
+
 
 # Save a log file for debugging
-log_file="${dir_ci}/${dir_commit}/checker-pr-format-async.log"
-echo -e "[DEBUG] Initializing...                          "                       | tee    $log_file
+mkdir -p $dir_commit
+log_file="${dir_ci}/${dir_commit}/checker-pr-format.log"
+echo -e "[DEBUG] dir_commit is $dir_commit. This folder is created."              | tee    $log_file
+echo -e "[DEBUG] Initializing...                          "                       | tee -a $log_file
 echo -e "[DEBUG] ./checker-pr-format.sh $1 $2 $3 $4 $5 $6 "                       | tee -a $log_file
 
 # --------------------------- Run module ----------------------------------------------------------------------
-echo -e "[DEBUG] current path: $(pwd)."                                           | tee -a $log_file
-cd ./standalone/
-./checker-pr-format-async.sh $1 $2 $3 $4 $5 $6                                    | tee -a $log_file
+echo -e "[DEBUG] Current path: $(pwd)."                                           | tee -a $log_file
 echo -e "[DEBUG] ./checker-pr-format-async.sh $1 $2 $3 $4 $5 $6 | tee $log_file " | tee -a $log_file
 echo -e "[DEBUG] Starting asynchronously...                                     " | tee -a $log_file
-echo -e "[DEBUG]                                                                " | tee -a $log_file
-echo -e "[DEBUG] ./checker-pr-format-async.sh $1 $2 $3 $4 $5 $6 | tee $log_file " | tee -a $log_file
-echo -e "[DEBUG] Completed ......."                                               | tee -a $log_file
+cd ./standalone/
+./checker-pr-format-async.sh $1 $2 $3 $4 $5 $6                                    | tee -a $log_file
+echo -e "[DEBUG] Running                                                        " | tee -a $log_file
+echo -e "[DEBUG] ......                                                         " | tee -a $log_file
+echo -e "[DEBUG] Completed"                                                       | tee -a $log_file

@@ -3,7 +3,7 @@
 ##
 # @file checker-pr-audit-async.sh
 # @brief It executes a build test whenever a PR is submitted.
-# @dependency: gbs, tee, curl, grep, wc, cat, sed, awk
+# @dependency: gbs, tee, curl, grep, wc, cat, sed, awk, basename
 # @param arguments are received by ci bot
 #  arg1: date(YmdHisu)
 #  arg2: commit number
@@ -50,6 +50,7 @@ check_package wc
 check_package cat
 check_package sed
 check_package awk
+check_package basename
 echo "[DEBUG] Checked dependency packages.\n"
 
 # get user ID from the input_repo string
@@ -60,8 +61,8 @@ user_id="@${Array[3]}"
 # Set folder name uniquely to run CI in different folder per a PR.
 dir_worker="repo-workers/pr-audit"
 
-# Set project repo name
-PROJECT_REPO=`echo ${input_repo##*/} | cut -d '.' -f1`
+# Set project repo name of contributor
+PROJECT_REPO=`echo $(basename "${input_repo%.*}")`
 
 cd ..
 export dir_ci=`pwd`
