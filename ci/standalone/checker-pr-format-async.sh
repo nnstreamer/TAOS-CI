@@ -733,8 +733,8 @@ fi
 echo "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
 echo "[MODULE] plugins-ugly: Plugin group that does not have evaluation and aging test enough"
 echo "Current path: $(pwd)."
-source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-format.sh
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-format.sh"
+source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-format.sh
 
 ##################################################################################################################
 # --------------------------- Report module: submit check result to github.sec.samsung.net --------------

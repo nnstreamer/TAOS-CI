@@ -11,6 +11,7 @@
 # Check issue #279. VIO commits should not touch non VIO files.
 #
 function pr-format-exclusive-vio(){
+    echo "##################################################################################################"
     echo "[DEBUG] Starting pr-format-exclusive-vio function to investigate if a VIO commit is not exclusive."
     FILELIST=`git show --pretty="format:" --name-only`
     VIO_DIRECTORY="ROS/.*VIO/"
