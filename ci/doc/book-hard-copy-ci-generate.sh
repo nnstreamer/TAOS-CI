@@ -5,7 +5,8 @@
 #  @date May-13-2018
 #  @dependency: doxygen, make
 
-$ci_path="/var/www/html/AuDri-doxygen/ci/" # It should be edited.
+# It should be edited.
+$ci_path="/var/www/html/TAOS-CI/ci/"
 
 ##
 # @brief  Generate PDF-based CI manual with doxygen tags

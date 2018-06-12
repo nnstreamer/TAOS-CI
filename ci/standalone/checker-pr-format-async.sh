@@ -783,6 +783,8 @@ echo "13. [MODULE] plugins-ugly: Plugin group that does not have evaluation and 
 echo "Current path: $(pwd)."
 source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-format.sh
 
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-format.sh"
+
 ##################################################################################################################
 # --------------------------- Report module: submit check result to github.sec.samsung.net --------------
 # report if all modules are successfully completed or not.

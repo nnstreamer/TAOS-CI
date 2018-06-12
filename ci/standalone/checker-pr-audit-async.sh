@@ -328,11 +328,11 @@ fi
 
 
 ##################################################################################################################
-echo "12. [MODULE] plugins-good: Plugin group that follow Apache license with good quality"
-echo "13. [MODULE] plugins-ugly: Plugin group that does not have evaluation and aging test enough"
+echo "2. [MODULE] plugins-good: Plugin group that follow Apache license with good quality"
+echo "3. [MODULE] plugins-ugly: Plugin group that does not have evaluation and aging test enough"
 echo "Current path: $(pwd)."
-source ${REFERENCE_REPOSITORY}/ci/standalone/config/enable-plugins-audit.sh
-
+source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-audit.sh
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-audit.sh"
 
 ##################################################################################################################
 

@@ -5,7 +5,8 @@
 #  @date May-13-2018
 #  @dependency: doxygen, make, unoconv, libreoffice, pdftk, pdfunite
 
-src_path="/var/www/html/AuDri-doxygen/ROS/" # It should be edited.
+# It should be edited.
+src_path="/var/www/html/nnstreamer/"
 
 # Generate original book with doxygen tags
 function generate_original(){
