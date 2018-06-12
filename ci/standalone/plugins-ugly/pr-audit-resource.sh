@@ -56,18 +56,18 @@ function pr-audit-resource(){
     if [[ $check_result == "success" ]]; then
         /usr/bin/curl -H "Content-Type: application/json" \
         -H "Authorization: token "$TOKEN"  " \
-        --data '{"state":"success","context":"CI/pr-audit-resource","description":"Successfully Resource checker is passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+        --data '{"state":"success","context":"CI/pr-audit-resource","description":"Successfully Resource checker is passed. Commit number is '$input_commit'","target_url":"'${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
         ${GITHUB_WEBHOOK_API}/statuses/$input_commit
     else
         /usr/bin/curl -H "Content-Type: application/json" \
         -H "Authorization: token "$TOKEN"  " \
-        --data '{"state":"failure","context":"CI/pr-audit-resource","description":"Oooops. Resource checker is failed. Resubmit the PR after fixing correctly. Commit number is '$input_commit'.","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+        --data '{"state":"failure","context":"CI/pr-audit-resource","description":"Oooops. Resource checker is failed. Resubmit the PR after fixing correctly. Commit number is '$input_commit'.","target_url":"'${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
         ${GITHUB_WEBHOOK_API}/statuses/$input_commit
     
         # comment a hint on failed PR to author.
         /usr/bin/curl -H "Content-Type: application/json" \
         -H "Authorization: token "$TOKEN"  " \
-        --data '{"body":":octocat: **cibot**: '$user_id', Resource checker could not be completed because not-installed resources exist. To find out the reasons, please go to '${CISERVER}${PROJECT}/ci/${dir_commit}/report/resource_check_${input_pr}_error.txt'."}' \
+        --data '{"body":":octocat: **cibot**: '$user_id', Resource checker could not be completed because not-installed resources exist. To find out the reasons, please go to '${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/resource_check_${input_pr}_error.txt'."}' \
         ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
     fi
 }

@@ -62,7 +62,7 @@ user_id="@${Array[3]}"
 dir_worker="repo-workers/pr-audit"
 
 # Set project repo name of contributor
-PROJECT_REPO=`echo $(basename "${input_repo%.*}")`
+PRJ_REPO_OWNER=`echo $(basename "${input_repo%.*}")`
 
 cd ..
 export dir_ci=`pwd`
@@ -114,12 +114,12 @@ ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
 # create new context name to monitor progress status of a checker
 /usr/bin/curl -H "Content-Type: application/json" \
 -H "Authorization: token "$TOKEN"  " \
---data "{\"state\":\"pending\",\"context\":\"(INFO)CI/pr-audit-all\",\"description\":\"Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/\"}" \
+--data "{\"state\":\"pending\",\"context\":\"(INFO)CI/pr-audit-all\",\"description\":\"Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/\"}" \
 ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
 /usr/bin/curl -H "Content-Type: application/json" \
 -H "Authorization: token "$TOKEN"  " \
---data "{\"state\":\"pending\",\"context\":\"CI/pr-audit-build\",\"description\":\"Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/\"}" \
+--data "{\"state\":\"pending\",\"context\":\"CI/pr-audit-build\",\"description\":\"Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/\"}" \
 ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
 # --------------------------- git-clone module: clone git repository -------------------------------------------------
@@ -135,10 +135,10 @@ fi
 # check if github project folder already exists
 pwd
 cd $dir_commit
-if [[ -d ${PROJECT_REPO} ]]; then
-    echo "[DEBUG] WARN: ${PROJECT_REPO} already exists and is not an empty directory."
+if [[ -d ${PRJ_REPO_OWNER} ]]; then
+    echo "[DEBUG] WARN: ${PRJ_REPO_OWNER} already exists and is not an empty directory."
     echo "[DEBUG] WARN: Removing the existing directory..."
-    rm -rf ./${PROJECT_REPO}
+    rm -rf ./${PRJ_REPO_OWNER}
 fi
 
 # create 'report' folder to archive log files.
@@ -161,7 +161,7 @@ if [[ $? != 0 ]]; then
 fi
 
 # run "git branch" to use commits from PR branch
-cd ./${PROJECT_REPO}
+cd ./${PRJ_REPO_OWNER}
 git checkout -b $input_branch origin/$input_branch
 git branch
 
@@ -225,7 +225,7 @@ done
 echo "[DEBUG] Starting CI trigger to run 'gbs build' command actually."
 /usr/bin/curl -H "Content-Type: application/json" \
 -H "Authorization: token "$TOKEN"  " \
---data '{"state":"pending","context":"CI/pr-audit-build","description":"Triggered and started. The commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+--data '{"state":"pending","context":"CI/pr-audit-build","description":"Triggered and started. The commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
 ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
 echo "[DEBUG] Make sure commit all changes before running this checker."
@@ -271,12 +271,12 @@ if [[ $BUILD_MODE == 99 ]]; then
 
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"success","context":"CI/pr-audit-build","description":"Skipped gbs build procedure. No buildable files found. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+    --data '{"state":"success","context":"CI/pr-audit-build","description":"Skipped gbs build procedure. No buildable files found. Commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"success","context":"(INFO)CI/pr-audit-all","description":"Skipped gbs build procedure. Successfully all audit modules are passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+    --data '{"state":"success","context":"(INFO)CI/pr-audit-all","description":"Skipped gbs build procedure. Successfully all audit modules are passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
     # Let's inform developers of CI test result to go to a review process as a final step before merging a PR
@@ -301,18 +301,18 @@ else
     if [[ $check_result == "success" ]]; then
         /usr/bin/curl -H "Content-Type: application/json" \
         -H "Authorization: token "$TOKEN"  " \
-        --data '{"state":"success","context":"CI/pr-audit-build","description":"Successfully a build checker is passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+        --data '{"state":"success","context":"CI/pr-audit-build","description":"Successfully a build checker is passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
         ${GITHUB_WEBHOOK_API}/statuses/$input_commit
     else
         /usr/bin/curl -H "Content-Type: application/json" \
         -H "Authorization: token "$TOKEN"  " \
-        --data '{"state":"failure","context":"CI/pr-audit-build","description":"Oooops. A build checker is failed. Resubmit the PR after fixing correctly. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+        --data '{"state":"failure","context":"CI/pr-audit-build","description":"Oooops. A build checker is failed. Resubmit the PR after fixing correctly. Commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
         ${GITHUB_WEBHOOK_API}/statuses/$input_commit
     
         # comment a hint on failed PR to author.
         /usr/bin/curl -H "Content-Type: application/json" \
         -H "Authorization: token "$TOKEN"  " \
-        --data '{"body":":octocat: **cibot**: '$user_id', A builder checker could not be completed because one of the checkers is not completed. In order to find out a reason, please go to '${CISERVER}${PROJECT}/ci/${dir_commit}/'."}' \
+        --data '{"body":":octocat: **cibot**: '$user_id', A builder checker could not be completed because one of the checkers is not completed. In order to find out a reason, please go to '${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'."}' \
         ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
     fi
 fi
@@ -380,7 +380,7 @@ if [[ $global_check_result == "success" ]]; then
     # The global check is succeeded.
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"success","context":"(INFO)CI/pr-audit-all","description":"Successfully all audit modules are passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+    --data '{"state":"success","context":"(INFO)CI/pr-audit-all","description":"Successfully all audit modules are passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
     # Let's inform developers of CI test result to go to a review process as a final step before merging a PR
@@ -393,13 +393,13 @@ elif [[ $global_check_result == "failure" ]]; then
     # The global check is failed.
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"failure","context":"(INFO)CI/pr-audit-all","description":"Oooops. One of the audits is failed. Resubmit the PR after fixing correctly. Commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+    --data '{"state":"failure","context":"(INFO)CI/pr-audit-all","description":"Oooops. One of the audits is failed. Resubmit the PR after fixing correctly. Commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 else
     # The global check is failed due to CI error.
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"error","context":"(INFO)CI/pr-audit-all","description":"CI Error. There is a bug in CI script. Please contact the CI administrator.","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+    --data '{"state":"error","context":"(INFO)CI/pr-audit-all","description":"CI Error. There is a bug in CI script. Please contact the CI administrator.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
     echo -e "[DEBUG] It seems that this script has a bug. Please check value of \$global_check_result."
 fi

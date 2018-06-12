@@ -17,7 +17,7 @@
 ################# Modify the below statements for your server  #######################
 
 # Project name of github.sec.samsung.net
-PROJECT="nnstreamer"
+PRJ_REPO_UPSTREAM="nnstreamer"
 
 # CI Server webaddress. Should end with /
 CISERVER="http://aaci.mooo.com/"
@@ -52,17 +52,17 @@ TOKEN="01eec554abcaae8755c06c2b06f5d6bb84d4b4a5"
 EMAIL="git.bot.sec@samsung.com"
 
 # Reference repository to speed up "git clone" command
-REFERENCE_REPOSITORY="/var/www/html/$PROJECT/"
+REFERENCE_REPOSITORY="/var/www/html/$PRJ_REPO_UPSTREAM/"
 
 # RPM repo cache for GBS build
-REPOCACHE="/var/www/html/$PROJECT/repo_cache/"
+REPOCACHE="/var/www/html/$PRJ_REPO_UPSTREAM/repo_cache/"
 
 # Github repostiroy webaddress
-REPOSITORY_WEB="https://github.sec.samsung.net/STAR/$PROJECT"
-REPOSITORY_GIT="https://github.sec.samsung.net/STAR/$PROJECT.git"
+REPOSITORY_WEB="https://github.sec.samsung.net/STAR/$PRJ_REPO_UPSTREAM"
+REPOSITORY_GIT="https://github.sec.samsung.net/STAR/$PRJ_REPO_UPSTREAM.git"
 
 # Github webhook API
-GITHUB_WEBHOOK_API="https://github.sec.samsung.net/api/v3/repos/STAR/$PROJECT"
+GITHUB_WEBHOOK_API="https://github.sec.samsung.net/api/v3/repos/STAR/$PRJ_REPO_UPSTREAM"
 
 
 

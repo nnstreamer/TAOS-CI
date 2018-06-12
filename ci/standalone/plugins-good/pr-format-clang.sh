@@ -47,7 +47,7 @@ function pr-format-clang(){
         echo "[DEBUG] Passed. A clang-formatting style."
         /usr/bin/curl -H "Content-Type: application/json" \
          -H "Authorization: token "$TOKEN"  " \
-         --data "{\"state\":\"success\",\"context\":\"CI/pr-format-clang\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/report/${clang_format_file}\"}" \
+         --data "{\"state\":\"success\",\"context\":\"CI/pr-format-clang\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${clang_format_file}\"}" \
          ${GITHUB_WEBHOOK_API}/statuses/$input_commit
     else
         echo "[DEBUG] Failed. A clang-formatting style."

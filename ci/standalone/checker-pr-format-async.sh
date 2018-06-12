@@ -80,7 +80,7 @@ user_id="@${Array[3]}"
 dir_worker="repo-workers/pr-format"
 
 # Set project repo name
-PROJECT_REPO=`echo $(basename "${input_repo%.*}")`
+PRJ_REPO_OWNER=`echo $(basename "${input_repo%.*}")`
 
 cd ..
 export dir_ci=`pwd`
@@ -99,7 +99,7 @@ export dir_commit=${dir_worker}/${input_date}-${input_pr}-${input_commit}
 # --------------------------- CI Trigger ----------------------------------------------------------------------
 /usr/bin/curl -H "Content-Type: application/json" \
 -H "Authorization: token "$TOKEN"  " \
---data '{"state":"pending","context":"(INFO)CI/pr-format-all","description":"Triggered. The commit number is '$input_commit'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+--data '{"state":"pending","context":"(INFO)CI/pr-format-all","description":"Triggered. The commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
 ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
 # --------------------------- git-clone module: clone git repository -------------------------------------------------
@@ -112,10 +112,10 @@ fi
 
 # check if github project folder already exists
 cd $dir_commit
-if [[ -d ${PROJECT_REPO} ]]; then
-    echo "[DEBUG] WARN: ${PROJECT_REPO} already exists and is not an empty directory."
+if [[ -d ${PRJ_REPO_OWNER} ]]; then
+    echo "[DEBUG] WARN: ${PRJ_REPO_OWNER} already exists and is not an empty directory."
     echo "[DEBUG] WARN: So removing the existing directory..."
-    rm -rf ./${PROJECT_REPO}
+    rm -rf ./${PRJ_REPO_OWNER}
 fi
 
 # create 'report' folder to archive log files.
@@ -133,7 +133,7 @@ else
 fi
 
 # run "git branch" to use commits from PR branch
-cd ./${PROJECT_REPO}
+cd ./${PRJ_REPO_OWNER}
 git checkout -b $input_branch origin/$input_branch
 git branch
 
@@ -179,13 +179,13 @@ if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. File size."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"success","context":"CI/pr-format-filesize","description":"Successfully all files are passed without any issue of file size.","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+     --data '{"state":"success","context":"CI/pr-format-filesize","description":"Successfully all files are passed without any issue of file size.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 else
     echo "[DEBUG] Failed. File size."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"failure","context":"CI/pr-format-filesize","description":"Oooops. File size checker is failed at '$i_filename'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+     --data '{"state":"failure","context":"CI/pr-format-filesize","description":"Oooops. File size checker is failed at '$i_filename'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
     # inform PR submitter of a hint in more detail
@@ -233,13 +233,13 @@ if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. No newline anomaly."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"success","context":"CI/pr-format-newline","description":"Successfully all text files are passed without newline issue.","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+     --data '{"state":"success","context":"CI/pr-format-newline","description":"Successfully all text files are passed without newline issue.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 else
     echo "[DEBUG] Failed. A newline anomaly happened."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"failure","context":"CI/pr-format-newline","description":"Oooops. New line checker is failed at '$i_filename'","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+     --data '{"state":"failure","context":"CI/pr-format-newline","description":"Oooops. New line checker is failed at '$i_filename'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
     # inform PR submitter of a hint in more detail
@@ -327,13 +327,13 @@ if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. doxygen documentation."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"success","context":"CI/pr-format-doxygen","description":"Successfully source code(s) includes doxygen document correctly.","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+     --data '{"state":"success","context":"CI/pr-format-doxygen","description":"Successfully source code(s) includes doxygen document correctly.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 else
     echo "[DEBUG] Failed. doxygen documentation."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"failure","context":"CI/pr-format-doxygen","description":"Oooops. The doxygen checker is failed. Please, write doxygen document in your code.","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+     --data '{"state":"failure","context":"CI/pr-format-doxygen","description":"Oooops. The doxygen checker is failed. Please, write doxygen document in your code.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
     # inform PR submitter of a hint in more detail
@@ -392,19 +392,19 @@ if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. static code analysis tool - cppcheck."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-cppcheck\",\"description\":\"Successfully source code(s) is written without dangerous coding constructs.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/report/\"}" \
+     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-cppcheck\",\"description\":\"Successfully source code(s) is written without dangerous coding constructs.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/\"}" \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 elif [[ $check_result == "skip" ]]; then
     echo "[DEBUG] Skipped. static code analysis tool - cppcheck."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-cppcheck\",\"description\":\"Skipped. Your PR does not include c/c++ code(s).\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/report/\"}" \
+     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-cppcheck\",\"description\":\"Skipped. Your PR does not include c/c++ code(s).\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/\"}" \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 else
     echo "[DEBUG] Failed. static code analysis tool - cppcheck."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-cppcheck\",\"description\":\"Oooops. cppcheck is failed. Please, read '$cppcheck_result' for more details.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/report/\"}" \
+     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-cppcheck\",\"description\":\"Oooops. cppcheck is failed. Please, read '$cppcheck_result' for more details.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/\"}" \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
     # inform PR submitter of a hint in more detail
@@ -468,27 +468,27 @@ if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. static code analysis tool - pylint."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-pylint\",\"description\":\"Successfully source code(s) is written without dangerous coding constructs.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/report/\"}" \
+     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-pylint\",\"description\":\"Successfully source code(s) is written without dangerous coding constructs.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/\"}" \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
     # inform PR submitter of a hint in more detail
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
-    --data "{\"body\":\":octocat: **cibot**: $user_id, We generate a report if there are dangerous coding constructs in your code. Please read ${CISERVER}${PROJECT}/ci/${dir_commit}/report/${py_check_result}.\"}" \
+    --data "{\"body\":\":octocat: **cibot**: $user_id, We generate a report if there are dangerous coding constructs in your code. Please read ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${py_check_result}.\"}" \
     ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
 
 elif [[ $check_result == "skip" ]]; then
     echo "[DEBUG] Skipped. static code analysis tool - pylint."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-pylint\",\"description\":\"Skipped. Your PR does not include python code(s).\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/report/\"}" \
+     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-pylint\",\"description\":\"Skipped. Your PR does not include python code(s).\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/\"}" \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
 else
     echo "[DEBUG] Failed. static code analysis tool - pylint."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-pylint\",\"description\":\"Oooops. cppcheck is failed. Please, read '$py_check_result' for more details.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/report/\"}" \
+     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-pylint\",\"description\":\"Oooops. cppcheck is failed. Please, read '$py_check_result' for more details.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/\"}" \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
     # inform PR submitter of a hint in more detail
@@ -541,27 +541,27 @@ if [[ spec_modified == "true" ]]; then
     # TODO: Improve the existing handling method in case that developers incorrectly write *.spec file.
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
-    --data "{\"body\":\":octocat: **cibot**: [FYI] We inform $user_id of a check result of spec file with rpmlint. If there are some warning(s) or error(s) in your spec file, modify ${i} correctly after reading the report at ${CISERVER}${PROJECT}/ci/${dir_commit}/report/${RPM_SPEC_REPORT_FILE} \"}" \
+    --data "{\"body\":\":octocat: **cibot**: [FYI] We inform $user_id of a check result of spec file with rpmlint. If there are some warning(s) or error(s) in your spec file, modify ${i} correctly after reading the report at ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${RPM_SPEC_REPORT_FILE} \"}" \
     ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
 
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. rpm spec checker."
         /usr/bin/curl -H "Content-Type: application/json" \
          -H "Authorization: token "$TOKEN"  " \
-         --data '{"state":"success","context":"CI/pr-format-rpm-spec","description":"Successfully rpm spec checker is done.","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+         --data '{"state":"success","context":"CI/pr-format-rpm-spec","description":"Successfully rpm spec checker is done.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
          ${GITHUB_WEBHOOK_API}/statuses/$input_commit
     else
         echo "[DEBUG] Failed. rpm spec checker."
         /usr/bin/curl -H "Content-Type: application/json" \
          -H "Authorization: token "$TOKEN"  " \
-         --data '{"state":"failure","context":"CI/pr-format-rpm-spec","description":"Oooops. The rpm spec checker is failed.","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+         --data '{"state":"failure","context":"CI/pr-format-rpm-spec","description":"Oooops. The rpm spec checker is failed.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
          ${GITHUB_WEBHOOK_API}/statuses/$input_commit
     fi
 else
     echo "[DEBUG] Skipped. rpm spec checker."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"success","context":"CI/pr-format-rpm-spec","description":"Skipped. rpm spec checker is jumped because you did not modify a spec file.","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+     --data '{"state":"success","context":"CI/pr-format-rpm-spec","description":"Skipped. rpm spec checker is jumped because you did not modify a spec file.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
 fi
@@ -615,13 +615,13 @@ if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. No newline abnormally."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"success","context":"CI/pr-format-nobody","description":"Successfully commit body includes +5 words.","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+     --data '{"state":"success","context":"CI/pr-format-nobody","description":"Successfully commit body includes +5 words.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 else
     echo "[DEBUG] Failed. A newline abnormally found."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"failure","context":"CI/pr-format-nobody","description":"Oooops. Commit message body checker failed. You must write commit message (+5 words) as well as commit title.","target_url":"'${CISERVER}${PROJECT}/ci/${dir_commit}/'"}' \
+     --data '{"state":"failure","context":"CI/pr-format-nobody","description":"Oooops. Commit message body checker failed. You must write commit message (+5 words) as well as commit title.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 fi
 
@@ -682,13 +682,13 @@ if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A executable bits."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-executable\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/ \"}" \
+     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-executable\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/ \"}" \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 else
     echo "[DEBUG] Failed. A executable bits."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-executable\",\"description\":\"Oooops. The commit has an invalid executable: ${X}. Please turn the executable bits off.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/\"}" \
+     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-executable\",\"description\":\"Oooops. The commit has an invalid executable: ${X}. Please turn the executable bits off.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/\"}" \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 fi
 
@@ -718,13 +718,13 @@ if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A hardcoded paths."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-hardcoded-path\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/\"}" \
+     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-hardcoded-path\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/\"}" \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 else
     echo "[DEBUG] Failed. A hardcoded paths."
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-hardcoded-path\",\"description\":\"Oooops. The component you are submitting has hardcoded paths that are not allowed in the source. Please do not hardcode paths.\",\"target_url\":\"${CISERVER}${PROJECT}/ci/${dir_commit}/report/${hardcoded_file}\"}" \
+     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-hardcoded-path\",\"description\":\"Oooops. The component you are submitting has hardcoded paths that are not allowed in the source. Please do not hardcode paths.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${hardcoded_file}\"}" \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 fi
 
@@ -744,7 +744,7 @@ if [[ $global_check_result == "success" ]]; then
     # in case of success
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"success","context":"(INFO)CI/pr-format-all","description":"Successfully all format checkers are done. Note that CI bot has two sub-bots such as CI/pr-audit-all and CI/pr-format-all.","target_url":"'$CISERVER${PROJECT}/ci/${dir_commit}/'"}' \
+     --data '{"state":"success","context":"(INFO)CI/pr-format-all","description":"Successfully all format checkers are done. Note that CI bot has two sub-bots such as CI/pr-audit-all and CI/pr-format-all.","target_url":"'$CISERVER${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
     # inform PR submitter of success content to encourage review process
@@ -757,7 +757,7 @@ elif [[ $global_check_result == "failure" ]]; then
     # in case of failure
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"failure","context":"(INFO)CI/pr-format-all","description":"Oooops. There is a failed format checker. Update your code correctly after reading error messages.","target_url":"'$CISERVER${PROJECT}/ci/${dir_commit}/'"}' \
+     --data '{"state":"failure","context":"(INFO)CI/pr-format-all","description":"Oooops. There is a failed format checker. Update your code correctly after reading error messages.","target_url":"'$CISERVER${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
     # inform PR submitter of a hint to fix issues
@@ -770,7 +770,7 @@ else
     # in case that CI is broken
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"error","context":"(INFO)CI/pr-format-all","description":"Oooops. It seems that CI bot has bug(s). CI bot has to be fixed.","target_url":"'$CISERVER${PROJECT}/ci/${dir_commit}/'"}' \
+     --data '{"state":"error","context":"(INFO)CI/pr-format-all","description":"Oooops. It seems that CI bot has bug(s). CI bot has to be fixed.","target_url":"'$CISERVER${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 
 fi
