@@ -6,12 +6,12 @@
 #  @dependency: doxygen, make, unoconv, libreoffice, pdftk, pdfunite
 
 source ../standalone/config/config-environment.sh
-src_path="/var/www/html/$PRJ_REPO_UPSTREAM/ci/doc/"
+src_path="/var/www/html/$PRJ_REPO_UPSTREAM/"
 
 
 # Generate original book with doxygen tags
 function generate_original(){
-doxygen ../Doxyfile.prj
+doxygen ./ci/Doxyfile.prj
 cd latex 
 make  -j`nproc`
 mv refman.pdf book-prj.pdf 
@@ -19,11 +19,11 @@ mv refman.pdf book-prj.pdf
 
 function generate_cover(){
 # Generate cover book 
-unoconv -f pdf --export=ExportFormFields=false ../../doc/book-hard-copy-cover1.odt 
+unoconv -f pdf --export=ExportFormFields=false ../ci/doc/book-hard-copy-cover1.odt 
 string_time="\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                         $(date)"
 echo -e  "$string_time" > book-hard-copy-date.txt
 libreoffice --convert-to "pdf" book-hard-copy-date.txt 
-pdftk  ../../doc/book-hard-copy-cover1.pdf  stamp ./book-hard-copy-date.pdf  output book-hard-copy-stamped.pdf
+pdftk  ../ci/doc/book-hard-copy-cover1.pdf  stamp ./book-hard-copy-date.pdf  output book-hard-copy-stamped.pdf
 }
 
 function generate_final(){
