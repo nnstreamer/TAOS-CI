@@ -1,22 +1,24 @@
 <html>
 <head>
-<title>Monitoring resource usage of PR</title>
+<title>PR: Resource Usage (top)</title>
 <meta http-equiv="refresh" content="3; URL=./top.php">
 <meta name="keywords" content="automatic redirection">
 </head>
 <body>
-<h3><b> <font color=red>Process webviewer to monitor resource usage of PRs</font></b><br>
-</h3>
+<img src=monitor-icon.png border=0><font color=whiteblue> <b>PR: Resource Usage (top)</b></font>
+<br><br>
 
-It  is  similar  to  top. So you can see all the processes & threads  running<br>
+<font color=green>
+When PR does not completed in time due to a system overload, it is to monitor CPU,<br>
+Memory, and SWAP usage. So you can see all the processes and threads running<br>
 on the system as well as viewing them as a process tree.<br>
+</font>
 
 <?php
-echo "<br>";
-echo "==================================================";
+echo "========================================================";
 $output = shell_exec("COLUMNS=200 top -H -b -c -n 1 | aha --black --line-fix");
 echo "$output";
-echo "==================================================";
+echo "========================================================";
 ?>
 </body>
 </html>
