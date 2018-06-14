@@ -6,7 +6,7 @@
 #  @dependency: doxygen, make
 
 source ../standalone/config/config-environment.sh
-$ci_path="/var/www/html/$PROJECT/ci/doc/" 
+$ci_path="/var/www/html/$PRJ_REPO_UPSTREAM/ci/doc/" 
 
 ##
 # @brief  Generate PDF-based CI manual with doxygen tags

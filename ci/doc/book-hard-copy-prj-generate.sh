@@ -6,7 +6,7 @@
 #  @dependency: doxygen, make, unoconv, libreoffice, pdftk, pdfunite
 
 source ../standalone/config/config-environment.sh
-src_path="/var/www/html/$PROJECT/ci/doc/"
+src_path="/var/www/html/$PRJ_REPO_UPSTREAM/ci/doc/"
 
 
 # Generate original book with doxygen tags
