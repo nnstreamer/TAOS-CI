@@ -5,7 +5,7 @@
 #  @date May-13-2018
 #  @dependency: doxygen, make, unoconv, libreoffice, pdftk, pdfunite
 
-src_path="$(pwd)/../.."
+src_path="`dirname \"$0\"`/../.."
 
 # Generate original book with doxygen tags
 function generate_original(){

@@ -5,7 +5,7 @@
 #  @date May-13-2018
 #  @dependency: doxygen, make
 
-$ci_path="$(pwd)/../.."
+$ci_path="`dirname \"$0\"`/../.."
 
 ##
 # @brief  Generate PDF-based CI manual with doxygen tags
