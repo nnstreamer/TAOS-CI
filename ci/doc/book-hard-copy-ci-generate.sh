@@ -5,8 +5,7 @@
 #  @date May-13-2018
 #  @dependency: doxygen, make
 
-source ../standalone/config/config-environment.sh
-$ci_path="/var/www/html/$PRJ_REPO_UPSTREAM/ci/doc/" 
+$ci_path="$(pwd)/../.."
 
 ##
 # @brief  Generate PDF-based CI manual with doxygen tags

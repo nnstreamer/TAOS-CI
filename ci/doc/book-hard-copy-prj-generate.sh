@@ -5,9 +5,7 @@
 #  @date May-13-2018
 #  @dependency: doxygen, make, unoconv, libreoffice, pdftk, pdfunite
 
-source ../standalone/config/config-environment.sh
-src_path="/var/www/html/$PRJ_REPO_UPSTREAM/"
-
+src_path="$(pwd)/../.."
 
 # Generate original book with doxygen tags
 function generate_original(){
