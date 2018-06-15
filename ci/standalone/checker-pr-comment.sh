@@ -21,7 +21,7 @@ input_pr=$1
 # execute automatic comment on new PR.
 
 # inform PR submitter that they do not have to merge their own PR directly.
-message="Thank you for submitting PR #${input_pr}. Note that you **don't must merge your own PR** firsthand. If your PR has +2 commits, run **'$ git format-patch --cover-letter -{number-of-commits}'** to get a template. Then, paste a content in your PR body."
+message="Thank you for submitting PR #${input_pr}. Note that you **are not allowed to merge your own PR** directly. If your PR has +2 commits, run **'$ git format-patch --cover-letter -{number-of-commits}'** to get a template. Then, paste a content in your PR body."
 
 /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
