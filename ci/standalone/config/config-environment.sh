@@ -27,7 +27,7 @@ CISERVER="http://aaci.mooo.com/"
 # Specify a path of source code
 # 1) to check prohibited hardcoded paths (e.g., /home/* for now)
 # 2) to check code formatting sytele with clang-format
-SRC_PATH="."
+SRC_PATH="./gst/"
 
 # Audit Area (pr-audit)
 # Skip build-checker / unit-test checker if all changes are limited to:

@@ -215,7 +215,6 @@ Finally, let's generate automatically PDF book per 1 hour with cron table (e.g.,
 ```bash
 $ sudo vi /etc/crontab
 # Generate doxygen document
-20 * * * * www-data cd /var/www/html/<prj_name>/             ; git pull
+20 * * * * www-data cd /var/www/html/<prj_name>/ ; git pull
 30 * * * * www-data /var/www/html/<prj_name>/doc/book-hard-copy-prj-generate.sh
-35 * * * * www-data /var/www/html/<prj_name>/doc/book-hard-copy-ci-generate.sh
 ```
