@@ -78,7 +78,7 @@ $ time gbs build -A aarch64 --clean --include-all
 $ cd /var/www/html/
 $ git clone https://github.sec.samsung.net/STAR/<your_prj_name>.git
 $ cd <your_prj_name>
-$ git submodule https://github.sec.samsung.net/STAR/TAOS-CI.git
+$ git submodule add https://github.sec.samsung.net/STAR/TAOS-CI.git
 $ ln -s ./TAOS-CI/ci ./ci
 $ vi ./ci/standalone/config/config-environment.sh
   (You have to modify configuration variables appropriately.)
@@ -91,10 +91,11 @@ That's all. Enjoy TAOS-CI after setting-up webhook API.
 $ chromium-browser https://github.sec.samsung.net/STAR/AuDri/settings
 ```
 
-Press `Hooks & services` menu - Press `Add webhook` button - 
+Press `Hooks` menu - Press `Add webhook` button - 
 ```bash
 * Webhooks/ Add webhook
-  - Payload URL:  http://***.mooo.com/cibot.taos or http://***.mooo.com:8080/
+  - Payload URL:
+    http://<your_hostname>.mooo.com/<prj_name>/ci/standalone/cibot.tao
   - Content type: application/x-www-form-urlencoded
   - Secret: ******
   - Which events would you like to trigger this webhook?
