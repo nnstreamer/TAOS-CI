@@ -8,6 +8,7 @@
 
 # --------------------------- Pre-setting module --------------------------------------------------------
 source ./config/config-environment.sh
+source ./common/cibot_rest_api.sh
 
 # check if input argument is correct. 
 if [[ $1 == "" ]]; then
@@ -15,9 +16,11 @@ if [[ $1 == "" ]]; then
     exit 1
 fi
 
+input_issue=$1
+
 # --------------------------- Report module: submit check result to github.sec.samsung.net --------------
 # execute automatic comment on new issue.
-/usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data '{"body":":octocat: **cibot**: Thank you for posting issue #'$1'. The person in charge will reply soon."}' \
-     ${GITHUB_WEBHOOK_API}/issues/$1/comments
+
+message=":octocat: **cibot**: Thank you for posting issue #$input_issue. The person in charge will reply soon."
+cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_issue/comments"
+

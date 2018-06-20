@@ -3,8 +3,6 @@
 ##
 # @file pr-format-clang.sh
 # @brief Check Check the code formatting style with clang-format
-#
-
 
 ##
 #  @brief [MODULE] CI/pr-format-clang
@@ -44,16 +42,12 @@ function pr-format-clang(){
 
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. A clang-formatting style."
-        /usr/bin/curl -H "Content-Type: application/json" \
-         -H "Authorization: token "$TOKEN"  " \
-         --data "{\"state\":\"success\",\"context\":\"CI/pr-format-clang\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}/${PROJECT}/ci/${dir_commit}/report/${clang_format_file}\"}" \
-         ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+        message="Successfully, The commits are passed."
+        cibot_pr_report $TOKEN "success" "CI/pr-format-clang" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. A clang-formatting style."
-        /usr/bin/curl -H "Content-Type: application/json" \
-         -H "Authorization: token "$TOKEN"  " \
-         --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-clang\",\"description\":\"Oooops. The component you are submitting with incorrect clang-format style.\",\"target_url\":\"${CISERVER}/${PROJECT}/ci/${dir_commit}/report/${clang_format_file}\"}" \
-         ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+        message="Oooops. The component you are submitting with incorrect clang-format style."
+        cibot_pr_report $TOKEN "failure" "CI/pr-format-clang" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 fi
 
 

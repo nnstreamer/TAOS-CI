@@ -106,21 +106,15 @@ done
 
 # --------------------------- CI Trigger (queued) ----------------------------------------------------------------------
 # inform all developers of their activity whenever developers resubmit their PR after applying comments of reviews
-/usr/bin/curl -H "Content-Type: application/json" \
--H "Authorization: token "$TOKEN"  " \
---data "{\"body\":\":dart: **cibot**: $user_id has updated the pull request.\"}" \
-${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+message=":dart: **cibot**: $user_id has updated the pull request."
+cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 
 # create new context name to monitor progress status of a checker
-/usr/bin/curl -H "Content-Type: application/json" \
--H "Authorization: token "$TOKEN"  " \
---data "{\"state\":\"pending\",\"context\":\"(INFO)CI/pr-audit-all\",\"description\":\"Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/\"}" \
-${GITHUB_WEBHOOK_API}/statuses/$input_commit
+message="Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
+cibot_pr_report $TOKEN "pending" "(INFO)CI/pr-audit-all" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-/usr/bin/curl -H "Content-Type: application/json" \
--H "Authorization: token "$TOKEN"  " \
---data "{\"state\":\"pending\",\"context\":\"CI/pr-audit-build\",\"description\":\"Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/\"}" \
-${GITHUB_WEBHOOK_API}/statuses/$input_commit
+message="Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
+cibot_pr_report $TOKEN "pending" "CI/pr-audit-build" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
 # --------------------------- git-clone module: clone git repository -------------------------------------------------
 echo "[DEBUG] Starting pr-audit....\n"
@@ -223,10 +217,8 @@ done
 # --------------------------- CI Trigger (GBS starts) ----------------------------------------------------------------------
 
 echo "[DEBUG] Starting CI trigger to run 'gbs build' command actually."
-/usr/bin/curl -H "Content-Type: application/json" \
--H "Authorization: token "$TOKEN"  " \
---data '{"state":"pending","context":"CI/pr-audit-build","description":"Triggered and started. The commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-${GITHUB_WEBHOOK_API}/statuses/$input_commit
+message="Triggered and started. The commit number is $input_commit."
+cibot_pr_report $TOKEN "pending" "CI/pr-audit-build" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
 echo "[DEBUG] Make sure commit all changes before running this checker."
 pwd
@@ -234,10 +226,10 @@ pwd
 echo "[MODULE] CI/pr-audit-build: Check if 'gbs build' can be successfully passed."
 
 if [[ $BUILD_MODE == 99 ]]; then
-    echo  -e "BUILD_MODE = 99"
-    echo  -e "Skipping 'gbs build' procedure temporarily."
+    echo -e "BUILD_MODE = 99"
+    echo -e "Skipping 'gbs build' procedure temporarily."
 elif [[ $BUILD_MODE == 1 ]]; then
-    echo  -e "BUILD_MODE = 1"
+    echo -e "BUILD_MODE = 1"
     sudo -Hu www-data gbs build \
     -A x86_64 \
     --clean \
@@ -249,7 +241,7 @@ elif [[ $BUILD_MODE == 1 ]]; then
     --define "_skip_debug_rpm 1" \
     --buildroot ./GBS-ROOT/  | tee ../report/build_log_${input_pr}_output.txt
 else
-    echo  -e "BUILD_MODE = 0"
+    echo -e "BUILD_MODE = 0"
     sudo -Hu www-data gbs build \
     -A x86_64 \
     --clean \
@@ -265,28 +257,20 @@ result=$?
 
 if [[ $BUILD_MODE == 99 ]]; then
     # Do not run "gbs build" command in order to skip unnecessary examination if there are no buildable files.
-    echo  -e "BUILD_MODE == 99"
-    echo "[DEBUG] Let's skip the 'gbs build' procedure because there is not source code. All files may be skipped."
-    echo "[DEBUG] So, we stop remained all tasks at this time."
+    echo -e "BUILD_MODE == 99"
+    echo -e "[DEBUG] Let's skip the 'gbs build' procedure because there is not source code. All files may be skipped."
+    echo -e "[DEBUG] So, we stop remained all tasks at this time."
 
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"success","context":"CI/pr-audit-build","description":"Skipped gbs build procedure. No buildable files found. Commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-    ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Skipped gbs build procedure. No buildable files found. Commit number is $input_commit."
+    cibot_pr_report $TOKEN "success" "CI/pr-audit-build" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"success","context":"(INFO)CI/pr-audit-all","description":"Skipped gbs build procedure. Successfully all audit modules are passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-    ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Skipped gbs build procedure. Successfully all audit modules are passed. Commit number is $input_commit."
+    cibot_pr_report $TOKEN "success" "(INFO)CI/pr-audit-all" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-    # Let's inform developers of CI test result to go to a review process as a final step before merging a PR
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"body\":\":octocat: **cibot**: :+1: **(INFO)CI/pr-audit-all**: All audit modules are passed (gbs build procedure is skipped) - it is ready to review! :shipit: Note that CI bot has two sub-bots such as CI/pr-audit-all and CI/pr-format-all.\"}" \
-     ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+    echo -e "[DEBUG] All audit modules are passed (gbs build procedure is skipped) - it is ready to review! :shipit: Note that CI bot has two sub-bots such as CI/pr-audit-all and CI/pr-format-all."
 else
-    echo  -e "BUILD_MODE != 99"
-    echo  -e "[DEBUG] The return value of gbs build command is $result."
+    echo -e "BUILD_MODE != 99"
+    echo -e "[DEBUG] The return value of gbs build command is $result."
     # Let's check if build procedure is normally done.
     if [[ $result -eq 0 ]]; then
             echo "[DEBUG][PASSED] Successfully build checker is passed. Return value is ($result)."
@@ -299,21 +283,15 @@ else
    
     # Let's report build result of source code 
     if [[ $check_result == "success" ]]; then
-        /usr/bin/curl -H "Content-Type: application/json" \
-        -H "Authorization: token "$TOKEN"  " \
-        --data '{"state":"success","context":"CI/pr-audit-build","description":"Successfully a build checker is passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-        ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+        message="Successfully a build checker is passed. Commit number is '$input_commit'."
+        cibot_pr_report $TOKEN "success" "CI/pr-audit-build" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
-        /usr/bin/curl -H "Content-Type: application/json" \
-        -H "Authorization: token "$TOKEN"  " \
-        --data '{"state":"failure","context":"CI/pr-audit-build","description":"Oooops. A build checker is failed. Resubmit the PR after fixing correctly. Commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-        ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+        message="Oooops. A build checker is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
+        cibot_pr_report $TOKEN "failure" "CI/pr-audit-build" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     
         # comment a hint on failed PR to author.
-        /usr/bin/curl -H "Content-Type: application/json" \
-        -H "Authorization: token "$TOKEN"  " \
-        --data '{"body":":octocat: **cibot**: '$user_id', A builder checker could not be completed because one of the checkers is not completed. In order to find out a reason, please go to '${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'."}' \
-        ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+        message=":octocat: **cibot**: $user_id, A builder checker could not be completed because one of the checkers is not completed. In order to find out a reason, please go to ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/."
+        cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     fi
 fi
 
@@ -359,17 +337,11 @@ fi
 # Add thousands separator in a number
 FILESIZE_NUM=`echo $FILESIZE | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta'`
 if [[ $check_result == "success" ]]; then
-    # inform PR submitter of a normal execution result
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"body\":\":sunny: **cibot**: $user_id, Good job. the log file does not exceed 10MB. The file size of build_log_${input_pr}_output.txt is **$FILESIZE_NUM** bytes.\"}" \
-     ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+    echo "[DEBUG] Good job. the log file does not exceed 10MB. The file size of build_log_${input_pr}_output.txt is $FILESIZE_NUM bytes."
 else
     # inform PR submitter of a hint in more detail
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"body\":\":fire: **cibot**: $user_id, Oooops. The log file exceeds 10MB due to incorrect commit(s). The file size of build_log_${input_pr}_output.txt is **$FILESIZE_NUM** bytes. Please resubmit after updating your PR to reduce the file size of build_log_${input_pr}_output.txt.\"}" \
-     ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+    message=":fire: **cibot**: $user_id, Oooops. The log file exceeds 10MB due to incorrect commit(s). The file size of build_log_${input_pr}_output.txt is **$FILESIZE_NUM** bytes    . Please resubmit after updating your PR to reduce the file size of build_log_${input_pr}_output.txt."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
 # --------------------------- Report module: submit the global check result to github.sec.samsung.net --------------
@@ -378,29 +350,20 @@ echo "send a total report with global_check_result variable. global_check_result
 
 if [[ $global_check_result == "success" ]]; then
     # The global check is succeeded.
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"success","context":"(INFO)CI/pr-audit-all","description":"Successfully all audit modules are passed. Commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-    ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Successfully all audit modules are passed. Commit number is $input_commit."
+    cibot_pr_report $TOKEN "success" "(INFO)CI/pr-audit-all" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-    # Let's inform developers of CI test result to go to a review process as a final step before merging a PR
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"body\":\":octocat: **cibot**: :+1: **(INFO)CI/pr-audit-all**: All audit modules are passed - it is ready to review! :shipit:. Note that CI bot has two sub-bots such as CI/pr-audit-all and CI/pr-format-all.\"}" \
-     ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+    # If contributors want later, let's inform developers of CI test result to go to a review process as a final step before merging a PR
+    echo "[DEBUG] All audit modules are passed - it is ready to review! :shipit:. Note that CI bot has two sub-bots such as CI/pr-audit-all and CI/pr-format-all."
 
 elif [[ $global_check_result == "failure" ]]; then
     # The global check is failed.
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"failure","context":"(INFO)CI/pr-audit-all","description":"Oooops. One of the audits is failed. Resubmit the PR after fixing correctly. Commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-    ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Oooops. One of the audits is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
+    cibot_pr_report $TOKEN "failure" "(INFO)CI/pr-audit-all" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 else
     # The global check is failed due to CI error.
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data '{"state":"error","context":"(INFO)CI/pr-audit-all","description":"CI Error. There is a bug in CI script. Please contact the CI administrator.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-    ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="CI Error. There is a bug in CI script. Please contact the CI administrator."
+    cibot_pr_report $TOKEN "error" "(INFO)CI/pr-audit-all" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     echo -e "[DEBUG] It seems that this script has a bug. Please check value of \$global_check_result."
 fi
 

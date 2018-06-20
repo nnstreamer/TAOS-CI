@@ -27,15 +27,11 @@ function pr-format-exclusive-vio(){
     if [[ "$CHECKVIO" -eq 1 && "$CHECKNONVIO" -eq 1 ]]; then
         global_check_result="failure"
         echo "[DEBUG] Failed. A VIO commit is not exclusive."
-        /usr/bin/curl -H "Content-Type: application/json" \
-         -H "Authorization: token "$TOKEN"  " \
-         --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-exclusive-vio\",\"description\":\"Oooops. This commit has VIO files and non-VIO files at the same time, violating issue #279.\",\"target_url\":\"${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/\"}" \
-         ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+        message="Oooops. This commit has VIO files and non-VIO files at the same time, violating issue #279."
+        cibot_pr_report $TOKEN "failure" "CI/pr-format-exclusive-vio" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         echo "[DEBUG] Passed. No violation of issue #279."
-        /usr/bin/curl -H "Content-Type: application/json" \
-         -H "Authorization: token "$TOKEN"  " \
-         --data "{\"state\":\"success\",\"context\":\"CI/pr-format-exclusive-vio\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/}\"}" \
-         ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+        message="Successfully, The commits are passed."
+        cibot_pr_report $TOKEN "success" "CI/pr-format-exclusive-vio" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     fi
 }

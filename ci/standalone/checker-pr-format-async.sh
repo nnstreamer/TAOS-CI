@@ -44,6 +44,7 @@ input_delivery_id=$6
 # Note the "source ./config/config-environment.sh" file can be called in another script
 # instead of in this file in order to support asynchronous operation from CI manager
 source ./config/config-environment.sh
+source ./common/cibot_rest_api.sh
 
 # check if input argument is correct.
 if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; then
@@ -52,7 +53,7 @@ if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; t
 fi
 
 # @dependency
-# git, which, grep, touch, find, wc, cat, basename, tail, clang-format-4.0, cppcheck, rpmlint, aha, stat
+# git, which, grep, touch, find, wc, cat, basename, tail, clang-format-4.0, cppcheck, rpmlint, aha, stat, curl
 # check if dependent packages are installed
 source ./common/inspect_dependency.sh
 check_package git
@@ -69,6 +70,7 @@ check_package cppcheck
 check_package rpmlint
 check_package aha
 check_package stat
+check_package curl
 echo "[DEBUG] Checked dependency packages.\n"
 
 # get user ID from the input_repo string
@@ -97,10 +99,8 @@ export dir_worker=$dir_worker
 cd $dir_ci
 export dir_commit=${dir_worker}/${input_date}-${input_pr}-${input_commit}
 # --------------------------- CI Trigger ----------------------------------------------------------------------
-/usr/bin/curl -H "Content-Type: application/json" \
--H "Authorization: token "$TOKEN"  " \
---data '{"state":"pending","context":"(INFO)CI/pr-format-all","description":"Triggered. The commit number is '$input_commit'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-${GITHUB_WEBHOOK_API}/statuses/$input_commit
+message="Triggered. The commit number is $input_commit."
+cibot_pr_report $TOKEN "pending" "(INFO)CI/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 # --------------------------- git-clone module: clone git repository -------------------------------------------------
 echo "[DEBUG] Starting pr-format....\n"
@@ -150,13 +150,14 @@ git format-patch -1 $input_commit --output-directory ../report/
 check_result="success"
 global_check_result="success"
 
+
 echo "########################################################################################"
 echo "[MODULE] CI/pr-format-file-size: Check the file size to not include big binary files"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for i in ${FILELIST}; do
     # check the files in case that there are files that exceed 5MB.
-    echo "[DEBUG] file name is ( $i ) . "
+    echo "[DEBUG] file name is ($i) . "
         echo "[DEBUG] ( $i ) file is a text file."
         FILESIZE=$(stat -c%s "$i")
         # Add thousands separator in a number
@@ -172,27 +173,22 @@ for i in ${FILELIST}; do
         fi
 done
 
+
 # get just a file name from a path to avoid length limitation (e.g., max 140 characters) of 'description' tag
 i_filename=$(basename $i)
 
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. File size."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"success","context":"CI/pr-format-filesize","description":"Successfully all files are passed without any issue of file size.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Successfully all files are passed without any issue of file size."
+    cibot_pr_report $TOKEN "success" "CI/pr-format-filesize" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. File size."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"failure","context":"CI/pr-format-filesize","description":"Oooops. File size checker is failed at '$i_filename'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Oooops. File size checker is failed at $i_filename."
+    cibot_pr_report $TOKEN "failure" "CI/pr-format-filesize" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data '{"body":":octocat: **cibot**: '$user_id', It seems that there are big files that exceed 5MB in your PR. Please resubmit your PR after reducing '$i' size."}' \
-     ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+    message=":octocat: **cibot**: '$user_id', It seems that there are big files that exceed 5MB in your PR. Please resubmit your PR after reducing '$i' size."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
 echo "########################################################################################"
@@ -231,22 +227,16 @@ i_filename=$(basename $i)
 
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. No newline anomaly."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"success","context":"CI/pr-format-newline","description":"Successfully all text files are passed without newline issue.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Successfully all text files are passed without newline issue."
+    cibot_pr_report $TOKEN "success" "CI/pr-format-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. A newline anomaly happened."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"failure","context":"CI/pr-format-newline","description":"Oooops. New line checker is failed at '$i_filename'","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Oooops. New line checker is failed at $i_filename."
+    cibot_pr_report $TOKEN "failure" "CI/pr-format-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data '{"body":":octocat: **cibot**: '$user_id', There is a newline issue. The final line of a text file should have newline character. Please resubmit your PR after fixing end of line in '$i'."}' \
-     ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+    message=":octocat: **cibot**: $user_id, There is a newline issue. The final line of a text file should have newline character. Please resubmit your PR after fixing end of line in $i."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
 echo "########################################################################################"
@@ -325,22 +315,16 @@ done
 
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. doxygen documentation."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"success","context":"CI/pr-format-doxygen","description":"Successfully source code(s) includes doxygen document correctly.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Successfully source code(s) includes doxygen document correctly."
+    cibot_pr_report $TOKEN "success" "CI/pr-format-doxygen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. doxygen documentation."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"failure","context":"CI/pr-format-doxygen","description":"Oooops. The doxygen checker is failed. Please, write doxygen document in your code.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Oooops. The doxygen checker is failed. Please, write doxygen document in your code."
+    cibot_pr_report $TOKEN "failure" "CI/pr-format-doxygen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data "{\"body\":\":octocat: **cibot**: $user_id, **$i** does not include doxygen tags such as $doxygen_rules. You must include the doxygen tags in the source code at least. \"}" \
-    ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+    message=":octocat: **cibot**: $user_id, **$i** does not include doxygen tags such as $doxygen_rules. You must include the doxygen tags in the source code at least."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
 echo "########################################################################################"
@@ -390,28 +374,20 @@ done
 
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. static code analysis tool - cppcheck."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-cppcheck\",\"description\":\"Successfully source code(s) is written without dangerous coding constructs.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/\"}" \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Successfully source code(s) is written without dangerous coding constructs."
+    cibot_pr_report $TOKEN "success" "CI/pr-format-cppcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 elif [[ $check_result == "skip" ]]; then
     echo "[DEBUG] Skipped. static code analysis tool - cppcheck."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-cppcheck\",\"description\":\"Skipped. Your PR does not include c/c++ code(s).\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/\"}" \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Skipped. Your PR does not include c/c++ code(s)."
+    cibot_pr_report $TOKEN "success" "CI/pr-format-cppcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. static code analysis tool - cppcheck."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-cppcheck\",\"description\":\"Oooops. cppcheck is failed. Please, read '$cppcheck_result' for more details.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/\"}" \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Oooops. cppcheck is failed. Please, read $cppcheck_result for more details."
+    cibot_pr_report $TOKEN "failure" "CI/pr-format-cppcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data "{\"body\":\":octocat: **cibot**: $user_id, **$i** includes bug(s). You must fix incorrect coding constructs in the source code before entering a review process. \"}" \
-    ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+    message=":octocat: **cibot**: $user_id, **$i** includes bug(s). You must fix incorrect coding constructs in the source code before entering a review process."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
 
@@ -466,36 +442,26 @@ done
 
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. static code analysis tool - pylint."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-pylint\",\"description\":\"Successfully source code(s) is written without dangerous coding constructs.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/\"}" \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Successfully source code(s) is written without dangerous coding constructs."
+    cibot_pr_report $TOKEN "success" "CI/pr-format-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data "{\"body\":\":octocat: **cibot**: $user_id, We generate a report if there are dangerous coding constructs in your code. Please read ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${py_check_result}.\"}" \
-    ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+    message="We generate a report if there are dangerous coding constructs in your code. Please read ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${py_check_result}."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 
 elif [[ $check_result == "skip" ]]; then
     echo "[DEBUG] Skipped. static code analysis tool - pylint."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-pylint\",\"description\":\"Skipped. Your PR does not include python code(s).\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/\"}" \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Skipped. Your PR does not include python code(s)."
+    cibot_pr_report $TOKEN "success" "CI/pr-format-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 else
     echo "[DEBUG] Failed. static code analysis tool - pylint."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-pylint\",\"description\":\"Oooops. cppcheck is failed. Please, read '$py_check_result' for more details.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/\"}" \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Oooops. cppcheck is failed. Please, read $py_check_result for more details."
+    cibot_pr_report $TOKEN "failure" "CI/pr-format-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data "{\"body\":\":octocat: **cibot**: $user_id, It seems that **$i** includes bug(s). You must fix incorrect coding constructs in the source code before entering a review process. \"}" \
-    ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+    message=":octocat: **cibot**: $user_id, It seems that **$i** includes bug(s). You must fix incorrect coding constructs in the source code before entering a review process."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
 echo "########################################################################################"
@@ -537,32 +503,25 @@ done
 
 # If developer(s) modify *.spec file, let's report an investigation result that checks common errors in the file.
 if [[ spec_modified == "true" ]]; then
+
     # inform PR submitter of a hint in more detail to fix incorrect *.spec file.
     # TODO: Improve the existing handling method in case that developers incorrectly write *.spec file.
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data "{\"body\":\":octocat: **cibot**: [FYI] We inform $user_id of a check result of spec file with rpmlint. If there are some warning(s) or error(s) in your spec file, modify ${i} correctly after reading the report at ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${RPM_SPEC_REPORT_FILE} \"}" \
-    ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+    message=":octocat: **cibot**: [FYI] We inform $user_id of a check result of spec file with rpmlint. If there are some warning(s) or error(s) in your spec file, modify ${i} correctly after reading the report at ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${RPM_SPEC_REPORT_FILE}."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. rpm spec checker."
-        /usr/bin/curl -H "Content-Type: application/json" \
-         -H "Authorization: token "$TOKEN"  " \
-         --data '{"state":"success","context":"CI/pr-format-rpm-spec","description":"Successfully rpm spec checker is done.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-         ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+        message="Successfully rpm spec checker is done."
+        cibot_pr_report $TOKEN "success" "CI/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. rpm spec checker."
-        /usr/bin/curl -H "Content-Type: application/json" \
-         -H "Authorization: token "$TOKEN"  " \
-         --data '{"state":"failure","context":"CI/pr-format-rpm-spec","description":"Oooops. The rpm spec checker is failed.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-         ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+        message="Oooops. The rpm spec checker is failed."
+        cibot_pr_report $TOKEN "failure" "CI/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     fi
 else
     echo "[DEBUG] Skipped. rpm spec checker."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"success","context":"CI/pr-format-rpm-spec","description":"Skipped. rpm spec checker is jumped because you did not modify a spec file.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Skipped. rpm spec checker is jumped because you did not modify a spec file."
+    cibot_pr_report $TOKEN "success" "CI/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 fi
 
@@ -613,16 +572,12 @@ for filename in ../report/000*.patch; do
 done
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. No newline abnormally."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"success","context":"CI/pr-format-nobody","description":"Successfully commit body includes +5 words.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Successfully commit body includes +5 words."
+    cibot_pr_report $TOKEN "success" "CI/pr-format-nobody" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. A newline abnormally found."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"failure","context":"CI/pr-format-nobody","description":"Oooops. Commit message body checker failed. You must write commit message (+5 words) as well as commit title.","target_url":"'${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Oooops. Commit message body checker failed. You must write commit message (+5 words) as well as commit title."
+    cibot_pr_report $TOKEN "failure" "CI/pr-format-nobody" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 fi
 
 
@@ -649,16 +604,12 @@ fi
 
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A timestamp."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-timestamp\",\"description\":\"Successfully the commit has no timestamp error.\",\"target_url\":\"$CISERVER\"}" \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Successfully the commit has no timestamp error."
+    cibot_pr_report $TOKEN "success" "CI/pr-format-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. A timestamp."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-timestamp\",\"description\":\"Timestamp error: files are from the future: ${TIMESTAMP_READ} > (now) ${NOW_READ}.\",\"target_url\":\"$CISERVER\"}" \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Timestamp error: files are from the future: ${TIMESTAMP_READ} > (now) ${NOW_READ}."
+    cibot_pr_report $TOKEN "failure" "CI/pr-format-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 fi
 
 echo "########################################################################################"
@@ -680,16 +631,12 @@ done
 
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A executable bits."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-executable\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/ \"}" \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Successfully, The commits are passed."
+    cibot_pr_report $TOKEN "success" "CI/pr-format-executable" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. A executable bits."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-executable\",\"description\":\"Oooops. The commit has an invalid executable: ${X}. Please turn the executable bits off.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/\"}" \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Oooops. The commit has an invalid executable: ${X}. Please turn the executable bits off."
+    cibot_pr_report $TOKEN "failure" "CI/pr-format-executable" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 fi
 
 echo "########################################################################################"
@@ -716,16 +663,12 @@ fi
 
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A hardcoded paths."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"success\",\"context\":\"CI/pr-format-hardcoded-path\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/\"}" \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Successfully, The commits are passed."
+    cibot_pr_report $TOKEN "success" "CI/pr-format-hardcoded-path" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. A hardcoded paths."
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-hardcoded-path\",\"description\":\"Oooops. The component you are submitting has hardcoded paths that are not allowed in the source. Please do not hardcode paths.\",\"target_url\":\"${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${hardcoded_file}\"}" \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Oooops. The component you are submitting has hardcoded paths that are not allowed in the source. Please do not hardcode paths."
+    cibot_pr_report $TOKEN "failure" "CI/pr-format-hardcoded-path" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 fi
 
 
@@ -739,39 +682,30 @@ source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-format.sh
 ##################################################################################################################
 # --------------------------- Report module: submit check result to github.sec.samsung.net --------------
 # report if all modules are successfully completed or not.
-
+echo "[DEBUG] Varaible global_check_result is $global_check_result."
 if [[ $global_check_result == "success" ]]; then
     # in case of success
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"success","context":"(INFO)CI/pr-format-all","description":"Successfully all format checkers are done. Note that CI bot has two sub-bots such as CI/pr-audit-all and CI/pr-format-all.","target_url":"'$CISERVER${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Successfully all format checkers are done."
+    cibot_pr_report $TOKEN "success" "(INFO)CI/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    echo "[DEBUG] cibot_pr_report $TOKEN success (INFO)CI/pr-format-all $message ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/ ${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of success content to encourage review process
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data '{"body":":octocat: **cibot**: :+1: **(INFO)CI/pr-format-all**: All format modules are passed - it is ready to review! :shipit: Note that CI bot has two sub-bots such as CI/pr-audit-all and CI/pr-format-all."}' \
-    ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+    echo -e "[DEBUG] (INFO)CI/pr-format-all: All format modules are passed - it is ready to review!"
+    echo -e "[DEBUG] :shipit: Note that CI bot has two sub-bots such as CI/pr-audit-all and CI/pr-format-all."
 
 elif [[ $global_check_result == "failure" ]]; then
     # in case of failure
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"failure","context":"(INFO)CI/pr-format-all","description":"Oooops. There is a failed format checker. Update your code correctly after reading error messages.","target_url":"'$CISERVER${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Oooops. There is a failed format checker. Update your code correctly after reading error messages."
+    cibot_pr_report $TOKEN "failure" "(INFO)CI/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint to fix issues
-    /usr/bin/curl -H "Content-Type: application/json" \
-    -H "Authorization: token "$TOKEN"  " \
-    --data '{"body":":octocat: **cibot**: '$user_id', One of the format checkers is failed. If you want to get a hint to fix this issue, please go to '${REPOSITORY_WEB}/wiki/CI-System-for-continuous-integration'."}' \
-    ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
+    message=":octocat: **cibot**: $user_id, One of the format checkers is failed. If you want to get a hint to fix this issue, please go to ${REPOSITORY_WEB}/wiki/."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 
 else
     # in case that CI is broken
-    /usr/bin/curl -H "Content-Type: application/json" \
-     -H "Authorization: token "$TOKEN"  " \
-     --data '{"state":"error","context":"(INFO)CI/pr-format-all","description":"Oooops. It seems that CI bot has bug(s). CI bot has to be fixed.","target_url":"'$CISERVER${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/'"}' \
-     ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+    message="Oooops. It seems that CI bot has bug(s). CI bot has to be fixed."
+    cibot_pr_report $TOKEN "failure" "(INFO)CI/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 fi
 

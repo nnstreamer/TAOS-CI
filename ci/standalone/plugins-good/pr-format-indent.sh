@@ -56,15 +56,11 @@ function pr-format-indent(){
     
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. A indent formatting style."
-        /usr/bin/curl -H "Content-Type: application/json" \
-         -H "Authorization: token "$TOKEN"  " \
-         --data "{\"state\":\"success\",\"context\":\"CI/pr-format-indent\",\"description\":\"Successfully, The commits are passed.\",\"target_url\":\"${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${indent_format_file}\"}" \
-         ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+        message="Successfully, The commits are passed."
+        cibot_pr_report $TOKEN "success" "CI/pr-format-indent" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. A indent formatting style."
-        /usr/bin/curl -H "Content-Type: application/json" \
-         -H "Authorization: token "$TOKEN"  " \
-         --data "{\"state\":\"failure\",\"context\":\"CI/pr-format-indent\",\"description\":\"Oooops. The component you are submitting with incorrect indent-format style.\",\"target_url\":\"${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${indent_format_file}\"}" \
-         ${GITHUB_WEBHOOK_API}/statuses/$input_commit
+        message="Oooops. The component you are submitting with incorrect indent-format style."
+        cibot_pr_report $TOKEN "failure" "CI/pr-format-indent" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     fi
 }
