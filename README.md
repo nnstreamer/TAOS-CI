@@ -29,6 +29,7 @@ The below diagram shows an overall flow of CI system.
 # Prepare CI Server
 There are two alternatives to maintain your own CI server.
 * Standalone CI server: Use ./standalone/ folder after installing Apache and PHP in case of a small & lightweight project.
+  - If you want to run your own CI server firsthand, please read [Anministrator guide for standalone CI server](ci/standalone/ci-server/README.md)
 * Jenkins CI server: Use ./jenkins/ folder after installing Jenkins software (https://jenkins.io/) in case of a large & scalable project.
 
 CIbot is github webhook handle template for a github repository in order to control and maintain effectively issues and PRs that are submitted by lots of contributors.
@@ -114,6 +115,7 @@ As a final step, press `Add webhook` button. That's all. From now on, enjoy CI w
 ### How to use new CI module
 ##### How to develop new module
 Please append new CI module in `./plugins-{good|ugly}` folder to customize TAOS-CI for your repository. We recommend that you use cibot_comment() and cibot_pr_report() function to send webhook messages to github.sec.samsung.net.
+   - plugins-base: it is a well-maintained collection of CI plugins. A wide rang of Tizen (gbs) and Ubuntu (pdebuild) are included.
    - plugins-good: it is a set of plug-ins that we consider to have good quality code, correct functionality, our preferred license (Apache for the plug-in code).
    - plugins-ugly: it is a set of plug-ins that are not up to par compared to the rest. They might be close to being good quality, but they are missing something - be it a good code review, some documentation, a set of tests, or aging test.
 

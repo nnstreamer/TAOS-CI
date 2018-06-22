@@ -98,8 +98,8 @@ export dir_worker=$dir_worker
 # let's keep the existing result although the same target directory already exists.
 cd $dir_ci
 export dir_commit=${dir_worker}/${input_date}-${input_pr}-${input_commit}
-# --------------------------- CI Trigger ----------------------------------------------------------------------
-message="Triggered. The commit number is $input_commit."
+# --------------------------- CI Trigger (queued) --------------------------------------------------------------------
+message="Trigger: queued. The commit number is $input_commit."
 cibot_pr_report $TOKEN "pending" "(INFO)CI/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 # --------------------------- git-clone module: clone git repository -------------------------------------------------

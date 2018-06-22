@@ -18,7 +18,8 @@
 #  $dir_commit   directory for commits
 #
 # @modules:
-# 1. [MODULE] CI/pr-audit-build-tizen           Check if 'gbs build' can be successfully passed.
+# 1. [MODULE] CI/pr-audit-build-tizen     Check if 'gbs build' can be successfully passed.
+# 1. [MODULE] CI/pr-audit-build-ubuntu    Check if 'pdebuild' can be successfully passed.
 # 2. [MODULE] plugins-good                Plugin group that follow Apache license with good quality"
 # 3. [MODULE] plugins-ugly                Plugin group that does not have evaluation and aging test enough"
 
@@ -111,11 +112,14 @@ message=":dart: **cibot**: $user_id has updated the pull request."
 cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 
 # create new context name to monitor progress status of a checker
-message="Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
-cibot_pr_report $TOKEN "pending" "(INFO)CI/pr-audit-all" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+message="Trigger: queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
+cibot_pr_report $TOKEN "pending" "(INFO)CI/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-message="Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
-cibot_pr_report $TOKEN "pending" "CI/pr-audit-build-tizen" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+message="Trigger: queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
+cibot_pr_report $TOKEN "pending" "CI/pr-audit-build-tizen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+
+message="Trigger: queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
+cibot_pr_report $TOKEN "pending" "CI/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
 # --------------------------- git-clone module: clone git repository -------------------------------------------------
 echo "[DEBUG] Starting pr-audit....\n"
@@ -215,90 +219,25 @@ do
     sleep $WAITTIME
 done
 
-# --------------------------- CI Trigger (GBS starts) ----------------------------------------------------------------------
+# --------------------------- CI Trigger (running) ----------------------------------------------------------------------
 
-echo "[DEBUG] Starting CI trigger to run 'gbs build' command actually."
-message="Triggered and started. The commit number is $input_commit."
-cibot_pr_report $TOKEN "pending" "CI/pr-audit-build-tizen" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+message="Trigger: running. The commit number is $input_commit."
+cibot_pr_report $TOKEN "pending" "(INFO)CI/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-echo "[DEBUG] Make sure commit all changes before running this checker."
-pwd
+echo "[DEBUG] Starting CI trigger to run 'gbs build (for Tizen)' command actually."
+message="Trigger: running. The commit number is $input_commit."
+cibot_pr_report $TOKEN "pending" "CI/pr-audit-build-tizen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-echo "[MODULE] CI/pr-audit-build-tizen: Check if 'gbs build' can be successfully passed."
+echo "[DEBUG] Starting CI trigger to run 'pdebuild (for Ubuntu)' command actually."
+message="Trigger: running. The commit number is $input_commit."
+cibot_pr_report $TOKEN "pending" "CI/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-if [[ $BUILD_MODE == 99 ]]; then
-    echo -e "BUILD_MODE = 99"
-    echo -e "Skipping 'gbs build' procedure temporarily."
-elif [[ $BUILD_MODE == 1 ]]; then
-    echo -e "BUILD_MODE = 1"
-    sudo -Hu www-data gbs build \
-    -A x86_64 \
-    --clean \
-    --define "_smp_mflags -j${CPU_NUM}" \
-    --define "_pr_context pr-audit" \
-    --define "_pr_number ${input_pr}" \
-    --define "__ros_verify_enable 1" \
-    --define "_pr_start_time ${input_date}" \
-    --define "_skip_debug_rpm 1" \
-    --buildroot ./GBS-ROOT/  | tee ../report/build_log_${input_pr}_output.txt
-else
-    echo -e "BUILD_MODE = 0"
-    sudo -Hu www-data gbs build \
-    -A x86_64 \
-    --clean \
-    --define "_smp_mflags -j${CPU_NUM}" \
-    --define "_pr_context pr-audit" \
-    --define "_pr_number ${input_pr}" \
-    --define "__ros_verify_enable 1" \
-    --define "_pr_start_time ${input_date}" \
-    --define "_skip_debug_rpm 1" \
-    --buildroot ./GBS-ROOT/ 2> ../report/build_log_${input_pr}_error.txt 1> ../report/build_log_${input_pr}_output.txt
-fi
-result=$?
-
-if [[ $BUILD_MODE == 99 ]]; then
-    # Do not run "gbs build" command in order to skip unnecessary examination if there are no buildable files.
-    echo -e "BUILD_MODE == 99"
-    echo -e "[DEBUG] Let's skip the 'gbs build' procedure because there is not source code. All files may be skipped."
-    echo -e "[DEBUG] So, we stop remained all tasks at this time."
-
-    message="Skipped gbs build procedure. No buildable files found. Commit number is $input_commit."
-    cibot_pr_report $TOKEN "success" "CI/pr-audit-build-tizen" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
-
-    message="Skipped gbs build procedure. Successfully all audit modules are passed. Commit number is $input_commit."
-    cibot_pr_report $TOKEN "success" "(INFO)CI/pr-audit-all" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
-
-    echo -e "[DEBUG] All audit modules are passed (gbs build procedure is skipped) - it is ready to review! :shipit: Note that CI bot has two sub-bots such as CI/pr-audit-all and CI/pr-format-all."
-else
-    echo -e "BUILD_MODE != 99"
-    echo -e "[DEBUG] The return value of gbs build command is $result."
-    # Let's check if build procedure is normally done.
-    if [[ $result -eq 0 ]]; then
-            echo "[DEBUG][PASSED] Successfully build checker is passed. Return value is ($result)."
-            check_result="success"
-    else
-            echo "[DEBUG][FAILED] Oooops!!!!!! build checker is failed. Return value is ($result)."
-            check_result="failure"
-            global_check_result="failure"
-    fi
-   
-    # Let's report build result of source code 
-    if [[ $check_result == "success" ]]; then
-        message="Successfully a build checker is passed. Commit number is '$input_commit'."
-        cibot_pr_report $TOKEN "success" "CI/pr-audit-build-tizen" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
-    else
-        message="Oooops. A build checker is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-        cibot_pr_report $TOKEN "failure" "CI/pr-audit-build-tizen" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
-    
-        # comment a hint on failed PR to author.
-        message=":octocat: **cibot**: $user_id, A builder checker could not be completed because one of the checkers is not completed. In order to find out a reason, please go to ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/."
-        cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
-    fi
-fi
+# ----------------------------------------------------------------------------------------------------------------------
 
 ##################################################################################################################
+echo "[MODULE] plugins-base: Plugin group that does have well-maintained features as a base module."
 echo "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
-echo "[MODULE] plugins-ugly: Plugin group that does not have evaluation and aging test enough"
+echo "[MODULE] plugins-ugly: Plugin group that does not has evaluation and aging test enough"
 echo "Current path: $(pwd)."
 source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-audit.sh
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-audit.sh"
@@ -352,7 +291,7 @@ echo "send a total report with global_check_result variable. global_check_result
 if [[ $global_check_result == "success" ]]; then
     # The global check is succeeded.
     message="Successfully all audit modules are passed. Commit number is $input_commit."
-    cibot_pr_report $TOKEN "success" "(INFO)CI/pr-audit-all" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "(INFO)CI/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     # If contributors want later, let's inform developers of CI test result to go to a review process as a final step before merging a PR
     echo "[DEBUG] All audit modules are passed - it is ready to review! :shipit:. Note that CI bot has two sub-bots such as CI/pr-audit-all and CI/pr-format-all."
@@ -360,22 +299,25 @@ if [[ $global_check_result == "success" ]]; then
 elif [[ $global_check_result == "failure" ]]; then
     # The global check is failed.
     message="Oooops. One of the audits is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-    cibot_pr_report $TOKEN "failure" "(INFO)CI/pr-audit-all" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_pr_report $TOKEN "failure" "(INFO)CI/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 else
     # The global check is failed due to CI error.
     message="CI Error. There is a bug in CI script. Please contact the CI administrator."
-    cibot_pr_report $TOKEN "error" "(INFO)CI/pr-audit-all" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_pr_report $TOKEN "error" "(INFO)CI/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     echo -e "[DEBUG] It seems that this script has a bug. Please check value of \$global_check_result."
 fi
 
 # --------------------------- Cleaner: remove ./GBS-ROOT/ folder to keep available storage space --------
 # let's do not keep the ./GBS-ROOT/ folder because it needs a storage space more than 9GB on average.
-sleep 5
-echo "Removing ./GBS-ROOT/ folder."
-sudo rm -rf ./GBS-ROOT/
-if [[ $? -ne 0 ]]; then
-        echo "[DEBUG][FAILED] Oooops!!!!!! ./GBS-ROOT folder is not removed."
-else
-        echo "[DEBUG][PASSED] Successfully ./GBS-ROOT folder is removed."
+sleep 3
+
+if [[ -d GBS-ROOT ]]; then
+    echo "Removing ./GBS-ROOT/ folder."
+    sudo rm -rf ./GBS-ROOT/
+    if [[ $? -ne 0 ]]; then
+            echo "[DEBUG][FAILED] Oooops!!!!!! ./GBS-ROOT folder is not removed."
+    else
+            echo "[DEBUG][PASSED] Successfully ./GBS-ROOT folder is removed."
+    fi
 fi
 pwd
