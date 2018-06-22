@@ -18,7 +18,7 @@
 #  $dir_commit   directory for commits
 #
 # @modules:
-# 1. [MODULE] CI/pr-audit-build           Check if 'gbs build' can be successfully passed.
+# 1. [MODULE] CI/pr-audit-build-tizen           Check if 'gbs build' can be successfully passed.
 # 2. [MODULE] plugins-good                Plugin group that follow Apache license with good quality"
 # 3. [MODULE] plugins-ugly                Plugin group that does not have evaluation and aging test enough"
 
@@ -115,7 +115,7 @@ message="Triggered but queued. There are other build jobs and we need to wait.. 
 cibot_pr_report $TOKEN "pending" "(INFO)CI/pr-audit-all" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
 message="Triggered but queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
-cibot_pr_report $TOKEN "pending" "CI/pr-audit-build" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+cibot_pr_report $TOKEN "pending" "CI/pr-audit-build-tizen" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
 # --------------------------- git-clone module: clone git repository -------------------------------------------------
 echo "[DEBUG] Starting pr-audit....\n"
@@ -219,12 +219,12 @@ done
 
 echo "[DEBUG] Starting CI trigger to run 'gbs build' command actually."
 message="Triggered and started. The commit number is $input_commit."
-cibot_pr_report $TOKEN "pending" "CI/pr-audit-build" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+cibot_pr_report $TOKEN "pending" "CI/pr-audit-build-tizen" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
 echo "[DEBUG] Make sure commit all changes before running this checker."
 pwd
 
-echo "[MODULE] CI/pr-audit-build: Check if 'gbs build' can be successfully passed."
+echo "[MODULE] CI/pr-audit-build-tizen: Check if 'gbs build' can be successfully passed."
 
 if [[ $BUILD_MODE == 99 ]]; then
     echo -e "BUILD_MODE = 99"
@@ -263,7 +263,7 @@ if [[ $BUILD_MODE == 99 ]]; then
     echo -e "[DEBUG] So, we stop remained all tasks at this time."
 
     message="Skipped gbs build procedure. No buildable files found. Commit number is $input_commit."
-    cibot_pr_report $TOKEN "success" "CI/pr-audit-build" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "CI/pr-audit-build-tizen" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     message="Skipped gbs build procedure. Successfully all audit modules are passed. Commit number is $input_commit."
     cibot_pr_report $TOKEN "success" "(INFO)CI/pr-audit-all" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
@@ -285,10 +285,10 @@ else
     # Let's report build result of source code 
     if [[ $check_result == "success" ]]; then
         message="Successfully a build checker is passed. Commit number is '$input_commit'."
-        cibot_pr_report $TOKEN "success" "CI/pr-audit-build" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_pr_report $TOKEN "success" "CI/pr-audit-build-tizen" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         message="Oooops. A build checker is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-        cibot_pr_report $TOKEN "failure" "CI/pr-audit-build" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_pr_report $TOKEN "failure" "CI/pr-audit-build-tizen" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     
         # comment a hint on failed PR to author.
         message=":octocat: **cibot**: $user_id, A builder checker could not be completed because one of the checkers is not completed. In order to find out a reason, please go to ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/."
