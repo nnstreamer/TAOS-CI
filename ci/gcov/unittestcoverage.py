@@ -166,8 +166,18 @@ def check_component(path):
   if path[-1:] == '/':
     path = path[:-1]
 
+  buildpath = os.path.join(path, "build")
+  searchlimit = 5
+  buildpathconst = path
+
+  # If path/build does not exist, try path/../build, path/../../build, ... (limit = 5)
+  while ((not os.path.isdir(buildpath)) and searchlimit > 0):
+    searchlimit = searchlimit - 1
+    buildpathconst = os.path.join(buildpathconst, "..")
+    buildpath = os.path.join(buildpathconst, "build")
+
   # Get gcov report from unittests
-  out = os.popen("gcov -p -r -s " + path + " `find " + os.path.join(path, "build/") +
+  out = os.popen("gcov -p -r -s " + path + " `find " + buildpath +
                  " -name *.gcno`").read()
   dprint(out)
   endpoint = len(out) - 1
@@ -194,8 +204,17 @@ def check_component(path):
 ## @brief Check unit test coverage for a specific path. (every code in that path, recursively)
 #
 # @param The audited path.
-def cmd_module(path):
-  (lines, rate) = check_component(path)
+def cmd_module(paths):
+  lines = 0
+  rate = 0
+  countrated = 0
+
+  for path in paths:
+    (l, rate) = check_component(path)
+    lines = lines + l
+    countrated = countrated + (rate * l)
+
+  rate = countrated / lines
   if lines < 0:
     return -1
 
@@ -290,7 +309,7 @@ def main():
   elif (sys.argv[1] == 'all'):
     return cmd_all(arg)
   elif (sys.argv[1] == 'module'):
-    return cmd_module(arg)
+    return cmd_module(sys.argv[2:])
 
   return cmd_help()
 
