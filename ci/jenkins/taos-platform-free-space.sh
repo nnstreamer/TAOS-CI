@@ -17,8 +17,8 @@ mounted_folders="/ /var/www"
 email_cmd="mailx"
 email_recipient="geunsik.lim@samsung.com myungjoo.ham@samsung.com jijoon.moon@samsung.com sangjung.woo@samsung.com \
 wook16.song@samsung.com jy1210.jung@samsung.com jinhyuck83.park@samsung.com hello.ahn@samsung.com \
-sewon.oh@samsung.com kibeom.lee@samsung.com "
-email_subject="[$(date)] Your hard disk is nearly full.".
+sewon.oh@samsung.com kibeom.lee@samsung.com byoungo.kim@samsung.com "
+email_subject="[aaci] Critical:  Your hard disk is nearly full.".
 email_message=" Hi,\n\n Ooops. Your specified partitions ($mounted_folders) are almost full.\n\n $(df -h)\n\n For more details, visit https://github.sec.samsung.net/STAR/TAOS-Platform/issues/.\n\n $(date).\n from aaci.mooo.com.\n"
 PART_QUOTA_GB=10
 
@@ -42,25 +42,20 @@ check_package mailx
 check_package df
 
 # run
-result=0
+
+source /etc/environment
+
 for dir in $mounted_folders; do
     PART_FREE_MB=`df -m --output=avail "$dir" | tail -n1` # df -m not df -h
     PART_FREE_GB=$(($PART_FREE_MB/1024))
     if [[ $PART_FREE_GB -lt $PART_QUOTA_GB ]]; then
         echo "[DEBUG] Oops. '$dir' is almost full. The available space is $PART_FREE_GB Gbytes."
         email_on_failure
-        result=4
-        break
+        exit 4
     else
         echo "[DEBUG] Okay. '$dir' is not full. The available space is $PART_FREE_GB Gbytes."
-        result=0
     fi
 done
 
 # jenkins submit issue according "exit ***" value.
-if [[ $result == 0 ]]; then
-    exit 0
-else
-    exit 4
-fi
-
+exit 0

@@ -2,9 +2,13 @@
 
 # -----------------------------------------------------------------------------------------
 # @author Geunsik Lim <geunsik.lim@samsung.com>
-# @brief Check if Linux system try to use SWAP space.
+# @brief Check if Linux system reports system errors.
 # -----------------------------------------------------------------------------------------
 
+
+#--------- user configuraiton ---------------
+#filter="^"
+filter="error"
 
 # email information
 email_cmd="mailx"
@@ -14,28 +18,31 @@ sewon.oh@samsung.com kibeom.lee@samsung.com byoungo.kim@samsung.com "
 email_subject="[aaci] Warning: Server starts using SWAP memory to avoid OOM."
 email_message=" Hi,\n\n Ooops. The server starts using SWAP memory due to shortage of RAM space.\n\n $(free -h)\n\n For more details, visit https://github.sec.samsung.net/STAR/TAOS-Platform/issues/.\n\n $(date).\n from aaci.mooo.com.\n"
 
-
-
-
 # send e-mail if a partitions is almost full.
 function email_on_failure(){
     echo -e "$email_message" | $email_cmd -v -s  "$email_subject" $email_recipient
 }
 
 # run
+#--------- do not modify from this line -----
+data=`dmesg | tail -n 50`
+error_num=`echo -n "$data" | grep -c "$filter" `
+as_start_criteria=5
 
-source /etc/environment
+echo -e "---------------"
+echo -e "1. Filtering message: \"$filter\" "
+echo -e "2. Report address: https://github.sec.samsung.net "
+echo -e "3. # of errors: $error_num"
+echo -e "4. dmesg data:"
+echo -e "  . . . Omission . . . "
+echo -e "$data"
+echo -e "---------------"
 
-SwapTotal=`awk '/SwapTotal:/ { print $2}' /proc/meminfo`
-SwapFree=`awk '/SwapFree:/ { print $2}' /proc/meminfo`
-echo -e "SwapTotal is $SwapTotal. SwapFree is $SwapFree"
-
-if [[ $SwapFree -lt $SwapTotal ]]; then
+if [[ $error_num -gt $as_start_criteria ]]; then
     email_on_failure
     exit 4
 else
-    echo -e "Good. Linux kernel does not try to use SWAP space."
+    exit 0
 fi
 
-# jenkins submit issue according "exit ***" value.
-exit 0
+
