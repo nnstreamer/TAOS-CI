@@ -7,6 +7,10 @@ PRs causing regressions will not be automatically merged. We are going to report
 - Preventing performance regression
 - Finding bugs at a proper time
 
+<img src=https://github.sec.samsung.net/STAR/TAOS-CI/blob/tizen/screenshot01.png border=0 width=350 height=250></img>
+<img src=https://github.sec.samsung.net/STAR/TAOS-CI/blob/tizen/screenshot02.png border=0 width=350 height=250></img>
+
+
 ## Goals	
 **TAOS-CI** is re-designed and implemented with a light-weight approach based on the existing `AuDri CI` to support a desktop computer based servers that have out-of-date CPUs and low memory capacity. Also, if you want to enable your project specific CI facilities, It will be easily customizable for your github repository because it just requires Apache and PHP package.
 
@@ -15,6 +19,7 @@ TAOS-CI is to prevent regressions and bugs due to incorrect PRs as follows. As a
 * Test automation (both build and run)
 * Preventing Performance regression
 * Finding bugs at a proper time
+
 
 ## Maintainers
 * Geunsik Lim (geunsik.lim@samsung.com)
