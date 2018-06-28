@@ -122,7 +122,7 @@ Press `Hooks` menu - Press `Add webhook` button -
 ```bash
 * Webhooks/ Add webhook
   - Payload URL:
-    http://<your_hostname>.mooo.com/<prj_name>/ci/standalone/cibot.tao
+    http://<your_hostname>.mooo.com/<prj_name>/ci/standalone/cibot.taos
   - Content type: application/x-www-form-urlencoded
   - Secret: ******
   - Which events would you like to trigger this webhook?
