@@ -21,9 +21,15 @@ input_pr=$1
  # --------------------------- Report module: submit check result to github.sec.samsung.net --------------
 # execute automatic comment to handle new PR that include commits more than 2.
 
+if [[ $pr_comment_notice == 1 ]]; then
+    # inform PR submitter of a rule to pass the CI process
+    message="Thank you for submitting PR #${input_pr}. Your PR has to pass all verificiation processes of cibot before getting a review process from reviewers. We recommend that you read instruction manual in `Documentation folder`. If you want to monitor the progress status of your PR in detail, visit ${CISERVER}."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
+fi
+
 if [[ $pr_comment_self_merge == 1 ]]; then
     # inform PR submitter that they do not have to merge their own PR directly.
-    message="Thank you for submitting PR #${input_pr}. Note that you **are not allowed to merge your own PR** directly." 
+    message="Note that **you do not have to merge your own PR** directly."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 

@@ -42,6 +42,10 @@ SKIP_CI_PATHS="^ci/.*|^Documentation/.*|^\.github/.*|^obsolete/.*|^README\.md"
 CPU_NUM=3
 
 #### Automatic PR commenter: enabling(1), disabling(0)
+
+# inform PR submitter of a rule to pass the CI process
+pr_comment_notice=1
+
 # inform all developers of their activity whenever PR submitter resubmit their PR after applying comments of reviews
 pr_comment_pr_updated=0
 
