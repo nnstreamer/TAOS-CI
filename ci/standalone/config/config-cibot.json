@@ -5,7 +5,7 @@
         "from": "git.bot.sec@samsung.com"
     },
     "repo": {
-        "repo": "https://github.sec.samsung.net/STAR/AuDri.git",
+        "repo": "https://github.sec.samsung.net/STAR/nnstreamer.git",
         "branch": "tizen",
         "action": "something has been changed on the server",
         "run": "./run-unit-test.sh"

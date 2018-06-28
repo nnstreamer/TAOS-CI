@@ -21,12 +21,21 @@ input_pr=$1
  # --------------------------- Report module: submit check result to github.sec.samsung.net --------------
 # execute automatic comment to handle new PR that include commits more than 2.
 
-# inform PR submitter that they do not have to merge their own PR directly.
-# message="Thank you for submitting PR #${input_pr}. Note that you **are not allowed to merge your own PR** directly. If your PR has +2 commits, run **'$ git format-patch --cover-letter -{number-of-commits}'** to get a template. Then, paste a content in your PR body."
-# cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
+if [[ $pr_comment_self_merge == 1 ]]; then
+    # inform PR submitter that they do not have to merge their own PR directly.
+    message="Thank you for submitting PR #${input_pr}. Note that you **are not allowed to merge your own PR** directly." 
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
+fi
 
+if [[ $pr_comment_many_commit == 1 ]]; then
+    # infrom PR submitter of how to submit a PR that include lots of commits.
+    message="If you have to submit +2 commits per PR, paste the output in your PR body after running `$ git format-patch --cover-letter -{number-of-commits}`."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
+fi
 
-# inform the developers of the webpage address in order that they can monitor the current status of their PR.
-message="If you want to monitor the current build status of your PR, Please refer to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/standalone/ci-server/monitor.php"
-cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
+if [[ $pr_comment_pr_monitor == 1 ]]; then
+    # inform PR submitter of the webpage address in order that they can monitor the current status of their PR.
+    message="If you want to monitor the current build status of your PR, Please refer to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/standalone/ci-server/monitor.php"
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
+fi
 

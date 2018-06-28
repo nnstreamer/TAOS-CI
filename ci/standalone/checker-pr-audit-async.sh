@@ -107,9 +107,12 @@ do
 done
 
 # --------------------------- CI Trigger (queued) ----------------------------------------------------------------------
-# inform all developers of their activity whenever developers resubmit their PR after applying comments of reviews
-message=":dart: **cibot**: $user_id has updated the pull request."
-cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
+
+if [[ $pr_comment_pr_updated == 1 ]]; then
+    # inform all developers of their activity whenever PR submitter resubmit their PR after applying comments of reviews
+    message=":dart: **cibot**: $user_id has updated the pull request."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
+fi
 
 # create new context name to monitor progress status of a checker
 message="Trigger: queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
