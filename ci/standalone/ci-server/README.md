@@ -218,3 +218,17 @@ $ sudo vi /etc/crontab
 20 * * * * www-data cd /var/www/html/<prj_name>/ ; git pull
 30 * * * * www-data /var/www/html/<prj_name>/doc/book-hard-copy-prj-generate.sh
 ```
+
+## How to use Scancode Toolkit
+
+[ScanCode Toolkit](https://github.com/nexB/scancode-toolkit) is a set of code scanning tools to detect the origin and license of code and dependencies.
+It uses a plug-in architecture to run a series of scan-related tools in one process flow.
+
+```bash
+sudo apt-get install python-dev bzip2 xz-utils zlib1g libxml2-dev libxslt1-dev
+cd /opt
+git clone https://github.com/nexB/scancode-toolkit.git
+sudo chown -R www-data:www-data /opt/scancode-toolkit/
+mkdir  /var/www/html/<prj_name>/scancode/
+/opt/scancode-toolkit/scancode  --license /var/www/html/<prj_name>/  --html-app /var/www/html/<prj_name>/scancode/index.html
+```
