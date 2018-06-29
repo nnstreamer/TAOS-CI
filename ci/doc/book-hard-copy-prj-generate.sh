@@ -62,12 +62,6 @@ function main(){
     # import configuraiotn file of CI
     source ./ci/standalone/config/config-environment.sh
 
-    # make symbolic links (e.g., latex and html) for webpage
-    if [[ -d latex || -f latex ]]; echo "Oooops. latex folder/symbolic exists."; then rm -rf latex; fi
-    if [[ -d html  || -f html  ]]; echo "Oooops. html  folder/symbolic exists."; then rm -rf html ; fi
-    ln -s $SRC_PATH/latex latex
-    ln -s $SRC_PATH/html  html
-
     # let's go to source folder
     # then, run entire procedure to generate doxygen-based pdf book
     pushd $SRC_PATH
@@ -77,6 +71,14 @@ function main(){
     generate_final
     display "[DEBUG] current folder:" $(pwd)
     popd
+
+    # Move 'latex' and 'html' folder to project folder to keep only source code in $SRC_PATH directory.
+    # Note that $SRC_PATH directory has to be used by various utilities.
+    display "[DEBUG] current folder:" $1
+    if [[ -d latex || -f latex ]]; echo "Oooops. latex folder/symbolic exists. Removing that..."; then rm -rf latex; fi
+    if [[ -d html  || -f html  ]]; echo "Oooops. html  folder/symbolic exists. Removing that..."; then rm -rf html ; fi
+    mv $SRC_PATH/latex .
+    mv $SRC_PATH/html  .
 }
 
 ## @dependency: doxygen, make, unoconv, libreoffice, pdftk, pdfunite
