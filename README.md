@@ -31,7 +31,7 @@ TAOS-CI is to prevent regressions and bugs due to incorrect PRs as follows. As a
 * Wook Song (wook16.song@samsung.com)
 * Sewon Oh (sewon.oh@samsung.com) for nnstreamer
 * ByoungOh Kim (byoungo.kim@samsung.com) for AuDri 
-* Seungchul Oh (saint.oh@samsung.com) on-device-api
+* Seungchul Oh (saint.oh@samsung.com) for on-device-api
 
 # Overall flow
 The below diagram shows an overall flow of CI system.
