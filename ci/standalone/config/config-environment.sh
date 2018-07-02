@@ -61,6 +61,9 @@ pr_comment_pr_monitor=0
 
 ################# Do not modify the below statements #################################
 
+# Version format: Major.Minor
+VERSION="1.20180703"
+
 # Connecting to a repository using token id instead of git.bot.sec@samsung.com id
 # because of two-authentification. Refer to https://github.sec.samsung.net/settings/tokens
 TOKEN="01eec554abcaae8755c06c2b06f5d6bb84d4b4a5"
