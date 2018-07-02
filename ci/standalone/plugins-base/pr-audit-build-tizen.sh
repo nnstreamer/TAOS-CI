@@ -9,10 +9,23 @@
 # @requirement
 # $ sudo apt install gbs
 
-# @brief [MODULE] CI/pr-audit-build-tizen
+# @brief [MODULE] TAOS/pr-audit-build-tizen-trigger-queue
+function pr-audit-build-tizen-trigger-queue(){
+    message="Trigger: queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
+    cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-tizen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+}
+
+# @brief [MODULE] TAOS/pr-audit-build-tizen-trigger-run
+function pr-audit-build-tizen-trigger-run(){
+    echo "[DEBUG] Starting CI trigger to run 'gbs build (for Tizen)' command actually."
+    message="Trigger: running. The commit number is $input_commit."
+    cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-tizen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+}
+
+# @brief [MODULE] TAOS/pr-audit-build-tizen
 function pr-audit-build-tizen(){
-    ## [MODULE] CI/pr-audit-build-tizen: Check if 'gbs build' can be successfully passed.
-    echo "[MODULE] CI/pr-audit-build-tizen: Check if 'gbs build' can be successfully passed."
+    ## [MODULE] TAOS/pr-audit-build-tizen: Check if 'gbs build' can be successfully passed.
+    echo "[MODULE] TAOS/pr-audit-build-tizen: Check if 'gbs build' can be successfully passed."
     pwd
 
     # check if dependent packages are installed
@@ -60,10 +73,10 @@ function pr-audit-build-tizen(){
         echo -e "[DEBUG] So, we stop remained all tasks at this time."
     
         message="Skipped gbs build procedure. No buildable files found. Commit number is $input_commit."
-        cibot_pr_report $TOKEN "success" "CI/pr-audit-build-tizen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_pr_report $TOKEN "success" "TAOS/pr-audit-build-tizen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     
         message="Skipped gbs build procedure. Successfully all audit modules are passed. Commit number is $input_commit."
-        cibot_pr_report $TOKEN "success" "(INFO)CI/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_pr_report $TOKEN "success" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     
         echo -e "[DEBUG] All audit modules are passed (gbs build procedure is skipped) - it is ready to review!"
     else
@@ -82,10 +95,10 @@ function pr-audit-build-tizen(){
         # Let's report build result of source code
         if [[ $check_result == "success" ]]; then
             message="Successfully a build checker is passed. Commit number is '$input_commit'."
-            cibot_pr_report $TOKEN "success" "CI/pr-audit-build-tizen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+            cibot_pr_report $TOKEN "success" "TAOS/pr-audit-build-tizen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
         else
             message="Oooops. A build checker is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-            cibot_pr_report $TOKEN "failure" "CI/pr-audit-build-tizen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+            cibot_pr_report $TOKEN "failure" "TAOS/pr-audit-build-tizen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     
             # comment a hint on failed PR to author.
             message=":octocat: **cibot**: $user_id, A builder checker could not be completed because one of the checkers is not completed. In order to find out a reason, please go to ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/."

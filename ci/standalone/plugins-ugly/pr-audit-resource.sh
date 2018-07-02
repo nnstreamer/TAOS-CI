@@ -55,10 +55,10 @@ function pr-audit-resource(){
     echo "report the execution result of resource checker. check_result is ${check_result}. "
     if [[ $check_result == "success" ]]; then
         message="Successfully Resource checker is passed. Commit number is '$input_commit'."
-        cibot_pr_report $TOKEN "success" "CI/pr-audit-resource" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_pr_report $TOKEN "success" "TAOS/pr-audit-resource" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         message="Oooops. Resource checker is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-        cibot_pr_report $TOKEN "failure" "CI/pr-audit-resource" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_pr_report $TOKEN "failure" "TAOS/pr-audit-resource" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     
         # comment a hint on failed PR to author.
         message=":octocat: **cibot**: $user_id, Resource checker could not be completed because not-installed resources exist. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/resource_check_${input_pr}_error.txt."

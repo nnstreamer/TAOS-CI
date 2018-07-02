@@ -10,7 +10,7 @@ echo "[MODULE] plugins-good: Plugin group that follow Apache license with good q
 # Please append your plugin modules here.
 
 echo "pr-format-indent is starting."
-echo "[MODULE] CI/pr-format-indent: Check the code formatting style with GNU indent"
+echo "[MODULE] TAOS/pr-format-indent: Check the code formatting style with GNU indent"
 echo "Current path: $(pwd)."
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/pr-format-indent.sh"
 source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/pr-format-indent.sh
@@ -18,7 +18,7 @@ pr-format-indent
 echo "pr-format-indent is done."
 
 # echo "pr-format-clang is starting."
-# echo "[MODULE] CI/pr-format-clang: Check the code formatting style with clang-format"
+# echo "[MODULE] TAOS/pr-format-clang: Check the code formatting style with clang-format"
 # echo "Current path: $(pwd)."
 # echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/pr-format-clang.sh"
 # source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/pr-format-clang.sh
@@ -26,7 +26,7 @@ echo "pr-format-indent is done."
 # echo "pr-format-clang is done."
 
 echo "pr-format-exclusive-io is starting."
-echo "[MODULE] CI/pr-format-exclusive-vio: Check issue #279. VIO commits should not touch non VIO files."
+echo "[MODULE] TAOS/pr-format-exclusive-vio: Check issue #279. VIO commits should not touch non VIO files."
 echo "Current path: $(pwd)."
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/pr-format-exclusive-vio.sh"
 source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/pr-format-exclusive-vio.sh

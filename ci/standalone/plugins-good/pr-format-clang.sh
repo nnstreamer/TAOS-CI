@@ -5,10 +5,10 @@
 # @brief Check Check the code formatting style with clang-format
 
 ##
-#  @brief [MODULE] CI/pr-format-clang
+#  @brief [MODULE] TAOS/pr-format-clang
 function pr-format-clang(){
     echo "########################################################################################"
-    echo "[MODULE] CI/pr-format-clang: Check the code formatting style with clang-format"
+    echo "[MODULE] TAOS/pr-format-clang: Check the code formatting style with clang-format"
     # Note that you have to install up-to-date clang-format package from llvm project.
     # The clang-format-4.0 package includes git-clang-format as well as clang-format.
     # It has been included by http://archive.ubuntu.com/ubuntu/ by default since Oct-25-2017.
@@ -43,11 +43,11 @@ function pr-format-clang(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. A clang-formatting style."
         message="Successfully, The commits are passed."
-        cibot_pr_report $TOKEN "success" "CI/pr-format-clang" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_pr_report $TOKEN "success" "TAOS/pr-format-clang" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. A clang-formatting style."
         message="Oooops. The component you are submitting with incorrect clang-format style."
-        cibot_pr_report $TOKEN "failure" "CI/pr-format-clang" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_pr_report $TOKEN "failure" "TAOS/pr-format-clang" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 fi
 
 

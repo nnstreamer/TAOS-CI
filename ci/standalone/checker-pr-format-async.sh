@@ -17,16 +17,16 @@
 #  $dir_commit   directory is commit folder
 #
 # @modules:
-# "[MODULE] CI/pr-format-file-size      Check the file size to not include big binary files"
-# "[MODULE] CI/pr-format-newline        Check the illegal newline handlings in text files"
-# "[MODULE] CI/pr-format-doxygen        Check documenting code using doxygen in text files"
-# "[MODULE] CI/pr-format-cppcheck       Check dangerous coding constructs in source codes (*.c, *.cpp) with cppcheck"
-# "[MODULE] CI/pr-format-pylint         Check dangerous coding constructs in source codes (*.py) with pylint"
-# "[MODULE] CI/pr-format-rpm-spec       Check the spec file with rpmlint"
-# "[MODULE] CI/pr-format-nobody         Check the commit message body"
-# "[MODULE] CI/pr-format-timestamp      Check the timestamp of the commit"
-# "[MODULE] CI/pr-format-executable     Check executable bits for .cpp, .h, .hpp, .c, .caffemodel, .prototxt, .txt."
-# "[MODULE] CI/pr-format-hardcoded-path Check prohibited hardcoded paths (/home/* for now)"
+# "[MODULE] TAOS/pr-format-file-size      Check the file size to not include big binary files"
+# "[MODULE] TAOS/pr-format-newline        Check the illegal newline handlings in text files"
+# "[MODULE] TAOS/pr-format-doxygen        Check documenting code using doxygen in text files"
+# "[MODULE] TAOS/pr-format-cppcheck       Check dangerous coding constructs in source codes (*.c, *.cpp) with cppcheck"
+# "[MODULE] TAOS/pr-format-pylint         Check dangerous coding constructs in source codes (*.py) with pylint"
+# "[MODULE] TAOS/pr-format-rpm-spec       Check the spec file with rpmlint"
+# "[MODULE] TAOS/pr-format-nobody         Check the commit message body"
+# "[MODULE] TAOS/pr-format-timestamp      Check the timestamp of the commit"
+# "[MODULE] TAOS/pr-format-executable     Check executable bits for .cpp, .h, .hpp, .c, .caffemodel, .prototxt, .txt."
+# "[MODULE] TAOS/pr-format-hardcoded-path Check prohibited hardcoded paths (/home/* for now)"
 # "[MODULE] plugins-good                Plugin group that follow Apache license with good quality"
 # "[MODULE] plugins-ugly                Plugin group that does not have evaluation and aging test enough"
 #
@@ -100,7 +100,7 @@ cd $dir_ci
 export dir_commit=${dir_worker}/${input_date}-${input_pr}-${input_commit}
 # --------------------------- CI Trigger (queued) --------------------------------------------------------------------
 message="Trigger: queued. The commit number is $input_commit."
-cibot_pr_report $TOKEN "pending" "(INFO)CI/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 # --------------------------- git-clone module: clone git repository -------------------------------------------------
 echo "[DEBUG] Starting pr-format....\n"
@@ -152,7 +152,7 @@ global_check_result="success"
 
 
 echo "########################################################################################"
-echo "[MODULE] CI/pr-format-file-size: Check the file size to not include big binary files"
+echo "[MODULE] TAOS/pr-format-file-size: Check the file size to not include big binary files"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for i in ${FILELIST}; do
@@ -180,11 +180,11 @@ i_filename=$(basename $i)
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. File size."
     message="Successfully all files are passed without any issue of file size."
-    cibot_pr_report $TOKEN "success" "CI/pr-format-filesize" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "TAOS/pr-format-filesize" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. File size."
     message="Oooops. File size checker is failed at $i_filename."
-    cibot_pr_report $TOKEN "failure" "CI/pr-format-filesize" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "failure" "TAOS/pr-format-filesize" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
     message=":octocat: **cibot**: '$user_id', It seems that there are big files that exceed 5MB in your PR. Please resubmit your PR after reducing '$i' size."
@@ -192,7 +192,7 @@ else
 fi
 
 echo "########################################################################################"
-echo "[MODULE] CI/pr-format-newline: Check the illegal newline handlings in text files"
+echo "[MODULE] TAOS/pr-format-newline: Check the illegal newline handlings in text files"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for i in ${FILELIST}; do
@@ -228,11 +228,11 @@ i_filename=$(basename $i)
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. No newline anomaly."
     message="Successfully all text files are passed without newline issue."
-    cibot_pr_report $TOKEN "success" "CI/pr-format-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "TAOS/pr-format-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. A newline anomaly happened."
     message="Oooops. New line checker is failed at $i_filename."
-    cibot_pr_report $TOKEN "failure" "CI/pr-format-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "failure" "TAOS/pr-format-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
     message=":octocat: **cibot**: $user_id, There is a newline issue. The final line of a text file should have newline character. Please resubmit your PR after fixing end of line in $i."
@@ -240,7 +240,7 @@ else
 fi
 
 echo "########################################################################################"
-echo "[MODULE] CI/pr-format-doxygen: Check documenting code using doxygen in text files"
+echo "[MODULE] TAOS/pr-format-doxygen: Check documenting code using doxygen in text files"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for i in ${FILELIST}; do
@@ -316,11 +316,11 @@ done
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. doxygen documentation."
     message="Successfully source code(s) includes doxygen document correctly."
-    cibot_pr_report $TOKEN "success" "CI/pr-format-doxygen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "TAOS/pr-format-doxygen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. doxygen documentation."
     message="Oooops. The doxygen checker is failed. Please, write doxygen document in your code."
-    cibot_pr_report $TOKEN "failure" "CI/pr-format-doxygen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "failure" "TAOS/pr-format-doxygen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
     message=":octocat: **cibot**: $user_id, **$i** does not include doxygen tags such as $doxygen_rules. You must include the doxygen tags in the source code at least."
@@ -328,7 +328,7 @@ else
 fi
 
 echo "########################################################################################"
-echo "[MODULE] CI/pr-format-cppcheck: Check dangerous coding constructs in source codes (*.c, *.cpp) with cppcheck"
+echo "[MODULE] TAOS/pr-format-cppcheck: Check dangerous coding constructs in source codes (*.c, *.cpp) with cppcheck"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for i in ${FILELIST}; do
@@ -375,15 +375,15 @@ done
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. static code analysis tool - cppcheck."
     message="Successfully source code(s) is written without dangerous coding constructs."
-    cibot_pr_report $TOKEN "success" "CI/pr-format-cppcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "TAOS/pr-format-cppcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 elif [[ $check_result == "skip" ]]; then
     echo "[DEBUG] Skipped. static code analysis tool - cppcheck."
     message="Skipped. Your PR does not include c/c++ code(s)."
-    cibot_pr_report $TOKEN "success" "CI/pr-format-cppcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "TAOS/pr-format-cppcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. static code analysis tool - cppcheck."
     message="Oooops. cppcheck is failed. Please, read $cppcheck_result for more details."
-    cibot_pr_report $TOKEN "failure" "CI/pr-format-cppcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "failure" "TAOS/pr-format-cppcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
     message=":octocat: **cibot**: $user_id, **$i** includes bug(s). You must fix incorrect coding constructs in the source code before entering a review process."
@@ -392,7 +392,7 @@ fi
 
 
 echo "########################################################################################"
-echo "[MODULE] CI/pr-format-pylint: Check dangerous coding constructs in source codes (*.py) with pylint"
+echo "[MODULE] TAOS/pr-format-pylint: Check dangerous coding constructs in source codes (*.py) with pylint"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for i in ${FILELIST}; do
@@ -443,7 +443,7 @@ done
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. static code analysis tool - pylint."
     message="Successfully source code(s) is written without dangerous coding constructs."
-    cibot_pr_report $TOKEN "success" "CI/pr-format-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "TAOS/pr-format-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
     message="We generate a report if there are dangerous coding constructs in your code. Please read ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${py_check_result}."
@@ -452,12 +452,12 @@ if [[ $check_result == "success" ]]; then
 elif [[ $check_result == "skip" ]]; then
     echo "[DEBUG] Skipped. static code analysis tool - pylint."
     message="Skipped. Your PR does not include python code(s)."
-    cibot_pr_report $TOKEN "success" "CI/pr-format-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "TAOS/pr-format-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 else
     echo "[DEBUG] Failed. static code analysis tool - pylint."
     message="Oooops. cppcheck is failed. Please, read $py_check_result for more details."
-    cibot_pr_report $TOKEN "failure" "CI/pr-format-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "failure" "TAOS/pr-format-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
     message=":octocat: **cibot**: $user_id, It seems that **$i** includes bug(s). You must fix incorrect coding constructs in the source code before entering a review process."
@@ -465,7 +465,7 @@ else
 fi
 
 echo "########################################################################################"
-echo "[MODULE] CI/pr-format-rpm-spec: Check the spec file with rpmlint"
+echo "[MODULE] TAOS/pr-format-rpm-spec: Check the spec file with rpmlint"
 spec_modified="false"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
@@ -512,21 +512,21 @@ if [[ spec_modified == "true" ]]; then
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. rpm spec checker."
         message="Successfully rpm spec checker is done."
-        cibot_pr_report $TOKEN "success" "CI/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_pr_report $TOKEN "success" "TAOS/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. rpm spec checker."
         message="Oooops. The rpm spec checker is failed."
-        cibot_pr_report $TOKEN "failure" "CI/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_pr_report $TOKEN "failure" "TAOS/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     fi
 else
     echo "[DEBUG] Skipped. rpm spec checker."
     message="Skipped. rpm spec checker is jumped because you did not modify a spec file."
-    cibot_pr_report $TOKEN "success" "CI/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "TAOS/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 fi
 
 echo "########################################################################################"
-echo "[MODULE] CI/pr-format-nobody: Check the commit message body"
+echo "[MODULE] TAOS/pr-format-nobody: Check the commit message body"
 check_result="success"
 for filename in ../report/000*.patch; do
     line_count=0
@@ -573,17 +573,17 @@ done
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. No newline abnormally."
     message="Successfully commit body includes +5 words."
-    cibot_pr_report $TOKEN "success" "CI/pr-format-nobody" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "TAOS/pr-format-nobody" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. A newline abnormally found."
     message="Oooops. Commit message body checker failed. You must write commit message (+5 words) as well as commit title."
-    cibot_pr_report $TOKEN "failure" "CI/pr-format-nobody" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "failure" "TAOS/pr-format-nobody" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 fi
 
 
 
 echo "########################################################################################"
-echo "[MODULE] CI/pr-format-timestamp: Check the timestamp of the commit"
+echo "[MODULE] TAOS/pr-format-timestamp: Check the timestamp of the commit"
 check_result="success"
 TIMESTAMP=`git show --pretty="%ct" --no-notes -s`
 TIMESTAMP_READ=`git show --pretty="%cD" --no-notes -s`
@@ -605,15 +605,15 @@ fi
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A timestamp."
     message="Successfully the commit has no timestamp error."
-    cibot_pr_report $TOKEN "success" "CI/pr-format-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "TAOS/pr-format-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. A timestamp."
     message="Timestamp error: files are from the future: ${TIMESTAMP_READ} > (now) ${NOW_READ}."
-    cibot_pr_report $TOKEN "failure" "CI/pr-format-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "failure" "TAOS/pr-format-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 fi
 
 echo "########################################################################################"
-echo "[MODULE] CI/pr-format-executable: Check executable bits for .cpp, .h, .hpp, .c, .caffemodel, .prototxt, .txt."
+echo "[MODULE] TAOS/pr-format-executable: Check executable bits for .cpp, .h, .hpp, .c, .caffemodel, .prototxt, .txt."
 # Please add more types if you feel proper.
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for X in $FILELIST; do
@@ -632,15 +632,15 @@ done
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A executable bits."
     message="Successfully, The commits are passed."
-    cibot_pr_report $TOKEN "success" "CI/pr-format-executable" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "TAOS/pr-format-executable" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. A executable bits."
     message="Oooops. The commit has an invalid executable: ${X}. Please turn the executable bits off."
-    cibot_pr_report $TOKEN "failure" "CI/pr-format-executable" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "failure" "TAOS/pr-format-executable" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 fi
 
 echo "########################################################################################"
-echo "[MODULE] CI/pr-format-hardcoded-path: Check prohibited hardcoded paths (/home/* for now)"
+echo "[MODULE] TAOS/pr-format-hardcoded-path: Check prohibited hardcoded paths (/home/* for now)"
 hardcoded_file="hardcoded-path.txt"
 if [[ -f ../report/${hardcoded_file}.tmp ]]; then
     rm -f ../report/${hardcoded_file}.tmp
@@ -664,11 +664,11 @@ fi
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A hardcoded paths."
     message="Successfully, The commits are passed."
-    cibot_pr_report $TOKEN "success" "CI/pr-format-hardcoded-path" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "TAOS/pr-format-hardcoded-path" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. A hardcoded paths."
     message="Oooops. The component you are submitting has hardcoded paths that are not allowed in the source. Please do not hardcode paths."
-    cibot_pr_report $TOKEN "failure" "CI/pr-format-hardcoded-path" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "failure" "TAOS/pr-format-hardcoded-path" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 fi
 
 
@@ -686,17 +686,17 @@ echo "[DEBUG] Varaible global_check_result is $global_check_result."
 if [[ $global_check_result == "success" ]]; then
     # in case of success
     message="Successfully all format checkers are done."
-    cibot_pr_report $TOKEN "success" "(INFO)CI/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
-    echo "[DEBUG] cibot_pr_report $TOKEN success (INFO)CI/pr-format-all $message ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/ ${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    echo "[DEBUG] cibot_pr_report $TOKEN success (INFO)TAOS/pr-format-all $message ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/ ${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of success content to encourage review process
-    echo -e "[DEBUG] (INFO)CI/pr-format-all: All format modules are passed - it is ready to review!"
-    echo -e "[DEBUG] :shipit: Note that CI bot has two sub-bots such as CI/pr-audit-all and CI/pr-format-all."
+    echo -e "[DEBUG] (INFO)TAOS/pr-format-all: All format modules are passed - it is ready to review!"
+    echo -e "[DEBUG] :shipit: Note that CI bot has two sub-bots such as TAOS/pr-audit-all and TAOS/pr-format-all."
 
 elif [[ $global_check_result == "failure" ]]; then
     # in case of failure
     message="Oooops. There is a failed format checker. Update your code correctly after reading error messages."
-    cibot_pr_report $TOKEN "failure" "(INFO)CI/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "failure" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint to fix issues
     message=":octocat: **cibot**: $user_id, One of the format checkers is failed. If you want to get a hint to fix this issue, please go to ${REPOSITORY_WEB}/wiki/."
@@ -705,7 +705,7 @@ elif [[ $global_check_result == "failure" ]]; then
 else
     # in case that CI is broken
     message="Oooops. It seems that CI bot has bug(s). CI bot has to be fixed."
-    cibot_pr_report $TOKEN "failure" "(INFO)CI/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "failure" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 fi
 

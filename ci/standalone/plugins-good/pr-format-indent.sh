@@ -6,10 +6,10 @@
 #  
 # https://www.gnu.org/software/indent/
 
-# @brief [MODULE] CI/pr-format-indent
+# @brief [MODULE] TAOS/pr-format-indent
 function pr-format-indent(){
     echo "########################################################################################"
-    echo "[MODULE] CI/pr-format-indent: Check the code formatting style with GNU indent"
+    echo "[MODULE] TAOS/pr-format-indent: Check the code formatting style with GNU indent"
     # Note that you have to install up-to-date GNU intent package.
     INDENTFORMAT=NA
     INDENT_COMMAND="indent"
@@ -26,7 +26,7 @@ function pr-format-indent(){
     FILES_IN_COMPILER=$(find $SRC_PATH/ -iname '*.cpp' -o -iname '*.c')
     FILES_TO_BE_TESTED=$(git ls-files $FILES_IN_COMPILER)
     
-    echo "[DEBUG] CI/pr-format-indent: run"
+    echo "[DEBUG] TAOS/pr-format-indent: run"
     # ${INDENT_COMMAND} -i $FILES_TO_BE_TESTED
     indent \
       --braces-on-if-line \
@@ -57,10 +57,10 @@ function pr-format-indent(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. A indent formatting style."
         message="Successfully, The commits are passed."
-        cibot_pr_report $TOKEN "success" "CI/pr-format-indent" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_pr_report $TOKEN "success" "TAOS/pr-format-indent" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. A indent formatting style."
         message="Oooops. The component you are submitting with incorrect indent-format style."
-        cibot_pr_report $TOKEN "failure" "CI/pr-format-indent" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_pr_report $TOKEN "failure" "TAOS/pr-format-indent" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     fi
 }

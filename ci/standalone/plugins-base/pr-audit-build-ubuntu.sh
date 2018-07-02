@@ -19,10 +19,23 @@
 # $ sudo pbuilder create
 # $ ls -al /var/cache/pbuilder/base.tgz
 
-# @brief [MODULE] CI/pr-audit-build-ubuntu
+# @brief [MODULE] TAOS/pr-audit-build-ubuntu-trigger-queue
+function pr-audit-build-ubuntu-trigger-queue(){
+    message="Trigger: queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
+    cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+}
+
+# @brief [MODULE] TAOS/pr-audit-build-ubuntu-trigger-run
+function pr-audit-build-ubuntu-trigger-run(){
+    echo "[DEBUG] Starting CI trigger to run 'pdebuild (for Ubuntu)' command actually."
+    message="Trigger: running. The commit number is $input_commit."
+    cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+}
+
+# @brief [MODULE] TAOS/pr-audit-build-ubuntu
 function pr-audit-build-ubuntu(){
     echo "########################################################################################"
-    echo "[MODULE] CI/pr-audit-build-ubuntu: check build process for Ubuntu distribution"
+    echo "[MODULE] TAOS/pr-audit-build-ubuntu: check build process for Ubuntu distribution"
 
     # check if dependent packages are installed
     # the required packages are pbuilder(pdebuild), debootstrap(debootstrap), and devscripts(debuild)
@@ -33,7 +46,7 @@ function pr-audit-build-ubuntu(){
     check_package debootstrap
     check_package debuild
 
-    echo "[DEBUG] starting CI/pr-audit-build-ubuntu facility"
+    echo "[DEBUG] starting TAOS/pr-audit-build-ubuntu facility"
 
     # build package
     if [[ $BUILD_MODE == 99 ]]; then
@@ -74,12 +87,12 @@ function pr-audit-build-ubuntu(){
         echo -e "[DEBUG] So, we stop remained all tasks at this time."
 
         message="Skipped pdebuild procedure. No buildable files found. Commit number is $input_commit."
-        cibot_pr_report $TOKEN "success" "CI/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_pr_report $TOKEN "success" "TAOS/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         message="Skipped pdebuild procedure. Successfully all audit modules are passed. Commit number is $input_commit."
-        cibot_pr_report $TOKEN "success" "(INFO)CI/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_pr_report $TOKEN "success" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-        echo -e "[DEBUG] pdebuild procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as CI/pr-audit-all and CI/pr-format-all."
+        echo -e "[DEBUG] pdebuild procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as TAOS/pr-audit-all and TAOS/pr-format-all."
     else
         echo -e "BUILD_MODE != 99"
         echo -e "[DEBUG] The return value of pdebuild command is $result."
@@ -96,10 +109,10 @@ function pr-audit-build-ubuntu(){
         # Let's report build result of source code
         if [[ $check_result == "success" ]]; then
             message="Successfully  Ubuntu build checker is passed. Commit number is '$input_commit'."
-            cibot_pr_report $TOKEN "success" "CI/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+            cibot_pr_report $TOKEN "success" "TAOS/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
         else
             message="Oooops. Ubuntu  build checker is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-            cibot_pr_report $TOKEN "failure" "CI/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+            cibot_pr_report $TOKEN "failure" "TAOS/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
             # comment a hint on failed PR to author.
             message=":octocat: **cibot**: $user_id, A Ubuntu builder checker could not be completed. To get a hint, please go to ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/."

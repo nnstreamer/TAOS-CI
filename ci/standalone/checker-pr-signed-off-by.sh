@@ -49,8 +49,8 @@ input_commit=$2
 input_result=$3
 
 # --------------------------- CI Trigger ------------------------------------------------------------------------------
-# attach a trigger to CI/pr-signedoff context.
-cibot_pr_report $TOKEN "pending" "CI/pr-signedoff" "Triggered. The commit number is $input_commit" "$CISERVER" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+# attach a trigger to TAOS/pr-signedoff context.
+cibot_pr_report $TOKEN "pending" "TAOS/pr-signedoff" "Triggered. The commit number is $input_commit" "$CISERVER" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 
  # -------------------------- Report module: submit check result to github.sec.samsung.net ----------------------------
@@ -60,11 +60,11 @@ cibot_pr_report $TOKEN "pending" "CI/pr-signedoff" "Triggered. The commit number
 if [[ $input_result == "success" ]]; then
     # in case of success
     message="Successfully signedoff! This PR includes Signed-off-by: string."
-    cibot_pr_report $TOKEN "success" "CI/pr-signedoff" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_pr_report $TOKEN "success" "TAOS/pr-signedoff" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 elif [[ $input_result == "failure" ]]; then
     # in case of failure
     message="Oooops. No signedoff found. This PR does not include 'Signed-off-by:' string. The lawyers tell us we must have it."
-    cibot_pr_report $TOKEN "failure" "CI/pr-signedoff" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_pr_report $TOKEN "failure" "TAOS/pr-signedoff" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform contributors of meaning of Signed-off-by: statement
     message="To contributor, We have used '**Signed-off-by:**' notation by default to handle the license issues, that result from contributors. Note that 'Is there a Signed-off-by line?' is important because lawyers tell us we must have to it **to cleanly maintain the license issues** such as GPL and LGPL even though it has nothing to do with the code itself."
@@ -72,5 +72,5 @@ elif [[ $input_result == "failure" ]]; then
 else
     # in case of CI error
     message="Oooops. It seems that CI bot includes bug(s). CI bot has to be fixed."
-    cibot_pr_report $TOKEN "error" "CI/pr-signedoff" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_pr_report $TOKEN "error" "TAOS/pr-signedoff" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 fi
