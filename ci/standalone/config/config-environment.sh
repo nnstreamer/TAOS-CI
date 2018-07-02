@@ -77,6 +77,10 @@ pr_comment_pr_monitor=0
 #### Build test: Write build type to test ex) "x86_64 armv7l" 
 pr_build_arch_type="x86_64"
 
+### Check level of doxygen tag:
+# Basic = 0 (@file + @brief)
+# Advanced = 1 (Basic + "@author, @bug and functions with ctags")
+pr_doxygen_check_level=0
 
 #### File size limit
 # unit of the file size is MB.

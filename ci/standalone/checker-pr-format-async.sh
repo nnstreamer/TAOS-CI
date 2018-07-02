@@ -87,6 +87,7 @@ check_package rpmlint
 check_package aha
 check_package stat
 check_package curl
+check_package ctags
 echo "[DEBUG] Checked dependency packages.\n"
 
 # get user ID from the input_repo string
@@ -264,46 +265,91 @@ echo "##########################################################################
 echo "[MODULE] TAOS/pr-format-doxygen: Check documenting code using doxygen in text files"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
-for i in ${FILELIST}; do
+for curr_file in ${FILELIST}; do
     # if a current file is located in $SKIP_CI_PATHS folder, let's skip the inspection process
-    if [[ "$i" =~ ($SKIP_CI_PATHS)$ ]]; then
+    if [[ "$curr_file" =~ ($SKIP_CI_PATHS)$ ]]; then
         echo "[DEBUG] $file may be skipped because it is located in teh \"$SKIP_CI_PATHS\"."
         continue
     fi
 
     # Handle only text files in case that there are lots of files in one commit.
-    echo "[DEBUG] file name is ( $i ) . "
-    if [[ `file $i | grep "ASCII text" | wc -l` -gt 0 ]]; then
+    echo "[DEBUG] file name is ( $curr_file ) . "
+    if [[ `file $curr_file | grep "ASCII text" | wc -l` -gt 0 ]]; then
         # in case of source code files: *.c|*.h|*.cpp|*.py|*.sh|*.php )
-        case $i in
+        case $curr_file in
             # in case of C/C++ code
             *.c|*.h|*.cpp|*.hpp )
-                echo "[DEBUG] ( $i ) file is  source code with the text format."
+                echo "[DEBUG] ( $curr_file ) file is  source code with the text format."
                 doxygen_lang="doxygen-cncpp"
                 # Append a doxgen rule step by step
-                doxygen_rules="@file @brief"
-                doxygen_rule_num=0
-                doxygen_rule_all=0
-                for word in $doxygen_rules
+                doxygen_basic_rules="@file @brief" # @file and @brief to inspect file
+                doxygen_advanced_rules="@author @bug" # @author, @bug to inspect file, @brief for to inspect function
+                check_result="success"
+
+                # Apply advanced doxygen rule if pr_doxygen_check_level=1 in config-environment.sh
+                if [[ $pr_doxygen_check_level == 1 ]]; then
+                    doxygen_basic_rules="$doxygen_basic_rules $doxygen_advanced_rules"
+                fi
+
+                for word in $doxygen_basic_rules
                 do
                     echo "[DEBUG] $doxygen_lang: doxygen tag for current $doxygen_lang code is $word."
-                    doxygen_rule_all=$(( doxygen_rule_all + 1 ))
-                    doxygen_rule[$doxygen_rule_all]=`cat ${i} | grep "$word" | wc -l`
-                    doxygen_rule_num=$(( $doxygen_rule_num + ${doxygen_rule[$doxygen_rule_all]} ))
+                    doxygen_rule_compare_count=`cat ${curr_file} | grep "$word" | wc -l`
+                    doxygen_rule_expect_count=1
+                    
+                    # Doxygen_rule_compare_count: real number of doxygen tag in file
+                    # Doxygen_rule_expect_count: required number of doxygen tag 
+                    if [[ $doxygen_rule_compare_count -lt $doxygen_rule_expect_count ]]; then
+                        echo "[DEBUG] $doxygen_lang: failed. file name: $curr_file, $word tag is required at the top of file"
+                        check_result="failure"
+                        global_check_result="failure"
+                    fi	
                 done
-                if  [[ $doxygen_rule_num -le 0 ]]; then
-                    echo "[DEBUG] $doxygen_lang: failed. file name: $i, ($doxygen_rule_num)/$doxygen_rule_all tags are found."
-                    check_result="failure"
-                    global_check_result="failure"
+                
+                # Checking tags for each function
+                if [[ $pr_doxygen_check_level == 1 ]]; then
+                    declare -i idx=0
+                    function_positions="" # Line number of functions.
+
+                    # Find line number of functions using ctags, and append them.
+                    while IFS='' read -r line || [[ -n "$line" ]]; do
+                        temp=`echo $line | cut -d ' ' -f3`
+                        function_positions="$function_positions $temp "
+                    done < <(ctags -x --c-kinds=f $curr_file)
+
+                    # Checking commited file line by line for detailed hints when missing doxygen tags.
+                    while IFS='' read -r line || [[ -n "$line" ]]; do
+                        idx+=1
+                        
+                        # Check if a function has @brief tag or not.
+                        if [[ $function_positions =~ " $idx " && $brief -eq 0 ]]; then
+                            echo "[DEBUG] File name: $curr_file, $idx line, `echo $line | cut -d ' ' -f1` function needs @brief tag "
+                            check_result="failure"
+                            global_check_result="failure"
+                        fi
+
+                        # Find brief tag in the comments between the codes.
+                        if [[ $line =~  "@brief" ]]; then 
+                            brief=1
+                        elif [[ $line != *"*"*  && ( $line =~ ";" || $line =~ "}" ) ]]; then  # The tag you find is used in this line.
+                            brief=0
+                        fi
+                        
+                    done < "$curr_file"
+                fi
+
+                if  [[ $check_result == "failure" ]]; then
+                    message=":octocat: **cibot**: $user_id, You wrote code with incorrect doxygen statements. Please check a doxygen rule at"
+                    message="$message http://github.sec.samsung.net/STAR/TAOS-CI/blob/tizen/ci/doc/doxygen-documentation.md"
+                    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
                     break
                 else
-                    echo "[DEBUG] $doxygen_lang: passed. file name: $i, ($doxygen_rule_num)/$doxygen_rule_all tags are found."
-                    check_result="success"
+                    echo "[DEBUG] $doxygen_lang: passed. file name: $curr_file, All tags are found."
                 fi
                 ;;
             # in case of Python code
             *.py )
-                echo "[DEBUG] ( $i ) file is  source code with the text format."
+                echo "[DEBUG] ( $curr_file ) file is  source code with the text format."
                 doxygen_lang="doxygen-python"
                 # Append a doxgen rule step by step
                 doxygen_rules="@package @brief"
@@ -313,21 +359,21 @@ for i in ${FILELIST}; do
                 do
                     echo "[DEBUG] $doxygen_lang: doxygen tag for current $doxygen_lang code is $word."
                     doxygen_rule_all=$(( doxygen_rule_all + 1 ))
-                    doxygen_rule[$doxygen_rule_all]=`cat ${i} | grep "$word" | wc -l`
+                    doxygen_rule[$doxygen_rule_all]=`cat ${curr_file} | grep "$word" | wc -l`
                     doxygen_rule_num=$(( $doxygen_rule_num + ${doxygen_rule[$doxygen_rule_all]} ))
                 done
                 if  [[ $doxygen_rule_num -le 0 ]]; then
-                    echo "[DEBUG] $doxygen_lang: failed. file name: $i, ($doxygen_rule_num)/$doxygen_rule_all tags are found."
+                    echo "[DEBUG] $doxygen_lang: failed. file name: $curr_file, ($doxygen_rule_num)/$doxygen_rule_all tags are found."
                     check_result="failure"
                     global_check_result="failure"
                     break
                 else
-                    echo "[DEBUG] $doxygen_lang: passed. file name: $i, ($doxygen_rule_num)/$doxygen_rule_all tags are found."
+                    echo "[DEBUG] $doxygen_lang: passed. file name: $curr_file, ($doxygen_rule_num)/$doxygen_rule_all tags are found."
                     check_result="success"
                 fi
                 ;;
             * )
-                echo "[DEBUG] ( $i ) file is not source code with the text format."
+                echo "[DEBUG] ( $curr_file ) file is not source code with the text format."
                 check_result="success"
                 ;;
         esac
