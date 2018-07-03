@@ -36,20 +36,18 @@ TAOS-CI is to prevent regressions and bugs due to incorrect PRs as follows. As a
 # Overall flow
 The below diagram shows an overall flow of CI system.
 ```bash
-
- |<-- Jenkins: Server Diagnosis -->|
- |                                 |
-                       |<--------------------------- Standalone: Automation Area ------------------->|
-                       |                                                                             |
-                       |                                                                             |
-1) Issue --> 2) PR --> 3) Build  ----> 4) Run Test  --> 5) Regression Check --> 6) Review ----> 7) Merged --> 8) Release
-     |          |          |                |                    |                     |                           |
- (developers)   |(CIbot)   |(CIbot)         |(CIbot)         (git blame)           (reviewers)    (reviewers)      |(SR:Submit Request)
-                |          |                |                                                                      |
-                |          |-- Audit Modules`-- Pre-flight                                                         |-- Platform Image
-                |          `-- Unit testing                                                                        `-- DashBoard
-                 `-- Format Modules
-
+ | <----------------------------- Jenkins: Server Diagnosis ------------------------------> |
+                   | <------------ TAOS-CI: Inspect & Verify ------------> | <---- CD ---->
+                   |                                                       |
+  +-----+     +----+     +-------+     +-----+     +--------+     +-------+     +---------+             
+  |Issue| --> | PR | --> | Build | --> | Run | --> | Review | --> | Merged| --> | Release |
+  +-----+     +----+     +-------+     +-----+     +--------+     +-------+     +---------+ 
+     |          |           |             |             |             |             |
+  (user)     (user)      (CIbot)          |(CIbot)   (reviewers)  (reviewers)       |-- SR(Submit Request)
+                |           |         git blame            scancode --|             |  
+                |           |-- Audit Modules                  Doxygen Book         |-- Pre-flight   
+                |      Unit testing                                                 `Tizen PMB(Image)
+                 `Format Modules                                                   
 ```
 
 # Prepare CI Server
