@@ -51,7 +51,7 @@ The below diagram shows an overall flow of CI system.
 ```
 
 # How to install
-Please refer to [How to install TAOS-CI](Documentation/how-to-install-taos-ci.md).
+Please refer to [How to install TAOS-CI](ci/doc/how-to-install-taos-ci.md).
 
 # Self assessment: how to build a package
 You have to execute ***gbs build*** command as a self-assessment before submitting your PR.
@@ -63,11 +63,4 @@ $ time gbs build -A aarch64 --clean --include-all
 ```
 
 # How to use new CI module
-### How to develop new module
-Please append new CI module in `./plugins-{good|ugly}` folder to customize TAOS-CI for your repository. We recommend that you use two APIs such as `cibot_comment()` and `cibot_pr_report()` in case that you have to send a webhook message to github.sec.samsung.net.
-   - `plugins-base`: it is a well-maintained collection of CI plugins. A wide rang of Tizen (gbs) and Ubuntu (pdebuild) are included.
-   - `plugins-good`: it is a set of plug-ins that we consider to have good quality code, correct functionality, our preferred license (Apache for the plug-in code).
-   - `plugins-ugly`: it is a set of plug-ins that are not up to par compared to the rest. They might be close to being good quality, but they are missing something - be it a good code review, some documentation, a set of tests, or aging test.
-
-### How to attach new module
-First, open `./config/config-plugins-{format|audit}.sh`. Then, append a function name of a module that you want to attach newly. If you are poor at CI module, we recommend that you refer to the existing examples.
+Please refer to [How to use new CI module](ci/doc/how-to-use-taos-ci-module.md).
