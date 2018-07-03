@@ -32,8 +32,9 @@
 #  $dir_commit   directory for commits
 #
 # @modules:
-# [MODULE] TAOS/pr-audit-build-tizen     Check if 'gbs build' can be successfully passed.
-# [MODULE] TAOS/pr-audit-build-ubuntu    Check if 'pdebuild' can be successfully passed.
+# [MODULE] TAOS/pr-audit-build-tizen-x86_64     Check if 'gbs build -A x86_64' can be successfully passed.
+# [MODULE] TAOS/pr-audit-build-tizen-armv7l     Check if 'gbs build -A armv7l' can be successfully passed.
+# [MODULE] TAOS/pr-audit-build-ubuntu           Check if 'pdebuild' can be successfully passed.
 # [MODULE] plugins-base                Plugin group that consist of a well-maintained modules
 # [MODULE] plugins-good                Plugin group that follow Apache license with good quality
 # [MODULE] plugins-ugly                Plugin group that does not have evaluation and aging test enough
@@ -141,8 +142,11 @@ echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins
 message="Trigger: queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
 cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-echo "[DEBUG] Job is queued to run 'gbs (for Tizen)' command."
-pr-audit-build-tizen-trigger-queue
+for arch in $pr_build_arch_type
+do
+    echo "[DEBUG] Job is queued to run 'gbs build -A $arch(for Tizen)' command."
+    pr-audit-build-tizen-trigger-queue $arch
+done
 
 echo "[DEBUG] Job is queued to run 'pdebuild (for Ubuntu)' command."
 pr-audit-build-ubuntu-trigger-queue
@@ -250,17 +254,24 @@ done
 message="Trigger: running. The commit number is $input_commit."
 cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-echo "[DEBUG] Job is started to run 'gbs (for Tizen)' command."
-pr-audit-build-tizen-trigger-run
+for arch in $pr_build_arch_type
+do
+    echo "[DEBUG] Job is started to run 'gbs build -A $arch(for Tizen)' command."
+    pr-audit-build-tizen-trigger-run $arch
+done
 
 echo "[DEBUG] Job is started to run 'pdebuild (for Ubuntu)' command."
 pr-audit-build-ubuntu-trigger-run
 
-echo "[DEBUG] Compiling the source code to Tizen RPM package."
-pr-audit-build-tizen
+for arch in $pr_build_arch_type
+do
+    echo "[DEBUG] Compiling the source code to Tizen $arch RPM package."
+    pr-audit-build-tizen $arch
+done
 
 echo "[DEBUG] Compiling the source code to Ubuntu DEB package."
 pr-audit-build-ubuntu
+
 
 ##################################################################################################################
 
