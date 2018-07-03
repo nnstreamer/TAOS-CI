@@ -528,29 +528,31 @@ fi
 echo "########################################################################################"
 echo "[MODULE] TAOS/pr-format-nobody: Check the commit message body"
 check_result="success"
+echo "             #### No body check result ####            " > ../report/nobody-result.txt
 for filename in ../report/000*.patch; do
+    echo " * $filename " >> ../report/nobody-result.txt
     line_count=0
     body_count=0
     nobody_result=0
-    #While loop to read line by line
+    # let's do the while-loop statement to read data line by line
     while IFS= read -r line; do
         #If the line starts with "Subject*" then set var to "yes".
         if [[ $line == Subject* ]] ; then
             printline="yes"
             # Just t make each line start very clear, remove in use.
-            echo "----------------------->>"
+            echo "============== commit body: start =====================" >> ../report/nobody-result.txt
             continue
         fi
         #If the line starts with "---*" then set var to "no".
         if [[ $line == ---* ]] ; then
             printline="no"
             # Just to make each line end very clear, remove in use.
-            echo "-----------------------<<"
+            echo "============== commit body: end   =====================" >> ../report/nobody-result.txt
             break
         fi
         # If variable is yes, print the line.
         if [[ $printline == "yes" ]] ; then
-            echo "[DEBUG] $line"
+            echo "[DEBUG] $line"   >> ../report/nobody-result.txt
             line_count=$(echo $line | wc -w)
             body_count=$(($body_count + $line_count))
         fi
