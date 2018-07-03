@@ -39,7 +39,6 @@ function pr-audit-build-ubuntu(){
 
     # check if dependent packages are installed
     # the required packages are pbuilder(pdebuild), debootstrap(debootstrap), and devscripts(debuild)
-    source ./common/inspect_dependency.sh
     check_package sudo
     check_package curl
     check_package pdebuild

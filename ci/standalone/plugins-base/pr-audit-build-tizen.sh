@@ -30,7 +30,6 @@ function pr-audit-build-tizen(){
 
     # check if dependent packages are installed
     # the required packages are gbs.
-    source ./common/inspect_dependency.sh
     check_package sudo
     check_package curl
     check_package gbs
