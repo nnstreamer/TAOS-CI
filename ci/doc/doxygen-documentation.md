@@ -22,20 +22,12 @@ Doxygen is the de facto regular tool for generating documentation from annotated
     ```
 
 # How to generate documentation from source code
-* Two parts are documented with doxygen: `ROS` and `ci`
 * If you want to automatically generate documentation from source code in Linux by using doxygen, proceed as follows:
 
     ```
-    # below are in relative of project folder
-    $ cd ./<your_prj_name>
-
     # for src app
-    $ cd ./src
-    $ doxygen ../Doxyfile.prj
-
-    # for ci
-    $ cd ./ci
-    $ doxygen ../Doxyfile.ci
+    $ cd ./gst
+    $ doxygen ../Doxyfile.prj # from https://github.sec.samsung.net/STAR/TAOS-CI/blob/tizen/ci/Doxyfile.prj
 
     # launch with the browser to view the results
     $ chromium-browser ./html/index.html
@@ -51,6 +43,120 @@ Each file needs to begin with the `@file` command stating the name of the file. 
 Before each function, data structure, and macro you should put a comment block giving at least a brief description using the `@brief` command. A brief description will suffice for your data structures but for your macros and functions you will need to use a few more commands. After your description, you should use the `@param` command to describe all of the parameters to your function. These descriptions should be followed by a description of the return value using the `@return` command. Note: When we say "each" function, that is not a strong statement. You can leave out simple helper functions, like a max() macro, so you do not waste time.
 
 # Case study
+
+### Case study: C/C++
+- https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#cppblock
+
+You have to use comments starting with ** and then the special command.
+
+* C/C++ file doxygen entries:
+```bash
+/**
+ * Copyright (C) 2017 - 2018 Samsung Electronics Co., Ltd. All rights reserved.
+ *
+ * PROPRIETARY/CONFIDENTIAL
+ *
+ * This software is the confidential and proprietary information of
+ * SAMSUNG ELECTRONICS ("Confidential Information"). You shall not
+ * disclose such Confidential Information and shall use it only in
+ * accordance with the terms of the license agreement you entered
+ * into with SAMSUNG ELECTRONICS.  SAMSUNG make no representations
+ * or warranties about the suitability of the software, either
+ * express or implied, including but not limited to the implied
+ * warranties of merchantability, fitness for a particular purpose,
+ * or non-infringement. SAMSUNG shall not be liable for any damages
+ * suffered by licensee as a result of using, modifying or distributing
+ * this software or its derivatives.
+ */
+
+/**
+ * @file   taos_struct.c
+ * @author Gildong Hong <gildong.hong@samsung.com>
+ * @date   1/18/2018
+ * @brief  A taos driver.
+ *
+ * These empty function definitions are provided
+ * so that stdio will build without complaining.
+ * You will need to fill these functions in. This
+ * is the implementation of the TAOS device driver.
+ * Important details about its implementation
+ * should go in these comments.
+ *
+ * @bug     No know bugs.
+ * @todo    Make it do something.
+ */
+int main(void){
+   taos_base_initialize();
+   taos_frame_run();
+   return 0;
+}
+```
+
+* C/C++ function doxygen entries:
+```bash
+/**
+ * @brief	Initialize ring buffer
+ * @param	RingBuff	: Pointer to ring buffer to initialize
+ * @param	buffer		: Pointer to buffer to associate with RingBuff
+ * @param	itemSize	: Size of each buffer item size
+ * @param	count		: Size of ring buffer
+ * @note	Memory pointed by a buffer must have correct alignment of
+ * 			a itemSize, and a count must be a power of 2 and must at
+ * 			least be 2 or greater.
+ * @return	Nothing
+ */
+int RingBuffer_Init(RINGBUFF_T *RingBuff, void *buffer, int itemSize, int count);
+```
+
+* C/C++ struct/class doxygen entries:
+```bash
+/**
+ * @def		RB_VHEAD(rb)
+ * volatile typecasted head index
+ */
+#define RB_VHEAD(rb)              (*(volatile uint32_t *) &(rb)->head)
+
+/**
+ * @brief ring buffer structure
+ */
+typedef struct {
+    void *memBuf; /**<A void * pointing to memory of size bufSize.*/
+    size_t filePos; /**<Current position inside the file.*/
+    size_t bufPos; /**<Curent position inside the buffer.*/
+    size_t bufSize; /**<The size of the buffer.*/
+    size_t bufLen; /**<The actual size of the buffer used.*/
+    enum bigWigFile_type_enum type; /**<The connection type*/
+    int isCompressed; /**<1 if the file is compressed, otherwise 0*/
+    char *fname; /**<Only needed for remote connections. The original URL/filename requested.*/
+} ring_buffer_t;
+
+/**
+ * @brief ring cache structure
+ */
+class ring_cache
+{
+  public:
+
+    /**
+     * An enum type. 
+     * The documentation block cannot be put after the enum! 
+     */
+    enum EnumType
+    {
+      int EVal1,     /**< enum value 1 */
+      int EVal2      /**< enum value 2 */
+    };
+
+    /**
+     * a member function.
+     */
+    void member();
+    
+  protected:
+    int value;       /**< an integer value */
+};
+```
+
 ### Case study: Python
 - https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#pythonblocks
 
@@ -114,62 +220,6 @@ def setValue(self, value):
     return self.__value
 ```
 
-### Case study: C/C++, PHP
-- https://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#cppblock
-
-You have to use comments starting with ** and then the special command.
-```bash
-$ vi ./taos.c
-/**
- * Copyright (C) 2017 - 2018 Samsung Electronics Co., Ltd. All rights reserved.
- *
- * PROPRIETARY/CONFIDENTIAL
- *
- * This software is the confidential and proprietary information of
- * SAMSUNG ELECTRONICS ("Confidential Information"). You shall not
- * disclose such Confidential Information and shall use it only in
- * accordance with the terms of the license agreement you entered
- * into with SAMSUNG ELECTRONICS.  SAMSUNG make no representations
- * or warranties about the suitability of the software, either
- * express or implied, including but not limited to the implied
- * warranties of merchantability, fitness for a particular purpose,
- * or non-infringement. SAMSUNG shall not be liable for any damages
- * suffered by licensee as a result of using, modifying or distributing
- * this software or its derivatives.
- */
-
-/** @file    taos.c
- *  @brief   A taos driver.
- *
- *  These empty function definitions are provided
- *  so that stdio will build without complaining.
- *  You will need to fill these functions in. This
- *  is the implementation of the TAOS device driver.
- *  Important details about its implementation
- *  should go in these comments.
- *
- *  @date    1 Dec 2017
- *  @param   [in] repeat number of times to do nothing
- *  @retval  TRUE Successfully did nothing.
- *  @retval  FALSE Oops, did something.
- *  @bug     No know bugs.
- *  @todo    Make it do something.
- *
- *  Example Usage:
- *  @code
- *    example_core(3); // Do nothing 3 times.
- *  @endcode
- */
-#include "taos_base.h"
-#include "taos_frame.h"
-int mvain(void){
-   taos_base_initialize();
-   taos_base_enable_serivce();
-   taos_frame_run();
-   return 0;
-}
-```
-
 ### Case study: bash
 
 You have to use comments starting with ## and then the special command.
@@ -227,7 +277,7 @@ Below is a simple example of a mainpage you can create yourself.
  *  - Program Name      :   AutoDrive
  *  - Program Details   :   This includes a number of internal modules which
  *  are sensing & perception, planning & control, global map generation, logging & HMI.
- *  This repository consists of ROS-based applications as following:
+ *  This repository consists of TAOS-based applications as following:
  *  1) creates perception information form sensor inputs,
  *  2) handles map & routing information,
  *  3) controls the vehicle,
