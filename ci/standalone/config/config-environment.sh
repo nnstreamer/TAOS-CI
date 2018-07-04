@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 
 ##
+# Copyright 2018 The TAOS-CI Authors. All Rights Reserved.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+##
 # @file config-environment.sh
 # @brief Environment file to control all scripts commonly for CI bot
 #
@@ -19,7 +33,7 @@
 
 #### Repository setting
 # Project name of github.sec.samsung.net
-PRJ_REPO_UPSTREAM="nnstreamer"
+PRJ_REPO_UPSTREAM="TAOS-CI"
 
 # CI Server webaddress. Should end with /
 CISERVER="http://aaci.mooo.com/"
@@ -29,7 +43,7 @@ CISERVER="http://aaci.mooo.com/"
 # Specify a path of source code
 # 1) to check prohibited hardcoded paths (e.g., /home/* for now)
 # 2) to check code formatting sytele with clang-format
-SRC_PATH="./gst/"
+SRC_PATH="./ci/"
 
 # Audit Area (pr-audit)
 # Skip build-checker / unit-test checker if all changes are limited to:
