@@ -97,7 +97,7 @@ cd $dir_ci
 export dir_commit=${dir_worker}/${input_date}-${input_pr}-${input_commit}
 
 # kill PIDs that were previously invoked by checker-pr-audit.sh with the same PR number.
-echo "[DEBUG] Starting killing activity to kill previously invoed checker-pr-audit.sh with the smae PR number.\n"
+echo "[DEBUG] Starting killing activity to kill previously invoked checker-pr-audit.sh with the same PR number.\n"
 ps aux | grep "^www-data.*bash \./checker-pr-audit.sh" | while read line
 do
     victim_pr=`echo $line  | awk '{print $17}'`
