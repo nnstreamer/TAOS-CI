@@ -35,7 +35,7 @@ source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-base/$module_name.sh
 # echo "[DEBUG] $module_name is started."
 # echo "[DEBUG] TAOS/$module_name: Check if Ubuntu deb package is successfully generated."
 # echo "[DEBUG] Current path: $(pwd)."
-source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-base/$module_name.sh
+# source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-base/$module_name.sh
 # Note that do not append the below "$module_name" because build step is implemented as a built-in module partially
 # $module_name
 # echo "[DEBUG] $module_name is done."
