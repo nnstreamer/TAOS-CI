@@ -4,6 +4,14 @@
 # @file  cibot_rest_api.sh
 # @brief API collection to send webhook messages to a github server
 
+
+
+# check if dependent packages are installed to avoid an unexpected program error.
+check_package cut
+check_package wc
+check_package curl
+
+
 ##
 # @brief API to write comment to new pull request with curl
 # @param
@@ -27,10 +35,16 @@ function cibot_comment(){
     echo -e "[DEBUG] MESSAGE: $MESSAGE"
     echo -e "[DEBUG] COMMIT_ADDRESS: $COMMIT_ADDRESS"
     
+    # keep the message that exceeds 140 characters in case of comment creation of issue and PR
+    # In case that cibot create deployment statuses for a given PR:
+    # A short description of the status. Maximum length of 140 characters. Default: ""
+    # @see https://developer.github.com/v3/repos/deployments/
+    TRIM_MESSAGE="$MESSAGE"
+
     # let's do PR report
     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
-     --data "{\"body\":\"$MESSAGE\"}" \
+     --data "{\"body\":\"$TRIM_MESSAGE\"}" \
     $COMMIT_ADDRESS
 
     echo -e "[DEBUG] Return value of the curl webhook command is '$?'. If the value is 0, it means that webhook operation is normal."
@@ -64,11 +78,28 @@ function cibot_pr_report(){
     COMMIT_ADDRESS="$6"
     
     echo -e "[DEBUG] Running the curl-based PR status change procedure."
-    
-    # let's do PR report
+
+   
+    # trim the message that exceeds 140 characters in case of PR status change.
+    # In case that cibot create deployment statuses for a given PR:
+    # A short description of the status. Maximum length of 140 characters. Default: ""
+    # @see https://developer.github.com/v3/repos/deployments/
+    TRIM_DESCRIPTION=""
+    msg_max=120
+    num_chars=`echo $DESCRIPTION | wc -c`
+    echo -e "[DEBUG] The length of a webhook message is \"$num_chars\"."
+    echo -e "[DEBUG] The original DESCRIPTION is \"$DESCRIPTION\"."
+    if [[ $num_chars -gt $msg_max ]]; then
+        TRIM_DESCRIPTION="`echo $DESCRIPTION | cut -c 1-${msg_max}` ..."
+    else
+        TRIM_DESCRIPTION="$DESCRIPTION"
+    fi
+    echo -e "[DEBUG] The edited TRIM_DESCRIPTION is \"$TRIM_DESCRIPTION\"."
+ 
+    # let's send PR report to change PR status
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
-    --data "{\"state\":\"$STATE\",\"context\":\"$CONTEXT\",\"description\":\"$DESCRIPTION\",\"target_url\":\"$TARGET_URL\"}" \
+    --data "{\"state\":\"$STATE\",\"context\":\"$CONTEXT\",\"description\":\"$TRIM_DESCRIPTION\",\"target_url\":\"$TARGET_URL\"}" \
     $COMMIT_ADDRESS
 
     echo -e "[DEBUG] Return value of the curl webhook command is '$?'. If the value is 0, it means that webhook operation is normal."
