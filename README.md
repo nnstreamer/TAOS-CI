@@ -53,7 +53,7 @@ The below diagram shows an overall flow of CI system.
 # How to install
 Please refer to [How to install TAOS-CI](ci/doc/how-to-install-taos-ci.md).
 
-# Self assessment: how to build a package
+# Self assessment: how to build TAOS-CI RPM package
 You have to execute ***gbs build*** command as a self-assessment before submitting your PR.
 ```bash
 # in case of x86 64bit architecture
