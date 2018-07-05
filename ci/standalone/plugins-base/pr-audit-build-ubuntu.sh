@@ -88,7 +88,7 @@ function pr-audit-build-ubuntu(){
         pdebuild 2> ../report/build_log_${input_pr}_ubuntu_error.txt 1> ../report/build_log_${input_pr}_ubuntu_output.txt
     fi
 
-    $result=$?
+    result=$?
     echo "[DEBUG] The variable result value is $result."
 
     # report execution result
