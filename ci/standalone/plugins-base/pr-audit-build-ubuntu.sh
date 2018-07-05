@@ -128,7 +128,7 @@ function pr-audit-build-ubuntu(){
             cibot_pr_report $TOKEN "failure" "TAOS/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
             # comment a hint on failed PR to author.
-            message=":octocat: **cibot**: $user_id, A Ubuntu builder checker could not be completed. To get a hint, please go to ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/."
+            message=":octocat: **cibot**: $user_id, Oooops. A Ubuntu builder checker could not be completed. To get a hint, please go to ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/."
             cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
         fi
     fi

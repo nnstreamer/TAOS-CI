@@ -24,72 +24,119 @@
 
 #-------------------- Configuration --------------------------------------------------------
 $TITLE="Build Status Monitor of PRs";
-$PATTERN_REQ="[^]] bash ./checker-pr-audit.sh";
-$PATTERN_RUN="[^]]/usr/bin/python /usr/bin/gbs build";
-$STRING_NUM=5;
+$PATTERN_REQ       ="[^]] bash ./checker-pr-audit.sh";
+$PATTERN_RUN_TIZEN ="[^]]/usr/bin/python /usr/bin/gbs build";
+$PATTERN_RUN_UBUNTU="[^]]/bin/bash /usr/bin/pdebuild";
+$STRING_NUM_TIZEN  =5;
+$STRING_NUM_UBUNTU =5;
+
+# debugging: 1 (enabling), 0 (disabling)
+$DEBUG=0;
+
+#-------------------- Do not modify from here  ---------------------------------------------
+
+## @brief generate HTML head tag
+function display_msg($data){
+    global $DEBUG;
+    if ($DEBUG == 1){
+        echo $data;
+    }
+}
 
 ## @brief generate HTML head tag
 function generate_title(){
-global $TITLE;
-echo "<html>\n";
-echo "<head>\n";
-echo "<title>${TITLE}</title>\n";
-echo "<meta http-equiv=\"refresh\" content=\"3\" />\n";
-echo "</head>\n";
-echo "<body>\n";
-echo "<table width=1024 border=0><tr><td>\n";
-echo "<b><center><h2><u>${TITLE}</u></h2></center></b>\n";
-echo "<center><font size=2 color=gray>".date('jS-F-Y h:i:s A')."</font></center>\n";
-echo "<br><br> ";
+    global $TITLE;
+    echo "<html>\n";
+    echo "<head>\n";
+    echo "<title>${TITLE}</title>\n";
+    echo "<meta http-equiv=\"refresh\" content=\"3\" />\n";
+    echo "</head>\n";
+    echo "<body>\n";
+    echo "<table width=1024 border=0><tr><td>\n";
+    echo "<b><center><h2><u>${TITLE}</u></h2></center></b>\n";
+    echo "<center><font size=2 color=gray>".date('jS-F-Y h:i:s A')."</font></center>\n";
+    echo "<br><br> ";
 }
 
 ## @brief display all PR numbers
 function generate_requested_pr(){
-global $PATTERN_REQ;
-global $STRING_NUM;
-echo "<hr>\n";
-echo "<img src=monitor-icon.png border=0> <b>PR list: Requested PRs</b> <br>\n";
-$output = shell_exec("ps -ef | grep \"$PATTERN_REQ\"");
-echo "<font size=2 color=blue>\n";
-if (str_word_count($output) >= $STRING_NUM){
-    $output = str_replace("\n","<br><br>",$output);
-    echo nl2br($output);
-}
-else{
-    echo "<br>\n";
-    echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
-}
-echo "</font>\n";
-echo "<br><br>\n";
+    global $PATTERN_REQ;
+    global $STRING_NUM_TIZEN;
+    echo "<hr>\n";
+    echo "<img src=monitor-icon.png border=0> <b>Ready Queue: Requested PRs</b> <br>\n";
+    $output = shell_exec("ps -ef | grep \"$PATTERN_REQ\"");
+    echo "<font size=2 color=blue>\n";
+    if (str_word_count($output) >= $STRING_NUM_TIZEN){
+        $output = str_replace("\n","<br><br>",$output);
+        echo nl2br($output);
+    }
+    else{
+        echo "<br>\n";
+        echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
+    }
+    echo "</font>\n";
+    echo "<br><br>\n";
 }
 
-## @brief display only running PR numbers
-function generate_running_pr(){
-global $PATTERN_RUN;
-global $STRING_NUM;
-echo "<hr>\n";
-echo "<img src=monitor-icon.png border=0> <b>PR list: Building PRs</b> <br>\n";
-$output = shell_exec("ps -ef | grep \"$PATTERN_RUN\"");
-echo "<font size=2 color=red>\n";
-if (str_word_count($output) >= $STRING_NUM){
-    $output = str_replace("\n","<br><br>",$output);
-    echo nl2br($output);
+## @brief display only running PR numbers for Tizen/gbs build
+function generate_running_pr_tizen(){
+    global $PATTERN_RUN_TIZEN;
+    global $STRING_NUM_TIZEN;
+    echo "<hr>\n";
+    echo "<img src=monitor-icon.png border=0> <b>Run Queue: Building Tizen PRs</b> <br>\n";
+    $output = shell_exec("ps -ef | grep \"$PATTERN_RUN_TIZEN\"");
+    echo "<font size=2 color=red>\n";
+    if (str_word_count($output) >= $STRING_NUM_TIZEN){
+        $output = str_replace("\n","<br><br>",$output);
+        echo nl2br($output);
+    }
+    else{
+        echo "<br>\n";
+        echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
+    }
+    echo "</font>\n";
+    echo "<br><br>\n";
 }
-else{
-    echo "<br>\n";
-    echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
+
+## @brief display only running PR numbers for Ubuntu/pdebuild
+#  @todo have to make wrapper script (e.g., pdebuild.sh --pr xxx --commit xxx ...) to run
+#        pdebuild command in order that we display a helpful message including PR number,
+#        commit number, and so on.
+function generate_running_pr_ubuntu(){
+    global $PATTERN_RUN_UBUNTU;
+    global $STRING_NUM_UBUNTU;
+    echo "<hr>\n";
+    echo "<img src=monitor-icon.png border=0> <b>Run Queue: Building Ubuntu PRs</b> <br>\n";
+    $output = shell_exec("ps -ef | grep \"$PATTERN_RUN_UBUNTU\"");
+    display_msg ("[DEBUG]   (".str_word_count($output)." >= $STRING_NUM_UBUNTU)<br>");
+    echo "<font size=2 color=red>\n";
+    if (str_word_count($output) >= $STRING_NUM_UBUNTU){
+        $output = str_replace("\n","<br><br>",$output);
+        echo nl2br($output);
+    }
+    else{
+        echo "<br>\n";
+        echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
+    }
+    echo "</font>\n";
+    echo "<br><br>\n";
 }
-echo "</font>\n";
-echo "<br><br>\n";
-echo "</td></tr></table>\n";
-echo "<font size=2>\n";
-echo "End of Line\n";
-echo "</font>\n";
-echo "<html>\n";
+
+
+## @brief generate HTML head tag
+function generate_foot(){
+    echo "<br><br>\n";
+    echo "</td></tr></table>\n";
+    echo "<font size=2>\n";
+    echo "End of Line\n";
+    echo "</font>\n";
+    echo "<html>\n";
 }
 
 # @brief main function
 generate_title();
 generate_requested_pr();
-generate_running_pr();
+generate_running_pr_tizen();
+generate_running_pr_ubuntu();
+generate_foot();
 ?>
