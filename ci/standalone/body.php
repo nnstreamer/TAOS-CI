@@ -10,6 +10,16 @@
 <h1><b> &nbsp;&nbsp;&nbsp;&nbsp;Standalone Continuous Integration Server</b></h1>
 
 <br>
+<b>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<?php 
+echo rtrim($_SERVER['SCRIPT_FILENAME'],"ci/standalone/body.php");
+?>
+</b>
+<br>
+<br>
 It is designed and implemented with a light-weight approach to support a desktop computer based servers<br>
 that have out-of-date CPUs and low memory capacity. Also, if you want to enable your project specific<br>
 CI facilities, It will be easily <b>customizable</b> for your github repository because it just requires<br>
@@ -24,7 +34,7 @@ PRs causing regressions will not be automatically merged.<br>
 <br>
 <br>
 <br>
-<img src=./ci.jpg border=0 width=550 height=200></src>
+<img src=./image/ci-logo.jpg border=0 width=550 height=200></src>
 <br>
 <br>
 <hr>
