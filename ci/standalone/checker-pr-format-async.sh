@@ -42,7 +42,7 @@
 # "[MODULE] TAOS/pr-format-executable     Check executable bits for .cpp, .h, .hpp, .c, .caffemodel, .prototxt, .txt."
 # "[MODULE] TAOS/pr-format-hardcoded-path Check prohibited hardcoded paths (/home/* for now)"
 # "[MODULE] plugins-good                Plugin group that follow Apache license with good quality"
-# "[MODULE] plugins-ugly                Plugin group that does not have evaluation and aging test enough"
+# "[MODULE] plugins-staging                Plugin group that does not have evaluation and aging test enough"
 #
 
 # --------------------------- Pre-setting module ----------------------------------------------------------------------
@@ -693,7 +693,7 @@ fi
 
 ##################################################################################################################
 echo "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
-echo "[MODULE] plugins-ugly: Plugin group that does not have evaluation and aging test enough"
+echo "[MODULE] plugins-staging: Plugin group that does not have evaluation and aging test enough"
 echo "Current path: $(pwd)."
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-format.sh"
 source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-format.sh

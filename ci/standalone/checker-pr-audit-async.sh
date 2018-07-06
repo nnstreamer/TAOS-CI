@@ -37,7 +37,7 @@
 # [MODULE] TAOS/pr-audit-build-ubuntu           Check if 'pdebuild' can be successfully passed.
 # [MODULE] plugins-base                Plugin group that consist of a well-maintained modules
 # [MODULE] plugins-good                Plugin group that follow Apache license with good quality
-# [MODULE] plugins-ugly                Plugin group that does not have evaluation and aging test enough
+# [MODULE] plugins-staging                Plugin group that does not have evaluation and aging test enough
 
 # --------------------------- Pre-setting module ----------------------------------------------------------------------
 input_date=$1
@@ -133,7 +133,7 @@ fi
 # load the configuraiton file that user defined to build selectively.
 echo "[MODULE] plugins-base: Plugin group that does have well-maintained features as a base module."
 echo "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
-echo "[MODULE] plugins-ugly: Plugin group that does not has evaluation and aging test enough"
+echo "[MODULE] plugins-staging: Plugin group that does not has evaluation and aging test enough"
 echo "Current path: $(pwd)."
 source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-audit.sh
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-audit.sh"

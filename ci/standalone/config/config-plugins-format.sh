@@ -49,6 +49,6 @@ echo "[MODULE] plugins-good: Plugin group that follow Apache license with good q
 
 
 ##################################################################################################################
-echo "[MODULE] plugins-ugly: Plugin group that does not have evaluation and aging test enough"
+echo "[MODULE] plugins-staging: Plugin group that does not have evaluation and aging test enough"
 # Please append your plugin modules here.
 
