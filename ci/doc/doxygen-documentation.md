@@ -42,6 +42,18 @@ Each file needs to begin with the `@file` command stating the name of the file. 
 
 Before each function, data structure, and macro you should put a comment block giving at least a brief description using the `@brief` command. A brief description will suffice for your data structures but for your macros and functions you will need to use a few more commands. After your description, you should use the `@param` command to describe all of the parameters to your function. These descriptions should be followed by a description of the return value using the `@return` command. Note: When we say "each" function, that is not a strong statement. You can leave out simple helper functions, like a max() macro, so you do not waste time.
 
+
+### Interesting doxygen Tags & Syntax
+```bash
+@note: 'lhc' stands for "Large Hadron Collider" in the function/method below
+@todo: Implement a delta-time loop class to replace this
+@tofix:asap: Accumulator doesn't have enough precision; change type to double, and deal with the cascading effects throughout the code
+@asap: Everyone, update your IDEs to newest version to avoid bug-X
+@issue: I'm missing an import but I don't know which...I get 'Exception (...)'
+@done: I've sent a copy of the missing lib to Bob, and explained him how to use it. Issue removed
+@bug: Indicates something where a situation on the input or flow of the program leads to outright breaking of the program
+```
+
 # Case study
 
 ### Case study: C/C++
