@@ -12,9 +12,9 @@ PRs causing regressions will not be automatically merged. We are going to report
 
 
 ## Goals	
-**TAOS-CI** is re-designed and implemented with a light-weight approach based on the existing `AuDri CI` to support a desktop computer based servers that have out-of-date CPUs and low memory capacity. Also, if you want to enable your project specific CI facilities, It will be easily customizable for your github repository because it just requires Apache and PHP package.
+This project is re-designed and re-implemented with a light-weight approach based on the existing `AuDri CI` to support a desktop computer based servers that have out-of-date CPUs and low memory capacity. Also, if you want to enable your project specific CI facilities, It will be easily customizable for your github repository because it just requires Apache and PHP package.
 
-TAOS-CI is to prevent regressions and bugs due to incorrect PRs as follows. As a mandatory process, PRs causing regressions will not be automatically merged.
+It is to prevent regressions and bugs due to incorrect PRs as follows. As a mandatory process, PRs causing regressions will not be automatically merged.
 
 * Test automation (both build and run)
 * Preventing Performance regression
@@ -38,13 +38,13 @@ The below diagram shows an overall flow of CI system.
 ```bash
  | <----------------------------- Jenkins: Server Diagnosis ------------------------------> |
                    | <------------ TAOS-CI: Inspect & Verify ------------> | <---- CD ---->
-                   |                                                       |
-  +-----+     +----+     +-------+     +-----+     +--------+     +-------+     +---------+             
-  |Issue| --> | PR | --> | Build | --> | Run | --> | Review | --> | Merged| --> | Release |
+                   |        /------ Tizen, Ubuntu, and SMP(TODO)           |
+  +-----+     +----+     +--|----+     +-----+     +--------+     +-------+     +---------+             
+  |Issue| --> | PR | --> | Build | --> | Run | --> | Review | --> | Merge | --> | Release |
   +-----+     +----+     +-------+     +-----+     +--------+     +-------+     +---------+ 
      |          |           |             |             |             |             |
   (user)     (user)      (CIbot)          |(CIbot)   (reviewers)  (reviewers)       |-- SR(Submit Request)
-                |           |         git blame            scancode --|             |  
+                |           |         Git Blame            Scancode --|             |  
                 |           |-- Audit Modules                  Doxygen Book         |-- Pre-flight   
                 |      Unit testing                                                 `Tizen PMB(Image)
                  `Format Modules                                                   
@@ -53,14 +53,31 @@ The below diagram shows an overall flow of CI system.
 # How to install
 Please refer to [How to install TAOS-CI](ci/doc/how-to-install-taos-ci.md).
 
-# Self assessment: how to build TAOS-CI RPM package
-You have to execute ***gbs build*** command as a self-assessment before submitting your PR.
-```bash
-# in case of x86 64bit architecture
-$ time gbs build -A x86_64  --clean --include-all
-# in case of ARM 64bit architecture
-$ time gbs build -A aarch64 --clean --include-all
-```
-
 # How to use new CI module
 Please refer to [How to use new CI module](ci/doc/how-to-use-taos-ci-module.md).
+
+# Self assessment before submitting PR
+* How to build [Tizen](https://source.tizen.org/documentation/reference/git-build-system/usage/gbs-build) RPM package
+You have to execute ***gbs build*** command before submitting your PR.
+```bash
+$ sudo vi /etc/apt/sources.list.d/tizen.list
+deb [trusted=yes] http://download.tizen.org/tools/latest-release/Ubuntu_16.04/ / # upgraded to xenial
+$ sudo apt update
+$ sudo install gbs
+$ cp TAOS-CI/packaging/.gbs.conf ~/
+$ time gbs build -A x86_64  --clean --include-all  # Generate *.rpm from source for x86_64
+$ time gbs build -A aarch64 --clean --include-all  # Generate *.rpm from source for aarch64
+```
+* How to build [Ubuntu](https://wiki.ubuntu.com/PbuilderHowto) DEB package
+You have to execute ***pdebuild*** command before submitting your PR.
+```bash
+$ sudo apt install pbuilder debootstrap devscripts
+$ vi ~/.pbuilderrc  # in case of x86 64bit architecture
+# man 5 pbuilderrc
+DISTRIBUTION=xenial
+OTHERMIRROR="deb http://archive.ubuntu.com/ubuntu xenial universe multiverse"
+$ sudo ln -s  ~/.pbuilderrc /root/.pbuilderrc
+$ sudo pbuilder create
+$ pdebuild  # build package to generate *.deb file
+$ ls -al /var/cache/pbuilder/result/*.deb
+```
