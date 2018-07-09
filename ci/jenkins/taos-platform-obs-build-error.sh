@@ -8,6 +8,7 @@
 
 #------------------------------- configuration area ---------------------------------------
 OBS_SERVER="http://10.113.136.201/project/show/Tizen:5.0:TAOS"
+OBS_SERVER_ERR_PKGS="http://10.113.136.201/project/monitor/Tizen:5.0:TAOS?blocked=0&building=0&dispatching=0&finished=0&scheduled=0&signing=0&succeeded=0"
 ISSUE_WEB="https://github.sec.samsung.net/STAR/TAOS-Platform/issues/"
 
 # email information
@@ -29,8 +30,27 @@ function check_package() {
 
 # send e-mail if a build error happens.
 function email_on_failure(){
+    # fecth package list
+    report_file=`curl -o obs-packages.txt http://10.113.136.201/project/monitor/Tizen:5.0:TAOS?blocked=0&building=0&dispatching=0&finished=0&scheduled=0&signing=0&succeeded=0`
+    if [[ $? == 0 ]]; then
+        echo "Successfully downloaded"
+    else
+        echo "Ooops. no downloaded."
+    fi
+    pack_list=`cat ./obs-packages.txt | grep "failed</a></td>" | cut -d "\"" -f 4`
+    
+    # make subject and message to send email
     email_subject="[aaci] Urgent: SPIN-OBS server generates build error"
-    email_message=" Hi,\n\n Ooops. $1 packages generate a build error.\n\n For more details, visit ${OBS_SERVER}\n and ${ISSUE_WEB}.\n\n $(date).\n from aaci.mooo.com\n"
+    
+    email_message="Hi,\n\n \
+    Ooops. The  below $1 packages generates a build error.\n\n \
+    [Package list]:\n $pack_list\n\n \
+    For more details,\n visit ${OBS_SERVER}\n and ${ISSUE_WEB}.\n\n \
+    If you want to see a package name in more detail,\n \
+    please visit ${OBS_SERVER_ERR_PKGS}.\n\n \
+    $(date)\n from aaci.mooo.com\n"
+    
+    # send email with mailx command
     echo -e "$email_message" | $email_cmd -v -s "$email_subject" $email_recipient
 }
 
@@ -64,3 +84,4 @@ fi
 
 # jenkins submit issue according "exit ***" value.
 exit 0
+
