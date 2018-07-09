@@ -22,7 +22,7 @@
 #  @brief [MODULE] TAOS/pr-format-clang
 function pr-format-clang(){
     echo "########################################################################################"
-    echo "[MODULE] TAOS/pr-format-clang: Check the code formatting style with clang-format"
+    echo "[MODULE] pr-format-clang: Check the code formatting style with clang-format"
     # Note that you have to install up-to-date clang-format package from llvm project.
     # The clang-format-4.0 package includes git-clang-format as well as clang-format.
     # It has been included by http://archive.ubuntu.com/ubuntu/ by default since Oct-25-2017.
@@ -38,13 +38,32 @@ function pr-format-clang(){
         exit 1
     fi
 
-    FILES_IN_COMPILER=$(find $SRC_PATH/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*.hpp')
-    FILES_TO_BE_TESTED=$(git ls-files $FILES_IN_COMPILER)
+    echo "[DEBUG] Path of a working directory: "
+    pwd
 
+    # define file type of source code
+    FILES_IN_COMPILER=`find $SRC_PATH/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*.hpp'`
+    if [[ $? != 0 ]] ; then
+        echo "[DEBUG] Oooops. Please check $SRC_PATH in configuraton file is vaild or not."
+    fi
+
+    echo "[DEBUG] Files of source code: $FILES_IN_COMPILER "
+
+    # define file format to be tested by clang command.
+    FILES_TO_BE_TESTED=$(git ls-files $FILES_IN_COMPILER)
+    echo "[DEBUG] Files to be tested: $FILES_TO_BE_TESTED"
+
+    # import clang configuration file
     ln -sf ci/doc/.clang-format .clang-format
+
+    # run clang format checker
     ${CLANG_COMMAND} -i $FILES_TO_BE_TESTED
+
+    # save the result
     clang_format_file="clang-format.patch"
     git diff > ../report/${clang_format_file}
+
+    # check a clang format rule with file size of patch file
     PATCHFILE_SIZE=$(stat -c%s ../report/${clang_format_file})
     if [[ $PATCHFILE_SIZE -ne 0 ]]; then
             echo "[DEBUG] Format checker is failed. Update your code to follow convention after reading ${clang_format_file}."
@@ -54,14 +73,15 @@ function pr-format-clang(){
             check_result="success"
     fi
 
+    # report the clang inspection result
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. A clang-formatting style."
         message="Successfully, The commits are passed."
-        cibot_pr_report $TOKEN "success" "TAOS/pr-format-clang" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_pr_report $TOKEN "success" "TAOS/pr-format-clang" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. A clang-formatting style."
         message="Oooops. The component you are submitting with incorrect clang-format style."
-        cibot_pr_report $TOKEN "failure" "TAOS/pr-format-clang" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_pr_report $TOKEN "failure" "TAOS/pr-format-clang" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 fi
 
 
