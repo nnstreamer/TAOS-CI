@@ -33,7 +33,7 @@
 
 #### Repository setting
 # Project name of github.sec.samsung.net
-PRJ_REPO_UPSTREAM="TAOS-CI"
+PRJ_REPO_UPSTREAM="on-device-api"
 
 # CI Server webaddress. Should end with /
 CISERVER="http://aaci.mooo.com/"
@@ -43,12 +43,12 @@ CISERVER="http://aaci.mooo.com/"
 # Specify a path of source code
 # 1) to check prohibited hardcoded paths (e.g., /home/* for now)
 # 2) to check code formatting sytele with clang-format
-SRC_PATH="./ci/"
+SRC_PATH="./proto/"
 
 # Audit Area (pr-audit)
 # Skip build-checker / unit-test checker if all changes are limited to:
 # The path starts without / and it denotes the full paths in the git repo. (regex)
-SKIP_CI_PATHS="^ci/.*|^Documentation/.*|^\.github/.*|^obsolete/.*|^README\.md"
+SKIP_CI_PATHS="^ci/.*|^Documentation/.*|^\.github/.*|^obsolete/.*|^README\.md|^temporal-bin/.*|^external/.*"
 
 # Define the number of CPUs to build source codes in parallel
 # We recommend that you define appropriate # of CPUs that does not result in
@@ -76,10 +76,18 @@ pr_comment_pr_monitor=0
 pr_build_arch_type="x86_64 armv7l"
 
 
+#### File size limit
+# unit of the file size is MB.
+filesize_limit=5
+
+# folder name to exclude the file size check rule. (e.g., <github-repository-name>/temproal-bin/)
+filesize_limit_exception_folder="temporal-bin"
+
+
 ################# Do not modify the below statements #################################
 
 # Version format: Major.Minor
-VERSION="1.20180703"
+VERSION="1.20180709"
 
 # Connecting to a repository using token id instead of git.bot.sec@samsung.com id
 # because of two-authentification. Refer to https://github.sec.samsung.net/settings/tokens

@@ -167,24 +167,29 @@ global_check_result="success"
 
 echo "########################################################################################"
 echo "[MODULE] TAOS/pr-format-file-size: Check the file size to not include big binary files"
+
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
-for i in ${FILELIST}; do
+
+for current_file in ${FILELIST}; do
+    FILESIZE=$(stat -c%s "$current_file")
+    echo "[DEBUG] current file name is ($current_file). file size is \"$FILESIZE\". "
+    # Add thousands separator in a number
+    FILESIZE_NUM=`echo $FILESIZE | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta'`
     # check the files in case that there are files that exceed 5MB.
-    echo "[DEBUG] file name is ($i) . "
-        echo "[DEBUG] ( $i ) file is a text file."
-        FILESIZE=$(stat -c%s "$i")
-        # Add thousands separator in a number
-        FILESIZE_NUM=`echo $FILESIZE | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta'`
-        if  [[ $FILESIZE -le 5*1024*1024 ]]; then
-            echo "[DEBUG] Passed. patch file name: $i. value is $FILESIZE_NUM."
-            check_result="success"
-        else
-            echo "[DEBUG] Failed. patch file name: $i. value is $FILESIZE_NUM."
-            check_result="failure"
-            global_check_result="failure"
-            break
-        fi
+    if  [[ $FILESIZE -le ${filesize_limit}*1024*1024 ]]; then
+        echo "[DEBUG] Passed. patch file name: $current_file. value is $FILESIZE_NUM."
+        check_result="success"
+    elif  [[ $current_file =~ "$filesize_limit_exception_folder" ]]; then
+        echo "[DEBUG] Skipped because a patch file $current_file is located in $filesize_limit_exception_folder."
+        echo "[DEBUG] The file size is $FILESIZE_NUM."
+        check_result="success"
+    else
+        echo "[DEBUG] Failed. patch file name: $current_file. value is $FILESIZE_NUM."
+        check_result="failure"
+        global_check_result="failure"
+        break
+    fi
 done
 
 
@@ -201,7 +206,7 @@ else
     cibot_pr_report $TOKEN "failure" "TAOS/pr-format-filesize" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
-    message=":octocat: **cibot**: '$user_id', It seems that there are big files that exceed 5MB in your PR. Please resubmit your PR after reducing '$i' size."
+    message=":octocat: **cibot**: '$user_id', Oooops. Note that you can not upload a big file that exceeds ${filesize_limit} Mbytes. The file name is ($current_file). The file size is \"$FILESIZE_NUM\". If you have to temporarily upload binary files unavoidably, please share this issue to all members after uploading the files in **/${filesize_limit_exception_folder}** folder."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
@@ -258,12 +263,12 @@ echo "[MODULE] TAOS/pr-format-doxygen: Check documenting code using doxygen in t
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for i in ${FILELIST}; do
-    if [[ $i =~ ^obsolete/.* ]]; then
+    # if a current file is located in $SKIP_CI_PATHS folder, let's skip the inspection process
+    if [[ "$i" =~ ($SKIP_CI_PATHS)$ ]]; then
+        echo "[DEBUG] $file may be skipped because it is located in teh \"$SKIP_CI_PATHS\"."
         continue
     fi
-    if [[ $i =~ ^external/.* ]]; then
-        continue
-    fi
+
     # Handle only text files in case that there are lots of files in one commit.
     echo "[DEBUG] file name is ( $i ) . "
     if [[ `file $i | grep "ASCII text" | wc -l` -gt 0 ]]; then
@@ -629,10 +634,11 @@ else
 fi
 
 echo "########################################################################################"
-echo "[MODULE] TAOS/pr-format-executable: Check executable bits for .cpp, .h, .hpp, .c, .caffemodel, .prototxt, .txt."
+echo "[MODULE] TAOS/pr-format-executable: Check executable bits for .cpp, .c, .hpp, .h, .prototxt, .caffemodel, .txt., .init"
 # Please add more types if you feel proper.
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for X in $FILELIST; do
+    echo "[DEBUG] exectuable checke - file name is \"$FILELIST\"."
     if [[ $X =~ \.cpp$ || $X =~ \.c$ || $X =~ \.hpp$ || $X =~ \.h$ || $X =~ \.prototxt$ || $X =~ \.caffemodel$ || $X =~ \.txt$ || $X =~ \.ini$ ]]; then
         if [[ -f "$X" && -x "$X" ]]; then
             # It is a text file (.cpp, .c, ...) and is executable. This is invalid!
