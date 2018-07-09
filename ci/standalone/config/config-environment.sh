@@ -33,7 +33,7 @@
 
 #### Repository setting
 # Project name of github.sec.samsung.net
-PRJ_REPO_UPSTREAM="on-device-api"
+PRJ_REPO_UPSTREAM="TAOS-CI"
 
 # CI Server webaddress. Should end with /
 CISERVER="http://aaci.mooo.com/"
@@ -43,7 +43,7 @@ CISERVER="http://aaci.mooo.com/"
 # Specify a path of source code
 # 1) to check prohibited hardcoded paths (e.g., /home/* for now)
 # 2) to check code formatting sytele with clang-format
-SRC_PATH="./proto/"
+SRC_PATH="./ci/"
 
 # Audit Area (pr-audit)
 # Skip build-checker / unit-test checker if all changes are limited to:
@@ -73,7 +73,7 @@ pr_comment_many_commit=0
 pr_comment_pr_monitor=0
 
 #### Build test: Write build type to test ex) "x86_64 armv7l" 
-pr_build_arch_type="x86_64 armv7l"
+pr_build_arch_type="x86_64"
 
 
 #### File size limit
