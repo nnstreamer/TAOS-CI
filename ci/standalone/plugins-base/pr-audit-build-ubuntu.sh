@@ -17,8 +17,9 @@
 ##
 # @file pr-audit-build-ubuntu.sh
 # @brief Build package with pbuilder/pdebuild to verify build validation on Ubuntu distribution
-#  
-# @see https://wiki.ubuntu.com/PbuilderHowto
+# @see      https://wiki.ubuntu.com/PbuilderHowto
+# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @requirement
 # First install the required packages.
 # $ sudo apt install pbuilder debootstrap devscripts

@@ -14,38 +14,41 @@
 # limitations under the License.
 #
 
-## @file checker-pr-signed-off-by.sh
-## @brief signedoff facility to check automatically whenever PR is submitted by contributor
-## @param
-##  arg1: PR number
-##  arg2: Commit number (based on SHA)
-##  arg3: Result value (success or failure) by checking "Signed-off-by: " rule
-##         from commit message of PR
-## @note
-## First of all, We have to understand why we have to use "Signed-off-by" statement.
-## We recommend that we have to require "Signed-off-by" line in git commit messages
-## to author on our project as well as Linux community. "Is there a Signed-off-by" line?"
-## is important because lawyers tell us we must have to it to cleanly maintain the license
-## issues even though it has nothing to do with the code itself. So, the activity that we
-## do append "Signed-off-by" line is helpful to developers as well as lawyers.
-## 
-## [FYI] How to give the developers zero cost:
-## 
-## $ vi ~/.gitconfig
-##   [user]                                                                                                             
-##           name = Gildong Hong
-##           email = gildong.hong@samsung.com
-## $ git commit -a -s  
-## // -s (--signoff) means automated signed-off-by statement 
-## 
 ##
-## Lots of opensource communities have been using "Signed-off-by:" notation by default to handle the license issues that result from contributors.
-## Refer to the below websites:
-## * GPL violoation - http://gpl-violations.org/
-## * Signed-off-by Process by LinuxFoundation - https://ltsi.linuxfoundation.org/developers/signed-process
-## * Signed-off-by lines and the DCO - http://elinux.org/Legal_Issues#Signed-off-by_lines_and_the_DCO
-## * Gerrit Code Review - Signed-off-by Lines - https://git.eclipse.org/r/Documentation/user-signedoffby.html
-## 
+# @file checker-pr-signed-off-by.sh
+# @brief signedoff facility to check automatically whenever PR is submitted by contributor
+# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @author   Geunsik Lim <geunsik.lim@samsung.com>
+# @param
+#  arg1: PR number
+#  arg2: Commit number (based on SHA)
+#  arg3: Result value (success or failure) by checking "Signed-off-by: " rule
+#         from commit message of PR
+# @note
+# First of all, We have to understand why we have to use "Signed-off-by" statement.
+# We recommend that we have to require "Signed-off-by" line in git commit messages
+# to author on our project as well as Linux community. "Is there a Signed-off-by" line?"
+# is important because lawyers tell us we must have to it to cleanly maintain the license
+# issues even though it has nothing to do with the code itself. So, the activity that we
+# do append "Signed-off-by" line is helpful to developers as well as lawyers.
+#
+# [FYI] How to give the developers zero cost:
+#
+# $ vi ~/.gitconfig
+#   [user]
+#           name = Gildong Hong
+#           email = gildong.hong@samsung.com
+# $ git commit -a -s
+# // -s (--signoff) means automated signed-off-by statement
+#
+#
+# Lots of opensource communities have been using "Signed-off-by:" notation by default to handle the license issues that result from contributors.
+# Refer to the below websites:
+# * GPL violoation - http://gpl-violations.org/
+# * Signed-off-by Process by LinuxFoundation - https://ltsi.linuxfoundation.org/developers/signed-process
+# * Signed-off-by lines and the DCO - http://elinux.org/Legal_Issues#Signed-off-by_lines_and_the_DCO
+# * Gerrit Code Review - Signed-off-by Lines - https://git.eclipse.org/r/Documentation/user-signedoffby.html
+# 
 
 # --------------------------- Pre-setting module ----------------------------------------------------------------------
 

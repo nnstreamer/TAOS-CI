@@ -14,11 +14,14 @@
 # limitations under the License.
 #
 
-## @file  checker-issue-comment.sh
-## @brief issue facility to comment automatically whenever issue happens .
-## @param
-##  arg1: issue number
 ##
+# @file  checker-issue-comment.sh
+# @brief issue facility to comment automatically whenever issue happens .
+# @see		https://github.sec.samsung.net/STAR/TAOS-CI
+# @author	Geunsik Lim <geunsik.lim@samsung.com>
+# @param
+#  arg1: issue number
+#
 
 # --------------------------- Pre-setting module --------------------------------------------------------
 source ./config/config-environment.sh

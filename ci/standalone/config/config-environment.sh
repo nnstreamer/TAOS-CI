@@ -17,6 +17,8 @@
 ##
 # @file config-environment.sh
 # @brief Environment file to control all scripts commonly for CI bot
+# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 # This script to maintain consistently all scripts files via this file. 
 # In the near future, all configuration variables will be integrated into this file. 

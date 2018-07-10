@@ -17,6 +17,8 @@
 ##
 # @file checker-pr-audit.sh
 # @brief It executes a build test whenever a PR is submitted.
+# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @dependency: tee
 # @param arguments are received from CI manager
 #  arg1: date(YmdHisu)

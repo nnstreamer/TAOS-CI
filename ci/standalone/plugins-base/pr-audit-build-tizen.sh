@@ -17,9 +17,9 @@
 ##
 # @file pr-audit-build-tizen.sh
 # @brief Build package with gbs command  to verify build validation on Tizen software platform
-#
-# @see https://source.tizen.org/documentation/reference/git-build-system
-#
+# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @see      https://source.tizen.org/documentation/reference/git-build-system
+# @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @requirement
 # $ sudo apt install gbs
 

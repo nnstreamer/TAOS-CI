@@ -17,6 +17,8 @@
 ##
 # @file pr-format-exclusive-vio.sh
 # @brief Check the issue #279 (VIO commits should be exclusive)
+# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
 ##

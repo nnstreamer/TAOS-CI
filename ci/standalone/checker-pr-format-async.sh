@@ -17,6 +17,8 @@
 ##
 # @file checker-pr-format-async.sh
 # @brief It checks format rules whenever a PR is submitted.
+# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @param arguments are received from CI manager
 #  arg1: date(Ymdhms)
 #  arg2: commit number

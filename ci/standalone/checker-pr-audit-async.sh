@@ -17,6 +17,8 @@
 ##
 # @file checker-pr-audit-async.sh
 # @brief It executes a build test whenever a PR is submitted.
+# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @dependency: gbs, tee, curl, grep, wc, cat, sed, awk, basename
 # @param arguments are received by ci bot
 #  arg1: date(YmdHisu)
@@ -35,9 +37,9 @@
 # [MODULE] TAOS/pr-audit-build-tizen-x86_64     Check if 'gbs build -A x86_64' can be successfully passed.
 # [MODULE] TAOS/pr-audit-build-tizen-armv7l     Check if 'gbs build -A armv7l' can be successfully passed.
 # [MODULE] TAOS/pr-audit-build-ubuntu           Check if 'pdebuild' can be successfully passed.
-# [MODULE] plugins-base                Plugin group that consist of a well-maintained modules
-# [MODULE] plugins-good                Plugin group that follow Apache license with good quality
-# [MODULE] plugins-staging                Plugin group that does not have evaluation and aging test enough
+# [MODULE] plugins-base                         Plugin group that consist of a well-maintained modules
+# [MODULE] plugins-good                         Plugin group that follow Apache license with good quality
+# [MODULE] plugins-staging                      Plugin group that does not have evaluation and aging test enough
 
 # --------------------------- Pre-setting module ----------------------------------------------------------------------
 input_date=$1

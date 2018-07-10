@@ -17,8 +17,10 @@
 ##
 # @file pr-format-indent.sh
 # @brief Check the code formatting style with GNU indent
-#  
-# https://www.gnu.org/software/indent/
+# @see      https://www.gnu.org/software/indent/
+# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @author   Geunsik Lim <geunsik.lim@samsung.com>
+#
 
 # @brief [MODULE] TAOS/pr-format-indent
 function pr-format-indent(){

@@ -17,6 +17,8 @@
 ##
 # @file config-plugins-format.sh
 # @brief add plugin modules for a github repository
+# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
 ##################################################################################################################

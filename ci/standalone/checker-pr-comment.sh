@@ -14,11 +14,14 @@
 # limitations under the License.
 #
 
-## @file  checker-pr-comment.sh
-## @brief Automatic PR commenter to announce information automatically whenever contributor submits a PR
-## @param
-##  arg1: PR number
 ##
+# @file  checker-pr-comment.sh
+# @brief Automatic PR commenter to announce information automatically whenever contributor submits a PR
+# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @author   Geunsik Lim <geunsik.lim@samsung.com>
+# @param
+#  arg1: PR number
+#
 
 # --------------------------- Pre-setting module --------------------------------------------------------
 source ./config/config-environment.sh
