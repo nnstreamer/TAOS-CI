@@ -37,7 +37,7 @@ It is to prevent regressions and bugs due to incorrect PRs as follows. As a mand
 The below diagram shows an overall flow of CI system.
 ```bash
  | <----------------------------- Jenkins: Server Diagnosis ------------------------------> |
-                   | <------------ TAOS-CI: Inspect & Verify ------------> | <---- CD ---->
+                   | <------------ sTArOS-CI: Inspect & Verify ------------> | <---- CD ---->
                    |        /------ Tizen, Ubuntu, and SMP(TODO)           |
   +-----+     +----+     +--|----+     +-----+     +--------+     +-------+     +---------+             
   |Issue| --> | PR | --> | Build | --> | Run | --> | Review | --> | Merge | --> | Release |
@@ -51,7 +51,7 @@ The below diagram shows an overall flow of CI system.
 ```
 
 # How to install
-Please refer to [How to install TAOS-CI](ci/doc/how-to-install-taos-ci.md).
+Please refer to [How to install sTArOS-CI](ci/doc/how-to-install-taos-ci.md).
 
 # How to use new CI module
 Please refer to [How to use new CI module](ci/doc/how-to-use-taos-ci-module.md).
