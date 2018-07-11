@@ -310,20 +310,38 @@ for curr_file in ${FILELIST}; do
                 if [[ $pr_doxygen_check_level == 1 ]]; then
                     declare -i idx=0
                     function_positions="" # Line number of functions.
+                    structure_positions="" # Line number of structure.
 
                     # Find line number of functions using ctags, and append them.
                     while IFS='' read -r line || [[ -n "$line" ]]; do
-                        temp=`echo $line | cut -d ' ' -f3`
+                        temp=`echo $line | cut -d ' ' -f3` # line number of function place 3rd field when divided into ' '
                         function_positions="$function_positions $temp "
-                    done < <(ctags -x --c-kinds=f $curr_file)
+                    done < <(ctags -x --c-kinds=f $curr_file) # "--c-kinds=f" mean find function 
+
+                    # Find line number of structure using ctags, and append them.
+                    while IFS='' read -r line || [[ -n "$line" ]]; do
+                        temp=`echo $line | cut -d ' ' -f3` # line number of structure place 3rd field when divided into ' '
+                        structure_positions="$structure_positions $temp "
+                    done < <(ctags -x --c-kinds=sc $curr_file) # "--c-kinds=sc" mean find 's'truct and 'c'lass 
 
                     # Checking commited file line by line for detailed hints when missing doxygen tags.
                     while IFS='' read -r line || [[ -n "$line" ]]; do
                         idx+=1
                         
                         # Check if a function has @brief tag or not.
-                        if [[ $function_positions =~ " $idx " && $brief -eq 0 ]]; then
+                        # To pass correct line number not sub number, keep space " $idx ". 
+                        # ex) want to pass 143 not 14, 43, 1, 3, 4 
+                        if [[ $function_positions =~ " $idx " && $brief -eq 0 ]]; then  
                             echo "[DEBUG] File name: $curr_file, $idx line, `echo $line | cut -d ' ' -f1` function needs @brief tag "
+                            check_result="failure"
+                            global_check_result="failure"
+                        fi
+
+                        # Check if a structure has @brief tag or not.
+                        # To pass correct line number not sub number, keep space " $idx ". 
+                        # ex) want to pass 143 not 14, 43, 1, 3, 4 
+                        if [[ $structure_positions =~ " $idx " && $brief -eq 0 ]]; then # same as above.
+                            echo "[FAIL] File name: $curr_file, $idx line, structure needs @brief tag "
                             check_result="failure"
                             global_check_result="failure"
                         fi
