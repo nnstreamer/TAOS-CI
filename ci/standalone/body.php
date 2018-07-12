@@ -11,12 +11,17 @@
 
 <br>
 <b>
+<font color=blue>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <?php 
-echo rtrim($_SERVER['SCRIPT_FILENAME'],"ci/standalone/body.php");
+// Note that the github repository has to be located in /var/www/html/ folder.
+$str = $_SERVER['SCRIPT_FILENAME'] ;
+$chars = preg_split('/\//', $str, -1);
+print_r($chars[4]);
 ?>
+</font>
 </b>
 <br>
 <br>
@@ -34,7 +39,7 @@ PRs causing regressions will not be automatically merged.<br>
 <br>
 <br>
 <br>
-<img src=./image/ci-logo.jpg border=0 width=550 height=200></src>
+<img src=./image/ci02.png border=0 width=550 height=200></src>
 <br>
 <br>
 <hr>
