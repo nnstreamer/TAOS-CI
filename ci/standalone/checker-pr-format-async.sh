@@ -272,9 +272,15 @@ echo "[MODULE] TAOS/pr-format-doxygen: Check documenting code using doxygen in t
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for curr_file in ${FILELIST}; do
+<<<<<<< HEAD
     # if a current file is located in $SKIP_CI_PATHS_AUDIT folder, let's skip the inspection process
     if [[ "$curr_file" =~ ($SKIP_CI_PATHS_AUDIT)$ ]]; then
         echo "[DEBUG] $file may be skipped because it is located in the \"$SKIP_CI_PATHS_AUDIT\"."
+=======
+    # if a current file is located in $SKIP_CI_PATHS folder, let's skip the inspection process
+    if [[ "$curr_file" =~ ($SKIP_CI_PATHS)$ ]]; then
+        echo "[DEBUG] $curr_file may be skipped because it is located in the \"$SKIP_CI_PATHS\"."
+>>>>>>> tizen
         continue
     fi
 
@@ -285,7 +291,7 @@ for curr_file in ${FILELIST}; do
         case $curr_file in
             # in case of C/C++ code
             *.c|*.h|*.cpp|*.hpp )
-                echo "[DEBUG] ( $curr_file ) file is  source code with the text format."
+                echo "[DEBUG] ( $curr_file ) file is source code with the text format."
                 doxygen_lang="doxygen-cncpp"
                 # Append a doxgen rule step by step
                 doxygen_basic_rules="@file @brief" # @file and @brief to inspect file
@@ -299,14 +305,14 @@ for curr_file in ${FILELIST}; do
 
                 for word in $doxygen_basic_rules
                 do
-                    echo "[DEBUG] $doxygen_lang: doxygen tag for current $doxygen_lang code is $word."
+                    # echo "[DEBUG] $doxygen_lang: doxygen tag for current $doxygen_lang code is $word."
                     doxygen_rule_compare_count=`cat ${curr_file} | grep "$word" | wc -l`
                     doxygen_rule_expect_count=1
                     
                     # Doxygen_rule_compare_count: real number of doxygen tag in file
                     # Doxygen_rule_expect_count: required number of doxygen tag 
                     if [[ $doxygen_rule_compare_count -lt $doxygen_rule_expect_count ]]; then
-                        echo "[DEBUG] $doxygen_lang: failed. file name: $curr_file, $word tag is required at the top of file"
+                        echo "[ERROR] $doxygen_lang: failed. file name: $curr_file, $word tag is required at the top of file"
                         check_result="failure"
                         global_check_result="failure"
                     fi	
@@ -338,7 +344,7 @@ for curr_file in ${FILELIST}; do
                         # To pass correct line number not sub number, keep space " $idx ". 
                         # ex) want to pass 143 not 14, 43, 1, 3, 4 
                         if [[ $function_positions =~ " $idx " && $brief -eq 0 ]]; then  
-                            echo "[DEBUG] File name: $curr_file, $idx line, `echo $line | cut -d ' ' -f1` function needs @brief tag "
+                            echo "[ERROR] File name: $curr_file, $idx line, `echo $line | cut -d ' ' -f1` function needs @brief tag "
                             check_result="failure"
                             global_check_result="failure"
                         fi
@@ -347,7 +353,7 @@ for curr_file in ${FILELIST}; do
                         # To pass correct line number not sub number, keep space " $idx ". 
                         # ex) want to pass 143 not 14, 43, 1, 3, 4 
                         if [[ $structure_positions =~ " $idx " && $brief -eq 0 ]]; then # same as above.
-                            echo "[FAIL] File name: $curr_file, $idx line, structure needs @brief tag "
+                            echo "[ERROR] File name: $curr_file, $idx line, structure needs @brief tag "
                             check_result="failure"
                             global_check_result="failure"
                         fi
@@ -359,21 +365,30 @@ for curr_file in ${FILELIST}; do
                             brief=0
                         fi
                         
+                        # Check the beginning of the comment is '/*' beacuse doxygen can't recognize comment start with '/*'
+                        if [[ $line =~ "/*" && $line != *"/**"* ]]; then
+                            echo "[ERROR] File name: $curr_file, $idx line, the comment should begin with /**"
+                            check_result="failure"
+                            global_check_result="failure"
+                        fi
+                        
+                        # Check the doxygen tag written in upper case beacuase doxygen can't use upper case tag. ex) @TODO
+                        if [[ $line =~ "@"[A-Z] ]]; then
+                            echo "[ERROR] File name: $curr_file, $idx line, The tag sholud be written in lower case."
+                            check_result="failure"
+                            global_check_result="failure"
+                        fi
+
                     done < "$curr_file"
                 fi
 
-                if  [[ $check_result == "failure" ]]; then
-                    message=":octocat: **cibot**: $user_id, You wrote code with incorrect doxygen statements. Please check a doxygen rule at"
-                    message="$message http://github.sec.samsung.net/STAR/TAOS-CI/blob/tizen/ci/doc/doxygen-documentation.md"
-                    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
-                    break
-                else
-                    echo "[DEBUG] $doxygen_lang: passed. file name: $curr_file, All tags are found."
+                if  [[ $check_result == "success" ]]; then
+                    echo "[ERROR] $doxygen_lang: passed. file name: $curr_file, All tags are found."
                 fi
                 ;;
             # in case of Python code
             *.py )
-                echo "[DEBUG] ( $curr_file ) file is  source code with the text format."
+                echo "[DEBUG] ( $curr_file ) file is source code with the text format."
                 doxygen_lang="doxygen-python"
                 # Append a doxgen rule step by step
                 doxygen_rules="@package @brief"
@@ -381,13 +396,13 @@ for curr_file in ${FILELIST}; do
                 doxygen_rule_all=0
                 for word in $doxygen_rules
                 do
-                    echo "[DEBUG] $doxygen_lang: doxygen tag for current $doxygen_lang code is $word."
+                    # echo "[DEBUG] $doxygen_lang: doxygen tag for current $doxygen_lang code is $word."
                     doxygen_rule_all=$(( doxygen_rule_all + 1 ))
                     doxygen_rule[$doxygen_rule_all]=`cat ${curr_file} | grep "$word" | wc -l`
                     doxygen_rule_num=$(( $doxygen_rule_num + ${doxygen_rule[$doxygen_rule_all]} ))
                 done
                 if  [[ $doxygen_rule_num -le 0 ]]; then
-                    echo "[DEBUG] $doxygen_lang: failed. file name: $curr_file, ($doxygen_rule_num)/$doxygen_rule_all tags are found."
+                    echo "[ERROR] $doxygen_lang: failed. file name: $curr_file, ($doxygen_rule_num)/$doxygen_rule_all tags are found."
                     check_result="failure"
                     global_check_result="failure"
                     break
@@ -409,12 +424,16 @@ if [[ $check_result == "success" ]]; then
     message="Successfully source code(s) includes doxygen document correctly."
     cibot_pr_report $TOKEN "success" "TAOS/pr-format-doxygen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
-    echo "[DEBUG] Failed. doxygen documentation."
+    echo "[ERROR] Failed. doxygen documentation."
     message="Oooops. The doxygen checker is failed. Please, write doxygen document in your code."
     cibot_pr_report $TOKEN "failure" "TAOS/pr-format-doxygen" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
-    message=":octocat: **cibot**: $user_id, **$i** does not include doxygen tags such as $doxygen_rules. You must include the doxygen tags in the source code at least."
+    message=":octocat: **cibot**: $user_id, **$i** does not include doxygen tags such as $doxygen_basic_rules. You must include the doxygen tags in the source code at least."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
+
+    message=":octocat: **cibot**: $user_id, You wrote code with incorrect doxygen statements. Please check a doxygen rule at"
+    message="$message http://github.sec.samsung.net/STAR/TAOS-CI/blob/tizen/ci/doc/doxygen-documentation.md"
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
