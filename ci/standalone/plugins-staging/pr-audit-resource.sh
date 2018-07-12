@@ -18,7 +18,7 @@
 # @file pr-audit-resource.sh
 # @brief Check not-installed resources exist
 # @see      https://github.sec.samsung.net/STAR/TAOS-CI
-# @author   Geunsik Lim <geunsik.lim@samsung.com>
+# @author   Jiho Chu <jiho.chu@samsung.com>
 #
 
 ##
