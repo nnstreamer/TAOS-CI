@@ -220,6 +220,7 @@ FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for i in ${FILELIST}; do
     # Handle only text files in case that there are lots of files in one commit.
     echo "[DEBUG] file name is ( $i )."
+
     newline_count=0
     if [[ `file $i | grep "ASCII text" | wc -l` -gt 0 ]]; then
         # in case of text files: *.c|*.h|*.cpp|*.py|*.md|*.xml|*.txt|*.launch|*.sh|*.php|*.html|*.json|*.spec|*.manifest|*.CODEOWNERS )
@@ -232,6 +233,11 @@ for i in ${FILELIST}; do
         newline_count=$(cat ../report/${num}.patch  | tail -1 | grep '^\\ No newline' | wc -l)
         if  [[ $newline_count == 0 ]]; then
             echo "[DEBUG] Newline checker is passed. patch file name: $i. The number of newlines is $newline_count."
+            check_result="success"
+
+        elif  [[ $i =~ "$filesize_limit_exception_folder" ]]; then
+            echo "[DEBUG] Newline checker skipped because a patch file $i is located in the $filesize_limit_exception_folder."
+            echo "[DEBUG] The file size is $FILESIZE_NUM."
             check_result="success"
         else
             echo "[DEBUG] Newline checker is failed. patch file name: $i. The number of newlines is $newline_count."
@@ -268,7 +274,7 @@ FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for curr_file in ${FILELIST}; do
     # if a current file is located in $SKIP_CI_PATHS folder, let's skip the inspection process
     if [[ "$curr_file" =~ ($SKIP_CI_PATHS)$ ]]; then
-        echo "[DEBUG] $file may be skipped because it is located in teh \"$SKIP_CI_PATHS\"."
+        echo "[DEBUG] $file may be skipped because it is located in the \"$SKIP_CI_PATHS\"."
         continue
     fi
 
