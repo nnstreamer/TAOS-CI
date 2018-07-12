@@ -272,15 +272,9 @@ echo "[MODULE] TAOS/pr-format-doxygen: Check documenting code using doxygen in t
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for curr_file in ${FILELIST}; do
-<<<<<<< HEAD
-    # if a current file is located in $SKIP_CI_PATHS_AUDIT folder, let's skip the inspection process
-    if [[ "$curr_file" =~ ($SKIP_CI_PATHS_AUDIT)$ ]]; then
-        echo "[DEBUG] $file may be skipped because it is located in the \"$SKIP_CI_PATHS_AUDIT\"."
-=======
-    # if a current file is located in $SKIP_CI_PATHS folder, let's skip the inspection process
-    if [[ "$curr_file" =~ ($SKIP_CI_PATHS)$ ]]; then
-        echo "[DEBUG] $curr_file may be skipped because it is located in the \"$SKIP_CI_PATHS\"."
->>>>>>> tizen
+    # if a current file is located in $SKIP_CI_PATHS_FORMAT folder, let's skip the inspection process
+    if [[ "$curr_file" =~ ($SKIP_CI_PATHS_FORMAT)$ ]]; then
+        echo "[DEBUG] Doxygen checker skips the doxygen inspection because $curr_file is located in the \"$SKIP_CI_PATHS_FORMAT\"."
         continue
     fi
 
