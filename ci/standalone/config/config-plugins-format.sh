@@ -49,6 +49,13 @@ echo "[MODULE] plugins-good: Plugin group that follow Apache license with good q
 # pr-format-exclusive-vio
 # echo "pr-format-exclusive-io is done."
 
+echo "pr-format-pylint is starting."
+echo "[MODULE] TAOS/pr-format-pylint: Check the code formatting style with pylint"
+echo "Current path: $(pwd)."
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/pr-format-pylint.sh"
+source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/pr-format-pylint.sh
+pr-format-pylint
+echo "pr-format-pylint is done."
 
 ##################################################################################################################
 echo "[MODULE] plugins-staging: Plugin group that does not have evaluation and aging test enough"
