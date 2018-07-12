@@ -183,8 +183,8 @@ for current_file in ${FILELIST}; do
     if  [[ $FILESIZE -le ${filesize_limit}*1024*1024 ]]; then
         echo "[DEBUG] Passed. patch file name: $current_file. value is $FILESIZE_NUM."
         check_result="success"
-    elif  [[ $current_file =~ "$filesize_limit_exception_folder" ]]; then
-        echo "[DEBUG] Skipped because a patch file $current_file is located in $filesize_limit_exception_folder."
+    elif  [[ $current_file =~ "$SKIP_CI_PATHS_FORMAT" ]]; then
+        echo "[DEBUG] Skipped because a patch file $current_file is located in $SKIP_CI_PATHS_FORMAT."
         echo "[DEBUG] The file size is $FILESIZE_NUM."
         check_result="success"
     else
@@ -209,7 +209,7 @@ else
     cibot_pr_report $TOKEN "failure" "TAOS/pr-format-filesize" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
-    message=":octocat: **cibot**: '$user_id', Oooops. Note that you can not upload a big file that exceeds ${filesize_limit} Mbytes. The file name is ($current_file). The file size is \"$FILESIZE_NUM\". If you have to temporarily upload binary files unavoidably, please share this issue to all members after uploading the files in **/${filesize_limit_exception_folder}** folder."
+    message=":octocat: **cibot**: '$user_id', Oooops. Note that you can not upload a big file that exceeds ${filesize_limit} Mbytes. The file name is ($current_file). The file size is \"$FILESIZE_NUM\". If you have to temporarily upload binary files unavoidably, please share this issue to all members after uploading the files in **/${SKIP_CI_PATHS_FORMAT}** folder."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
@@ -235,8 +235,8 @@ for i in ${FILELIST}; do
             echo "[DEBUG] Newline checker is passed. patch file name: $i. The number of newlines is $newline_count."
             check_result="success"
 
-        elif  [[ $i =~ "$filesize_limit_exception_folder" ]]; then
-            echo "[DEBUG] Newline checker skipped because a patch file $i is located in the $filesize_limit_exception_folder."
+        elif  [[ $i =~ "$SKIP_CI_PATHS_FORMAT" ]]; then
+            echo "[DEBUG] Newline checker skipped because a patch file $i is located in the $SKIP_CI_PATHS_FORMAT."
             echo "[DEBUG] The file size is $FILESIZE_NUM."
             check_result="success"
         else
@@ -272,9 +272,9 @@ echo "[MODULE] TAOS/pr-format-doxygen: Check documenting code using doxygen in t
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for curr_file in ${FILELIST}; do
-    # if a current file is located in $SKIP_CI_PATHS folder, let's skip the inspection process
-    if [[ "$curr_file" =~ ($SKIP_CI_PATHS)$ ]]; then
-        echo "[DEBUG] $curr_file may be skipped because it is located in the \"$SKIP_CI_PATHS\"."
+    # if a current file is located in $SKIP_CI_PATHS_FORMAT folder, let's skip the inspection process
+    if [[ "$curr_file" =~ ($SKIP_CI_PATHS_FORMAT)$ ]]; then
+        echo "[DEBUG] Doxygen checker skips the doxygen inspection because $curr_file is located in the \"$SKIP_CI_PATHS_FORMAT\"."
         continue
     fi
 

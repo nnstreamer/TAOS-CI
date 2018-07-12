@@ -211,7 +211,7 @@ FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 BUILD_MODE=99
 for file in $FILELIST
 do
-    if [[ "$file" =~ ($SKIP_CI_PATHS)$ ]]; then
+    if [[ "$file" =~ ($SKIP_CI_PATHS_AUDIT)$ ]]; then
         echo "[DEBUG] $file may be skipped."
     else
         echo "[DEBUG] $file cannot be skipped."
