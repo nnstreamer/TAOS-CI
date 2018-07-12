@@ -29,7 +29,7 @@
 #  arg6: delivery id
 #
 # @see directory variables
-#  $dir_ci directory for webhooks
+#  $dir_ci       directory for webhooks
 #  $dir_worker   directory for PR workers
 #  $dir_commit   directory for commits
 #
@@ -37,6 +37,7 @@
 # [MODULE] TAOS/pr-audit-build-tizen-x86_64     Check if 'gbs build -A x86_64' can be successfully passed.
 # [MODULE] TAOS/pr-audit-build-tizen-armv7l     Check if 'gbs build -A armv7l' can be successfully passed.
 # [MODULE] TAOS/pr-audit-build-ubuntu           Check if 'pdebuild' can be successfully passed.
+# [MODULE] TAOS/pr-audit-build-yocto              Check if 'devtool' can be successfully passed.
 # [MODULE] plugins-base                         Plugin group that consist of a well-maintained modules
 # [MODULE] plugins-good                         Plugin group that follow Apache license with good quality
 # [MODULE] plugins-staging                      Plugin group that does not have evaluation and aging test enough
@@ -52,7 +53,7 @@ input_delivery_id=$6
 # Note the "source ./config/config-environment.sh" file can be called in another script
 # instead of in this file in order to support asynchronous operation from cibot.php
 source ./config/config-environment.sh
-source ./common/cibot_rest_api.sh
+source ./common/api_collection.sh
 
 # check if input argument is correct.
 if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; then
@@ -61,7 +62,7 @@ if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; t
 fi
 
 # check if dependent packages are installed
-source ./common/inspect_dependency.sh
+source ./common/api_collection.sh
 check_package gbs
 check_package tee
 check_package curl
@@ -152,6 +153,9 @@ done
 
 echo "[DEBUG] Job is queued to run 'pdebuild (for Ubuntu)' command."
 pr-audit-build-ubuntu-trigger-queue
+
+echo "[DEBUG] Job is queued to run 'devtool (for YOCTO)' command."
+pr-audit-build-yocto-trigger-queue
 
 # --------------------------- git-clone module: clone git repository -------------------------------------------------
 echo "[DEBUG] Starting pr-audit....\n"
@@ -265,6 +269,9 @@ done
 echo "[DEBUG] Job is started to run 'pdebuild (for Ubuntu)' command."
 pr-audit-build-ubuntu-trigger-run
 
+echo "[DEBUG] Job is started to run 'devtool (for YOCTO)' command."
+pr-audit-build-yocto-trigger-run
+
 for arch in $pr_build_arch_type
 do
     echo "[DEBUG] Compiling the source code to Tizen $arch RPM package."
@@ -274,6 +281,8 @@ done
 echo "[DEBUG] Compiling the source code to Ubuntu DEB package."
 pr-audit-build-ubuntu
 
+echo "[DEBUG] Compiling the source code to YOCTO DEB package."
+pr-audit-build-yocto
 
 ##################################################################################################################
 

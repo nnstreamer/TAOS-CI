@@ -26,6 +26,7 @@ echo "[MODULE] plugins-base: Plugin group that follow Apache license with good q
 # Please append your plugin modules here.
 
 module_name="pr-audit-build-tizen"
+echo "[DEBUG] The defualt BUILD_MODE of $module_name is declared with 99 (SKIP MODE) by default in plugins-base folder."
 echo "[DEBUG] $module_name is started."
 echo "[DEBUG] TAOS/$module_name: Check if Tizen rpm package is successfully generated."
 echo "[DEBUG] Current path: $(pwd)."
@@ -34,14 +35,29 @@ source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-base/$module_name.sh
 # $module_name
 # echo "[DEBUG] $module_name is done."
 
-# module_name="pr-audit-build-ubuntu"
-# echo "[DEBUG] $module_name is started."
-# echo "[DEBUG] TAOS/$module_name: Check if Ubuntu deb package is successfully generated."
-# echo "[DEBUG] Current path: $(pwd)."
+
+module_name="pr-audit-build-ubuntu"
+echo "[DEBUG] The defualt BUILD_MODE of $module_name is declared with 99 (SKIP MODE) by default in plugins-base folder."
+echo "[DEBUG] $module_name is started."
+echo "[DEBUG] TAOS/$module_name: Check if Ubuntu deb package is successfully generated."
+echo "[DEBUG] Current path: $(pwd)."
 # source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-base/$module_name.sh
 # Note that do not append the below "$module_name" because build step is implemented as a built-in module partially
 # $module_name
 # echo "[DEBUG] $module_name is done."
+
+
+module_name="pr-audit-build-yocto"
+echo "[DEBUG] The defualt BUILD_MODE of $module_name is declared with 99 by default in plugins-base folder."
+echo "[DEBUG] $module_name is started."
+echo "[DEBUG] TAOS/$module_name: Check if YOCTO deb package is successfully generated."
+echo "[DEBUG] Current path: $(pwd)."
+source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-base/$module_name.sh
+# Note that do not append the below "$module_name" because build step is implemented as a built-in module partially
+# $module_name
+# echo "[DEBUG] $module_name is done."
+
+
 
 ###### plugins-good ###############################################################################################
 echo "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"

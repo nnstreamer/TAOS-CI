@@ -34,7 +34,7 @@
 
 
 #### Repository setting
-# Name of Account (or orgranzation)
+# Name of account (or orgranzation)
 GITHUB_ACCOUNT="STAR"
 
 # Project name of github.sec.samsung.net
@@ -95,10 +95,24 @@ pr_doxygen_check_level=0
 filesize_limit=5
 
 
+#### Build mode of software platform
+
+# BUILD_MODE_***=0  : execute a build process without a debug file.
+# BUILD_MODE_***=1  : execute a build process with a debug file.
+# BUILD_MODE_***=99 : skip a build process (by default)
+#
+# Note: if a packaging management is not normally executed for package build, you must declare `BUILD_MODE_***=99` unavoidably
+# 1) Tizen (packaging/*.spec): If a maintainer done the gbs based build process, you may change builde mode from 99 to 0.
+# 2) Ubuntu (debian/*.rule)  : If a maintainer done the pdebuild based build process, you may change builde mode from 99 to 0.
+# 3) Yocto (CMakeLists.txt)  : If a maintainer done the devtool based build process, you may change builde mode from 99 to 0.
+BUILD_MODE_TIZEN=99
+BUILD_MODE_UBUNTU=99
+BUILD_MODE_YOCTO=99
+
 ################# Do not modify the below statements #################################
 
 # Version format: Major.Minor
-VERSION="1.20180709"
+VERSION="1.20180719"
 
 # Connecting to a repository using token id instead of git.bot.sec@samsung.com id
 # because of two-authentification. Refer to https://github.sec.samsung.net/settings/tokens

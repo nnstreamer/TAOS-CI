@@ -55,7 +55,7 @@ if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; t
 fi
 
 # Check if dependent packages are installed
-source ./common/inspect_dependency.sh
+source ./common/api_collection.sh
 check_package tee
 echo "[DEBUG] Checked dependency packages.\n"
 

@@ -49,6 +49,13 @@ function pr-audit-build-tizen(){
     check_package gbs
     check_package tee
 
+
+    # BUILD_MODE=0 : run "gbs build" command without generating debugging information.
+    # BUILD_MODE=1 : run "gbs build" command with a debug file.
+    # BUILD_MODE=99: skip "gbs build" procedures
+    BUILD_MODE=$BUILD_MODE_TIZEN
+
+    # build package
     if [[ $BUILD_MODE == 99 ]]; then
         echo -e "BUILD_MODE = 99"
         echo -e "Skipping 'gbs build -A $1' procedure temporarily."

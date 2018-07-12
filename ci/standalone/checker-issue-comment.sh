@@ -25,7 +25,7 @@
 
 # --------------------------- Pre-setting module --------------------------------------------------------
 source ./config/config-environment.sh
-source ./common/cibot_rest_api.sh
+source ./common/api_collection.sh
 
 # check if input argument is correct. 
 if [[ $1 == "" ]]; then

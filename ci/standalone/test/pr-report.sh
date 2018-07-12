@@ -23,7 +23,7 @@ fi
 CONTEXT="(INFO)TAOS/pr-format-all"
 #CONTEXT="TAOS/pr-audit-build-tizen"
 #CONTEXT="TAOS/pr-audit-build-ubuntu"
-#CONTEXT="TAOS/pr-audit-build-smp"
+#CONTEXT="TAOS/pr-audit-build-yocto"
 #CONTEXT="(INFO)TAOS/pr-audit-all"
 
 

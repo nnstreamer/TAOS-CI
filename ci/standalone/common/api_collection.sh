@@ -1,15 +1,8 @@
 #!/usr/bin/env bash
 
 ##
-# @file  cibot_rest_api.sh
-# @brief API collection to send webhook messages to a github server
-
-
-
-# check if dependent packages are installed to avoid an unexpected program error.
-check_package cut
-check_package wc
-check_package curl
+# @file  api_collection.sh
+# @brief API collection to send webhook messages to a github server and to manage comment functions
 
 
 ##
@@ -107,3 +100,20 @@ function cibot_pr_report(){
     echo -e "[DEBUG] Note: The privileged user id has to be appended by \"Write\" permission."
     echo -e "[DEBUG] Note: If webhook server replies \"message\": \"Bad credentials\", try do it again with a correct token key."
 }
+
+##
+#  @brief check if a pcakge is installed
+#  @param
+#   arg1: package name
+function check_package() {
+    echo "Checking for $1..."
+    which "$1" 2>/dev/null || {
+      echo "Please install $1."
+      exit 1
+    }
+}
+
+# check if dependent packages are installed to avoid an unexpected program error.
+check_package curl
+check_package cut
+check_package wc

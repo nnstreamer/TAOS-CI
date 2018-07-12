@@ -62,6 +62,11 @@ function pr-audit-build-ubuntu(){
 
     echo "[DEBUG] starting TAOS/pr-audit-build-ubuntu facility"
 
+    # BUILD_MODE=0 : run "pdebuild" command without generating debugging information.
+    # BUILD_MODE=1 : run "pdebuild" command with a debug file.
+    # BUILD_MODE=99: skip "pdebuild" procedures
+    BUILD_MODE=$BUILD_MODE_UBUNTU
+
     # build package
     if [[ $BUILD_MODE == 99 ]]; then
         # skip build procedure
