@@ -47,6 +47,7 @@ function pr-audit-build-tizen(){
     check_package sudo
     check_package curl
     check_package gbs
+    check_package tee
 
     if [[ $BUILD_MODE == 99 ]]; then
         echo -e "BUILD_MODE = 99"
@@ -62,7 +63,7 @@ function pr-audit-build-tizen(){
         --define "__ros_verify_enable 1" \
         --define "_pr_start_time ${input_date}" \
         --define "_skip_debug_rpm 1" \
-        --buildroot ./GBS-ROOT/  | tee ../report/build_log_${input_pr}_tizen_output.txt
+        --buildroot ./GBS-ROOT/  | tee ../report/build_log_${input_pr}_tizen_$1_output.txt
     else
         echo -e "BUILD_MODE = 0"
         sudo -Hu www-data gbs build \
@@ -74,7 +75,7 @@ function pr-audit-build-tizen(){
         --define "__ros_verify_enable 1" \
         --define "_pr_start_time ${input_date}" \
         --define "_skip_debug_rpm 1" \
-        --buildroot ./GBS-ROOT/ 2> ../report/build_log_${input_pr}_tizen_error.txt 1> ../report/build_log_${input_pr}_tizen_output.txt
+        --buildroot ./GBS-ROOT/ 2> ../report/build_log_${input_pr}_tizen_$1_error.txt 1> ../report/build_log_${input_pr}_tizen_$1_output.txt
     fi
     result=$?
     echo "[DEBUG] The variable result value is $result."
