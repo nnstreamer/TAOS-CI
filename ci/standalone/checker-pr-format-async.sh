@@ -197,7 +197,7 @@ done
 
 
 # get just a file name from a path to avoid length limitation (e.g., max 140 characters) of 'description' tag
-i_filename=$(basename $i)
+i_filename=$(basename $current_file)
 
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. File size."
@@ -217,30 +217,30 @@ echo "##########################################################################
 echo "[MODULE] TAOS/pr-format-newline: Check the illegal newline handlings in text files"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
-for i in ${FILELIST}; do
+for current_file in ${FILELIST}; do
     # Handle only text files in case that there are lots of files in one commit.
-    echo "[DEBUG] file name is ( $i )."
+    echo "[DEBUG] file name is ( $current_file )."
 
     newline_count=0
-    if [[ `file $i | grep "ASCII text" | wc -l` -gt 0 ]]; then
+    if [[ `file $current_file | grep "ASCII text" | wc -l` -gt 0 ]]; then
         # in case of text files: *.c|*.h|*.cpp|*.py|*.md|*.xml|*.txt|*.launch|*.sh|*.php|*.html|*.json|*.spec|*.manifest|*.CODEOWNERS )
-        echo "[DEBUG] ( $i ) file is a text file."
+        echo "[DEBUG] ( $current_file ) file is a text file."
         num=$(( $num + 1 ))
         # fetch patch content of a specified file from  a commit.
-        echo "[DEBUG] git show $i > ../report/${num}.patch "
-        git show $i > ../report/${num}.patch
+        echo "[DEBUG] git show $current_file > ../report/${num}.patch "
+        git show $current_file > ../report/${num}.patch
         # check if the last line of a patch file includes "\ No newline....." statement.
         newline_count=$(cat ../report/${num}.patch  | tail -1 | grep '^\\ No newline' | wc -l)
         if  [[ $newline_count == 0 ]]; then
-            echo "[DEBUG] Newline checker is passed. patch file name: $i. The number of newlines is $newline_count."
+            echo "[DEBUG] Newline checker is passed. patch file name: $current_file. The number of newlines is $newline_count."
             check_result="success"
 
-        elif  [[ $i =~ "$SKIP_CI_PATHS_FORMAT" ]]; then
-            echo "[DEBUG] Newline checker skipped because a patch file $i is located in the $SKIP_CI_PATHS_FORMAT."
+        elif  [[ $current_file =~ "$SKIP_CI_PATHS_FORMAT" ]]; then
+            echo "[DEBUG] Newline checker skipped because a patch file $current_file is located in the $SKIP_CI_PATHS_FORMAT."
             echo "[DEBUG] The file size is $FILESIZE_NUM."
             check_result="success"
         else
-            echo "[DEBUG] Newline checker is failed. patch file name: $i. The number of newlines is $newline_count."
+            echo "[DEBUG] Newline checker is failed. patch file name: $current_file. The number of newlines is $newline_count."
             touch ../report/newline-error-${num}.patch
             echo " There are ${newline_count} '\ No newline ...' statements in the ${num}.patch file." > ../report/newline-error-${num}.patch
             check_result="failure"
@@ -251,7 +251,7 @@ for i in ${FILELIST}; do
 done
 
 # get just a file name from a path to avoid length limitation (e.g., max 140 characters) of 'description' tag
-i_filename=$(basename $i)
+i_filename=$(basename $current_file)
 
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. No newline anomaly."
@@ -263,7 +263,7 @@ else
     cibot_pr_report $TOKEN "failure" "TAOS/pr-format-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
-    message=":octocat: **cibot**: $user_id, There is a newline issue. The final line of a text file should have newline character. Please resubmit your PR after fixing end of line in $i."
+    message=":octocat: **cibot**: $user_id, There is a newline issue. The final line of a text file should have newline character. Please resubmit your PR after fixing end of line in $current_file."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
