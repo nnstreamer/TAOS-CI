@@ -359,15 +359,16 @@ for curr_file in ${FILELIST}; do
                         fi
                         
                         # Check the beginning of the comment is '/*' beacuse doxygen can't recognize comment start with '/*'
-                        if [[ $line =~ "/*" && $line != *"/**"* ]]; then
-                            echo "[ERROR] File name: $curr_file, $idx line, the comment should begin with /**"
+                        # Let's skip the doxygen tag inspection such as "/**" in case of a single line comment.
+                        if [[ $line =~ "/*" && $line != *"/**"*  && ( $line != *"*/"  || $line =~ "@" ) ]]; then
+                            echo "[ERROR] File name: $curr_file, $idx line, Doxygen or multi line comments should begin with /**"
                             check_result="failure"
                             global_check_result="failure"
                         fi
                         
                         # Check the doxygen tag written in upper case beacuase doxygen can't use upper case tag. ex) @TODO
                         if [[ $line =~ "@"[A-Z] ]]; then
-                            echo "[ERROR] File name: $curr_file, $idx line, The tag sholud be written in lower case."
+                            echo "[ERROR] File name: $curr_file, $idx line, The doxygen tag sholud be written in lower case."
                             check_result="failure"
                             global_check_result="failure"
                         fi
