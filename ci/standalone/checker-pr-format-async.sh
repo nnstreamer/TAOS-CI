@@ -376,7 +376,7 @@ for curr_file in ${FILELIST}; do
                 fi
 
                 if  [[ $check_result == "success" ]]; then
-                    echo "[ERROR] $doxygen_lang: passed. file name: $curr_file, All tags are found."
+                    echo "[DEBUG] $doxygen_lang: passed. file name: $curr_file, All tags are found."
                 fi
                 ;;
             # in case of Python code
