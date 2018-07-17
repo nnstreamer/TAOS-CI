@@ -48,32 +48,26 @@ $rawPost="";
 $json="";
 $open_sesame="";
 
-/**
- * @brief set-up configuration setting
- */
-function configuration(){
-    echo ("[DEBUG] PRINT: CI engine started..... <br>\n");
-    # Please, add "$hookSecret" value in Secret field at github.sec.samsung.net/.../setting/hooks/
-    # Set NULL if you want to disable this security.
-    global $hookSecret;
-    $hookSecret = 'cibot';
-}
 
 /**
  * @brief read json file
  */
-function read_json_config(){
+function json_config(){
+    echo ("[DEBUG] PRINT: <font color=blue><b>CI webhook engine is started.....</b></font> <br>\n");
     // read JSON file
     $string = file_get_contents("./config/config-cibot.json");
     $json_config = json_decode($string);
 
-    // get id and toke from json file
+    // get id from json file
     $github_id = $json_config->github->id;
-    $github_token = $json_config->github->token;
     // Note that you have to use print_r instead of echo function to display decoded json data.
     // print_r ($json_config);
-    // printf ("[DEBUG] github bot token: %s\n<br>", $json_config->github->token);
-    // printf ("[DEBUG] github bot id: %s\n<br>", $json_config->github->id);
+    printf ("[DEBUG] webhook id: %s\n<br>", $json_config->github->id);
+
+    # Please, add "$hookSecret" value in Secret field at github.sec.samsung.net/.../setting/hooks/
+    # Set NULL if you want to disable this security.
+    global $hookSecret;
+    $hookSecret = '$json_config->github->secret';
 }
 
 /**
@@ -92,7 +86,7 @@ function get_payload_contents(){
     set_exception_handler(function($e) {
         header('HTTP/1.1 500 Internal Server Error');
         echo "[DEBUG] ERROR: <font color=red>Ooops. This webpage is a security zone. Do not try to do an illegal access.</font><br>\n";
-        echo "[DEBUG] ERROR: This error is generated on <b>line {$e->getLine()}</b> of <b>".basename($_SERVER['PHP_SELF'])."</b> by exception handling facility.<br>\n";
+        echo "[DEBUG] ERROR: This error is generated on <b>line {$e->getLine()}</b> of the <b>".basename($_SERVER['PHP_SELF'])."</b> file by exception handling facility.<br>\n";
         echo "[DEBUG] ERROR: ".htmlSpecialChars($e->getMessage())."<br>\n";
         die();
     });
@@ -344,8 +338,7 @@ function github_event_handling(){
  * @brief  Main fuction
  */
 function main(){
-    configuration();
-    read_json_config();
+    json_config();
     get_payload_contents();
     decode_json_data();
     github_event_handling();

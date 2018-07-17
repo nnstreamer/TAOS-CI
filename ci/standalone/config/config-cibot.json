@@ -1,0 +1,7 @@
+{
+    "github": {
+        "id": "git.bot.sec",
+        "email": "git.bot.sec@samsung.com",
+        "secret": "cibot"
+    }
+}
