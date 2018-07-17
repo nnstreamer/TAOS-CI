@@ -34,6 +34,9 @@
 
 
 #### Repository setting
+# Name of Account (or orgranzation)
+GITHUB_ACCOUNT="STAR"
+
 # Project name of github.sec.samsung.net
 PRJ_REPO_UPSTREAM="TAOS-CI"
 
@@ -113,11 +116,11 @@ REFERENCE_REPOSITORY="/var/www/html/$PRJ_REPO_UPSTREAM/"
 REPOCACHE="/var/www/html/$PRJ_REPO_UPSTREAM/repo_cache/"
 
 # Github repostiroy webaddress
-REPOSITORY_WEB="https://github.sec.samsung.net/STAR/$PRJ_REPO_UPSTREAM"
-REPOSITORY_GIT="https://github.sec.samsung.net/STAR/$PRJ_REPO_UPSTREAM.git"
+REPOSITORY_WEB="https://github.sec.samsung.net/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
+REPOSITORY_GIT="https://github.sec.samsung.net/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM.git"
 
 # Github webhook API
-GITHUB_WEBHOOK_API="https://github.sec.samsung.net/api/v3/repos/STAR/$PRJ_REPO_UPSTREAM"
+GITHUB_WEBHOOK_API="https://github.sec.samsung.net/api/v3/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
 
 
 
