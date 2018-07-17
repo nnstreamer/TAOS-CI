@@ -66,11 +66,12 @@ function json_config(){
     // Note that you have to use print_r instead of echo function to display decoded json data.
     // print_r ($json_config);
     printf ("[DEBUG] webhook id: %s\n<br>", $json_config->github->id);
+    printf ("[DEBUG] webhook secret: %s\n<br>", $json_config->github->secret);
 
     # Please, add "$hookSecret" value in Secret field at github.sec.samsung.net/.../setting/hooks/
     # Set NULL if you want to disable this security.
     global $hookSecret;
-    $hookSecret = '$json_config->github->secret';
+    $hookSecret = $json_config->github->secret;
 }
 
 /**
