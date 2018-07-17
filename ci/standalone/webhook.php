@@ -15,7 +15,7 @@
  */
 
 /**
- *    @file   cibot.taos
+ *    @file   webhook.php
  *    @brief  Github webhook handler
  *
  *    It is an event handler based on github webhook API to automatically
@@ -53,6 +53,9 @@ $open_sesame="";
  * @brief read json file
  */
 function json_config(){
+    echo ("<img src=./image/ci-bot-flow.png border=0></img><br>\n");
+    echo ("<style> table { border: 1px solid #444444; } </style>\n");
+    echo ("<table bgcolor=gray><tr><td width=800></td></tr></table>\n");
     echo ("[DEBUG] PRINT: <font color=blue><b>CI webhook engine is started.....</b></font> <br>\n");
     // read JSON file
     $string = file_get_contents("./config/config-cibot.json");
