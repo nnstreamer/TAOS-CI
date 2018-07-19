@@ -44,7 +44,6 @@
 #
 # Lots of opensource communities have been using "Signed-off-by:" notation by default to handle the license issues that result from contributors.
 # Refer to the below websites:
-# * GPL violoation - http://gpl-violations.org/
 # * Signed-off-by Process by LinuxFoundation - https://ltsi.linuxfoundation.org/developers/signed-process
 # * Signed-off-by lines and the DCO - http://elinux.org/Legal_Issues#Signed-off-by_lines_and_the_DCO
 # * Gerrit Code Review - Signed-off-by Lines - https://git.eclipse.org/r/Documentation/user-signedoffby.html
@@ -84,7 +83,7 @@ elif [[ $input_result == "failure" ]]; then
     cibot_pr_report $TOKEN "failure" "TAOS/pr-signedoff" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform contributors of meaning of Signed-off-by: statement
-    message="To contributor, We have used '**Signed-off-by:**' notation by default to handle the license issues, that result from contributors. Note that 'Is there a Signed-off-by line?' is important because lawyers tell us we must have to it **to cleanly maintain the license issues** such as GPL and LGPL even though it has nothing to do with the code itself."
+    message="To contributor, We have used '**Signed-off-by:**' notation by default to handle the license issues, that result from contributors. Note that 'Is there a Signed-off-by line?' is important because lawyers tell us we must have to it **to cleanly maintain the open-source license issues** even though it has nothing to do with the code itself."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 else
     # in case of CI error
