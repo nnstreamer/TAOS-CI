@@ -1,22 +1,36 @@
 #!/usr/bin/env python2.7
-## @file unittestcoverage.py
-#  @brief Calculate and show unit test coverate rate.
+
+##
+# Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
 #
-# License: Apache-2.0
-# (c) 2018 MyungJoo Ham <myungjoo.ham@samsung.com>
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
+
+##
+# @file unittestcoverage.py
+# @brief Calculate and show unit test coverate rate.
+# @author MyungJoo Ham <myungjoo.ham@samsung.com>
+# @note
 # Precondition:
-#   The user must have executed cmake/make build for all compoennts with -fprofile-arcs -ftest-coverage enabled
-#   All the unit tests binaries should have been executed.
-#   Other than the unit test binaries, no other built binaries should be executed, yet
+#  The user must have executed cmake/make build for all compoennts with -fprofile-arcs -ftest-coverage enabled
+#  All the unit tests binaries should have been executed.
+#  Other than the unit test binaries, no other built binaries should be executed, yet
 #
 # Usage: (for the case of STAR/AuDri.git)
 #
-#   $ unittestcoverage module /home/abuild/rpmbuild/BUILD/audri-1.1.1/ROS/autodrive/
-#   Please use absolute path to the module directory.
+#  $ unittestcoverage module /home/abuild/rpmbuild/BUILD/audri-1.1.1/ROS/autodrive/
+#  Please use absolute path to the module directory.
 #
-#   $ unittestcoverage all /home/abuild/rpmbuild/BUILD/audri-1.1.1/ROS/
-#   Please use absolute path to the ROS module root dir
+#  $ unittestcoverage all /home/abuild/rpmbuild/BUILD/audri-1.1.1/ROS/
+#  Please use absolute path to the ROS module root dir
 #
 # Limitation of this version: supports c/c++ only (.c, .cpp, .h, .hpp)
 #
