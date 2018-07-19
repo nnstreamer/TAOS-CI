@@ -270,6 +270,7 @@ echo "##########################################################################
 echo "[MODULE] TAOS/pr-format-doxygen: Check documenting code using doxygen in text files"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
+check_result="success"
 for curr_file in ${FILELIST}; do
     # if a current file is located in $SKIP_CI_PATHS_FORMAT folder, let's skip the inspection process
     if [[ "$curr_file" =~ ($SKIP_CI_PATHS_FORMAT)$ ]]; then
@@ -289,7 +290,6 @@ for curr_file in ${FILELIST}; do
                 # Append a doxgen rule step by step
                 doxygen_basic_rules="@file @brief" # @file and @brief to inspect file
                 doxygen_advanced_rules="@author @bug" # @author, @bug to inspect file, @brief for to inspect function
-                check_result="success"
 
                 # Apply advanced doxygen rule if pr_doxygen_check_level=1 in config-environment.sh
                 if [[ $pr_doxygen_check_level == 1 ]]; then
@@ -354,7 +354,8 @@ for curr_file in ${FILELIST}; do
                         # Find brief tag in the comments between the codes.
                         if [[ $line =~  "@brief" ]]; then 
                             brief=1
-                        elif [[ $line != *"*"*  && ( $line =~ ";" || $line =~ "}" ) ]]; then  # The tag you find is used in this line.
+                        # Doxygen tags become zero in code section.
+                        elif [[ $line != *"*"*  && ( $line =~ ";" || $line =~ "}" || $line =~ "#") ]]; then  
                             brief=0
                         fi
                         
@@ -374,10 +375,6 @@ for curr_file in ${FILELIST}; do
                         fi
 
                     done < "$curr_file"
-                fi
-
-                if  [[ $check_result == "success" ]]; then
-                    echo "[DEBUG] $doxygen_lang: passed. file name: $curr_file, All tags are found."
                 fi
                 ;;
             # in case of Python code
