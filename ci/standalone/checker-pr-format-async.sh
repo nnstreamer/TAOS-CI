@@ -34,7 +34,6 @@
 #
 # @modules:
 # "[MODULE] TAOS/pr-format-file-size      Check the file size to not include big binary files"
-# "[MODULE] TAOS/pr-format-newline        Check the illegal newline handlings in text files"
 # "[MODULE] TAOS/pr-format-cppcheck       Check dangerous coding constructs in source codes (*.c, *.cpp) with cppcheck"
 # "[MODULE] TAOS/pr-format-rpm-spec       Check the spec file with rpmlint"
 # "[MODULE] TAOS/pr-format-nobody         Check the commit message body"
@@ -43,7 +42,6 @@
 # "[MODULE] TAOS/pr-format-hardcoded-path Check prohibited hardcoded paths (/home/* for now)"
 # "[MODULE] plugins-good                Plugin group that follow Apache license with good quality"
 # "[MODULE] plugins-staging                Plugin group that does not have evaluation and aging test enough"
-#
 
 # --------------------------- Pre-setting module ----------------------------------------------------------------------
 
@@ -208,60 +206,6 @@ else
 
     # inform PR submitter of a hint in more detail
     message=":octocat: **cibot**: '$user_id', Oooops. Note that you can not upload a big file that exceeds ${filesize_limit} Mbytes. The file name is ($current_file). The file size is \"$FILESIZE_NUM\". If you have to temporarily upload binary files unavoidably, please share this issue to all members after uploading the files in **/${SKIP_CI_PATHS_FORMAT}** folder."
-    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
-fi
-
-echo "########################################################################################"
-echo "[MODULE] TAOS/pr-format-newline: Check the illegal newline handlings in text files"
-# investigate generated all *.patch files
-FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
-for current_file in ${FILELIST}; do
-    # Handle only text files in case that there are lots of files in one commit.
-    echo "[DEBUG] file name is ( $current_file )."
-
-    newline_count=0
-    if [[ `file $current_file | grep "ASCII text" | wc -l` -gt 0 ]]; then
-        # in case of text files: *.c|*.h|*.cpp|*.py|*.md|*.xml|*.txt|*.launch|*.sh|*.php|*.html|*.json|*.spec|*.manifest|*.CODEOWNERS )
-        echo "[DEBUG] ( $current_file ) file is a text file."
-        num=$(( $num + 1 ))
-        # fetch patch content of a specified file from  a commit.
-        echo "[DEBUG] git show $current_file > ../report/${num}.patch "
-        git show $current_file > ../report/${num}.patch
-        # check if the last line of a patch file includes "\ No newline....." statement.
-        newline_count=$(cat ../report/${num}.patch  | tail -1 | grep '^\\ No newline' | wc -l)
-        if  [[ $newline_count == 0 ]]; then
-            echo "[DEBUG] Newline checker is passed. patch file name: $current_file. The number of newlines is $newline_count."
-            check_result="success"
-
-        elif  [[ $current_file =~ "$SKIP_CI_PATHS_FORMAT" ]]; then
-            echo "[DEBUG] Newline checker skipped because a patch file $current_file is located in the $SKIP_CI_PATHS_FORMAT."
-            echo "[DEBUG] The file size is $FILESIZE_NUM."
-            check_result="success"
-        else
-            echo "[DEBUG] Newline checker is failed. patch file name: $current_file. The number of newlines is $newline_count."
-            touch ../report/newline-error-${num}.patch
-            echo " There are ${newline_count} '\ No newline ...' statements in the ${num}.patch file." > ../report/newline-error-${num}.patch
-            check_result="failure"
-            global_check_result="failure"
-            break
-        fi
-    fi
-done
-
-# get just a file name from a path to avoid length limitation (e.g., max 140 characters) of 'description' tag
-i_filename=$(basename $current_file)
-
-if [[ $check_result == "success" ]]; then
-    echo "[DEBUG] Passed. No newline anomaly."
-    message="Successfully all text files are passed without newline issue."
-    cibot_pr_report $TOKEN "success" "TAOS/pr-format-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
-else
-    echo "[DEBUG] Failed. A newline anomaly happened."
-    message="Oooops. New line checker is failed at $i_filename."
-    cibot_pr_report $TOKEN "failure" "TAOS/pr-format-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
-
-    # inform PR submitter of a hint in more detail
-    message=":octocat: **cibot**: $user_id, There is a newline issue. The final line of a text file should have newline character. Please resubmit your PR after fixing end of line in $current_file."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
@@ -438,11 +382,11 @@ for filename in ../report/000*.patch; do
     fi
 done
 if [[ $check_result == "success" ]]; then
-    echo "[DEBUG] Passed. No newline abnormally."
+    echo "[DEBUG] Passed. There is no nobody issue."
     message="Successfully commit body includes +5 words."
     cibot_pr_report $TOKEN "success" "TAOS/pr-format-nobody" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
-    echo "[DEBUG] Failed. A newline abnormally found."
+    echo "[DEBUG] Failed. There is no the commit body in this commit."
     message="Oooops. Commit message body checker failed. You must write commit message (+5 words) as well as commit title."
     cibot_pr_report $TOKEN "failure" "TAOS/pr-format-nobody" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 fi
