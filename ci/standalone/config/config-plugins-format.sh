@@ -78,6 +78,15 @@ source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh
 $module_name
 echo "$module_name is done."
 
+module_name="pr-format-rpm-spec"
+echo "$module_name is starting."
+echo "[MODULE] TAOS/$module_name: Check if there is incorrect staements in *.spec file"
+echo "The current path: $(pwd)."
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh"
+source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh
+$module_name
+echo "$module_name is done."
+
 ##################################################################################################################
 echo "[MODULE] plugins-staging: Plugin group that does not have evaluation and aging test enough"
 # Please append your plugin modules here.

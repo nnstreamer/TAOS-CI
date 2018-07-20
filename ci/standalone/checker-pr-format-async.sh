@@ -15,33 +15,32 @@
 #
 
 ##
-# @file checker-pr-format-async.sh
-# @brief It checks format rules whenever a PR is submitted.
-# @see      https://github.sec.samsung.net/STAR/TAOS-CI
-# @author   Geunsik Lim <geunsik.lim@samsung.com>
-# @param arguments are received from CI manager
-#  arg1: date(Ymdhms)
-#  arg2: commit number
-#  arg3: repository address of PR
-#  arg4: branch name
-#  arg5: PR number
-#  arg6: delivery id
+# @file    checker-pr-format-async.sh
+# @brief   It checks format rules whenever a PR is submitted.
+# @see     https://github.sec.samsung.net/STAR/TAOS-CI
+# @author  Geunsik Lim <geunsik.lim@samsung.com>
+# @param   arguments are received from CI manager
+#  arg1:   date(Ymdhms)
+#  arg2:   commit number
+#  arg3:   repository address of PR
+#  arg4:   branch name
+#  arg5:   PR number
+#  arg6:   delivery id
 #
 # @see variables to control the directories
-#  $dir_ci directory is CI folder
+#  $dir_ci       directory is CI folder
 #  $dir_worker   directory is PR worker folder
 #  $dir_commit   directory is commit folder
 #
 # @modules:
 # "[MODULE] TAOS/pr-format-file-size      Check the file size to not include big binary files"
 # "[MODULE] TAOS/pr-format-cppcheck       Check dangerous coding constructs in source codes (*.c, *.cpp) with cppcheck"
-# "[MODULE] TAOS/pr-format-rpm-spec       Check the spec file with rpmlint"
 # "[MODULE] TAOS/pr-format-nobody         Check the commit message body"
 # "[MODULE] TAOS/pr-format-timestamp      Check the timestamp of the commit"
 # "[MODULE] TAOS/pr-format-executable     Check executable bits for .cpp, .h, .hpp, .c, .caffemodel, .prototxt, .txt."
 # "[MODULE] TAOS/pr-format-hardcoded-path Check prohibited hardcoded paths (/home/* for now)"
-# "[MODULE] plugins-good                Plugin group that follow Apache license with good quality"
-# "[MODULE] plugins-staging                Plugin group that does not have evaluation and aging test enough"
+# "[MODULE] plugins-good                  Plugin group that follow Apache license with good quality"
+# "[MODULE] plugins-staging               Plugin group that does not have evaluation and aging test enough"
 
 # --------------------------- Pre-setting module ----------------------------------------------------------------------
 
@@ -270,68 +269,6 @@ else
     # inform PR submitter of a hint in more detail
     message=":octocat: **cibot**: $user_id, **$i** includes bug(s). You must fix incorrect coding constructs in the source code before entering a review process."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
-fi
-
-
-echo "########################################################################################"
-echo "[MODULE] TAOS/pr-format-rpm-spec: Check the spec file with rpmlint"
-spec_modified="false"
-# investigate generated all *.patch files
-FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
-for i in ${FILELIST}; do
-    if [[ $i =~ ^obsolete/.* ]]; then
-        continue
-    fi
-    if [[ $i =~ ^external/.* ]]; then
-        continue
-    fi
-    # Handle only spec file in case that there are lots of files in one commit.
-    echo "[DEBUG] file name is ( $i )."
-    RPM_SPEC_REPORT_FILE="rpm-spec-check-result.html"
-    touch ../report/${RPM_SPEC_REPORT_FILE}
-    echo "RPM spec checker is skipped because there is no spec file (e.g., *.spec) in this PR."
-    if [[ `file $i | grep "ASCII text" | wc -l` -gt 0 ]]; then
-        case $i in
-            # in case of *.spec file
-            *.spec )
-                echo "[DEBUG] ( $i ) file is source code with the text format."
-                rpmlint_result=`rpmlint $i | aha --line-fix > ../report/${RPM_SPEC_REPORT_FILE}`
-                echo "[DEBUG] rpmlint result:\n $rpmlint_result"
-                check_result="success"
-                spec_modified="true"
-                break
-                ;;
-            * )
-                echo "[DEBUG] ( $i ) file is not source code with the text format."
-                check_result="success"
-                spec_modified="false"
-                ;;
-        esac
-    fi
-done
-
-# If developer(s) modify *.spec file, let's report an investigation result that checks common errors in the file.
-if [[ spec_modified == "true" ]]; then
-
-    # inform PR submitter of a hint in more detail to fix incorrect *.spec file.
-    # TODO: Improve the existing handling method in case that developers incorrectly write *.spec file.
-    message=":octocat: **cibot**: [FYI] We inform $user_id of a check result of spec file with rpmlint. If there are some warning(s) or error(s) in your spec file, modify ${i} correctly after reading the report at ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${RPM_SPEC_REPORT_FILE}."
-    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
-
-    if [[ $check_result == "success" ]]; then
-        echo "[DEBUG] Passed. rpm spec checker."
-        message="Successfully rpm spec checker is done."
-        cibot_pr_report $TOKEN "success" "TAOS/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
-    else
-        echo "[DEBUG] Failed. rpm spec checker."
-        message="Oooops. The rpm spec checker is failed."
-        cibot_pr_report $TOKEN "failure" "TAOS/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
-    fi
-else
-    echo "[DEBUG] Skipped. rpm spec checker."
-    message="Skipped. rpm spec checker is jumped because you did not modify a spec file."
-    cibot_pr_report $TOKEN "success" "TAOS/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
-
 fi
 
 echo "########################################################################################"
