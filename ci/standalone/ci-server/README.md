@@ -22,8 +22,8 @@ $ sudo apt-get install mic gbs
 
 ## Install Apache+PHP for CI Server
 
-NPUT Compiler's CI server is equipped with Apache and PHP script language to run lightwegith automation server
-instead of Jenkins. Builds has been triggered by last commit number by scheduling a Pull Request (PR) with NPU bot, that is based on Webhooks API and JASON format.
+The CI server to run TAOS-CI has to be equipped with Apache and PHP script language to run lightwegith automation server instead of Jenkins.
+Builds has been triggered by last commit number by scheduling a Pull Request (PR) with a bot, that is based on Webhook API and JSON.
 
 **for Ubuntu 16.04**
 
