@@ -53,7 +53,7 @@ $open_sesame="";
  * @brief read json file
  */
 function json_config(){
-    echo ("<img src=./image/ci-bot-flow.png border=0></img><br>\n");
+    echo ("<img src=./image/webhook-flow.png border=0></img><br>\n");
     echo ("<style> table { border: 1px solid #444444; } </style>\n");
     echo ("<table bgcolor=gray><tr><td width=800></td></tr></table>\n");
     echo ("[DEBUG] PRINT: <font color=blue><b>CI webhook engine is started.....</b></font> <br>\n");
