@@ -89,9 +89,19 @@ function pr-audit-build-ubuntu(){
                     echo -e "[DEBUG][PASSED] Successfully ./GBS-ROOT folder is removed."
             fi
         fi
-        echo -e "[DEBUG] starting 'pdebuild' command."
-        # sudo -Hu www-data pdebuild 2> ../report/build_log_${input_pr}_ubuntu_error.txt 1> ../report/build_log_${input_pr}_ubuntu_output.txt
-        pdebuild 2> ../report/build_log_${input_pr}_ubuntu_error.txt 1> ../report/build_log_${input_pr}_ubuntu_output.txt
+
+        # It extracts the chroot, invoke "apt-get update" and "apt-get dist-upgrade" inside the chroot,
+        # and then recreate the base.tgz (the base tar-ball)
+        # Caution: we recommend that you append the below statement into /etc/crontab to avoid a traffic jam
+        # such as a busy waiting situation in case of too many PRs.
+        # echo -e "[DEBUG] starting 'pdebuild update' command."
+        # sudo pbuilder update  --override-config
+
+        echo -e "[DEBUG] starting 'pdebuild --use-pdebuild-internal' command."
+        # --use-pdebuild-internal runs "debian/rules clean"inside the chroot
+        # http://pbuilder-docs.readthedocs.io/en/latest/usage.html
+        # example: sudo -Hu www-data pdebuild
+        pdebuild  --use-pdebuild-internal 2> ../report/build_log_${input_pr}_ubuntu_error.txt 1> ../report/build_log_${input_pr}_ubuntu_output.txt
     fi
 
     result=$?
