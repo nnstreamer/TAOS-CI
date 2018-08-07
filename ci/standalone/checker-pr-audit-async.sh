@@ -63,15 +63,15 @@ fi
 
 # check if dependent packages are installed
 source ./common/api_collection.sh
-check_package gbs
-check_package tee
-check_package curl
-check_package grep
-check_package wc
-check_package cat
-check_package sed
-check_package awk
-check_package basename
+check_dependency gbs
+check_dependency tee
+check_dependency curl
+check_dependency grep
+check_dependency wc
+check_dependency cat
+check_dependency sed
+check_dependency awk
+check_dependency basename
 echo "[DEBUG] Checked dependency packages.\n"
 
 # get user ID from the input_repo string

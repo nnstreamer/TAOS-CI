@@ -56,7 +56,7 @@ fi
 
 # Check if dependent packages are installed
 source ./common/api_collection.sh
-check_package tee
+check_dependency tee
 echo "[DEBUG] Checked dependency packages.\n"
 
 # Set folder name uniquely to run CI in different folder per a PR.

@@ -105,7 +105,7 @@ function cibot_pr_report(){
 #  @brief check if a pcakge is installed
 #  @param
 #   arg1: package name
-function check_package() {
+function check_dependency() {
     echo "Checking for $1..."
     which "$1" 2>/dev/null || {
       echo "Please install $1."
@@ -114,6 +114,6 @@ function check_package() {
 }
 
 # check if dependent packages are installed to avoid an unexpected program error.
-check_package curl
-check_package cut
-check_package wc
+check_dependency curl
+check_dependency cut
+check_dependency wc

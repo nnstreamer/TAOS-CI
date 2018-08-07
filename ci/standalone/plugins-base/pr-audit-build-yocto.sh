@@ -76,9 +76,9 @@ function pr-audit-build-yocto(){
  
     # check if dependent packages are installed
     # the required packages are sudo, curl, and eYOCTO(devtool)
-    check_package sudo
-    check_package curl
-    check_package devtool
+    check_dependency sudo
+    check_dependency curl
+    check_dependency devtool
 
     echo "[DEBUG] env information: start ---------------------------------------------"
     env
@@ -121,7 +121,7 @@ function pr-audit-build-yocto(){
             fi
         fi
         # create unique recipe folder to handle lots of PRs that can be submitted at the same time
-        check_package devtool
+        check_dependency devtool
         id -a
 
         echo "[DEBUG] devtool add ${PRJ_REPO_UPSTREAM}-${input_commit} git@github.sec.samsung.net:${GITHUB_ACCOUNT}/${PRJ_REPO_UPSTREAM}.git"

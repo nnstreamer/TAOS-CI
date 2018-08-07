@@ -49,7 +49,7 @@ source ./config/config-environment.sh
 # @dependency: tee
 # Check if dependent packages are installed
 source ./common/api_collection.sh
-check_package tee
+check_dependency tee
 echo "[DEBUG] Checked dependency packages.\n"
 
 # Check if input argument is correct.

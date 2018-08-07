@@ -54,11 +54,11 @@ function pr-audit-build-ubuntu(){
 
     # check if dependent packages are installed
     # the required packages are pbuilder(pdebuild), debootstrap(debootstrap), and devscripts(debuild)
-    check_package sudo
-    check_package curl
-    check_package pdebuild
-    check_package debootstrap
-    check_package debuild
+    check_dependency sudo
+    check_dependency curl
+    check_dependency pdebuild
+    check_dependency debootstrap
+    check_dependency debuild
 
     echo "[DEBUG] starting TAOS/pr-audit-build-ubuntu facility"
 
