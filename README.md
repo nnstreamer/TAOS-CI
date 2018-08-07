@@ -7,8 +7,8 @@ PRs causing regressions will not be automatically merged. We are going to report
 - Preventing performance regression
 - Finding bugs at a proper time
 
-<img src=https://github.sec.samsung.net/STAR/TAOS-CI/blob/tizen/screenshot01.png border=0 width=350 height=250></img>
-<img src=https://github.sec.samsung.net/STAR/TAOS-CI/blob/tizen/screenshot02.png border=0 width=350 height=250></img>
+<img src=https://github.com/nnsuite/TAOS-CI/blob/tizen/screenshot01.png border=0 width=350 height=250></img>
+<img src=https://github.com/nnsuite/TAOS-CI/blob/tizen/screenshot02.png border=0 width=350 height=250></img>
 
 
 ## Goals	
@@ -37,7 +37,7 @@ It is to prevent regressions and bugs due to incorrect PRs as follows. As a mand
 The below diagram shows an overall flow of CI system.
 ```bash
  | <----------------------------- Jenkins: Server Diagnosis ------------------------------> |
-                   | <------------ sTArOS-CI: Inspect & Verify ------------> | <---- CD ---->
+                   | <------------ TAOS-CI: Inspect & Verify ------------> | <---- CD ---->
                    |        /------ Tizen, Ubuntu, and SMP(TODO)           |
   +-----+     +----+     +--|----+     +-----+     +--------+     +-------+     +---------+             
   |Issue| --> | PR | --> | Build | --> | Run | --> | Review | --> | Merge | --> | Release |
@@ -51,10 +51,10 @@ The below diagram shows an overall flow of CI system.
 ```
 
 # How to install
-Please refer to [How to install sTArOS-CI](ci/doc/how-to-install-taos-ci.md).
+Please refer to [How to install TAOS-CI](ci/doc/how-to-install-taos-ci.md).
 
 # How to use new CI module
 Please refer to [How to use new CI module](ci/doc/how-to-use-taos-ci-module.md).
 
 # Self assessment before submitting PR
-Please refer to [How to build package](ci/doc/self-assessment-before-submitting-pr.md).
+Please refer to [How to build a package](ci/doc/self-assessment-before-submitting-pr.md).

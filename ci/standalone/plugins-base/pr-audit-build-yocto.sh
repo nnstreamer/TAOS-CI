@@ -17,8 +17,8 @@
 ##
 # @file pr-audit-build-yocto.sh
 # @brief Build package with OpenEmbedded/devtool to verify a build validation on YOCTO platform
-# @see      https://github.sec.samsung.net/pages/RS7-SmartMachine/developer-site/overview/
-# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @see      https://wiki.yoctoproject.org/wiki/Application_Development_with_Extensible_SDK
+# @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @note
 # $ sudo apt-get -y install gawk wget git-core diffstat unzip texinfo gcc-multilib \
@@ -30,8 +30,8 @@
 # $ ./kairos-glibc-x86_64-smartmachine-*-toolchain-ext-1.0.sh -d /var/www/kairos_sdk
 # $ source /var/www/kairos_sdk/environment-setup-core2-64-smp-linux
 # 
-# $ devtool add hello-world-sample git@github.sec.samsung.net:RS7-SmartMachine/hello-world-sample.git
-# ( $ devtool add hello-world-sample https://github.sec.samsung.net/RS7-SmartMachine/hello-world-sample.git   )
+# $ devtool add hello-world-sample git@github.com:nnsuite/hello-world-sample.git
+# ($ devtool add hello-world-sample https://github.com/nnsuite/hello-world-sample.git)
 # $ cd /var/www/kairos_sdk/workspace/sources/hello-world-sample/
 # $ devtool edit-recipe hello-world-sample
 # $ devtool build hello-world-sample
@@ -124,8 +124,9 @@ function pr-audit-build-yocto(){
         check_dependency devtool
         id -a
 
-        echo "[DEBUG] devtool add ${PRJ_REPO_UPSTREAM}-${input_commit} git@github.sec.samsung.net:${GITHUB_ACCOUNT}/${PRJ_REPO_UPSTREAM}.git"
-        devtool add ${PRJ_REPO_UPSTREAM}-${input_commit} git@github.sec.samsung.net:${GITHUB_ACCOUNT}/${PRJ_REPO_UPSTREAM}.git \
+        github_site="github.com"
+        echo "[DEBUG] devtool add ${PRJ_REPO_UPSTREAM}-${input_commit} git@${github_site}:${GITHUB_ACCOUNT}/${PRJ_REPO_UPSTREAM}.git"
+        devtool add ${PRJ_REPO_UPSTREAM}-${input_commit} git@${github_site}:${GITHUB_ACCOUNT}/${PRJ_REPO_UPSTREAM}.git \
         2> ../report/build_log_${input_pr}_devtool_add_yocto_error.txt 1> ../report/build_log_${input_pr}_devtool_add_yocto_output.txt
         echo "[DEBUG] The return value of 'devtool add' command is $?."
 

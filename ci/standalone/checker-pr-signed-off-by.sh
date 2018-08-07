@@ -17,7 +17,7 @@
 ##
 # @file checker-pr-signed-off-by.sh
 # @brief signedoff facility to check automatically whenever PR is submitted by contributor
-# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @param
 #  arg1: PR number
@@ -69,7 +69,7 @@ input_result=$3
 cibot_pr_report $TOKEN "pending" "TAOS/pr-signedoff" "Triggered. The commit number is $input_commit" "$CISERVER" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 
- # -------------------------- Report module: submit check result to github.sec.samsung.net ----------------------------
+ # -------------------------- Report module: submit check result to github-website ----------------------------
 # execute a check result by checking a Signed-off-by string.
 # https://developer.github.com/enterprise/2.10/v3/repos/statuses/#create-a-status
 

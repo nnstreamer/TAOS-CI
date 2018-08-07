@@ -27,7 +27,7 @@ Doxygen is the de facto regular tool for generating documentation from annotated
     ```
     # for src app
     $ cd ./gst
-    $ doxygen ../Doxyfile.prj # from https://github.sec.samsung.net/STAR/TAOS-CI/blob/tizen/ci/Doxyfile.prj
+    $ doxygen ../Doxyfile.prj
 
     # launch with the browser to view the results
     $ chromium-browser ./html/index.html
@@ -78,7 +78,7 @@ You have to use comments starting with ** and then the special command.
 
 /**
  * @file   taos_struct.c
- * @author Gildong Hong <gildong.hong@samsung.com>
+ * @author Gildong Hong <gildong.hong@your.email.com>
  * @date   1/18/2018
  * @brief  A taos driver.
  *

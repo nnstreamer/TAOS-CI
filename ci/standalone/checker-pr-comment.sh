@@ -17,7 +17,7 @@
 ##
 # @file  checker-pr-comment.sh
 # @brief Automatic PR commenter to announce information automatically whenever contributor submits a PR
-# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @param
 #  arg1: PR number
@@ -35,7 +35,7 @@ fi
 
 input_pr=$1
 
- # --------------------------- Report module: submit check result to github.sec.samsung.net --------------
+ # --------------------------- Report module: submit check result to github-website --------------
 # execute automatic comment to handle new PR that include commits more than 2.
 
 if [[ $pr_comment_notice == 1 ]]; then

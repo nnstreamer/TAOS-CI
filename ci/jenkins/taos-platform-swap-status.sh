@@ -26,7 +26,7 @@ email_recipient="geunsik.lim@samsung.com myungjoo.ham@samsung.com jijoon.moon@sa
 wook16.song@samsung.com jy1210.jung@samsung.com jinhyuck83.park@samsung.com hello.ahn@samsung.com \
 sewon.oh@samsung.com kibeom.lee@samsung.com byoungo.kim@samsung.com "
 email_subject="[aaci] Warning: Server starts using SWAP memory to avoid OOM."
-email_message=" Hi,\n\n Ooops. The server starts using SWAP memory due to shortage of RAM space.\n\n $(free -h)\n\n For more details, visit https://github.sec.samsung.net/STAR/TAOS-Platform/issues/.\n\n $(date).\n from aaci.mooo.com.\n"
+email_message=" Hi,\n\n Ooops. The server starts using SWAP memory due to shortage of RAM space.\n\n $(free -h)\n\n For more details, visit a github issue webpage.\n\n $(date).\n from Jenkins system.\n"
 
 
 

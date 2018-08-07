@@ -17,7 +17,7 @@
 ##
 # @file     pr-format-rpm-spec.sh
 # @brief    Check the spec file (packaging/*.spec) with rpmlint command
-# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 

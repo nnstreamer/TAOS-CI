@@ -7,19 +7,9 @@
 
 ## Firewall Access / Accounts / Official Guides
 
-While we use SPIN OBS build system, not the public Tizen OBS system, we need firewall access to the following servers
-- [Guide on How to Open Firewall Access (confluence)](http://suprem.sec.samsung.net/confluence/display/NEWCOMM/Firewall+Registration+for+using+SPIN)
-
-1. SPIN OBS (TRBS) server: 10.113.136.201 (http/https)
-2. RPM Binary Download Server: 10.113.136.32 (http/https)
-3. SPIN Main Page: 10.113.136.204 (http/https)
-4. Dashboard (we are not using it yet, but with the full CI support, we will be using this): 10.113.136.67
-
-You need a SPIN account to download binaries or to login to dashboard:
-- [Official Guide on SPIN Account Creation (confluence)](http://suprem.sec.samsung.net/confluence/display/NEWCOMM/SPIN+Account+Creation+Process)
+While we use a internal OBS build system of your company, not the public Tizen OBS system, we need firewall access to the following servers
 
 You need an OBS account if you want to access OBS (update commit ID of a package in the build system)
-- [Official Guide on SPIN-OBS Account Creation (confluence)](http://suprem.sec.samsung.net/confluence/display/NEWCOMM/OBS+Account+Creation+Process)
 - Note that OBS account is only for those who updates commitID of built (for OS image) packages: project managers and maintainers.
 - For readonly access, you may use ```obs_viewer``` / ```obs_viewer```.
 
@@ -118,7 +108,6 @@ will build and package rqt_adlog only (and autodrive that is required by rqt_adl
 ```
 $ gbs build --skip-srcrpm --ccache
 ```
-In an [experiment](https://github.sec.samsung.net/RS7-AutoDriving/AutoDriving_Platform/issues/156), this has improved full build from from 26 min to 11 min.
 
 If you have a large memory, you may let GBS use memory-based tmpfs to boost further.
 

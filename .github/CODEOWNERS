@@ -6,8 +6,11 @@
 # So, We must write all member IDs manually instead of @org/team-name.
 
 # in order that all members of a repository are supposed to review each other
-*                @myungjoo-ham @jijoong-moon @geunsik-lim @sangjung-woo @wook16-song @jinhyuck83-park @jy1210-jung @hello-ahn @sewon-oh
+*                @leemgs
+
+# For /ci/, reviewers are limited to those who understand continuous integration (CI)
+/ci/             @myungjoo @jijoongmoon @leemgs @again4you @wooksong @jaeyun-jung @helloahn @jinhyuck-park @ohsewon
 
 # For /packaging/, reviewers are limited to those who have some RPM packaging experiences
-/packaging/      @myungjoo-ham @geunsik-lim @sangjung-woo @wook16-song
+/packaging/      @myungjoo @leemgs @again4you @wook16-song
 
