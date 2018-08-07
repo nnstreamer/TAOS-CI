@@ -7,8 +7,8 @@ PRs causing regressions will not be automatically merged. We are going to report
 - Preventing performance regression
 - Finding bugs at a proper time
 
-<img src=https://github.sec.samsung.net/STAR/TAOS-CI/blob/tizen/screenshot01.png border=0 width=350 height=250></img>
-<img src=https://github.sec.samsung.net/STAR/TAOS-CI/blob/tizen/screenshot02.png border=0 width=350 height=250></img>
+<img src=https://github.com/nnsuite/TAOS-CI/blob/tizen/screenshot01.png border=0 width=350 height=250></img>
+<img src=https://github.com/nnsuite/TAOS-CI/blob/tizen/screenshot02.png border=0 width=350 height=250></img>
 
 
 ## Goals	
