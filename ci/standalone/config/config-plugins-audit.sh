@@ -17,7 +17,7 @@
 ##
 # @file config-plugins-audit.sh
 # @brief add plugin modules for a github repository
-# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 
 

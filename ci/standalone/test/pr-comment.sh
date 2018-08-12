@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
-GITHUB_WEBHOOK_API="https://github.sec.samsung.net/api/v3/repos/STAR/AuDri"
-TOKEN="01eec554abcaae8755c06c2b06f5d6bb84d4b4a5" # git.bot.sec id
+# github webhook api address for community and enterprise edition
+# GITHUB_WEBHOOK_API="https://github.enterprise.com/api/v3/repos/STAR/TAOS-CI"
+GITHUB_WEBHOOK_API="https://api.github.com/repos/nnsuite/TAOS-CI"
+
+TOKEN="01eec554abcaae8755c06c2b06f5d6bb84d4b4a5" # git.bot token id
 input_pr=$1
 
 if [[ $1 == "" ]]; then

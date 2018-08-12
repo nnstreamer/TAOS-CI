@@ -17,7 +17,7 @@
 ##
 # @file config-environment.sh
 # @brief Environment file to control all scripts commonly for CI bot
-# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 # This script to maintain consistently all scripts files via this file. 
@@ -35,13 +35,13 @@
 
 #### Repository setting
 # Name of account (or orgranzation)
-GITHUB_ACCOUNT="STAR"
+GITHUB_ACCOUNT="nnsuite"
 
-# Project name of github.sec.samsung.net
+# Project name of github website
 PRJ_REPO_UPSTREAM="TAOS-CI"
 
 # CI Server webaddress. Should end with /
-CISERVER="http://aaci.mooo.com/"
+CISERVER="http://invain.mooo.com/"
 
 # Format area (pr-format)
 # Add root path of source folders
@@ -112,16 +112,14 @@ BUILD_MODE_YOCTO=99
 ################# Do not modify the below statements #################################
 
 # Version format: Major.Minor
-VERSION="1.20180719"
+VERSION="1.20180811"
 
-# Connecting to a repository using token id instead of git.bot.sec@samsung.com id
-# because of two-authentification. Refer to https://github.sec.samsung.net/settings/tokens
-TOKEN="01eec554abcaae8755c06c2b06f5d6bb84d4b4a5"
+# Connecting to a repository using token id instead of git.bot.sec@github.io id
+# because of two-authentification. Refer to https://github.com/settings/tokens
+TOKEN="e8ef547310c1546d78aa78686b9806b1acf8785d"
 
 # Email-address
-# Note that we have to log-in at least 3 times per a month to avoid deletion of the ID
-# according to announcement of "전자녹스포탈" (knoxportal.sec@samsung.com).
-EMAIL="git.bot.sec@samsung.com"
+EMAIL="leemgs@github.io"
 
 # Reference repository to speed up "git clone" command
 REFERENCE_REPOSITORY="/var/www/html/$PRJ_REPO_UPSTREAM/"
@@ -130,12 +128,9 @@ REFERENCE_REPOSITORY="/var/www/html/$PRJ_REPO_UPSTREAM/"
 REPOCACHE="/var/www/html/$PRJ_REPO_UPSTREAM/repo_cache/"
 
 # Github repostiroy webaddress
-REPOSITORY_WEB="https://github.sec.samsung.net/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
-REPOSITORY_GIT="https://github.sec.samsung.net/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM.git"
+REPOSITORY_WEB="https://github.com/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
+REPOSITORY_GIT="https://github.com/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM.git"
 
 # Github webhook API
-GITHUB_WEBHOOK_API="https://github.sec.samsung.net/api/v3/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
-
-
-
+GITHUB_WEBHOOK_API="https://api.github.com/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
 

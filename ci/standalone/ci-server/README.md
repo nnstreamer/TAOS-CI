@@ -87,7 +87,7 @@ www-data:x:33:33:www-data:/var/www:/bin/bash
 # chwon www-data:www-data  /var/www/.bashrc
 # su - www-data
 $ vi ~/.netrc
-machine github.sec.samsung.net
+machine github.com
         login git.bot.sec
         password bdd8f27d1e718f878ff5c7120a45440ff63fxxxx
 machine 10.113.136.32
@@ -98,7 +98,7 @@ machine 10.113.136.32
 ## Setting gbs configuration file
 
 You have to write `~/.gbs.conf` in order that `www-data` id can build a pakcage with **gbs build** command.
-We assume that you are using `git.bot.sec` samsung id as a default id of a repository webserver.
+We assume that you are using `git.bot.sec` id as a default id of a repository webserver.
 
 ```bash
 [general]

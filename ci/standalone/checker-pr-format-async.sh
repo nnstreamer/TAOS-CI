@@ -17,7 +17,7 @@
 ##
 # @file    checker-pr-format-async.sh
 # @brief   It checks format rules whenever a PR is submitted.
-# @see     https://github.sec.samsung.net/STAR/TAOS-CI
+# @see     https://github.com/nnsuite/TAOS-CI
 # @author  Geunsik Lim <geunsik.lim@samsung.com>
 # @param   arguments are received from CI manager
 #  arg1:   date(Ymdhms)
@@ -432,7 +432,7 @@ echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins
 source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-format.sh
 
 ##################################################################################################################
-# --------------------------- Report module: submit check result to github.sec.samsung.net --------------
+# --------------------------- Report module: submit check result to github-website --------------
 # report if all modules are successfully completed or not.
 echo "[DEBUG] Varaible global_check_result is $global_check_result."
 if [[ $global_check_result == "success" ]]; then

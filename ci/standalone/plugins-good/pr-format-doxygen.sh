@@ -22,7 +22,7 @@
 # The execution result is reported with "TAOS/pr-format-doxygen" context into status section
 # of a github PR webpage.
 #
-# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @author   Sewon Oh <sewon.oh@samsung.com>
 
@@ -188,7 +188,7 @@ function pr-format-doxygen(){
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     
         message=":octocat: **cibot**: $user_id, You wrote code with incorrect doxygen statements. Please check a doxygen rule at"
-        message="$message http://github.sec.samsung.net/STAR/TAOS-CI/blob/tizen/ci/doc/doxygen-documentation.md"
+        message="$message http://github.com/nnsuite/TAOS-CI/blob/tizen/ci/doc/doxygen-documentation.md"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     fi
 }

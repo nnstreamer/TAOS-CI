@@ -4,7 +4,7 @@ In order to archive a big data such as map, training, network model, and image d
 We recommend that you use `git-lfs`command as a official process.
 Note that github does not support uploading big files more than +100MB by default. 
 You do not need to operate your own development server to archive big files thanks to `git-lfs` facility.
-You can upload +100MB data files to github.sec.samsung.net with `git-lfs` package.
+You can upload +100MB data files to a github website with `git-lfs` package.
 
 Git Large File Storage (LFS) replaces large files such as audio samples, videos, datasets, and graphics
 with text pointers inside Git, while storing the file contents on a remote server like GitHub.com 
@@ -19,16 +19,16 @@ $ sudo apt install git-lfs
 If you are using another Linux distribution such as Fedora, Please refer to the below webpage.
 * Installing git-lfs: https://github.com/git-lfs/git-lfs/blob/v2.4.0/INSTALLING.md#installing-on-linux-using-packagecloud
 
-# Case study: TF-Vision_EvaluationSet Repository 
+# Case study: dataset repository 
 Note that default branch must be `tizen` instead of `master` in case of TAOS. We assume that you have to upload LibreOffice Installer
 (251MB) in a github repository.
 
 Clone the github repository with upstream and origin.
 ```bash
-$ mkdir TF-Vision_EvaluationSet
-$ cd    TF-Vision_EvaluationSet
-$ git remote add upstream https://github.sec.samsung.net/RS7-AutoDriving/TF-Vision_EvaluationSet.git
-$ git remote add origin   https://github.sec.samsung.net/<your_github_id>/TF-Vision_EvaluationSet.git
+$ mkdir dataset
+$ cd    dataset
+$ git remote add upstream https://github.com/<main_github_id>/dataset.git
+$ git remote add origin   https://github.com/<your_github_id>/dataset.git
 $ git fetch upstream
 $ git pull upstream tizen
 ```

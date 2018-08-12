@@ -17,7 +17,7 @@
 ##
 # @file checker-pr-audit-async.sh
 # @brief It executes a build test whenever a PR is submitted.
-# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @dependency: gbs, tee, curl, grep, wc, cat, sed, awk, basename
 # @param arguments are received by ci bot
@@ -326,7 +326,7 @@ else
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
-# --------------------------- Report module: submit the global check result to github.sec.samsung.net --------------
+# --------------------------- Report module: submit the global check result to github-website --------------
 # report if all modules are successfully completed or not.
 echo "send a total report with global_check_result variable. global_check_result is ${global_check_result}. "
 

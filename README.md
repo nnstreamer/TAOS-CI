@@ -51,10 +51,10 @@ The below diagram shows an overall flow of CI system.
 ```
 
 # How to install
-Please refer to [How to install sTArOS-CI](ci/doc/how-to-install-taos-ci.md).
+Please refer to [How to install TAOS-CI](ci/doc/how-to-install-taos-ci.md).
 
 # How to use new CI module
 Please refer to [How to use new CI module](ci/doc/how-to-use-taos-ci-module.md).
 
 # Self assessment before submitting PR
-Please refer to [How to build package](ci/doc/self-assessment-before-submitting-pr.md).
+Please refer to [How to build a package](ci/doc/self-assessment-before-submitting-pr.md).
