@@ -18,7 +18,7 @@
 # @file pr-format-pylint.sh
 # @brief Check the code formatting style with GNU pylint
 # @see      https://www.pylint.org/
-# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 

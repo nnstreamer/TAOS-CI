@@ -6,7 +6,7 @@ There are two alternatives to maintain your own CI server.
 * Jenkins CI server: Use ./jenkins/ folder after installing Jenkins software (https://jenkins.io/) in case of a large & scalable project.
 
 CIbot is github webhook handle template for a github repository in order to control and maintain effectively issues and PRs that are submitted by lots of contributors.
-The official ID is git.bot.sec@samsung.com. Note that administrator has to sign-in +3 times every month to avoid a situation that ID is closed by Samsung SDS.
+Let's assume that an official ID is git.bot.sec@github.io. Note that administrator has to sign-in +3 times every month to avoid a situation that ID is closed by Samsung SDS.
 
 # Install CI software
 ### How to install standalone CI software
@@ -42,9 +42,9 @@ chromium-browser http://localhost:8080/
 # How to apply TAOS-CI into your project
 ```bash
 $ cd /var/www/html/
-$ git clone https://github.sec.samsung.net/STAR/<your_prj_name>.git
+$ git clone https://github.com/<your_account>/<your_prj_name>.git
 $ cd <your_prj_name>
-$ git submodule add https://github.sec.samsung.net/STAR/TAOS-CI.git
+$ git submodule add https://github.com/<your_account/TAOS-CI.git
 $ ln -s ./TAOS-CI/ci ./ci
 $ vi ./ci/standalone/config/config-environment.sh
   (You have to modify configuration variables appropriately.)
@@ -54,14 +54,14 @@ That's all. Enjoy TAOS-CI after setting-up webhook API.
 # How to use a webhook API
 
 ```bash
-$ chromium-browser https://github.sec.samsung.net/STAR/AuDri/settings
+$ chromium-browser https://github.com/<your_account>/<your_prj_name>/settings
 ```
 
 Press `Hooks` menu - Press `Add webhook` button - 
 ```bash
 * Webhooks/ Add webhook
   - Payload URL:
-    http://<your_hostname>.mooo.com/<prj_name>/ci/standalone/webhook.php
+    http://<your_hostname>.mooo.com/<your_prj_name>/ci/standalone/webhook.php
   - Content type: application/x-www-form-urlencoded
   - Secret: ******
   - Which events would you like to trigger this webhook?

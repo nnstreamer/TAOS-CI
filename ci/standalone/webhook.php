@@ -47,6 +47,7 @@ $hookSecret="";
 $rawPost="";
 $json="";
 $open_sesame="";
+$github_dns="github.com";
 
 
 /**
@@ -68,7 +69,7 @@ function json_config(){
     printf ("[DEBUG] webhook id: %s\n<br>", $json_config->github->id);
     printf ("[DEBUG] webhook secret: %s\n<br>", $json_config->github->secret);
 
-    # Please, add "$hookSecret" value in Secret field at github.sec.samsung.net/.../setting/hooks/
+    # Please, add "$hookSecret" value in Secret field at https://<github-address>/.../setting/hooks/
     # Set NULL if you want to disable this security.
     global $hookSecret;
     $hookSecret = $json_config->github->secret;
@@ -174,7 +175,7 @@ function check_open_sesame(){
        $pr_title=$payload->{"pull_request"}->{"title"};
        $pattern="/@open sesame[^.]+\/+[^.]+\:+[^.]/i";
        if (preg_match($pattern, $pr_title, $matches)) {
-        echo "[DEBUG] '@open sesame' is enabled. a matched data is ".$matches[0].". \n";
+        echo "[DEBUG] '@open sesame' is enabled. a matched data is '".$matches[0]."'. \n";
            $open_sesame="true";
        }
        else {
@@ -192,6 +193,7 @@ function check_open_sesame(){
 function github_event_handling(){
     global $payload;
     global $open_sesame;
+    global $github_dns;
     switch (strtolower($_SERVER['HTTP_X_GITHUB_EVENT'])){
         case 'issues':
             // checker: Comment some messages automatically when new issue is created.
@@ -260,7 +262,7 @@ function github_event_handling(){
                 $date=date_time_us();
                 $commit = $payload->pull_request->head->sha;
                 $full_name = $payload->pull_request->head->repo->full_name;
-                $repo = "https://github.sec.samsung.net/${full_name}.git";
+                $repo = "https://${github_dns}/${full_name}.git";
                 $branch = $payload->pull_request->head->ref;
                 $pr_no=$payload->pull_request->number;
                 $delivery_id = $_SERVER['HTTP_X_GITHUB_DELIVERY'];
@@ -292,7 +294,7 @@ function github_event_handling(){
                 $date=date_time_us();
                 $commit = $payload->pull_request->head->sha;
                 $full_name = $payload->pull_request->head->repo->full_name;
-                $repo = "https://github.sec.samsung.net/${full_name}.git";
+                $repo = "https://${github_dns}/${full_name}.git";
                 $branch = $payload->pull_request->head->ref;
                 $pr_no=$payload->pull_request->number;
                 $delivery_id = $_SERVER['HTTP_X_GITHUB_DELIVERY'];

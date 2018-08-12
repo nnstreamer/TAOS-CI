@@ -34,7 +34,7 @@ email_recipient="geunsik.lim@samsung.com myungjoo.ham@samsung.com jijoon.moon@sa
 wook16.song@samsung.com jy1210.jung@samsung.com jinhyuck83.park@samsung.com hello.ahn@samsung.com \
 sewon.oh@samsung.com kibeom.lee@samsung.com byoungo.kim@samsung.com "
 email_subject="[aaci] Critical:  Your hard disk is nearly full.".
-email_message=" Hi,\n\n Ooops. Your specified partitions ($mounted_folders) are almost full.\n\n $(df -h)\n\n For more details, visit https://github.sec.samsung.net/STAR/TAOS-Platform/issues/.\n\n $(date).\n from aaci.mooo.com.\n"
+email_message=" Hi,\n\n Ooops. Your specified partitions ($mounted_folders) are almost full.\n\n $(df -h)\n\n For more details, visit a github issue webapge.\n\n $(date).\n from Jenkins system.\n"
 PART_QUOTA_GB=10
 
 #------------------------------- code area -----------------------------------------------

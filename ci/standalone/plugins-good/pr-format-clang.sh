@@ -17,7 +17,7 @@
 ##
 # @file pr-format-clang.sh
 # @brief Check Check the code formatting style with clang-format
-# @see      https://github.sec.samsung.net/STAR/TAOS-CI
+# @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 
 ##

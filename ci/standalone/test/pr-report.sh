@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-# github webhook api address
-GITHUB_WEBHOOK_API="https://github.sec.samsung.net/api/v3/repos/STAR/on-device-api"
-# GITHUB_WEBHOOK_API="https://github.sec.samsung.net/api/v3/repos/STAR/nnstreamer"
-# GITHUB_WEBHOOK_API="https://github.sec.samsung.net/api/v3/repos/STAR/TAOS-CI"
+# github webhook api address for community and enterprise edition
+# GITHUB_WEBHOOK_API="https://github.enterprise.com/api/v3/repos/STAR/TAOS-CI"
+GITHUB_WEBHOOK_API="https://api.github.com/repos/nnsuite/TAOS-CI"
 
-TOKEN="01eec554abcaae8755c06c2b06f5d6bb84d4b4a5" # git.bot.sec id
+TOKEN="01eec554abcaae8755c06c2b06f5d6bb84d4xxxx" # git.bot token id
 
 # input commit number. For example,  input_commit is 6967adfe5fea652b9959c58110fc8d7f280c8a43
 input_commit=$1

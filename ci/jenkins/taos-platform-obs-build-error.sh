@@ -24,7 +24,6 @@
 #------------------------------- configuration area ---------------------------------------
 OBS_SERVER="http://10.113.136.201/project/show/Tizen:5.0:TAOS"
 OBS_SERVER_ERR_PKGS="http://10.113.136.201/project/monitor/Tizen:5.0:TAOS?blocked=0&building=0&dispatching=0&finished=0&scheduled=0&signing=0&succeeded=0"
-ISSUE_WEB="https://github.sec.samsung.net/STAR/TAOS-Platform/issues/"
 
 # email information
 email_cmd="mailx"
@@ -60,7 +59,6 @@ function email_on_failure(){
     email_message="Hi,\n\n \
     Ooops. The  below $1 packages generates a build error.\n\n \
     [Package list]:\n $pack_list\n\n \
-    For more details,\n visit ${OBS_SERVER}\n and ${ISSUE_WEB}.\n\n \
     If you want to see a package name in more detail,\n \
     please visit ${OBS_SERVER_ERR_PKGS}.\n\n \
     $(date)\n from aaci.mooo.com\n"

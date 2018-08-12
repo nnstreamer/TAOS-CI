@@ -3,7 +3,6 @@
 
 ROS Application follows [Google Style Guide](https://google.github.io/styleguide/cppguide.html) for coding convention. 
 A few rules might be ignored depending on modules. For the full list of ignored rules, please see the following link:
-- http://suprem.sec.samsung.net/confluence/display/SWCSAITTFC/Coding+Convention
 
 ## C/C++
 When you push your commits, ALWAYS run clang-format & cpplint to submit a commit with style change. If there is a change due to code style issues, make two separate commits: (Please do not include other codes' style change in the same commit)

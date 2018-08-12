@@ -17,7 +17,7 @@
 ##
 # @file  checker-issue-comment.sh
 # @brief issue facility to comment automatically whenever issue happens .
-# @see		https://github.sec.samsung.net/STAR/TAOS-CI
+# @see		https://github.com/nnsuite/TAOS-CI
 # @author	Geunsik Lim <geunsik.lim@samsung.com>
 # @param
 #  arg1: issue number
@@ -35,7 +35,7 @@ fi
 
 input_issue=$1
 
-# --------------------------- Report module: submit check result to github.sec.samsung.net --------------
+# --------------------------- Report module: submit check result to github-website --------------
 # execute automatic comment on new issue.
 
 message=":octocat: **cibot**: Thank you for posting issue #$input_issue. The person in charge will reply soon."
