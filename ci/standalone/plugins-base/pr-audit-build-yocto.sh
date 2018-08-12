@@ -21,14 +21,21 @@
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @note
-# $ sudo apt-get -y install gawk wget git-core diffstat unzip texinfo gcc-multilib \
-#   build-essential chrpath socat libsdl1.2-dev xterm
+# $ sudo apt-get -y install gawk wget git-core diffstat unzip texinfo gcc-multilib
+# $ sudo apt-get -y install build-essential chrpath socat libsdl1.2-dev xterm
+# Note that the devtool command is located in the Extensible SDK (eSDK). It means that you cannot install it with apt command.
 # 
+# #### Case study: Poky eSDK (x86-i586)
+# wget https://downloads.yoctoproject.org/tools/support/workflow/poky-glibc-x86_64-core-image-minimal-i586-toolchain-ext-2.2.sh
+# chmod +x ./poky-glibc-x86_64-core-image-minimal-i586-toolchain-ext-2.2.sh
+# ./poky-glibc-x86_64-core-image-minimal-i586-toolchain-ext-2.2.sh
+# source /var/www/html/poky_sdk/environment-setup-i586-poky-linux
+#
+# #### Case study: Kairos  eSDK (x86-x64)
 # $ wget http://10.113.136.32/download_qb/releases/Milestone/SR/RS7-SmartMachine/build/genericx86-64/latest/kairos-glibc-x86_64-smartmachine-jay-core2-64-toolchain-ext-1.0.sh
-# 
-# $ chmod +x kairos-glibc-x86_64-smartmachine-*-toolchain-ext-1.0.sh
-# $ ./kairos-glibc-x86_64-smartmachine-*-toolchain-ext-1.0.sh -d /var/www/kairos_sdk
-# $ source /var/www/kairos_sdk/environment-setup-core2-64-smp-linux
+# chmod +x kairos-glibc-x86_64-smartmachine-*-toolchain-ext-1.0.sh
+# ./kairos-glibc-x86_64-smartmachine-*-toolchain-ext-1.0.sh -d /var/www/kairos_sdk
+# source /var/www/kairos_sdk/environment-setup-core2-64-smp-linux
 # 
 # $ devtool add hello-world-sample git@github.com:nnsuite/hello-world-sample.git
 # ($ devtool add hello-world-sample https://github.com/nnsuite/hello-world-sample.git)
@@ -69,10 +76,19 @@ function pr-audit-build-yocto(){
     locale
     echo "[DEBUG] locale information: end   ---------------------------------------------"
 
-    # import environment variables
-    YOCTO_SDK_ROOT="/var/www/kairos_sdk"
-    echo "[DEBUG] source ${YOCTO_SDK_ROOT}/environment-setup-core2-64-smp-linux"
-    source ${YOCTO_SDK_ROOT}/environment-setup-core2-64-smp-linux
+    # import environment variables from eSDK to use devtool command
+    # YOCTO_ESDK_ROOT="/var/www/kairos_sdk"
+    YOCTO_ESDK_ROOT="/var/www/poky_sdk"
+
+    if [[ "$YOCTO_ESDK_ROOT" == "/var/www/kairos_sdk" ]]; then
+        echo "[DEBUG] source ${YOCTO_ESDK_ROOT}/environment-setup-core2-64-smp-linux"
+        source ${YOCTO_ESDK_ROOT}/environment-setup-core2-64-smp-linux
+    elif [[ "$YOCTO_ESDK_ROOT" == "/var/www/poky_sdk" ]]; then
+        echo "[DEBUG] source ${YOCTO_ESDK_ROOT}/environment-setup-i586-poky-linux"
+        source ${YOCTO_ESDK_ROOT}/environment-setup-i586-poky-linux
+    else
+        echo "[DEBUG] Oooops. The variable YOCTO_ESDK_ROOT is empty."
+    fi
  
     # check if dependent packages are installed
     # the required packages are sudo, curl, and eYOCTO(devtool)
@@ -103,16 +119,16 @@ function pr-audit-build-yocto(){
         # www-data    ALL=(ALL) NOPASSWD:ALL
         echo -e "[DEBUG] The current folder is $(pwd)."
 
-        # if ${YOCTO_SDK_ROOT}/workspace/sources/${PRJ_REPO_UPSTREAM} folder exists, let's remove this folder
-        echo "[DEBUG] Checking ${YOCTO_SDK_ROOT}/workspace/recipes/${PRJ_REPO_UPSTREAM}-${input_commit}"
-        if [[ -d ${YOCTO_SDK_ROOT}/workspace/recipes/${PRJ_REPO_UPSTREAM}-${input_commit} ]]; then
+        # if ${YOCTO_ESDK_ROOT}/workspace/sources/${PRJ_REPO_UPSTREAM} folder exists, let's remove this folder
+        echo "[DEBUG] Checking ${YOCTO_ESDK_ROOT}/workspace/recipes/${PRJ_REPO_UPSTREAM}-${input_commit}"
+        if [[ -d ${YOCTO_ESDK_ROOT}/workspace/recipes/${PRJ_REPO_UPSTREAM}-${input_commit} ]]; then
             echo "[DEBUG] devtool reset ${PRJ_REPO_UPSTREAM}-${input_commit}"
             devtool reset ${PRJ_REPO_UPSTREAM}-${input_commit} \
             2> ../report/build_log_${input_pr}_devtool_reset_yocto_error.txt 1> ../report/build_log_${input_pr}_devtool_reset_yocto_output.txt
-            if [[ -d ${YOCTO_SDK_ROOT}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit} ]]; then
-                echo -e "[DEBUG] Removing ${YOCTO_SDK_ROOT}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit} folder"
-                echo -e "[DEBUG] rm -rf ${YOCTO_SDK_ROOT}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit}"
-                rm -rf ${YOCTO_SDK_ROOT}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit}
+            if [[ -d ${YOCTO_ESDK_ROOT}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit} ]]; then
+                echo -e "[DEBUG] Removing ${YOCTO_ESDK_ROOT}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit} folder"
+                echo -e "[DEBUG] rm -rf ${YOCTO_ESDK_ROOT}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit}"
+                rm -rf ${YOCTO_ESDK_ROOT}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit}
                 if [[ $? -ne 0 ]]; then
                     echo -e "[DEBUG][FAILED] Oooops!!!!!! the source folder is still not removed."
                 else
