@@ -52,6 +52,8 @@ function pr-audit-build-ubuntu(){
     echo "########################################################################################"
     echo "[MODULE] TAOS/pr-audit-build-ubuntu: check build process for Ubuntu distribution"
 
+    echo "source /etc/environment"
+    source /etc/environment
     # check if dependent packages are installed
     # the required packages are pbuilder(pdebuild), debootstrap(debootstrap), and devscripts(debuild)
     check_dependency sudo
