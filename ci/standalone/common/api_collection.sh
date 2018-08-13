@@ -108,7 +108,8 @@ function cibot_pr_report(){
 function check_dependency() {
     echo "Checking for $1..."
     which "$1" 2>/dev/null || {
-      echo "Please install $1."
+      echo "[ERROR] Oooops.!!! The '$1' command does not exist. Please install '$1'."
+      echo "[DEBUG] Stopping this program to prevent unexpected errors."
       exit 1
     }
 }
