@@ -1,6 +1,6 @@
 
 # Introduction
-The Continuous Integration (CI) system is to prevent a regression and to find bugs due to incorrect PRs.
+This project is to prevent a regression, find bugs, and reduce inefficient review process due to incorrect PRs.
 PRs causing regressions will not be automatically merged. We are going to report the issue at regression test procedure.
 
 - Test automation (both build and run)
