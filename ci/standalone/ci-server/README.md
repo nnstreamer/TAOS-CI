@@ -11,31 +11,19 @@ VERSION_ID="16.04.3"
 ```
 
 ## Install prerequisites
+In order to run all checker modules normally, you have to run [install-packages.sh](install-packages.sh).
 
-```bash
-$ sudo apt-get install sed, ps, cat, aha, git, which grep, touch, find, wca, cppcheck
-$ sudo vi /etc/apt/sources.list.d/tizen.list
-  deb [trusted=yes] http://download.tizen.org/tools/latest-release/Ubuntu_16.04/ / # upgraded to xenial
-$ sudo apt-get update
-$ sudo apt-get install mic gbs
-```
 
 ## Install Apache+PHP for CI Server
-
 The CI server to run TAOS-CI has to be equipped with Apache and PHP script language to run lightwegith automation server instead of Jenkins.
 Builds has been triggered by last commit number by scheduling a Pull Request (PR) with a bot, that is based on Webhook API and JSON.
 
 **for Ubuntu 16.04**
 
 ```bash
-$ sudo apt-get update
 $ sudo apt-get install apache2
 $ sudo apt-get install php php-cgi libapache2-mod-php php-common php-pear php-mbstring
 $ sudo a2enconf php7.0-cgi
-$ sudo vi /etc/apache2/conf-enabled/php7.0-cgi.conf
-  <FilesMatch ".+\.taos$">
-     SetHandler application/x-httpd-php
-  </FilesMatch>
 $ sudo systemctl restart apache2
 $ sudo vi /var/www/html/index.php
 <?php
@@ -75,7 +63,7 @@ or
 www-data    ALL=(ALL) NOPASSWD: /usr/bin/git
 ```
 
-Then, let's enable www-data as system account.
+Then, let's enable www-data as a system account.
 
 ```bash
 $ su -
@@ -86,6 +74,9 @@ www-data:x:33:33:www-data:/var/www:/bin/bash
 # cp /root/.bashrc /var/www/
 # chwon www-data:www-data  /var/www/.bashrc
 # su - www-data
+```
+If you want to push your commits without a password input procedure, please create ~/.netrc file as follows.
+```bash
 $ vi ~/.netrc
 machine github.com
         login git.bot.sec
@@ -95,9 +86,21 @@ machine 10.113.136.32
         password npuxxxx
 ```
 
-## Setting gbs configuration file
+## Ubuntu: Set-up configuration file
+The `~/.pbuilderrc` file contains default values used in the pbuilder program invocation.
+The file itself is sourced by a shell script, so it is required that the file conforms to
+shell script conventions. For more details, refer to http://manpages.ubuntu.com/manpages/trusty/man5/pbuilderrc.5.html
+```bash
+$ vi ~/.pbuilderrc
+# man 5 pbuilderrc
+DISTRIBUTION=xenial
+OTHERMIRROR="deb http://archive.ubuntu.com/ubuntu xenial universe multiverse |deb [trusted=yes] http://[id]:[password]@[your-own-server]/taos/ubuntutools/ubuntu16.04/ /"
 
-You have to write `~/.gbs.conf` in order that `www-data` id can build a pakcage with **gbs build** command.
+```
+
+## Tizen: Set-up configuration file
+
+You have to write `~/.gbs.conf` in order that `www-data` id can build a pakcage with `gbs build` command.
 We assume that you are using `git.bot.sec` id as a default id of a repository webserver.
 
 ```bash
@@ -112,12 +115,12 @@ workdir = .
 [profile.tizen]
 #Common authentication info for whole profile
 #passwd will be automatically encrypted from passwd to passwdx
-user = git.bot.sec
-passwd = npuxxxx
+user = <your-id>
+passwd = <your-password>
 obs = obs.tizen
 
-repos = repo.autodrv, repo.unified, repo.base
-buildroot = ~/GBS-ROOT-5.0/
+repos = repo.extra, repo.unified, repo.base
+buildroot = ~/GBS-ROOT-SNAPSHOT/
 
 [obs.tizen]
 #OBS API URL pointing to a remote OBS.
@@ -127,17 +130,29 @@ url = https://api.tizen.org
 # https://github.com/01org/gbs/blob/master/docs/GBS.rst#34-shell-style-variable-references
 # ver_base=tizen-base_20180427.1
 # ver_unified=tizen-unified_20180504.2
-# ver_autodrv=tizen-5.0-taos_20180504.2
+# ver_extra=tizen-5.0-taos_20180504.2
+
 
 [repo.base]
-url = http://git.bot.sec:npuxxxx@165.213.149.200/download/public_mirror/tizen/base/latest/repos/standard/packages/
-
+url = http://download.tizen.org/snapshots/tizen/base/latest/repos/standard/packages/
+ 
 [repo.unified]
-url = http://git.bot.sec:npuxxxx@165.213.149.200/download/public_mirror/tizen/unified/latest/repos/standard/packages/
+url = http://download.tizen.org/snapshots/tizen/unified/latest/repos/standard/packages/
 
-[repo.autodrv]
-url = http://git.bot.sec:npuxxxx@165.213.149.200/download/snapshots/tizen/5.0-taos/latest/repos/standard/packages/
+[repo.extra]
+url = http://<your_id>:<your_pass>@<your_ip>/download/latest/repos/standard/packages/
 ```
+
+## Yocto: Set-up configuration file
+
+In case of Yocto, you can build a package with OpenEmbedded/devtool to verify a build validation on YOCTO platform
+For more details, please refer to https://wiki.yoctoproject.org/wiki/Application_Development_with_Extensible_SDK
+```bash
+$ sudo apt-get -y install gawk wget git-core diffstat unzip texinfo gcc-multilib
+$ sudo apt-get -y install build-essential chrpath socat libsdl1.2-dev xterm
+```
+Note that a devtool command are the configuration file (e.g.,environment-setup-i586-poky-linux) are located in the Extensible Software Development Kit (eSDK) folder. It means that you cannot install the devtool command via the apt command.
+
 
 ## Cron Job to auto delete folder older than 15 days
 
@@ -152,14 +167,14 @@ $ sudo vi /etc/crontab
 30 5 * * * root find /var/www/html/<your_prj_name>/ci/repo-workers/ -maxdepth 2 -type d -mtime +15 -exec rm -rf {} \;
 ```
 
-Please make sure before executing rm whether targets are intended files.
-You can check the target folders by specifying **maxdepth** option as the argument of find.
+Please make sure before executing a rm command whether a target folder is correct or not. 
+You can check the target folders by specifying **maxdepth** option as an argument of find command.
 
 ```bash
 $ find /var/www/html/<your_prj_name>/ci/repo-workers/ -maxdepth 2 -type d -mtime +15
 ```
 
-## How to speed up build time
+## How to speed-up a build time
 
 we recommend that you enable a temporary filesystem (tmpfs) to improve build time and
 avoid a situation that the number of inodes exceeds that of maximum inodes.
