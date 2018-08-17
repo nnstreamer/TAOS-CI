@@ -66,3 +66,7 @@ Please refer to [How to build a package](ci/doc/self-assessment-before-submittin
 * CD: Continuous Deployment
 * PR: Pull Request
 
+# Reference
+* https://developer.github.com/webhooks/
+* https://gogs.io/
+* https://curl.haxx.se/docs/ 
