@@ -47,13 +47,14 @@ $hookSecret="";
 $rawPost="";
 $json="";
 $open_sesame="";
-$github_dns="github.com";
+$github_dns="";
 
 
 /**
  * @brief read json file
  */
 function json_config(){
+    global $github_dns;
     echo ("<img src=./image/webhook-flow.png border=0></img><br>\n");
     echo ("<style> table { border: 1px solid #444444; } </style>\n");
     echo ("<table bgcolor=gray><tr><td width=800></td></tr></table>\n");
@@ -61,6 +62,9 @@ function json_config(){
     // read JSON file
     $string = file_get_contents("./config/config-cibot.json");
     $json_config = json_decode($string);
+
+    // get website name of github from json file
+    $github_dns = $json_config->github->website;
 
     // get id from json file
     $github_id = $json_config->github->id;
