@@ -1,5 +1,6 @@
 {
     "github": {
+        "website": "github.com",
         "id": "leemgs",
         "email": "leemgs@github.io",
         "secret": "cibot"
