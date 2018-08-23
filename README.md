@@ -20,7 +20,7 @@ It is designed and implemented with a light-weight system approach to support a 
 
 * Test automation (both build and run)
 * Preventing Performance regression
-* Finding bugs at a proper time
+* Finding potential bugs at a proper time
 
 
 ## Maintainers

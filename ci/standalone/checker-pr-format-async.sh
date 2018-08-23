@@ -160,7 +160,7 @@ global_check_result="success"
 
 # Plug-in folders
 ##################################################################################################################
-echo -e "[MODULE] plugins-base: it is a well-maintained collection of CI plugins as a essential plugin.
+echo -e "[MODULE] plugins-base: it is a well-maintained collection of CI plugins as a essential plugin."
 echo -e "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
 echo -e "[MODULE] plugins-staging: Plugin group that does not have evaluation and aging test enough"
 echo -e " "
