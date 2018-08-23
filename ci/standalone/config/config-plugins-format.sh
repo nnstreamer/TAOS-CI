@@ -87,6 +87,62 @@ source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh
 $module_name
 echo "$module_name is done."
 
+module_name="pr-format-file-size"
+echo "$module_name is starting."
+echo "[MODULE] TAOS/$module_name: Check the file size to not include big binary files"
+echo "The current path: $(pwd)."
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh"
+source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh
+$module_name
+echo "$module_name is done."
+
+module_name="pr-format-cppcheck"
+echo "$module_name is starting."
+echo "[MODULE] TAOS/$module_name: Check the file size to not include big binary files"
+echo "The current path: $(pwd)."
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh"
+source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh
+$module_name
+echo "$module_name is done."
+
+module_name="pr-format-nobody"
+echo "$module_name is starting."
+echo "[MODULE] TAOS/$module_name: Check the file size to not include big binary files"
+echo "The current path: $(pwd)."
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh"
+source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh
+$module_name
+echo "$module_name is done."
+
+module_name="pr-format-timestamp"
+echo "$module_name is starting."
+echo "[MODULE] TAOS/$module_name: Check the file size to not include big binary files"
+echo "The current path: $(pwd)."
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh"
+source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh
+$module_name
+echo "$module_name is done."
+
+module_name="pr-format-executable"
+echo "$module_name is starting."
+echo "[MODULE] TAOS/$module_name: Check the file size to not include big binary files"
+echo "The current path: $(pwd)."
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh"
+source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh
+$module_name
+echo "$module_name is done."
+
+module_name="pr-hardcoded-path"
+echo "$module_name is starting."
+echo "[MODULE] TAOS/$module_name: Check the file size to not include big binary files"
+echo "The current path: $(pwd)."
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh"
+source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-good/$module_name.sh
+$module_name
+echo "$module_name is done."
+
+
+
 ##################################################################################################################
 echo "[MODULE] plugins-staging: Plugin group that does not have evaluation and aging test enough"
 # Please append your plugin modules here.
