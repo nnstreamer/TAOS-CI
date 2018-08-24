@@ -10,7 +10,7 @@ TAOS-CI is an automated project coordinator to prevent a regression, find bugs, 
 - Support modulable facilities with plug-in interface
 - Integrate the existing opensource tools easily
 - Verify an integrity of a package by supporting a platform build
-- Support multiple operating system as following:
+- Support multiple operating systems as following:
   - Ubuntu: https://www.ubuntu.com/
   - Tizen: https://www.tizen.org/
   - Yocto: https://www.yoctoproject.org/
