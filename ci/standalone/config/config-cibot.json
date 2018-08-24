@@ -1,8 +1,8 @@
 {
     "github": {
         "website": "github.com",
-        "id": "leemgs",
-        "email": "leemgs@github.io",
-        "secret": "cibot"
+        "id": "<your-github-id>",
+        "email": "<your-github-id>@github.io",
+        "secret": "<github-setting-secret-name>"
     }
 }
