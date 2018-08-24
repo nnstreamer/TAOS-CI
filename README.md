@@ -17,7 +17,7 @@ TAOS-CI is an automated project coordinator to prevent a regression, find bugs, 
   - TBD & TBI
 
 <img src=https://github.com/nnsuite/TAOS-CI/blob/tizen/screenshot01.png border=0 width=350 height=250></img>
-<img src=https://github.com/nnsuite/TAOS-CI/blob/tizen/screenshot02.png border=0 width=350 height=250></img>
+<img src=https://github.com/nnsuite/TAOS-CI/blob/tizen/screenshot03.png border=0 width=350 height=250></img>
 
 
 ## Goals	
