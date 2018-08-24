@@ -233,6 +233,7 @@ $ sudo vi /etc/crontab
 20 * * * * www-data cd /var/www/html/<prj_name>/ ; git pull
 30 * * * * www-data /var/www/html/<prj_name>/doc/book-hard-copy-prj-generate.sh
 ```
+* caution: Don't set it to the same time as other book-hardcopy-prj-generate.sh
 
 ## How to use Scancode Toolkit
 
