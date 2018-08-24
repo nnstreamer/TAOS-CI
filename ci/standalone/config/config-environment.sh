@@ -30,7 +30,7 @@
 # c. In case that you need to create new project
 #
 
-################# Modify the below statements for your server  #######################
+################# Default: Modify the below statements for your server  #######################
 
 
 #### Repository setting
@@ -41,7 +41,7 @@ GITHUB_ACCOUNT="nnsuite"
 PRJ_REPO_UPSTREAM="TAOS-CI"
 
 # CI Server webaddress. Should end with /
-CISERVER="http://invain.mooo.com/"
+CISERVER="http://<your-ci-dns>.mooo.com/"
 
 # Format area (pr-format)
 # Add root path of source folders
@@ -109,17 +109,15 @@ BUILD_MODE_TIZEN=99
 BUILD_MODE_UBUNTU=99
 BUILD_MODE_YOCTO=99
 
-################# Do not modify the below statements #################################
-
 # Version format: Major.Minor
-VERSION="1.20180811"
+VERSION="1.20180820"
 
-# Connecting to a repository using token id instead of git.bot.sec@github.io id
+# Connecting to a repository using token id instead of your-gitbot-id@github.io id
 # because of two-authentification. Refer to https://github.com/settings/tokens
-TOKEN="e8ef547310c1546d78aa78686b9806b1acf8785d"
+TOKEN="××××××××××c1546d78aa78686b9806b1acf8785d"
 
 # Email-address
-EMAIL="leemgs@github.io"
+EMAIL="<your-github-id>@github.io"
 
 # Reference repository to speed up "git clone" command
 REFERENCE_REPOSITORY="/var/www/html/$PRJ_REPO_UPSTREAM/"
