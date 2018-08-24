@@ -39,7 +39,7 @@ PRs causing regressions will not be automatically merged.<br>
 <br>
 <br>
 <br>
-<img src=./image/ci02.png border=0 width=550 height=200></src>
+<img src=./image/ci02.png border=0 width=550 height=200></img>
 <br>
 <br>
 <hr>
