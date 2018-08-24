@@ -45,7 +45,7 @@ The below diagram shows an overall flow of CI system.
 ```bash
  | <----------------------------- Jenkins: Server Diagnosis ------------------------------> |
                    | <------------ TAOS-CI: Inspect & Verify ------------> | <---- CD ---->
-                   |        /------ Tizen, Ubuntu, and SMP(TODO)           |
+                   |        /------ Tizen, Ubuntu, and Yocto          |
   +-----+     +----+     +--|----+     +-----+     +--------+     +-------+     +---------+             
   |Issue| --> | PR | --> | Build | --> | Run | --> | Review | --> | Merge | --> | Release |
   +-----+     +----+     +-------+     +-----+     +--------+     +-------+     +---------+ 
