@@ -1,15 +1,20 @@
 
 # Introduction
-TAOS-CI is to prevent a regression, find bugs, and reduce a nonproductive review process because of incorrect PRs. Actually, Submitting the incorrect PRs is a PITA in case of continuous integration. Basically, PRs causing regressions will not be automatically merged. As a result of that, it will reduce the burdens of reviewers.
+TAOS-CI is an automated project coordinator to prevent a regression, find bugs, and reduce a nonproductive review process because of incorrect PRs in github.com. Actually, Submitting the incorrect PRs is a PITA in case of continuous integration. Basically, PRs causing regressions will not be automatically merged. As a result of that, it will reduce the burdens of reviewers.
 
 - Minimize a nonproductive review process
 - Provide a test automation (both build and run)
 - Prevent a performance regression
 - Find bugs at a proper time before merging buggy codes
 - Generate a doxygen-based developer manual
-- Integrate the existing opensource tools easily
-- Verify an integrity of a package by supporting a platform build (e.g., Ubuntu, Tizen, and Yocto)
 - Support modulable facilities with plug-in interface
+- Integrate the existing opensource tools easily
+- Verify an integrity of a package by supporting a platform build
+- Support multiple operating system as following:
+  - Ubuntu: https://www.ubuntu.com/
+  - Tizen: https://www.tizen.org/
+  - Yocto: https://www.yoctoproject.org/
+  - TBD & TBI
 
 <img src=https://github.com/nnsuite/TAOS-CI/blob/tizen/screenshot01.png border=0 width=350 height=250></img>
 <img src=https://github.com/nnsuite/TAOS-CI/blob/tizen/screenshot02.png border=0 width=350 height=250></img>
@@ -32,8 +37,8 @@ It is designed and implemented with a light-weight system approach to support a 
 * Sangjung Woo (sangjung.woo@samsung.com)
 * Wook Song (wook16.song@samsung.com)
 * Sewon Oh (sewon.oh@samsung.com) for nnstreamer
-* ByoungOh Kim (byoungo.kim@samsung.com) for another github repository
-* Seungchul Oh (saint.oh@samsung.com) for another github repository
+* ByoungOh Kim (byoungo.kim@samsung.com) for another repository
+* Seungchul Oh (saint.oh@samsung.com) for another repository
 
 # Overall flow
 The below diagram shows an overall flow of CI system.
@@ -65,6 +70,8 @@ Please refer to [How to build a package](ci/doc/self-assessment-before-submittin
 * CI: Continuous Integration
 * CD: Continuous Deployment
 * PR: Pull Request
+* TBD: To Be Defined
+* TBI: To Be Implemented
 
 # Reference
 * https://developer.github.com/webhooks/
