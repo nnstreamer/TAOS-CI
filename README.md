@@ -62,6 +62,25 @@ Please refer to [How to install TAOS-CI](ci/doc/how-to-install-taos-ci.md).
 
 # How to use new CI module
 Please refer to [How to use new CI module](ci/doc/how-to-use-taos-ci-module.md).
+* Current plugable facilities:
+   - Tizen builder
+   - Ubuntu builder
+   - Yocto builder
+   - File size
+   - New line
+   - No body
+   - Signed-off
+   - Clang-format
+   - Doxygen
+   - Timestamp
+   - Hardcoded-path
+   - Executable
+   - RPM-spec
+   - CPPcheck
+   - Pylint
+   - Indent
+   - Resource checker
+   - and so on
 
 # Self assessment before submitting PR
 Please refer to [How to build a package](ci/doc/self-assessment-before-submitting-pr.md).
