@@ -40,10 +40,12 @@ $ git clone https://github.com/<your_account>/<your_prj_name>.git <your_prj_name
 $ cd <your_prj_name>.git
 $ git submodule add https://github.com/<your_account/TAOS-CI.git
 $ ln -s ./TAOS-CI/ci ./ci
+$ vi ./ci/standalone/config/config-cibot.sh
+  (Please modify configuration variables appropriately.)
 $ vi ./ci/standalone/config/config-environment.sh
-  (You have to modify configuration variables appropriately.)
+  (Please modify configuration variables appropriately.)
 ```
-That's all. Enjoy TAOS-CI after setting-up webhook API.
+That's all. Enjoy TAOS-CI after setting-up webhook API of github.
 
 # Step 4: How to set-up github webhook API
 A CI bot of TAOS-CI works as a github webhook handler of a github repository in order to inspect automatically issues and PRs that are submitted by lots of contributors.

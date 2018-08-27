@@ -16,8 +16,8 @@ TAOS-CI is an automated project coordinator to prevent a regression, find bugs, 
   - Yocto: https://www.yoctoproject.org/
   - TBD & TBI
 
-<img src=https://github.com/nnsuite/TAOS-CI/blob/tizen/screenshot01.png border=0 width=350 height=250></img>
-<img src=https://github.com/nnsuite/TAOS-CI/blob/tizen/screenshot03.png border=0 width=350 height=250></img>
+<img src=./image/screenshot01.png border=0 width=350 height=250></img>
+<img src=./image/screenshot03.png border=0 width=350 height=250></img>
 
 
 ## Goals	
@@ -27,44 +27,22 @@ It is designed and implemented with a light-weight system approach to support a 
 * Preventing Performance regression
 * Finding potential bugs at a proper time
 
-
-## Maintainers
-* Geunsik Lim (geunsik.lim@samsung.com)
-
-## Committers	
-* Jijoong Mon (jijoon.moon@samsung.com)
-* MyungJoo Ham (myungjoo.ham@samsung.com)
-* Sangjung Woo (sangjung.woo@samsung.com)
-* Wook Song (wook16.song@samsung.com)
-* Sewon Oh (sewon.oh@samsung.com) for nnstreamer
-* ByoungOh Kim (byoungo.kim@samsung.com) for another repository
-* Seungchul Oh (saint.oh@samsung.com) for another repository
+## Maintenance
+Please refer to [Here](./ci/doc/maintenance.md).
 
 # Overall flow
-The below diagram shows an overall flow of CI system.
-```bash
- | <----------------------------- Jenkins: Server Diagnosis ------------------------------> |
-                   | <------------ TAOS-CI: Inspect & Verify ------------> | <---- CD ---->
-                   |        /------ Tizen, Ubuntu, and Yocto          |
-  +-----+     +----+     +--|----+     +-----+     +--------+     +-------+     +---------+             
-  |Issue| --> | PR | --> | Build | --> | Run | --> | Review | --> | Merge | --> | Release |
-  +-----+     +----+     +-------+     +-----+     +--------+     +-------+     +---------+ 
-     |          |           |             |             |             |             |
-  (user)     (user)      (CIbot)          |(CIbot)   (reviewers)  (reviewers)       |-- SR(Submit Request)
-                |           |         Git Blame            Scancode --|             |  
-                |           |-- Audit Modules                  Doxygen Book         |-- Pre-flight   
-                |      Unit testing                                                 `Tizen PMB(Image)
-                 `Format Modules                                                   
-```
+The below diagram shows an overall flow of our system.
+
+<img src=./image/architecture.png border=0 width=550 height=450></img>
 
 # How to install
 Please refer to [How to install TAOS-CI](ci/doc/how-to-install-taos-ci.md).
 
 # How to use new CI module
 Please refer to [How to use new CI module](ci/doc/how-to-use-taos-ci-module.md).
-* Current plugable facilities:
-   - Tizen builder
+Current plugable facilities are as following:
    - Ubuntu builder
+   - Tizen builder
    - Yocto builder
    - File size
    - New line
@@ -91,6 +69,9 @@ Please refer to [How to build a package](ci/doc/self-assessment-before-submittin
 * PR: Pull Request
 * TBD: To Be Defined
 * TBI: To Be Implemented
+
+# License
+* [Apache License 2.0](LICENSE)
 
 # Reference
 * https://developer.github.com/webhooks/
