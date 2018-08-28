@@ -1,6 +1,6 @@
 
 # Step 1: Set-up CI server
-We explain how to set-up your own CI server on Ubuntu 16.04 x86_64 (Recommended) even though TAOS-CI is completely compatible with most of the Linux distributions. Please refer to the [set-up guide of Standalone CI server](../../ci/standalone/ci-server/README.md) page to install required packages.
+We explain how to set-up your own CI server on Ubuntu 16.04 x86_64 (Recommended) even though TAOS-CI is completely compatible with most of the Linux distributions. Please refer to the [set-up guide of Standalone CI server](../../ci/taos/ci-server/README.md) page to install required packages.
 
 # Step 2: Install CI software
 ### How to install base packages for TAOS-CI
@@ -40,9 +40,9 @@ $ git clone https://github.com/<your_account>/<your_prj_name>.git <your_prj_name
 $ cd <your_prj_name>.git
 $ git submodule add https://github.com/<your_account/TAOS-CI.git
 $ ln -s ./TAOS-CI/ci ./ci
-$ vi ./ci/standalone/config/config-cibot.sh
+$ vi ./ci/taos/config/config-cibot.sh
   (Please modify configuration variables appropriately.)
-$ vi ./ci/standalone/config/config-environment.sh
+$ vi ./ci/taos/config/config-environment.sh
   (Please modify configuration variables appropriately.)
 ```
 That's all. Enjoy TAOS-CI after setting-up webhook API of github.
@@ -57,7 +57,7 @@ Press `Hooks` menu - Press `Add webhook` button -
 ```bash
 * Webhooks/ Add webhook
   - Payload URL:
-    http://<your_hostname>.mooo.com/<your_prj_name>/ci/standalone/webhook.php
+    http://<your_hostname>.mooo.com/<your_prj_name>/ci/taos/webhook.php
   - Content type: application/x-www-form-urlencoded
   - Secret: ******
   - Which events would you like to trigger this webhook?

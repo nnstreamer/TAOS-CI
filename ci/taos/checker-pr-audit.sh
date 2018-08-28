@@ -89,7 +89,7 @@ echo -e "[DEBUG] ./checker-pr-audit.sh $1 $2 $3 $4 $5 $6 "           | tee -a $l
 echo -e "[DEBUG] current path: $(pwd)."                              | tee -a $log_file
 echo -e "[DEBUG] ./checker-pr-audit-async.sh $1 $2 $3 $4 $5 $6 "     | tee -a $log_file
 echo -e "[DEBUG] Starting asynchronouly...               "           | tee -a $log_file
-cd ./standalone/
+cd ./taos/
 ./checker-pr-audit-async.sh $1 $2 $3 $4 $5 $6                        | tee -a $log_file
 echo -e "[DEBUG] Running"                                            | tee -a $log_file
 echo -e "[DEBUG] ......"                                             | tee -a $log_file

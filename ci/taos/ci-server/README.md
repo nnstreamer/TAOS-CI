@@ -1,4 +1,4 @@
-# Administrator guide for standalone CI server
+# Administrator guide for taos CI server
 
 ## Configuration of current CI server
 

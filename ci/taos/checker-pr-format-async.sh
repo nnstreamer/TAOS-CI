@@ -165,8 +165,8 @@ echo -e "[MODULE] plugins-good: Plugin group that follow Apache license with goo
 echo -e "[MODULE] plugins-staging: Plugin group that does not have evaluation and aging test enough"
 echo -e " "
 echo -e "Current path: $(pwd)."
-echo -e "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-format.sh"
-source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-format.sh
+echo -e "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-format.sh"
+source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-format.sh
 
 ##################################################################################################################
 

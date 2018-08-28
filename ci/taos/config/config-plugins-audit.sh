@@ -30,7 +30,7 @@ echo "[DEBUG] The default BUILD_MODE of $module_name is declared with 99 (SKIP M
 echo "[DEBUG] $module_name is started."
 echo "[DEBUG] TAOS/$module_name: Check if Tizen rpm package is successfully generated."
 echo "[DEBUG] Current path: $(pwd)."
-source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-base/$module_name.sh
+source ${REFERENCE_REPOSITORY}/ci/taos/plugins-base/$module_name.sh
 # Note that do not append the below "$module_name" because build step is implemented as a built-in module partially
 
 
@@ -39,7 +39,7 @@ echo "[DEBUG] The default BUILD_MODE of $module_name is declared with 99 (SKIP M
 echo "[DEBUG] $module_name is started."
 echo "[DEBUG] TAOS/$module_name: Check if Ubuntu deb package is successfully generated."
 echo "[DEBUG] Current path: $(pwd)."
-source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-base/$module_name.sh
+source ${REFERENCE_REPOSITORY}/ci/taos/plugins-base/$module_name.sh
 # Note that do not append the below "$module_name" because build step is implemented as a built-in module partially
 
 
@@ -48,7 +48,7 @@ echo "[DEBUG] The default BUILD_MODE of $module_name is declared with 99 by defa
 echo "[DEBUG] $module_name is started."
 echo "[DEBUG] TAOS/$module_name: Check if YOCTO deb package is successfully generated."
 echo "[DEBUG] Current path: $(pwd)."
-source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-base/$module_name.sh
+source ${REFERENCE_REPOSITORY}/ci/taos/plugins-base/$module_name.sh
 # Note that do not append the below "$module_name" because build step is implemented as a built-in module partially
 
 
@@ -70,7 +70,7 @@ echo "[MODULE] plugins-staging: Plugin group that does not have evaluation and a
 # echo "[DEBUG] $module_name is started."
 # echo "[DEBUG] TAOS/$module_name: Check if there are not-installed resource files."
 # echo "[DEBUG] Current path: $(pwd)."
-# source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-staging/$module_name.sh
+# source ${REFERENCE_REPOSITORY}/ci/taos/plugins-staging/$module_name.sh
 # $module_name
 # echo "[DEBUG] $module_name is done."
 
