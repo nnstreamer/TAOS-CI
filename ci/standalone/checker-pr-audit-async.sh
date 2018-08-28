@@ -125,38 +125,6 @@ do
     fi
 done
 
-# --------------------------- CI Trigger (queue) ----------------------------------------------------------------------
-
-if [[ $pr_comment_pr_updated == 1 ]]; then
-    # inform all developers of their activity whenever PR submitter resubmit their PR after applying comments of reviews
-    message=":dart: **cibot**: $user_id has updated the pull request."
-    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
-fi
-
-# load the configuraiton file that user defined to build selectively.
-echo "[MODULE] plugins-base: Plugin group that does have well-maintained features as a base module."
-echo "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
-echo "[MODULE] plugins-staging: Plugin group that does not has evaluation and aging test enough"
-echo "Current path: $(pwd)."
-source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-audit.sh
-echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-audit.sh"
-
-# create new context name to monitor progress status of a checker
-message="Trigger: queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
-cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
-
-for arch in $pr_build_arch_type
-do
-    echo "[DEBUG] Job is queued to run 'gbs build -A $arch(for Tizen)' command."
-    pr-audit-build-tizen-trigger-queue $arch
-done
-
-echo "[DEBUG] Job is queued to run 'pdebuild (for Ubuntu)' command."
-pr-audit-build-ubuntu-trigger-queue
-
-echo "[DEBUG] Job is queued to run 'devtool (for YOCTO)' command."
-pr-audit-build-yocto-trigger-queue
-
 # --------------------------- git-clone module: clone git repository -------------------------------------------------
 echo "[DEBUG] Starting pr-audit....\n"
 
@@ -199,6 +167,38 @@ fi
 cd ./${PRJ_REPO_OWNER}
 git checkout -b $input_branch origin/$input_branch
 git branch
+
+# --------------------------- CI Trigger (queue) ----------------------------------------------------------------------
+
+if [[ $pr_comment_pr_updated == 1 ]]; then
+    # inform all developers of their activity whenever PR submitter resubmit their PR after applying comments of reviews
+    message=":dart: **cibot**: $user_id has updated the pull request."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
+fi
+
+# load the configuraiton file that user defined to build selectively.
+echo "[MODULE] plugins-base: Plugin group that does have well-maintained features as a base module."
+echo "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
+echo "[MODULE] plugins-staging: Plugin group that does not has evaluation and aging test enough"
+echo "Current path: $(pwd)."
+source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-audit.sh
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/standalone/config/config-plugins-audit.sh"
+
+# create new context name to monitor progress status of a checker
+message="Trigger: queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
+cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+
+for arch in $pr_build_arch_type
+do
+    echo "[DEBUG] Job is queued to run 'gbs build -A $arch(for Tizen)' command."
+    pr-audit-build-tizen-trigger-queue $arch
+done
+
+echo "[DEBUG] Job is queued to run 'pdebuild (for Ubuntu)' command."
+pr-audit-build-ubuntu-trigger-queue
+
+echo "[DEBUG] Job is queued to run 'devtool (for YOCTO)' command."
+pr-audit-build-yocto-trigger-queue
 
 # --------------------------- Jenkins module: start -----------------------------------------------------
 

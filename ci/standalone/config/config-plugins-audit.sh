@@ -74,3 +74,11 @@ echo "[MODULE] plugins-staging: Plugin group that does not have evaluation and a
 # $module_name
 # echo "[DEBUG] $module_name is done."
 
+# module_name="pr-nnstreamer-apptest"
+# echo "[DEBUG] TAOS/$module_name: Check nnstreamer sample app"
+# echo "[DEBUG] $module_name is started."
+# echo "[DEBUG] Current path: $(pwd)."
+# source ${REFERENCE_REPOSITORY}/ci/standalone/plugins-staging/$module_name.sh
+# $module_name
+# echo "[DEBUG] $module_name is done." 
+
