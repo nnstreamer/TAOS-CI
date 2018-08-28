@@ -88,7 +88,7 @@ echo -e "[DEBUG] ./checker-pr-format.sh $1 $2 $3 $4 $5 $6 "                     
 echo -e "[DEBUG] Current path: $(pwd)."                                           | tee -a $log_file
 echo -e "[DEBUG] ./checker-pr-format-async.sh $1 $2 $3 $4 $5 $6 | tee $log_file " | tee -a $log_file
 echo -e "[DEBUG] Starting asynchronously...                                     " | tee -a $log_file
-cd ./standalone/
+cd ./taos/
 ./checker-pr-format-async.sh $1 $2 $3 $4 $5 $6                                    | tee -a $log_file
 echo -e "[DEBUG] Running                                                        " | tee -a $log_file
 echo -e "[DEBUG] ......                                                         " | tee -a $log_file

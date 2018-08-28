@@ -60,7 +60,7 @@ function main(){
     display "[DEBUG] value of prj_path:" $prj_path
     display "[DEBUG] current folder:" $(pwd)
     # import configuraiotn file of CI
-    source ./ci/standalone/config/config-environment.sh
+    source ./ci/taos/config/config-environment.sh
 
     # let's go to source folder
     # then, run entire procedure to generate doxygen-based pdf book

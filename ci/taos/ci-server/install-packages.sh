@@ -5,7 +5,7 @@
 # @brief This script is to install packages that are required to run all modules.
 #
 
-echo -e "########## Installing base packages to set-up standalone CI software"
+echo -e "########## Installing base packages to set-up taos CI software"
 sudo apt-get -y install bash php curl
 sudo apt-get -y install apache2
 sudo apt-get -y install php php-cgi libapache2-mod-php php-common php-pear php-mbstring
