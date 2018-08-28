@@ -145,6 +145,11 @@ echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-audit
 message="Trigger: queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
 cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
+if [[ ${nnstreamer_apptest} == 1 ]]; then
+    echo "[DEBUG] Job is queued to run nnstreamer app test"
+    pr-nnstreamer-apptest-trigger-queue
+fi
+
 for arch in $pr_build_arch_type
 do
     echo "[DEBUG] Job is queued to run 'gbs build -A $arch(for Tizen)' command."
@@ -260,6 +265,11 @@ done
 message="Trigger: running. The commit number is $input_commit."
 cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
+if [[ ${nnstreamer_apptest} == 1 ]]; then
+    echo "[DEBUG] Job is started to run nnstreamer app test"
+    pr-nnstreamer-apptest-trigger-run
+fi
+
 for arch in $pr_build_arch_type
 do
     echo "[DEBUG] Job is started to run 'gbs build -A $arch(for Tizen)' command."
@@ -271,6 +281,11 @@ pr-audit-build-ubuntu-trigger-run
 
 echo "[DEBUG] Job is started to run 'devtool (for YOCTO)' command."
 pr-audit-build-yocto-trigger-run
+
+if [[ ${nnstreamer_apptest} == 1 ]]; then
+    echo "[DEBUG] Testing the nnstreamer apps"
+    pr-nnstreamer-apptest
+fi
 
 for arch in $pr_build_arch_type
 do
