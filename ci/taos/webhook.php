@@ -39,7 +39,7 @@
  *    - OUTPUT              :  Execution result of CI
  *    @section  CREATEINFO     Code information
  *    - initial date        :  2017/07/30
- *    - version             :  1.06
+ *    - version             :  1.03
  */
 
 /** Declare global variables */
@@ -58,7 +58,7 @@ function json_config(){
     echo ("<img src=./image/webhook-flow.png border=0></img><br>\n");
     echo ("<style> table { border: 1px solid #444444; } </style>\n");
     echo ("<table bgcolor=gray><tr><td width=800></td></tr></table>\n");
-    echo ("[DEBUG] PRINT: <font color=blue><b>CI webhook engine is started.....</b></font> <br>\n");
+    echo ("[DEBUG] PRINT: <font color=blue><b>A webhook engine is started.....</b></font> <br>\n");
     // read JSON file
     $string = file_get_contents("./config/config-webhook.json");
     $json_config = json_decode($string);
@@ -68,13 +68,13 @@ function json_config(){
 
     // get id from json file
     $github_id = $json_config->github->id;
-    // Note that you have to use print_r instead of echo function to display decoded json data.
+    // Note that you have to use 'print_r' instead of echo function to display decoded json data.
     // print_r ($json_config);
-    printf ("[DEBUG] webhook id: %s\n<br>", $json_config->github->id);
+    printf ("[DEBUG] webhook ID: %s\n<br>", $json_config->github->id);
     printf ("[DEBUG] webhook secret: %s\n<br>", $json_config->github->secret);
 
-    # Please, add "$hookSecret" value in Secret field at https://<github-address>/.../setting/hooks/
-    # Set NULL if you want to disable this security.
+    // Please, add "$hookSecret" value in Secret field at https://<github-address>/.../setting/hooks/
+    // Set NULL if you want to disable this security.
     global $hookSecret;
     $hookSecret = $json_config->github->secret;
 }
@@ -148,7 +148,6 @@ function decode_json_data(){
     $payload = json_decode($json);
 
     echo ("[DEBUG] json string is decoded..... \n");
-    //echo ("[DEBUG] event: ".strtolower($_SERVER['HTTP_X_GITHUB_EVENT']."\n"));
     echo ("[DEBUG] action: '$payload->action'. \n");
 
 }
@@ -289,7 +288,8 @@ function github_event_handling(){
             }
 
             // Checker: checker-pr-audit.sh
-            // Todo: handle the case that has multiple commits per PR with "foreach $payload->head as $key => $value" statement.
+            // Todo: handle the case that has multiple commits per PR
+            // with "foreach $payload->head as $key => $value" statement.
             if ($payload->action == "opened" || ($payload->action == "edited" && $open_sesame == "true")||
                 $payload->action == "synchronize"){
                 printf ("\n\n");
