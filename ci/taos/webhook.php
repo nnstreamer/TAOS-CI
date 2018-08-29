@@ -60,7 +60,7 @@ function json_config(){
     echo ("<table bgcolor=gray><tr><td width=800></td></tr></table>\n");
     echo ("[DEBUG] PRINT: <font color=blue><b>CI webhook engine is started.....</b></font> <br>\n");
     // read JSON file
-    $string = file_get_contents("./config/config-cibot.json");
+    $string = file_get_contents("./config/config-webhook.json");
     $json_config = json_decode($string);
 
     // get website name of github from json file
