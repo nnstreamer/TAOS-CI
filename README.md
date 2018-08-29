@@ -33,7 +33,7 @@ Please refer to [Here](./ci/doc/maintenance.md).
 # Overall flow
 The below diagram shows an overall flow of our system.
 
-<img src=./image/architecture.png border=0 width=550 height=450></img>
+<img src=./image/architecture.png border=0 width=550 height=400></img>
 
 # How to install
 Please refer to [How to install TAOS-CI](ci/doc/how-to-install-taos-ci.md).
