@@ -40,10 +40,10 @@ $ git clone https://github.com/<your_account>/<your_prj_name>.git <your_prj_name
 $ cd <your_prj_name>.git
 $ git submodule add https://github.com/<your_account/TAOS-CI.git
 $ ln -s ./TAOS-CI/ci ./ci
-$ vi ./ci/taos/config/config-cibot.sh
-  (Please modify configuration variables appropriately.)
+$ vi ./ci/taos/config/config-webhook.json
+  (Please modify configuration variables for webhook handler.)
 $ vi ./ci/taos/config/config-environment.sh
-  (Please modify configuration variables appropriately.)
+  (Please modify configuration variables for CI modules.)
 ```
 That's all. Enjoy TAOS-CI after setting-up webhook API of github.
 
