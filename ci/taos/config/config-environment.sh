@@ -34,6 +34,10 @@
 
 
 #### Repository setting
+# Connecting to a repository using token id instead of your-gitbot-id@github.io id
+# because of two-authentification. Refer to https://github.com/settings/tokens
+TOKEN="××××××××××c1546d78aa78686b9806b1acf8785d"
+
 # Name of account (or orgranzation)
 GITHUB_ACCOUNT="nnsuite"
 
@@ -112,12 +116,7 @@ BUILD_MODE_YOCTO=99
 # Version format: Major.Minor
 VERSION="1.20180820"
 
-# Connecting to a repository using token id instead of your-gitbot-id@github.io id
-# because of two-authentification. Refer to https://github.com/settings/tokens
-TOKEN="××××××××××c1546d78aa78686b9806b1acf8785d"
-
-# Email-address
-EMAIL="<your-github-id>@github.io"
+#### Location
 
 # Reference repository to speed up "git clone" command
 REFERENCE_REPOSITORY="/var/www/html/$PRJ_REPO_UPSTREAM/"
