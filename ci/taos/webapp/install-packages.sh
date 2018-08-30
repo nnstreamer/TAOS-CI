@@ -46,7 +46,7 @@ sudo apt -y install libreoffice
 sudo apt -y install evince
 
 echo -e "########## Setting-up Tizen build environment"
-if [[ -f /etc/apt/sources.list.d/tizen.list ]]; then
+if [[ ! -f /etc/apt/sources.list.d/tizen.list ]]; then
     sudo echo "deb [trusted=yes] http://download.tizen.org/tools/latest-release/Ubuntu_16.04/ / # upgraded to xenial" > /etc/apt/sources.list.d/tizen.list
     sudo apt -y update
     sudo apt -y install mic gbs
