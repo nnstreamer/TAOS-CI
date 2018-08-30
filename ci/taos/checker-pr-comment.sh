@@ -58,7 +58,7 @@ fi
 
 if [[ $pr_comment_pr_monitor == 1 ]]; then
     # inform PR submitter of the webpage address in order that they can monitor the current status of their PR.
-    message="If you want to monitor the current build status of your PR, Please refer to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/taos/ci-server/monitor.php"
+    message="If you want to monitor the current build status of your PR, Please refer to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/taos/webapp/monitor.php"
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
