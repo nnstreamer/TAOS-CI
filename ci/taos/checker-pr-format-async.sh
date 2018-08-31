@@ -168,6 +168,12 @@ echo -e "Current path: $(pwd)."
 echo -e "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-format.sh"
 source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-format.sh
 
+for plugin in ${format_plugins[*]}
+do
+    echo "[DEBUG] Running the ${plugin}"
+    ${plugin}
+done
+
 ##################################################################################################################
 
 
