@@ -145,17 +145,21 @@ echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-audit
 message="Trigger: queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
 cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-for arch in $pr_build_arch_type
+for plugin in ${audit_plugins[*]}
 do
-    echo "[DEBUG] Job is queued to run 'gbs build -A $arch(for Tizen)' command."
-    pr-audit-build-tizen-trigger-queue $arch
+    if [[ ${plugin} == "pr-audit-build-tizen" ]]; then
+        for arch in $pr_build_arch_type
+        do
+            echo "[DEBUG] Job is queued to run 'gbs build -A $arch(for Tizen)' command."
+            ${plugin}-trigger-queue $arch
+        done
+    else
+        echo "[DEBUG] Job is queue to run $plugin"
+        ${plugin}-trigger-queue
+    fi
 done
 
-echo "[DEBUG] Job is queued to run 'pdebuild (for Ubuntu)' command."
-pr-audit-build-ubuntu-trigger-queue
 
-echo "[DEBUG] Job is queued to run 'devtool (for YOCTO)' command."
-pr-audit-build-yocto-trigger-queue
 
 # --------------------------- git-clone module: clone git repository -------------------------------------------------
 echo "[DEBUG] Starting pr-audit....\n"
@@ -260,29 +264,33 @@ done
 message="Trigger: running. The commit number is $input_commit."
 cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-for arch in $pr_build_arch_type
+for plugin in ${audit_plugins[*]}
 do
-    echo "[DEBUG] Job is started to run 'gbs build -A $arch(for Tizen)' command."
-    pr-audit-build-tizen-trigger-run $arch
+    if [[ ${plugin} == "pr-audit-build-tizen" ]]; then
+        for arch in $pr_build_arch_type
+        do
+            echo "[DEBUG] Job is started to run 'gbs build -A $arch(for Tizen)' command."
+            ${plugin}-trigger-run $arch
+        done
+    else
+        echo "[DEBUG] Job is started to run $plugin"
+        ${plugin}-trigger-run
+    fi
 done
 
-echo "[DEBUG] Job is started to run 'pdebuild (for Ubuntu)' command."
-pr-audit-build-ubuntu-trigger-run
-
-echo "[DEBUG] Job is started to run 'devtool (for YOCTO)' command."
-pr-audit-build-yocto-trigger-run
-
-for arch in $pr_build_arch_type
+for plugin in ${audit_plugins[*]}
 do
-    echo "[DEBUG] Compiling the source code to Tizen $arch RPM package."
-    pr-audit-build-tizen $arch
+    if [[ ${plugin} == "pr-audit-build-tizen" ]]; then
+        for arch in $pr_build_arch_type
+        do
+            echo "[DEBUG] Compiling the source code to Tizen $arch RPM package."
+            ${plugin} $arch
+        done
+    else
+        echo "[DEBUG] Running the $plugin"
+        ${plugin}
+    fi
 done
-
-echo "[DEBUG] Compiling the source code to Ubuntu DEB package."
-pr-audit-build-ubuntu
-
-echo "[DEBUG] Compiling the source code to YOCTO DEB package."
-pr-audit-build-yocto
 
 ##################################################################################################################
 
