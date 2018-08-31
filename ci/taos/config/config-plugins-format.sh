@@ -21,7 +21,7 @@
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 
 
-##### Set environment for audit plugins
+##### Set environment for format plugins
 declare -i idx=-1
 
 ##################################################################################################################
