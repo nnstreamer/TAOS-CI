@@ -11,7 +11,7 @@ VERSION_ID="16.04.3"
 ```
 
 ## Install prerequisites
-In order to run all checker modules normally, you have to run [install-packages.sh](install-packages.sh).
+In order to run all checker modules normally, you have to install required packages by running install-packages.sh in the [webapp](../taos/webapp/) folder.
 
 
 ## Install Apache+PHP for CI Server
