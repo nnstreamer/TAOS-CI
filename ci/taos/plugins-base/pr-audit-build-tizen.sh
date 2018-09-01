@@ -23,22 +23,23 @@
 # @requirement
 # $ sudo apt install gbs
 
-# @brief [MODULE] TAOS/pr-audit-build-tizen-trigger-queue
-function pr-audit-build-tizen-trigger-queue(){
-    message="Trigger: queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
+# @brief [MODULE] TAOS/pr-audit-build-tizen-wait-queue
+function pr-audit-build-tizen-wait-queue(){
+    message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
     cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-tizen-$1" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
-# @brief [MODULE] TAOS/pr-audit-build-tizen-trigger-run
-function pr-audit-build-tizen-trigger-run(){
-    echo "[DEBUG] Starting CI trigger to run 'gbs build -A $1 (for Tizen)' command actually."
-    message="Trigger: running. The commit number is $input_commit."
+# @brief [MODULE] TAOS/pr-audit-build-tizen-ready-queue
+function pr-audit-build-tizen-ready-queue(){
+    message="Trigger: ready queue. The commit number is $input_commit."
     cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-tizen-$1" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
-# @brief [MODULE] TAOS/pr-audit-build-tizen
-function pr-audit-build-tizen(){
-    ## [MODULE] TAOS/pr-audit-build-tizen: Check if 'gbs build' can be successfully passed.
+# @brief [MODULE] TAOS/pr-audit-build-tizen-run-queue
+function pr-audit-build-tizen-run-queue(){
+    message="Trigger: run queue. The commit number is $input_commit."
+    cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-tizen-$1" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+
     echo "[MODULE] TAOS/pr-audit-build-tizen-$1: Check if 'gbs build -A $1' can be successfully passed."
     pwd
 
@@ -48,7 +49,6 @@ function pr-audit-build-tizen(){
     check_dependency curl
     check_dependency gbs
     check_dependency tee
-
 
     # BUILD_MODE=0 : run "gbs build" command without generating debugging information.
     # BUILD_MODE=1 : run "gbs build" command with a debug file.

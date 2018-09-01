@@ -100,6 +100,8 @@ export dir_worker=$dir_worker
 cd $dir_ci
 export dir_commit=${dir_worker}/${input_date}-${input_pr}-${input_commit}
 
+# --------------------------- Out-of-commit (OOC) killer: kill duplicated PR request ----------------------------------
+
 # kill PIDs that were previously invoked by checker-pr-audit.sh with the same PR number.
 echo "[DEBUG] Starting killing activity to kill previously invoked checker-pr-audit.sh with the same PR number.\n"
 ps aux | grep "^www-data.*bash \./checker-pr-audit.sh" | while read line
@@ -125,7 +127,7 @@ do
     fi
 done
 
-# --------------------------- CI Trigger (queue) ----------------------------------------------------------------------
+# --------------------------- CI Trigger (wait queue) -----------------------------------------------------------------
 
 if [[ $pr_comment_pr_updated == 1 ]]; then
     # inform all developers of their activity whenever PR submitter resubmit their PR after applying comments of reviews
@@ -142,7 +144,7 @@ source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-audit.sh
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-audit.sh"
 
 # create new context name to monitor progress status of a checker
-message="Trigger: queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
+message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
 cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
 for plugin in ${audit_plugins[*]}
@@ -151,11 +153,11 @@ do
         for arch in $pr_build_arch_type
         do
             echo "[DEBUG] Job is queued to run 'gbs build -A $arch(for Tizen)' command."
-            ${plugin}-trigger-queue $arch
+            ${plugin}-wait-queue $arch
         done
     else
         echo "[DEBUG] Job is queue to run $plugin"
-        ${plugin}-trigger-queue
+        ${plugin}-wait-queue
     fi
 done
 
@@ -204,7 +206,7 @@ cd ./${PRJ_REPO_OWNER}
 git checkout -b $input_branch origin/$input_branch
 git branch
 
-# --------------------------- Jenkins module: start -----------------------------------------------------
+# --------------------------- audit module: start -----------------------------------------------------
 
 echo "[MODULE] Exception Handling: Let's skip CI-Build/UnitTest in case of no buildable files. "
 
@@ -248,10 +250,14 @@ pushd ./GBS-ROOT/local
 ln -s $REPOCACHE cache
 popd
 
+# --------------------------- Commit scheduler: manage hardware resource in case of too many PRs ----------------------
+
 # Let's accommodate upto 8 gbs tasks (one is "grep" process) to maintain a available system resource of the build server.
 # Job queue: Fairness or FCFS is not guaranteed.
 # $RANDOM is an internal bash function (not a constant) - http://tldp.org/LDP/abs/html/randomvar.html
 # To enhance a job queue, refer to http://hackthology.com/a-job-queue-in-bash.html
+
+# Commit scheduler for Tizen build (gbs)
 JOBS_PR=8
 while [ `ps aux | grep "sudo.*gbs build" | wc -l` -gt $JOBS_PR ]
 do
@@ -259,9 +265,16 @@ do
     sleep $WAITTIME
 done
 
-# --------------------------- CI Trigger (run) ----------------------------------------------------------------------
+# Todo: Commit scheduler for Ubuntu build (pdebuild)
+# Todo: Commit scheduler for Yocto  build (devtool)
 
-message="Trigger: running. The commit number is $input_commit."
+# --------------------------- CI Trigger (ready queue) --------------------------------------------------------
+
+# Note that package build results in the unexpected build failure due to some reasons such as server issue,
+# changes of build environment, and high overload of run queeue. So We need to provide ready queue to inform
+# users of current status of a pull request.
+
+message="Trigger: wait queue. The commit number is $input_commit."
 cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
 for plugin in ${audit_plugins[*]}
@@ -270,13 +283,22 @@ do
         for arch in $pr_build_arch_type
         do
             echo "[DEBUG] Job is started to run 'gbs build -A $arch(for Tizen)' command."
-            ${plugin}-trigger-run $arch
+            ${plugin}-ready-queue $arch
         done
     else
         echo "[DEBUG] Job is started to run $plugin"
-        ${plugin}-trigger-run
+        ${plugin}-ready-queue
     fi
 done
+
+
+# --------------------------- CI Trigger (run queue) --------------------------------------------------------
+
+# Note that  major job is run qeue amon the queues while executing the audit checker. So we have to notify
+# if the current status of pull reqeust is building or not.
+
+message="Trigger: run queue. The commit number is $input_commit."
+cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
 for plugin in ${audit_plugins[*]}
 do
@@ -284,15 +306,15 @@ do
         for arch in $pr_build_arch_type
         do
             echo "[DEBUG] Compiling the source code to Tizen $arch RPM package."
-            ${plugin} $arch
+            ${plugin}-run-queue $arch
         done
     else
         echo "[DEBUG] Running the $plugin"
-        ${plugin}
+        ${plugin}-run-queue
     fi
 done
 
-##################################################################################################################
+# --------------------------- Report module: generate a log file and checke other conditions --------------------------
 
 # save webhook information for debugging
 echo ""
@@ -334,7 +356,7 @@ else
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
-# --------------------------- Report module: submit the global check result to github-website --------------
+# --------------------------- Report module: submit  global check result -----------------------------------------------
 # report if all modules are successfully completed or not.
 echo "send a total report with global_check_result variable. global_check_result is ${global_check_result}. "
 
@@ -357,7 +379,7 @@ else
     echo -e "[DEBUG] It seems that this script has a bug. Please check value of \$global_check_result."
 fi
 
-# --------------------------- Cleaner: remove ./GBS-ROOT/ folder to keep available storage space --------
+# --------------------------- Cleaner: remove ./GBS-ROOT/ folder to keep available storage space --------------------
 # let's do not keep the ./GBS-ROOT/ folder because it needs a storage space more than 9GB on average.
 sleep 3
 
