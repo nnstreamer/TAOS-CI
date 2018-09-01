@@ -34,21 +34,23 @@
 # $ sudo pbuilder create
 # $ ls -al /var/cache/pbuilder/base.tgz
 
-# @brief [MODULE] TAOS/pr-audit-build-ubuntu-trigger-queue
-function pr-audit-build-ubuntu-trigger-queue(){
-    message="Trigger: queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
+# @brief [MODULE] TAOS/pr-audit-build-ubuntu-wait-queue
+function pr-audit-build-ubuntu-wait-queue(){
+    message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
     cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
-# @brief [MODULE] TAOS/pr-audit-build-ubuntu-trigger-run
-function pr-audit-build-ubuntu-trigger-run(){
-    echo "[DEBUG] Starting CI trigger to run 'pdebuild (for Ubuntu)' command actually."
-    message="Trigger: running. The commit number is $input_commit."
+# @brief [MODULE] TAOS/pr-audit-build-ubuntu-ready-queue
+function pr-audit-build-ubuntu-ready-queue(){
+    message="Trigger: ready queue. The commit number is $input_commit."
     cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
-# @brief [MODULE] TAOS/pr-audit-build-ubuntu
-function pr-audit-build-ubuntu(){
+# @brief [MODULE] TAOS/pr-audit-build-ubuntu-run-queue
+function pr-audit-build-ubuntu-run-queue(){
+    message="Trigger: run queue. The commit number is $input_commit."
+    cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+
     echo "########################################################################################"
     echo "[MODULE] TAOS/pr-audit-build-ubuntu: check build process for Ubuntu distribution"
 

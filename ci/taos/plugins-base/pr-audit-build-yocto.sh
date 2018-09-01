@@ -46,21 +46,23 @@
 # $ devtool reset hello-world-sample
 #
 
-# @brief [MODULE] TAOS/pr-audit-build-yocto-trigger-queue
-function pr-audit-build-yocto-trigger-queue(){
-    message="Trigger: queued. There are other build jobs and we need to wait.. The commit number is $input_commit."
+# @brief [MODULE] TAOS/pr-audit-build-yocto-wait-queue
+function pr-audit-build-yocto-wait-queue(){
+    message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
     cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
-# @brief [MODULE] TAOS/pr-audit-build-yocto-trigger-run
-function pr-audit-build-yocto-trigger-run(){
-    echo "[DEBUG] Starting CI trigger to run 'devtool (for YOCTO)' command actually."
-    message="Trigger: running. The commit number is $input_commit."
+# @brief [MODULE] TAOS/pr-audit-build-yocto-ready-queue
+function pr-audit-build-yocto-ready-queue(){
+    message="Trigger: ready queue. The commit number is $input_commit."
     cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
-# @brief [MODULE] TAOS/pr-audit-build-yocto
-function pr-audit-build-yocto(){
+# @brief [MODULE] TAOS/pr-audit-build-yocto-run-queue
+function pr-audit-build-yocto-run-queue(){
+    message="Trigger: run queue. The commit number is $input_commit."
+    cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+
     echo "########################################################################################"
     echo "[MODULE] TAOS/pr-audit-build-yocto: check build process for YOCTO distribution"
 
