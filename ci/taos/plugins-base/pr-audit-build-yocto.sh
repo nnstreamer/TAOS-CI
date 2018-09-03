@@ -96,9 +96,11 @@ function pr-audit-build-yocto-run-queue(){
  
     # Check if dependent packages are installed
     # The required packages are sudo, curl, and eYOCTO(devtool)
-    check_dependency sudo
-    check_dependency curl
-    check_dependency devtool
+    if [[ $YOCTO_ESDK_ROOT != "" ]]; then
+        check_dependency sudo
+        check_dependency curl
+        check_dependency devtool
+    fi
 
     echo "[DEBUG] env information: start ---------------------------------------------"
     env
@@ -124,7 +126,7 @@ function pr-audit-build-yocto-run-queue(){
         # '888' will be used for a fine-graind classification when the values of 'build_result' are increased.
         build_result=888
     else
-        # build package with devtool
+        # Build a package with devtool. The devtool command requires root privilege.
         # Note that you have to set no-password condition after running 'visudo' command.
         # www-data    ALL=(ALL) NOPASSWD:ALL
         echo -e "[DEBUG] The current folder is $(pwd)."
