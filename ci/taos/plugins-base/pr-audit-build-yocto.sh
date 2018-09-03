@@ -116,13 +116,13 @@ function pr-audit-build-yocto-run-queue(){
         # Skip a build procedure because BUILD_MODE is 99
         echo -e "[DEBUG] Skipping 'devtool' procedure temporarily because BUILD_MODE is 99."
         # '777' will be used for a fine-graind classification when the values of 'build_result' are increased.
-        $build_result=777
+        build_result=777
     elif [[ $YOCTO_ESDK_ROOT == "" ]]; then
         # Skip a build procedure because YOCTO_ESDK_ROOT is empty
         echo -e "[DEBUG] Skipping 'devtool' procedure temporarily because YOCTO_ESDK_ROOT is empty."
-        echo -e "[DEBUG] Ask administrator of a server to install Yocto eSDK.
+        echo -e "[DEBUG] Ask administrator of a server to install Yocto eSDK."
         # '888' will be used for a fine-graind classification when the values of 'build_result' are increased.
-        $build_result=888
+        build_result=888
     else
         # build package with devtool
         # Note that you have to set no-password condition after running 'visudo' command.
