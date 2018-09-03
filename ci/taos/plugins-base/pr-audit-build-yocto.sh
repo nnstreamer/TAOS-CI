@@ -78,9 +78,10 @@ function pr-audit-build-yocto-run-queue(){
     locale
     echo "[DEBUG] locale information: end   ---------------------------------------------"
 
-    # import environment variables from eSDK to use devtool command
-    # YOCTO_ESDK_ROOT="/var/www/kairos_sdk"
-    YOCTO_ESDK_ROOT="/var/www/poky_sdk"
+    # Import environment variables from eSDK to use devtool command
+    # For example, YOCTO_ESDK_ROOT="/var/www/kairos_sdk"
+    # Note that administrator of a server has to specify the location of eSDK at first.
+    YOCTO_ESDK_ROOT=""
 
     if [[ "$YOCTO_ESDK_ROOT" == "/var/www/kairos_sdk" ]]; then
         echo "[DEBUG] source ${YOCTO_ESDK_ROOT}/environment-setup-core2-64-smp-linux"
@@ -90,10 +91,11 @@ function pr-audit-build-yocto-run-queue(){
         source ${YOCTO_ESDK_ROOT}/environment-setup-i586-poky-linux
     else
         echo "[DEBUG] Oooops. The variable YOCTO_ESDK_ROOT is empty."
+        echo "[INFO ] Note that administrator of a server has to specify the location of eSDK at first"
     fi
  
-    # check if dependent packages are installed
-    # the required packages are sudo, curl, and eYOCTO(devtool)
+    # Check if dependent packages are installed
+    # The required packages are sudo, curl, and eYOCTO(devtool)
     check_dependency sudo
     check_dependency curl
     check_dependency devtool
@@ -109,12 +111,18 @@ function pr-audit-build-yocto-run-queue(){
     # BUILD_MODE=99: skip "gbs build" procedures
     BUILD_MODE=$BUILD_MODE_YOCTO
 
-    # build package
+    # Build a package for Yocto
     if [[ $BUILD_MODE == 99 ]]; then
-        # skip build procedure
-        echo -e "BUILD_MODE = 99"
-        echo -e "Skipping 'devtool' procedure temporarily."
-        $result=999
+        # Skip a build procedure because BUILD_MODE is 99
+        echo -e "[DEBUG] Skipping 'devtool' procedure temporarily because BUILD_MODE is 99."
+        # '777' will be used for a fine-graind classification when the values of 'build_result' are increased.
+        $build_result=777
+    elif [[ $YOCTO_ESDK_ROOT == "" ]]; then
+        # Skip a build procedure because YOCTO_ESDK_ROOT is empty
+        echo -e "[DEBUG] Skipping 'devtool' procedure temporarily because YOCTO_ESDK_ROOT is empty."
+        echo -e "[DEBUG] Ask administrator of a server to install Yocto eSDK.
+        # '888' will be used for a fine-graind classification when the values of 'build_result' are increased.
+        $build_result=888
     else
         # build package with devtool
         # Note that you have to set no-password condition after running 'visudo' command.
@@ -158,15 +166,28 @@ function pr-audit-build-yocto-run-queue(){
 
     echo "[DEBUG] The return value (build_result) of 'devtool build' command is $build_result."
 
-    # report a build result
-    # let's do the build procedure of or skip the build procedure according to $BUILD_MODE
+    # Report a build result of Yocto package
+    # Let's do the build procedure of or skip the build procedure according to $BUILD_MODE
     if [[ $BUILD_MODE == 99 ]]; then
         # Do not run "devtool" command in order to skip unnecessary examination if there are no buildable files.
         echo -e "BUILD_MODE == 99"
-        echo -e "[DEBUG] Let's skip the devtool procedure because there is not source code. All files may be skipped."
+        echo -e "[DEBUG] Let's skip the devtool procedure because BUILD_MODE of Yocto is 99."
         echo -e "[DEBUG] So, we stop remained all tasks at this time."
 
         message="Skipped devtool procedure. No buildable files found. Commit number is $input_commit."
+        cibot_pr_report $TOKEN "success" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+
+        message="Skipped devtool procedure. Successfully all audit modules are passed. Commit number is $input_commit."
+        cibot_pr_report $TOKEN "success" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+
+        echo -e "[DEBUG] devtool procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as TAOS/pr-audit-all and TAOS/pr-format-all."
+    elif [[ $YOCTO_ESDK_ROOT == "" ]]; then
+        # Do not run "devtool" command in order to skip unnecessary examination if there eSDK is not installed by administrator.
+        echo -e "YOCTO_ESDK_ROOT == ''"
+        echo -e "[DEBUG] Let's skip the devtool procedure because eSDK is not installed by administrator."
+        echo -e "[DEBUG] So, we stop remained all tasks at this time."
+
+        message="Skipped devtool procedure. eSDK is not installed. Commit number is $input_commit."
         cibot_pr_report $TOKEN "success" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         message="Skipped devtool procedure. Successfully all audit modules are passed. Commit number is $input_commit."
