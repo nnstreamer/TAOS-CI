@@ -1,3 +1,11 @@
+[![GitHub license](https://dmlc.github.io/img/apache2.svg)](./LICENSE)
+
+[Build Status](http://invain.mooo.com/TAOS-CI/ci/taos/) |
+[Documentation](ci/doc/doxygen-documentation.md) |
+[Contributing](ci/doc/contributing.md) |
+[Chat Room](https://gitter.im/login) |
+[Release Notes](https://github.com/nnsuite/TAOS-CI/wiki/Release-Plan)
+
 
 # Introduction
 TAOS-CI is an automated project coordinator to prevent a regression, find bugs, and reduce a nonproductive review process because of incorrect PRs in github.com. Actually, Submitting the incorrect PRs is a PITA in case of continuous integration. Basically, PRs causing regressions will not be automatically merged. As a result of that, it will reduce the burdens of reviewers.
