@@ -1,21 +1,18 @@
-# Administrator guide for taos CI server
+# Administrator guide for TAOS-CI server
 
-## Configuration of current CI server
-
-- Server address: http://localhost/
-- Ubuntu 16.04
+## Prerequisites
+We assume that you install Ubuntu 16.04 x86_64 distribution in your own computer.
 
 ```
 $ cat /etc/os-release |grep VERSION_ID
 VERSION_ID="16.04.3"
 ```
-
-## Install prerequisites
-In order to run all checker modules normally, you have to install required packages by running install-packages.sh in the [webapp](../taos/webapp/) folder.
+In order to run all modules of TAOS-CI normally, you have to install required packages.
+Please run `install-packages.sh` that is located in the [webapp](../taos/webapp/) folder.
 
 
 ## Install Apache+PHP for CI Server
-The CI server to run TAOS-CI has to be equipped with Apache and PHP script language to run lightwegith automation server instead of Jenkins.
+The CI server to run TAOS-CI has to be equipped with Apache and PHP script language to run lightweight automation server instead of Jenkins.
 Builds has been triggered by last commit number by scheduling a Pull Request (PR) with a bot, that is based on Webhook API and JSON.
 
 **for Ubuntu 16.04**
@@ -31,11 +28,27 @@ phpinfo();
 ?>
 $ firefox http://localhost/index.php
 ```
-
 Note. If you have a firewall in your network, please make sure that ports for CI server are opened and can accept requests.
 
-## Install clang-format-4.0 for format checker
+## How to set-up domain name address
+If you want to use your own domain name address instead of IP address, we recommend that you try to get a host name
+free of charge at https://freedns.afraid.org.
 
+```bash
+$ sudo vi /etc/apache2/sites-enabled/000-default.conf 
+<VirtualHost *:80>
+        # You can get a free dns such as {your_host}.mooo.com free of charge at http://freedns.afraid.org.
+        ServerName {your_host}.mooo.com
+        ServerAdmin webmaster@localhost
+        DocumentRoot /home/taos-ci/public_html
+        # Alias /nnstreamer-link /home/taos-ci/public_html/{your_github_repo_name}/ci/taos
+        ErrorLog ${APACHE_LOG_DIR}/error.{your_github_repo_name}.log
+        CustomLog ${APACHE_LOG_DIR}/access.{your_github_repo_name}.log combined
+</VirtualHost>
+$ sudo systemctl restart apache2
+```
+
+## Install clang-format-4.0 for C/C++ format checker
 You have to install clang-format-4.0 (official version to check C++ formatting).
 
 **for Ubuntu 16.04**
@@ -49,10 +62,10 @@ $ sudo apt update
 $ sudo apt install clang-format-4.0
 ```
 
-## Setting sudo privilege of www-data
+## Allowing www-data to do sudo privilege
 
-You have to update /etc/sudoers for sudo access of www-data with no password in order to run "git clone" command normally
-in Apahce/Php environment as following:
+You have to update `/etc/sudoers` to give `www-data` user sudo access with **NOPASSWD**  in order to run "git clone" command normally
+in Apache/PHP environment as following:
 
 ```bash
 $ sudo visudo
@@ -60,20 +73,21 @@ $ sudo visudo
 www-data    ALL=(ALL) NOPASSWD:ALL
 or
 # User privilege specification for robust security
-www-data    ALL=(ALL) NOPASSWD: /usr/bin/git
+www-data    ALL=(ALL) NOPASSWD: /usr/bin/git , NOPASSWD: /usr/bin/mount
 ```
 
-Then, let's enable www-data as a system account.
+Then, let's enable www-data as a system account for debugging and setting-up the TAOS-CI solution.
+When you complete all of the set-up procedure, please replace `/bin/bash` with `/bin/nologin` for security.
 
 ```bash
-$ su -
-# vi /etc/passwd
+# sudo vi /etc/passwd
 www-data:x:33:33:www-data:/var/www:/bin/bash
-# cd /var/
+# cd /var/www/
 # chown -R www-data:www-data /var/www/
 # cp /root/.bashrc /var/www/
-# chwon www-data:www-data  /var/www/.bashrc
+# chwon -R www-data:www-data  /var/www/.bashrc
 # su - www-data
+$
 ```
 If you want to push your commits without a password input procedure, please create ~/.netrc file as follows.
 ```bash
@@ -81,9 +95,6 @@ $ vi ~/.netrc
 machine github.com
         login git.bot.sec
         password bdd8f27d1e718f878ff5c7120a45440ff63fxxxx
-machine 10.113.136.32
-        login git.bot.sec
-        password npuxxxx
 ```
 
 ## Ubuntu: Set-up configuration file
@@ -94,14 +105,14 @@ shell script conventions. For more details, refer to http://manpages.ubuntu.com/
 $ vi ~/.pbuilderrc
 # man 5 pbuilderrc
 DISTRIBUTION=xenial
-OTHERMIRROR="deb http://archive.ubuntu.com/ubuntu xenial universe multiverse |deb [trusted=yes] http://[id]:[password]@[your-own-server]/taos/ubuntutools/ubuntu16.04/ /"
+OTHERMIRROR="deb http://archive.ubuntu.com/ubuntu xenial universe multiverse |deb [trusted=yes] http://[id]:[password]@[your-own-server]/tools/ubuntu16.04/ /"
 
 ```
 
 ## Tizen: Set-up configuration file
 
-You have to write `~/.gbs.conf` in order that `www-data` id can build a pakcage with `gbs build` command.
-We assume that you are using `git.bot.sec` id as a default id of a repository webserver.
+You have to write `~/.gbs.conf` in order that `www-data` id build a package with `gbs build` command.
+We assume that you are using your id as a default id of a repository webserver.
 
 ```bash
 [general]
@@ -192,7 +203,7 @@ $ df | grep tmpfs
 tmpfs            5242880      2520   5240360   1% /tmp
 ```
 
-## How to enable swap memory space to avoid OOM
+## How to enable SWAP to avoid Out-of-Memory
 
 In order to avoid OOM operations while running a build process, You may enable swap space with swapfile.
 Note that it does not speed up the build time.
@@ -206,7 +217,7 @@ $ sudo swapon ./swapfile-50gb
 $ free
 ```
 
-## How to create a single PDF document from doxygen
+## How to generate PDF document with doxygen
 
 First of all, you have to install latex packages to generate PDF file from latex as follows.
 
@@ -220,7 +231,7 @@ sudo apt install libreoffice
 Then, generate a single PDF file by running the below script in **Documentation** folder.
 
 ```bash
-$ cd /var/www/html/<prj_name>/doc
+$ cd /var/www/html/{prj_name}/doc
 $ ./book-hard-copy-prj-generate.sh
 $ evince ./latex/book.pdf
 ```
@@ -230,12 +241,12 @@ Finally, let's generate automatically PDF book per 1 hour with cron table (e.g.,
 ```bash
 $ sudo vi /etc/crontab
 # Generate doxygen document
-20 * * * * www-data cd /var/www/html/<prj_name>/ ; git pull
-30 * * * * www-data /var/www/html/<prj_name>/doc/book-hard-copy-prj-generate.sh
+20 * * * * www-data cd /var/www/html/{prj_name}/ ; git pull
+30 * * * * www-data /var/www/html/{prj_name}/doc/book-hard-copy-prj-generate.sh
 ```
-* caution: Don't set it to the same time as other book-hardcopy-prj-generate.sh
+* Note that you do not have to run `book-hard-copy-prj-generate.sh` file at the same time due to an execution error of LibreOffice.
 
-## How to use Scancode Toolkit
+## How to inspect license issue with Scancode Toolkit
 
 [ScanCode Toolkit](https://github.com/nexB/scancode-toolkit) is a set of code scanning tools to detect the origin and license of code and dependencies.
 It uses a plug-in architecture to run a series of scan-related tools in one process flow.
@@ -245,6 +256,6 @@ sudo apt-get install python-dev bzip2 xz-utils zlib1g libxml2-dev libxslt1-dev
 cd /opt
 git clone https://github.com/nexB/scancode-toolkit.git
 sudo chown -R www-data:www-data /opt/scancode-toolkit/
-mkdir  /var/www/html/<prj_name>/scancode/
-/opt/scancode-toolkit/scancode  --license /var/www/html/<prj_name>/  --html-app /var/www/html/<prj_name>/scancode/index.html
+mkdir  /var/www/html/{prj_name}/scancode/
+/opt/scancode-toolkit/scancode  --license /var/www/html/{prj_name}/  --html-app /var/www/html/{prj_name}/scancode/index.html
 ```
