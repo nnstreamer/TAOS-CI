@@ -65,8 +65,9 @@ for i in ${FILELIST}; do
                 typo_analysis_sw="aspell"
                 typo_analysis_rules=" list -l en "
                 typo_check_result="misspelling_result.txt"
-                fi
+
                 cat $i | $typo_analysis_sw $typo_analysis_rules > ../report/${typo_check_result}
+
                 line_count=`cat ../report/${typo_check_result} | wc -l`
                 # TODO: 9,000 is declared by heuristic method from our experiment.
                 if  [[ $line_count -gt 9000 ]]; then
@@ -98,7 +99,7 @@ if [[ $check_result == "success" ]]; then
 
 elif [[ $check_result == "skip" ]]; then
     echo "[DEBUG] Skipped. A spell check tool - aspell."
-    message="Skipped. Your PR does not include python code(s)."
+    message="Skipped. Your PR does not include document file(s) such as .txt and .md."
     cibot_pr_report $TOKEN "success" "TAOS/pr-format-misspelling" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 else
