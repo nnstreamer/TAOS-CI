@@ -50,7 +50,6 @@ input_delivery_id=$6
 # Note the "source ./config/config-environment.sh" file can be called in another script
 # instead of in this file in order to support asynchronous operation from CI manager
 source ./config/config-environment.sh
-source ./common/api_collection.sh
 
 # check if input argument is correct.
 if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; then
@@ -166,7 +165,8 @@ echo -e "[MODULE] plugins-staging: Plugin group that does not have evaluation an
 echo -e " "
 echo -e "Current path: $(pwd)."
 echo -e "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-format.sh"
-source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-format.sh
+source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-format.sh  2>> ../format_module_error.log
+
 
 for plugin in ${format_plugins[*]}
 do
