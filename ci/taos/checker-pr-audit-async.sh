@@ -56,7 +56,6 @@ source ./config/config-server-administrator.sh
 # Note the "source ./config/config-environment.sh" file can be called in another script
 # instead of in this file in order to support asynchronous operation from cibot.php
 source ./config/config-environment.sh
-source ./common/api_collection.sh
 
 # check if input argument is correct.
 if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; then
@@ -143,7 +142,7 @@ echo "[MODULE] plugins-base: Plugin group that does have well-maintained feature
 echo "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
 echo "[MODULE] plugins-staging: Plugin group that does not has evaluation and aging test enough"
 echo "Current path: $(pwd)."
-source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-audit.sh
+source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-audit.sh 2>> ../audit_module_error.log
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-audit.sh"
 
 # create new context name to monitor progress status of a checker
