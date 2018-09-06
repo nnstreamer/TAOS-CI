@@ -79,24 +79,20 @@ function pr-audit-build-yocto-run-queue(){
     echo "[DEBUG] locale information: end   ---------------------------------------------"
 
     # Import environment variables from eSDK to use devtool command
-    # For example, YOCTO_ESDK_ROOT="/var/www/kairos_sdk"
-    # Note that administrator of a server has to specify the location of eSDK at first.
-    YOCTO_ESDK_ROOT=""
-
-    if [[ "$YOCTO_ESDK_ROOT" == "/var/www/kairos_sdk" ]]; then
-        echo "[DEBUG] source ${YOCTO_ESDK_ROOT}/environment-setup-core2-64-smp-linux"
-        source ${YOCTO_ESDK_ROOT}/environment-setup-core2-64-smp-linux
-    elif [[ "$YOCTO_ESDK_ROOT" == "/var/www/poky_sdk" ]]; then
-        echo "[DEBUG] source ${YOCTO_ESDK_ROOT}/environment-setup-i586-poky-linux"
-        source ${YOCTO_ESDK_ROOT}/environment-setup-i586-poky-linux
+    if [[ "$YOCTO_ESDK_NAME" == "kairos_sdk" ]]; then
+        echo "[DEBUG] source $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/environment-setup-core2-64-smp-linux"
+        source $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/environment-setup-core2-64-smp-linux
+    elif [[ "$YOCTO_ESDK_NAME" == "poky_sdk" ]]; then
+        echo "[DEBUG] source $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/environment-setup-i586-poky-linux"
+        source $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/environment-setup-i586-poky-linux
     else
-        echo "[DEBUG] Oooops. The variable YOCTO_ESDK_ROOT is empty."
+        echo "[DEBUG] Oooops. The variable YOCTO_ESDK_NAME is empty."
         echo "[INFO ] Note that administrator of a server has to specify the location of eSDK at first"
     fi
  
     # Check if dependent packages are installed
     # The required packages are sudo, curl, and eYOCTO(devtool)
-    if [[ $YOCTO_ESDK_ROOT != "" ]]; then
+    if [[ $YOCTO_ESDK_NAME != "" ]]; then
         check_dependency sudo
         check_dependency curl
         check_dependency devtool
@@ -119,9 +115,9 @@ function pr-audit-build-yocto-run-queue(){
         echo -e "[DEBUG] Skipping 'devtool' procedure temporarily because BUILD_MODE is 99."
         # '777' will be used for a fine-graind classification when the values of 'build_result' are increased.
         build_result=777
-    elif [[ $YOCTO_ESDK_ROOT == "" ]]; then
-        # Skip a build procedure because YOCTO_ESDK_ROOT is empty
-        echo -e "[DEBUG] Skipping 'devtool' procedure temporarily because YOCTO_ESDK_ROOT is empty."
+    elif [[ $YOCTO_ESDK_NAME == "" ]]; then
+        # Skip a build procedure because YOCTO_ESDK_NAME is empty
+        echo -e "[DEBUG] Skipping 'devtool' procedure temporarily because YOCTO_ESDK_NAME is empty."
         echo -e "[DEBUG] Ask administrator of a server to install Yocto eSDK."
         # '888' will be used for a fine-graind classification when the values of 'build_result' are increased.
         build_result=888
@@ -131,16 +127,15 @@ function pr-audit-build-yocto-run-queue(){
         # www-data    ALL=(ALL) NOPASSWD:ALL
         echo -e "[DEBUG] The current folder is $(pwd)."
 
-        # if ${YOCTO_ESDK_ROOT}/workspace/sources/${PRJ_REPO_UPSTREAM} folder exists, let's remove this folder
-        echo "[DEBUG] Checking ${YOCTO_ESDK_ROOT}/workspace/recipes/${PRJ_REPO_UPSTREAM}-${input_commit}"
-        if [[ -d ${YOCTO_ESDK_ROOT}/workspace/recipes/${PRJ_REPO_UPSTREAM}-${input_commit} ]]; then
+        echo "[DEBUG] Checking $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/recipes/${PRJ_REPO_UPSTREAM}-${input_commit}"
+        if [[ -d $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/recipes/${PRJ_REPO_UPSTREAM}-${input_commit} ]]; then
             echo "[DEBUG] devtool reset ${PRJ_REPO_UPSTREAM}-${input_commit}"
             devtool reset ${PRJ_REPO_UPSTREAM}-${input_commit} \
             2> ../report/build_log_${input_pr}_devtool_reset_yocto_error.txt 1> ../report/build_log_${input_pr}_devtool_reset_yocto_output.txt
-            if [[ -d ${YOCTO_ESDK_ROOT}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit} ]]; then
-                echo -e "[DEBUG] Removing ${YOCTO_ESDK_ROOT}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit} folder"
-                echo -e "[DEBUG] rm -rf ${YOCTO_ESDK_ROOT}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit}"
-                rm -rf ${YOCTO_ESDK_ROOT}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit}
+            if [[ -d $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit} ]]; then
+                echo -e "[DEBUG] Removing $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit} folder"
+                echo -e "[DEBUG] rm -rf $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit}"
+                rm -rf $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit}
                 if [[ $? -ne 0 ]]; then
                     echo -e "[DEBUG][FAILED] Oooops!!!!!! the source folder is still not removed."
                 else
@@ -183,9 +178,9 @@ function pr-audit-build-yocto-run-queue(){
         cibot_pr_report $TOKEN "success" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         echo -e "[DEBUG] devtool procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as TAOS/pr-audit-all and TAOS/pr-format-all."
-    elif [[ $YOCTO_ESDK_ROOT == "" ]]; then
+    elif [[ $YOCTO_ESDK_NAME == "" ]]; then
         # Do not run "devtool" command in order to skip unnecessary examination if there eSDK is not installed by administrator.
-        echo -e "YOCTO_ESDK_ROOT == ''"
+        echo -e "YOCTO_ESDK_NAME == ''"
         echo -e "[DEBUG] Let's skip the devtool procedure because eSDK is not installed by administrator."
         echo -e "[DEBUG] So, we stop remained all tasks at this time."
 

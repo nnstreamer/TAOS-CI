@@ -50,6 +50,9 @@ input_branch=$4
 input_pr=$5
 input_delivery_id=$6
 
+# Note that the server administrator has to specify appropriate variables after installing required packages.
+source ./config/config-server-administrator.sh
+
 # Note the "source ./config/config-environment.sh" file can be called in another script
 # instead of in this file in order to support asynchronous operation from cibot.php
 source ./config/config-environment.sh
