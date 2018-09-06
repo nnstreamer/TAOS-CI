@@ -312,7 +312,7 @@ do
             ${plugin}-run-queue $arch
         done
     else
-        echo "[DEBUG] Running the $plugin"
+        echo "[DEBUG] run queue: Running the '$plugin' module"
         ${plugin}-run-queue
     fi
 done
