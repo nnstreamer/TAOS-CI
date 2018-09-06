@@ -120,6 +120,13 @@ echo "The current path: $(pwd)."
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh"
 source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh
 
+format_plugins[++idx]="pr-format-misspelling"
+echo "${format_plugins[idx]} is starting."
+echo "[MODULE] TAOS/${format_plugins[idx]}: Check a misspelled statement in a document file with GNU Aspell"
+echo "The current path: $(pwd)."
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh"
+source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh
+
 
 
 ##################################################################################################################
