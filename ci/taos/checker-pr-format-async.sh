@@ -170,7 +170,8 @@ source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-format.sh  2>> ../f
 
 for plugin in ${format_plugins[*]}
 do
-    echo "[DEBUG] run queue: Running the '${plugin}' module"
+    echo -e "[DEBUG] -----------------------------"
+    echo -e "[DEBUG] run queue: Running the '${plugin}' module"
     ${plugin}
 done
 

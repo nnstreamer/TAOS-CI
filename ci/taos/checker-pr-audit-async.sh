@@ -151,14 +151,15 @@ cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVE
 
 for plugin in ${audit_plugins[*]}
 do
+    echo -e "[DEBUG] -----------------------------"
     if [[ ${plugin} == "pr-audit-build-tizen" ]]; then
         for arch in $pr_build_arch_type
         do
-            echo "[DEBUG] Job is queued to run 'gbs build -A $arch(for Tizen)' command."
+            echo "[DEBUG] wait queue: Job is queued to run 'gbs build -A $arch (for Tizen)' command."
             ${plugin}-wait-queue $arch
         done
     else
-        echo "[DEBUG] Job is queue to run $plugin"
+        echo "[DEBUG] wait queue: Job is queue to run $plugin"
         ${plugin}-wait-queue
     fi
 done
@@ -281,14 +282,15 @@ cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVE
 
 for plugin in ${audit_plugins[*]}
 do
+    echo -e "[DEBUG] -----------------------------"
     if [[ ${plugin} == "pr-audit-build-tizen" ]]; then
         for arch in $pr_build_arch_type
         do
-            echo "[DEBUG] Job is started to run 'gbs build -A $arch(for Tizen)' command."
+            echo "[DEBUG] ready queue: Job is started to run 'gbs build -A $arch (for Tizen)' command."
             ${plugin}-ready-queue $arch
         done
     else
-        echo "[DEBUG] Job is started to run $plugin"
+        echo "[DEBUG] ready queue: Job is started to run $plugin"
         ${plugin}-ready-queue
     fi
 done
@@ -304,10 +306,11 @@ cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVE
 
 for plugin in ${audit_plugins[*]}
 do
+    echo -e "-----------------------------"
     if [[ ${plugin} == "pr-audit-build-tizen" ]]; then
         for arch in $pr_build_arch_type
         do
-            echo "[DEBUG] Compiling the source code to Tizen $arch RPM package."
+            echo "[DEBUG] run queue: Compiling the source code to Tizen $arch RPM package."
             ${plugin}-run-queue $arch
         done
     else
