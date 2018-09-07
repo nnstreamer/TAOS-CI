@@ -37,8 +37,8 @@ check_dependency gbs
 check_dependency rpm2cpio
 check_dependency cpio
 
-# Build unit test coverage rpm
-gbs build -A x86_64 --define "testcoverage 1" -B $dirpath $build_root
+# Build a RPM file to geneate a code coverage statistics with gcov/lcov.
+gbs build -A x86_64 --define "testcoverage 1" -B $dirpath $build_root --clean
 
 # Extract rpm to gcov_html folder
 cp $dirpath/local/repos/tizen/x86_64/RPMS/nnstreamer-unittest-coverage* $dirpath
@@ -48,7 +48,10 @@ mkdir -p ../gcov_html
 mv -f usr/share/nnstreamer/unittest/result/* ../gcov_html
 popd
 
-# Remove unused folders
-rm -rf $dirpath/local
-rm -rf $dirpath/usr
+# Remove unused folder. 
+# Note that we have to use 'sudo' command  to remove these files 
+# because 'gbs' command creates some files with "root' ID 
+# via "sudo chroot" operation.
+sudo rm -rf $dirpath/local
+sudo rm -rf $dirpath/usr
 
