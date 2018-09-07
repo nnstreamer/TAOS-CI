@@ -217,11 +217,12 @@ $ sudo swapon ./swapfile-50gb
 $ free
 ```
 
-## How to generate PDF document with doxygen
+## How to generate HTML/PDF with doxygen
 
 First of all, you have to install latex packages to generate PDF file from latex as follows.
 
 ```bash
+sudo apt install doxygen
 sudo apt install texlive-latex-base texlive-latex-extra
 sudo apt install latex-xcolor
 sudo apt install unoconv pdfunite  pdftk
