@@ -28,7 +28,7 @@ declare -i idx=-1
 echo "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
 # Please append your plugin modules here.
 
-format_plugins[++idx]="pr-format-doxygen"
+format_plugins[++idx]="pr-format-doxygen-tag"
 echo "${format_plugins[idx]} is starting."
 echo "[MODULE] TAOS/${format_plugins[idx]}: Check a source code consists of required doxygen tags."
 echo "[DEBUG] The current path: $(pwd)."
