@@ -1,0 +1,5 @@
+taos-ci (1.0-1) unstable; urgency=medium
+
+  * Initial packaging work with dpkg-buildpackage for Ubuntu sever.
+
+ -- Geunsik Lim <geunsik.lim@samsung.com> Sat, 08 Sep 2018 17:35:32 +0900
