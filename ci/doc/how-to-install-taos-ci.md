@@ -2,7 +2,7 @@
 # Step 1: Set-up CI server
 We explain how to set-up your own CI server on Ubuntu 16.04 x86_64 (Recommended) even though TAOS-CI is completely compatible with most of the Linux distributions. Please refer to the [set-up guide of Standalone CI server](./how-to-setup-taos-ci-server.md) page to install required packages.
 
-# Step 2: Install CI software
+# Step 2: Install base packages
 ### How to install base packages for TAOS-CI
 * PHP: a widely-used general-purpose scripting language can be embedded into HTML.
 * Bash: sh-compatible command language interpreter that can be configured to be POSIX-conformant by default.
@@ -33,7 +33,7 @@ sudo service jenkins restart
 chromium-browser http://localhost:8080/
 ```
 
-# Step 3: How to install TAOS-CI software
+# Step 3: How to install TAOS-CI system
 ```bash
 $ cd /var/www/html/
 $ git clone https://github.com/<your_account>/<your_prj_name>.git <your_prj_name>.git
