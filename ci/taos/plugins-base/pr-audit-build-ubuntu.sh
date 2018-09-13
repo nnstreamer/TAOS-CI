@@ -105,7 +105,11 @@ function pr-audit-build-ubuntu-run-queue(){
         # --use-pdebuild-internal runs "debian/rules clean"inside the chroot
         # http://pbuilder-docs.readthedocs.io/en/latest/usage.html
         # example: sudo -Hu www-data pdebuild
-        pdebuild  --use-pdebuild-internal 2> ../report/build_log_${input_pr}_ubuntu_error.txt 1> ../report/build_log_${input_pr}_ubuntu_output.txt
+        echo -e "[DEBUG] pdebuild start at :"
+        date -R
+        time pdebuild  --use-pdebuild-internal 2> ../report/build_log_${input_pr}_ubuntu_error.txt 1> ../report/build_log_${input_pr}_ubuntu_output.txt
+        echo -e "[DEBUG] pdebuild finished at :"
+        date -R
     fi
 
     result=$?
