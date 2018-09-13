@@ -23,7 +23,7 @@
 #
 
 #-------------------- Configuration --------------------------------------------------------
-$TITLE="Build Status Monitor of PRs";
+$TITLE="State Transition Monitor for PR";
 $PATTERN_REQ       ="[^]] bash ./checker-pr-audit.sh";
 $PATTERN_RUN_TIZEN ="[^]]/usr/bin/python /usr/bin/gbs build";
 $PATTERN_RUN_UBUNTU="[^]]/bin/bash /usr/bin/pdebuild";
@@ -63,7 +63,7 @@ function generate_requested_pr(){
     global $PATTERN_REQ;
     global $STRING_NUM_TIZEN;
     echo "<hr>\n";
-    echo "<img src=monitor-icon.png border=0> <b>Ready Queue: Requested PRs</b> <br>\n";
+    echo "<img src=monitor-icon.png border=0> <b>Assigned Queue: Submitted PRs</b> <br>\n";
     $output = shell_exec("ps -ef | grep \"$PATTERN_REQ\"");
     echo "<font size=2 color=blue>\n";
     if (str_word_count($output) >= $STRING_NUM_TIZEN){
