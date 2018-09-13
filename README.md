@@ -52,7 +52,8 @@ Current plugable facilities are as following:
    - **Format** (before a build): File size, New line, No body, Signed-off, Clang-format, Doxygen, Timestamp, Hardcoded-path, Executable, RPM-spec, CPPcheck, Pylint, Indent, Resource checker, and so on.
    - **Audit** (after a build): Ubuntu builder, Tizen builder, Yocto builder, and Android (Coming Soon).
 
-# Self assessment before submitting PR
+# Self assessment
+Note that you have to execute a self assessment before submitting your PR.
 Please refer to [How to build a package](ci/doc/self-assessment-before-submitting-pr.md).
 
 # Terminology
