@@ -39,7 +39,9 @@ It is designed and implemented with a light-weight system approach to support a 
 Please refer to [Here](./ci/doc/maintenance.md).
 
 # Overall flow
-The below diagram shows an overall flow of our system.
+The below diagram shows an overall flow of our system. The TAOS-CI system performs (1) the format checker (before the build) and (2) the audit checker (after the build) by separating an inspection procedure with two steps whenever contributors submit a Pull Request (PR).
+
+* Geunsik Lim, MyungJoo Ham, Jijoong Moon, Wook Song, Sangjung Woo, and Sewon Oh, "TAOS-CI: Lightweight & Modular Continuous Integration System for Edge Computing," 37th IEEE International Conference on Consumer Electronics (ICCE), Las Vegas, USA, Jan. 2019. (Accepted)
 
 <img src=./image/architecture.png border=0 width=550 height=400></img>
 
