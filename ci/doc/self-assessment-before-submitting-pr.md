@@ -1,16 +1,24 @@
 
+In this page, we describe how to verify if your commit(s) is valid. To do source code verification,
+we strongly recommend that you execute a clean build with a latest version of a software platform.
+Note that partial validation inspection of software cause potential defects when the software is
+integrated into the software platform.
 
 # How to build [Ubuntu](https://wiki.ubuntu.com/PbuilderHowto) DEB package with pdebuild
 You have to execute ***pdebuild*** command before submitting your PR.
 ```bash
 $ sudo apt install pbuilder debootstrap devscripts
-$ vi ~/.pbuilderrc  # in case of x86 64bit architecture
+$ vi ~/.pbuilderrc  # In case of x86 64bit architecture
 # man 5 pbuilderrc
 DISTRIBUTION=xenial
-OTHERMIRROR="deb http://archive.ubuntu.com/ubuntu xenial universe multiverse"
+OTHERMIRROR="deb http://archive.ubuntu.com/ubuntu xenial universe multiverse |deb [trusted=yes] http://ppa.launchpad.net/nnstreamer/ppa/ubuntu xenial main"
 $ sudo ln -s  ~/.pbuilderrc /root/.pbuilderrc
 $ sudo pbuilder create
-$ pdebuild  # build package to generate *.deb file
+$ sudo vi /etc/crontab
+#### Update pdebuild/pbuilder to keep latest apt repositories, /var/cache/pbuilder/base.tgz
+30 7 * * * root pbuilder update --override-config
+$
+$ pdebuild  # generate *.deb file with chroot technique
 $ ls -al /var/cache/pbuilder/result/*.deb
 ```
 
@@ -48,7 +56,7 @@ $ devtool reset hello-world-sample
 The source code below is an example in case that you have to write helloYocto source code in your own github repository.
 Yocto provides three build methods to compile a source code as following:
 
-* CMake-based hello-world project
+* CMake-based hello-world project (Recommended)
 ```bash
 $ cat ./CMakeLists.txt
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)

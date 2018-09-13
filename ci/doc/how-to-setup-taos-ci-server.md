@@ -8,7 +8,7 @@ $ cat /etc/os-release |grep VERSION_ID
 VERSION_ID="16.04.3"
 ```
 In order to run all modules of TAOS-CI normally, you have to install required packages.
-Please run `install-packages.sh` that is located in the [webapp](../taos/webapp/) folder.
+Please run **install-packages.sh** that is located in the [ci/taos/webapp](../taos/webapp/) folder.
 
 
 ## Install Apache+PHP for CI Server
@@ -89,7 +89,7 @@ www-data:x:33:33:www-data:/var/www:/bin/bash
 # su - www-data
 $
 ```
-If you want to push your commits without a password input procedure, please create ~/.netrc file as follows.
+If you want to push your commits without a password input procedure, please create `~/.netrc` file as follows.
 ```bash
 $ vi ~/.netrc
 machine github.com
@@ -98,15 +98,31 @@ machine github.com
 ```
 
 ## Ubuntu: Set-up configuration file
-The `~/.pbuilderrc` file contains default values used in the pbuilder program invocation.
-The file itself is sourced by a shell script, so it is required that the file conforms to
-shell script conventions. For more details, refer to http://manpages.ubuntu.com/manpages/trusty/man5/pbuilderrc.5.html
+It contains default values used in the pbuilder program invocation.
+`/etc/pbuilderrc` and `${HOME}/.pbuilderrc` are read in when pbuilder is invoked.
+* /etc/pbuilderrc: The configuration file for pbuilder, used in pdebuild.
+* /usr/share/pbuilder/pbuilderrc: The default configuration file for pbuilder, used in pdebuild.
+* ${HOME}/.pbuilderrc: Configuration file for pbuilder, used in pdebuild.  It overrides /etc/pbuilderrc
+
+It is useful to use `--configfile` option to load up a preset configuration file when switching between configuration files for different distributions.
+The file itself is sourced by a shell script, so it is required that the file conforms to shell script conventions.
+For more details, refer to http://manpages.ubuntu.com/manpages/trusty/man5/pbuilderrc.5.html
 ```bash
 $ vi ~/.pbuilderrc
 # man 5 pbuilderrc
 DISTRIBUTION=xenial
 OTHERMIRROR="deb http://archive.ubuntu.com/ubuntu xenial universe multiverse |deb [trusted=yes] http://[id]:[password]@[your-own-server]/tools/ubuntu16.04/ /"
+$ sudo vi /etc/crontab
+#### Update pdebuild/pbuilder to keep latest apt repositories, /var/cache/pbuilder/base.tgz
+30 7 * * * root pbuilder update --override-config
+```
 
+**(OPTIONAL, not yet tested)** If you have lots of RAM (more than 4 GB) putting the pbuilder 'build' chroot on tmpfs will speed it up immensely.
+so add the following to /etc/fstab (it should be all on one line starting with 'tmpfs' and ending with the second zero).
+```bash
+$ sudo vi /etc/fstab
+tmpfs   /var/cache/pbuilder/build       tmpfs   defaults,size=2400M 0 0
+$ sudo mount /var/cache/pbuilder/build
 ```
 
 ## Tizen: Set-up configuration file
@@ -126,8 +142,8 @@ workdir = .
 [profile.tizen]
 #Common authentication info for whole profile
 #passwd will be automatically encrypted from passwd to passwdx
-user = <your-id>
-passwd = <your-password>
+user = {your-id}
+passwd = {your-password}
 obs = obs.tizen
 
 repos = repo.extra, repo.unified, repo.base
@@ -151,7 +167,7 @@ url = http://download.tizen.org/snapshots/tizen/base/latest/repos/standard/packa
 url = http://download.tizen.org/snapshots/tizen/unified/latest/repos/standard/packages/
 
 [repo.extra]
-url = http://<your_id>:<your_pass>@<your_ip>/download/latest/repos/standard/packages/
+url = http://<your_id>:<your_pass>@<your_team_server>/download/latest/repos/standard/packages/
 ```
 
 ## Yocto: Set-up configuration file
@@ -245,7 +261,7 @@ $ sudo vi /etc/crontab
 20 * * * * www-data cd /var/www/html/{prj_name}/ ; git pull
 30 * * * * www-data /var/www/html/{prj_name}/doc/book-hard-copy-prj-generate.sh
 ```
-* Note that you do not have to run `book-hard-copy-prj-generate.sh` file at the same time due to an execution error of LibreOffice.
+* Note that you do not have to run `book-hard-copy-prj-generate.sh` file at the same time because the LibreOffice commands can not be executed simultaneously.
 
 ## How to inspect license issue with Scancode Toolkit
 
