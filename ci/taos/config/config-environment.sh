@@ -128,6 +128,8 @@ REPOCACHE="/var/www/html/$PRJ_REPO_UPSTREAM/repo_cache/"
 REPOSITORY_WEB="https://github.com/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
 REPOSITORY_GIT="https://github.com/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM.git"
 
-# Github webhook API
+# Github webhook API address
+# a. Community Edition - "https://github.{your_company_dns}/api/v3/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
+# b. Enterprise Edition- "https://api.github.com/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
 GITHUB_WEBHOOK_API="https://api.github.com/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
 
