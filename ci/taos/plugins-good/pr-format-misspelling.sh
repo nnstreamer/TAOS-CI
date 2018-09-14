@@ -46,6 +46,9 @@ FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 
 # Inspect all files that contributor modifed.
 for i in ${FILELIST}; do
+    # default value of check_result is "skip".
+    check_result="skip"
+
     # skip obsolete folder
     if [[ $i =~ ^obsolete/.* ]]; then
         continue
@@ -94,7 +97,7 @@ if [[ $check_result == "success" ]]; then
     cibot_pr_report $TOKEN "success" "TAOS/pr-format-misspelling" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
-    message="Info: You can read if there are misspelled characters at our misspelling check report. Please read ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${typo_check_result}."
+    message="**INFO:** You can read if there are misspelled characters at our misspelling check report. Please read ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${typo_check_result}."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 
 elif [[ $check_result == "skip" ]]; then
