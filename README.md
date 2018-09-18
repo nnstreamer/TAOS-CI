@@ -8,7 +8,7 @@
 
 
 # Introduction
-TAOS-CI is an automated project coordinator to prevent a regression, find bugs, and reduce a nonproductive review process because of incorrect PRs in github.com. Actually, Submitting the incorrect PRs is a PITA in case of continuous integration. Basically, PRs causing regressions will not be automatically merged. As a result of that, it will reduce the burdens of reviewers.
+TAOS-CI is an automated project coordinator to achieve "**Review less, merge faster**" with a tool-based review system. It accelerates a software development based on the GitHub webhook API. We aim to prevent a regression, find bugs, and reduce a nonproductive review process because of incorrect PRs in https://github.com. Actually, Submitting the incorrect PRs is a PITA in case of continuous integration. Basically, PRs causing regressions will not be automatically merged. As a result of that, it drastically reduces the existing burdens of reviewers.
 
 - Minimize a nonproductive review process
 - Provide a test automation (both build and run)
@@ -41,7 +41,7 @@ Please refer to [Here](./ci/doc/maintenance.md).
 # Overall flow
 The below diagram shows an overall flow of our system. The TAOS-CI system performs (1) the format checker (before the build) and (2) the audit checker (after the build) by separating an inspection procedure with two steps whenever contributors submit a Pull Request (PR).
 
-* Geunsik Lim, MyungJoo Ham, Jijoong Moon, Wook Song, Sangjung Woo, and Sewon Oh, "TAOS-CI: Lightweight & Modular Continuous Integration System for Edge Computing," 37th IEEE International Conference on Consumer Electronics (ICCE), Las Vegas, USA, Jan. 2019. (Accepted)
+* Geunsik Lim, MyungJoo Ham, Jijoong Moon, Wook Song, Sangjung Woo, and Sewon Oh, "**TAOS-CI: Lightweight & Modular Continuous Integration System for Edge Computing,**" 37th IEEE International Conference on Consumer Electronics (ICCE), Las Vegas, USA, Jan. 2019. (Accepted)
 
 <img src=./image/architecture.png border=0 width=550 height=400></img>
 
@@ -72,3 +72,7 @@ Please refer to [How to build a package](ci/doc/self-assessment-before-submittin
 * https://developer.github.com/webhooks/
 * https://gogs.io/
 * https://curl.haxx.se/docs/ 
+* Papers
+   * [ICSE2018, "Modern code review: a case study at google"](https://dl.acm.org/citation.cfm?id=3183525)
+   * [ICSE2015, "Do Not Find Bugs: how the Current Code Review Best Practive Slows Us Down"](https://dl.acm.org/citation.cfm?id=2819015)
+   * [IFIPAICT, "The Impact of a Low Level of Agreement Among Reviewers in a Code Review Process"](https://link.springer.com/chapter/10.1007/978-3-319-39225-7_8)
