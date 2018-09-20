@@ -1,6 +1,7 @@
 
 # Step 1: Set-up CI server
-We explain how to set-up your own CI server on Ubuntu 16.04 x86_64 (Recommended) even though TAOS-CI is completely compatible with most of the Linux distributions. Please refer to the [set-up guide of Standalone CI server](./how-to-setup-taos-ci-server.md) page to install required packages.
+We explain how to set-up your own CI server on Ubuntu 16.04 x86_64 (Recommended) even though TAOS-CI is completely compatible with most of the Linux distributions. Please refer to a set-up guide of a CI server to install required packages.
+* [Setting up a CI server](./how-to-setup-taos-ci-server.md) 
 
 # Step 2: Install base packages
 ### How to install base packages for TAOS-CI
@@ -30,36 +31,37 @@ sudo echo 'jenkins ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 sudo service jenkins stop 
 sudo service jenkins start 
 sudo service jenkins restart
-chromium-browser http://localhost:8080/
+firefox http://localhost:8080/
 ```
 
 # Step 3: How to install TAOS-CI system
 ```bash
 $ cd /var/www/html/
-$ git clone https://github.com/<your_account>/<your_prj_name>.git <your_prj_name>.git
-$ cd <your_prj_name>.git
-$ git submodule add https://github.com/<your_account/TAOS-CI.git
+$ git clone https://github.com/{your_github_account}/{your_prj_name}.git
+$ cd {your_prj_name}
+Then, please press 'Watch', 'Star', and 'Fork' on the top right to monitor feature changes of TAOS-CI repository.
+$ git submodule add https://github.com/nnsuite/TAOS-CI.git
 $ ln -s ./TAOS-CI/ci ./ci
 $ vi ./ci/taos/config/config-server-administrator.sh
-  (Please modify configuration variables for CI server.)
+  : Please modify configuration variables for CI server.
 $ vi ./ci/taos/config/config-webhook.json
-  (Please modify configuration variables for webhook handler.)
+  : Please modify configuration variables for a webhook handler.
 $ vi ./ci/taos/config/config-environment.sh
-  (Please modify configuration variables for CI modules.)
+  : Please modify configuration variables for CI modules.
 ```
 That's all. Enjoy TAOS-CI after setting-up webhook API of github.
 
 # Step 4: How to set-up github webhook API
-A CI bot of TAOS-CI works as a github webhook handler of a github repository in order to inspect automatically issues and PRs that are submitted by lots of contributors.
+A webhook handler of TAOS-CI receives an event message from a github repository, in order to inspect pull requests that are submitted by contributors.
 ```bash
-$ chromium-browser https://github.com/<your_account>/<your_prj_name>/settings
+$ firefox https://github.com/{your_github_account}/{your_prj_name}/settings
 ```
 
-Press `Hooks` menu - Press `Add webhook` button - 
+Press the `Hooks` menu - Press the `Add webhook` button. Note that you have to ask a firewall manager to get a network access such as 80 and 443 port between your own CI server and a github server if your company is running a firewall system.
 ```bash
 * Webhooks/ Add webhook
   - Payload URL:
-    http://<your_hostname>.mooo.com/<your_prj_name>/ci/taos/webhook.php
+    http://{your_hostname}.mooo.com/{your_prj_name}/ci/taos/webhook.php
   - Content type: application/x-www-form-urlencoded
   - Secret: ******
   - Which events would you like to trigger this webhook?
@@ -74,4 +76,4 @@ We will deliver event details when this hook is triggered.
 ```
 
 As a final step, press `Add webhook` button. That's all. 
-From now on, enjoy CI world for more collaborative and productive software development!!!
+From now on, enjoy a CI world for more collaborative and productive software development!!!
