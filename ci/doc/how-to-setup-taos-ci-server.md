@@ -93,8 +93,8 @@ If you want to push your commits without a password input procedure, please crea
 ```bash
 $ vi ~/.netrc
 machine github.com
-        login git.bot.sec
-        password bdd8f27d1e718f878ff5c7120a45440ff63fxxxx
+        login {your_gihub_id}
+        password your_token_key_bdd8f27d1e718f878ff5c7120a4544
 ```
 
 ## Ubuntu: Set-up configuration file
@@ -142,7 +142,7 @@ workdir = .
 [profile.tizen]
 #Common authentication info for whole profile
 #passwd will be automatically encrypted from passwd to passwdx
-user = {your-id}
+user = {your-tizen-id}
 passwd = {your-password}
 obs = obs.tizen
 
@@ -191,14 +191,14 @@ results in "No space left on device" issue despite available storage spaces.
 
 ```bash
 $ sudo vi /etc/crontab
-30 5 * * * root find /var/www/html/<your_prj_name>/ci/repo-workers/ -maxdepth 2 -type d -mtime +15 -exec rm -rf {} \;
+30 5 * * * root find /var/www/html/{your_prj_name}/ci/repo-workers/ -maxdepth 2 -type d -mtime +15 -exec rm -rf {} \;
 ```
 
 Please make sure before executing a rm command whether a target folder is correct or not. 
 You can check the target folders by specifying **maxdepth** option as an argument of find command.
 
 ```bash
-$ find /var/www/html/<your_prj_name>/ci/repo-workers/ -maxdepth 2 -type d -mtime +15
+$ find /var/www/html/{your_prj_name}/ci/repo-workers/ -maxdepth 2 -type d -mtime +15
 ```
 
 ## How to speed-up a build time
@@ -248,7 +248,7 @@ sudo apt install libreoffice
 Then, generate a single PDF file by running the below script in **Documentation** folder.
 
 ```bash
-$ cd /var/www/html/{prj_name}/doc
+$ cd /var/www/html/{your_prj_name}/doc
 $ ./book-hard-copy-prj-generate.sh
 $ evince ./latex/book.pdf
 ```
@@ -258,8 +258,8 @@ Finally, let's generate automatically PDF book per 1 hour with cron table (e.g.,
 ```bash
 $ sudo vi /etc/crontab
 # Generate doxygen document
-20 * * * * www-data cd /var/www/html/{prj_name}/ ; git pull
-30 * * * * www-data /var/www/html/{prj_name}/doc/book-hard-copy-prj-generate.sh
+20 * * * * www-data cd /var/www/html/{your_prj_name}/ ; git pull
+30 * * * * www-data /var/www/html/{your_prj_name}/doc/book-hard-copy-prj-generate.sh
 ```
 * Note that you do not have to run `book-hard-copy-prj-generate.sh` file at the same time because the LibreOffice commands can not be executed simultaneously.
 
@@ -273,6 +273,6 @@ sudo apt-get install python-dev bzip2 xz-utils zlib1g libxml2-dev libxslt1-dev
 cd /opt
 git clone https://github.com/nexB/scancode-toolkit.git
 sudo chown -R www-data:www-data /opt/scancode-toolkit/
-mkdir  /var/www/html/{prj_name}/scancode/
-/opt/scancode-toolkit/scancode  --license /var/www/html/{prj_name}/  --html-app /var/www/html/{prj_name}/scancode/index.html
+mkdir  /var/www/html/{your_prj_name}/scancode/
+/opt/scancode-toolkit/scancode  --license /var/www/html/{your_prj_name}/{src_folder}  --html-app /var/www/html/{your_prj_name}/scancode/index.html
 ```
