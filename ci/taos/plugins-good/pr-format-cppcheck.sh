@@ -17,7 +17,21 @@
 ##
 # @file     pr-format-cppcheck.sh
 # @brief    Check dangerous coding constructs in source codes (*.c, *.cpp) with cppcheck
+#
+# The possible severities (e.g., --enable=warning,unusedFunction) for messages are as following:
+# Note that by default Cppcheck only writes error messages if it is certain.
+# 1. error  : used when bugs are found
+# 2. warning: suggestions about defensive programming to prevent bugs
+# 3. style  : stylistic issues related to code cleanup (unused functions, redundant code, constness, and such)
+# 4. performance: Suggestions for making the code faster. These suggestions are only based on common knowledge.
+# 5. portability: portability warnings. 64-bit portability. code might work different on different compilers. etc.
+# 6. information: Informational messages about checking problems.
+# 7. unusedFunction: enable unusedFunction checking. This is not enabled by --enable=style
+#    because it does not work well on libraries.
+# 8. all: enable all messages. It should also only be used when the whole program is scanned.
+#
 # @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/danmar/cppcheck
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
@@ -25,6 +39,9 @@
 function pr-format-cppcheck(){
     echo "########################################################################################"
     echo "[MODULE] TAOS/pr-format-cppcheck: Check dangerous coding constructs in source codes (*.c, *.cpp) with cppcheck"
+
+    check_result="skip"
+
     # investigate generated all *.patch files
     FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
     for i in ${FILELIST}; do
@@ -45,7 +62,7 @@ function pr-format-cppcheck(){
                 *.c|*.cpp)
                     echo "[DEBUG] ( $i ) file is source code with the text format."
                     static_analysis_sw="cppcheck"
-                    static_analysis_rules="--std=posix"
+                    static_analysis_rules="--enable=warning,performance --std=posix"
                     cppcheck_result="cppcheck_result.txt"
                     # Check C/C++ file, enable all checks.
                     $static_analysis_sw $static_analysis_rules $i 2> ../report/$cppcheck_result
