@@ -60,7 +60,7 @@ function pr-nnstreamer-ubuntu-apptest-run-queue() {
     declare -i result=0
 
     # Build and install nnstreamer library
-    cd ${NNST_ROOT}
+    pushd ${NNST_ROOT}
     if [[ -d ./build ]]; then
         rm -rf ./build/*
     else
@@ -85,16 +85,20 @@ function pr-nnstreamer-ubuntu-apptest-run-queue() {
 
     # Download tensorflow-lite model file and labels.
     mkdir tflite_model
-    cd tflite_model    
-    wget https://github.com/nnsuite/testcases/raw/master/DeepLearningModels/tensorflow-lite/Mobilenet_1.0_224_quant/mobilenet_v1_1.0_224_quant.tflite
+    cd tflite_model
+    echo -e "" >> ../../../report/nnstreamer-apptest-output.log
+    echo -e "[DEBUG] Starting wget tflite model..." >> ../../../report/nnstreamer-apptest-output.log
+    wget https://github.com/nnsuite/testcases/raw/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/mobilenet_v1_1.0_224_quant.tflite 2>> ../../../report/nnstreamer-apptest-error.log 1>> ../../../report/nnstreamer-apptest-output.log
     result+=$?
-    wget https://raw.githubusercontent.com/nnsuite/testcases/master/DeepLearningModels/tensorflow-lite/Mobilenet_1.0_224_quant/labels.txt
+    echo -e "" >> ../../../report/nnstreamer-apptest-output.log
+    echo -e "[DEBUG] Starting wget tflite label..." >> ../../../report/nnstreamer-apptest-output.log
+    wget https://raw.githubusercontent.com/nnsuite/testcases/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/labels.txt 2>> ../../../report/nnstreamer-apptest-error.log 1>> ../../../report/nnstreamer-apptest-output.log
     result+=$?
     cd ..
 
     if [[ ${result} -ne 0 ]]; then
         echo -e "[DEBUG][FAILED] Oooops!!!!!! apptest is failed."
-        echo -e " The data files was not downloaded. Please check the log file to get a hint"
+        echo -e "[DEBUG][FAILED] The data files was not downloaded. Please check the log file to get a hint"
         echo -e ""
         check_result="failure"
         global_check_result="failure"
@@ -120,14 +124,18 @@ function pr-nnstreamer-ubuntu-apptest-run-queue() {
         # Test that video image classification.
         # Testing while 2seconds. 2seconds is arbitrary.
         # and then kill process, otherwise, process run forever.
-        ./nnstreamer_example_filter &
+        echo -e "" >> ../../report/nnstreamer-apptest-output.log
+        echo -e "[DEBUG] Starting nnstreamer_example_filter test..." >> ../../report/nnstreamer-apptest-output.log
+        ./nnstreamer_example_filter 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log & 
         pid=$!
         sleep 2
         kill ${pid}
         result+=$?
 
         # Same as above. Differencs is to run with python.
-        python nnstreamer_example_filter.py &
+        echo -e "" >> ../../report/nnstreamer-apptest-output.log
+        echo -e "[DEBUG] Starting nnstreamer_example_filter.py test..." >> ../../report/pr-nnstreamer-apptest.log
+        python nnstreamer_example_filter.py 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log &
         pid=$!
         sleep 2
         kill ${pid}
@@ -136,7 +144,9 @@ function pr-nnstreamer-ubuntu-apptest-run-queue() {
         # Test that video mixer with nnstreamer plug-in
         # Testing while 2seconds. 2seconds is arbitrary.
         # and then kill process, otherwise, process run forever.
-        ./nnstreamer_example_cam &
+        echo -e "" >> ../../nnstreamer-apptest-output.log
+        echo -e "[DEBUG] Starting nnstreamer_example_cam test..." >> ../../nnstreamer-apptest-output.log
+        ./nnstreamer_example_cam 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log &
         pid=$!
         sleep 2
         kill ${pid}
@@ -146,19 +156,25 @@ function pr-nnstreamer-ubuntu-apptest-run-queue() {
     fi
 
     # Test to convert video images to tensor.
-    ./nnstreamer_sink_example
+    echo -e "" >> ../../nnstreamer-apptest-output.log
+    echo -e "[DEBUG] Starting nnstreamer_sink_example test..." >> ../../nnstreamer-apptest-output.log
+    ./nnstreamer_sink_example 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log
     result+=$?
     
     # Test to convert video images to tensor, tensor buffer pass another pipeline,
     # and convert tensor to video images.
     # Testing while 2seconds. 2seconds is arbitrary.
     # and then kill process, otherwise, process run forever.
-    ./nnstreamer_sink_example_play &
+    echo -e "" >> ../../nnstreamer-apptest-output.log
+    echo -e "[DEBUG] Starting nnstreamer_sink_example_play test..." >> ../../nnstreamer-apptest-output.log
+    ./nnstreamer_sink_example_play 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log &
     pid=$!
     sleep 2
     kill ${pid}
     result+=$?
     
+    popd
+
     if [[ ${result} -ne 0 ]]; then
         echo -e "[DEBUG][FAILED] Oooops!!!!!! apptest is failed. Resubmit the PR after fixing correctly."
         echo -e ""
