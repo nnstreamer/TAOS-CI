@@ -33,7 +33,7 @@ function pr-format-doxygen-tag(){
     echo "[MODULE] TAOS/pr-format-doxygen-tag: Check if source code includes required doxygen tags for doxygen documentation."
     # Inspect all *.patch files that are fetched from a commit file
     FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
-    check_result="success"
+    check_result="skip"
     for curr_file in ${FILELIST}; do
         # if a current file is located in $SKIP_CI_PATHS_FORMAT folder, let's skip the inspection process
         if [[ "$curr_file" =~ ($SKIP_CI_PATHS_FORMAT)$ ]]; then
@@ -53,6 +53,12 @@ function pr-format-doxygen-tag(){
                     # Append a doxgen rule step by step
                     doxygen_basic_rules="@file @brief" # @file and @brief to inspect file
                     doxygen_advanced_rules="@author @bug" # @author, @bug to inspect file, @brief for to inspect function
+
+                    # When a current file is a source code, 
+                    # change a default value of $check_result from 'skip' to 'success'
+                    if [[ $check_result == "skip" ]]; then
+                        check_result="success"
+                    fi
     
                     # Apply advanced doxygen rule if pr_doxygen_check_level=1 in config-environment.sh
                     if [[ $pr_doxygen_check_level == 1 ]]; then
@@ -149,6 +155,13 @@ function pr-format-doxygen-tag(){
                     doxygen_rules="@package @brief"
                     doxygen_rule_num=0
                     doxygen_rule_all=0
+
+                    # When a current file is a source code, 
+                    # change a default value of $check_result from 'skip' to 'success'
+                    if [[ $check_result == "skip" ]]; then
+                        check_result="success"
+                    fi
+
                     for word in $doxygen_rules
                     do
                         # echo "[DEBUG] $doxygen_lang: doxygen tag for current $doxygen_lang code is $word."
@@ -163,12 +176,10 @@ function pr-format-doxygen-tag(){
                         break
                     else
                         echo "[DEBUG] $doxygen_lang: passed. file name: $curr_file, ($doxygen_rule_num)/$doxygen_rule_all tags are found."
-                        check_result="success"
                     fi
                     ;;
                 * )
                     echo "[DEBUG] ( $curr_file ) file is not source code with the text format."
-                    check_result="success"
                     ;;
             esac
         fi
@@ -177,6 +188,10 @@ function pr-format-doxygen-tag(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. doxygen documentation."
         message="Successfully source code(s) includes doxygen document correctly."
+        cibot_pr_report $TOKEN "success" "TAOS/pr-format-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    elif [[ $check_result == "skip" ]]; then
+        echo "[DEBUG] Skipped. doxygen documentation"
+        message="Skipped. Your PR does not include source code(s)."
         cibot_pr_report $TOKEN "success" "TAOS/pr-format-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
         echo "[ERROR] Failed. doxygen documentation."
