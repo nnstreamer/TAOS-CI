@@ -71,7 +71,7 @@ function json_config(){
     // Note that you have to use 'print_r' instead of echo function to display decoded json data.
     // print_r ($json_config);
     printf ("[DEBUG] json config: your webhook ID: %s\n<br>", $json_config->github->id);
-    printf ("[DEBUG] json config: your webhook secret: %s\n<br>", substr_replace("$json_config->github->secret","******",3);
+    printf ("[DEBUG] json config: your webhook secret: %s\n<br>", substr_replace("$json_config->github->secret","******",3));
 
     // Please, add "$hookSecret" value in Secret field at https://<github-address>/.../setting/hooks/
     // Set NULL if you want to disable this security.
