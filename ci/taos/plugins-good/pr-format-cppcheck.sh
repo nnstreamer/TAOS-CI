@@ -66,7 +66,7 @@ function pr-format-cppcheck(){
                     cppcheck_result="cppcheck_result.txt"
                     # Check C/C++ file, enable all checks.
                     $static_analysis_sw $static_analysis_rules $i 2> ../report/$cppcheck_result
-                    bug_line=`wc -l ../report/$cppcheck_result`
+                    bug_line=`cat ../report/$cppcheck_result | wc -l `
                     if  [[ $bug_line -gt 0 ]]; then
                         echo "[DEBUG] $static_analysis_sw: failed. file name: $i, There are $bug_line bug(s)."
                         check_result="failure"
@@ -79,7 +79,6 @@ function pr-format-cppcheck(){
                     ;;
                 * )
                     echo "[DEBUG] ( $i ) file can not be investigated by cppcheck (statid code analysis tool)."
-                    check_result="skip"
                     ;;
             esac
         fi
