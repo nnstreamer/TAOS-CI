@@ -62,7 +62,19 @@ function pr-format-cppcheck(){
                 *.c|*.cpp)
                     echo "[DEBUG] ( $i ) file is source code with the text format."
                     static_analysis_sw="cppcheck"
-                    static_analysis_rules="--enable=warning,performance --std=posix"
+                    if [[ $pr_cppcheck_check_level -eq 0 ]]; then
+                        echo "[DEBUG] cppcheck: It's okay. The value of the cppcheck level is $pr_cppcheck_check_level."
+                        static_analysis_rules="--std=posix"
+                    elif [[ $pr_cppcheck_check_level -eq 1 ]]; then
+                        echo "[DEBUG] cppcheck: It's okay. The value of the cppcheck level is $pr_cppcheck_check_level."
+                        static_analysis_rules="--enable=warning,performance --std=posix"
+                    else
+                        echo "[DEBUG] cppcheck: Oooops. The value of the cppcheck level is $pr_cppcheck_check_level."
+                        echo "[DEBUG] cppcheck: Note that you have to declare one between 0 and 1."
+                        echo "[DEBUG] cppcheck: The module executes an inspection proceudre with level 0."
+                        static_analysis_rules="--std=posix"
+                    fi
+
                     cppcheck_result="cppcheck_result.txt"
                     # Check C/C++ file, enable all checks.
                     $static_analysis_sw $static_analysis_rules $i 2> ../report/$cppcheck_result
