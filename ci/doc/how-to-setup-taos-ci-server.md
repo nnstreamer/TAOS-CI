@@ -1,15 +1,18 @@
 # Administrator guide for TAOS-CI server
 
 ## Prerequisites
-We assume that you install Ubuntu 16.04 x86_64 distribution in your own computer.
+We assume that you already installed Ubuntu 16.04 x86_64 distribution in your own computer.
 
 ```
 $ cat /etc/os-release |grep VERSION_ID
 VERSION_ID="16.04.3"
 ```
-In order to run all modules of TAOS-CI normally, you have to install required packages.
+In order to run all modules of TAOS-CI normally, you have to install required packages as a first step.
 Please run **install-packages.sh** that is located in the [ci/taos/webapp](../taos/webapp/) folder.
-
+```bash
+$ cd TAOS-CI
+$ sudo ./ci/taos/webapp/install-packages.sh
+```
 
 ## Install Apache+PHP for CI Server
 The CI server to run TAOS-CI has to be equipped with Apache and PHP script language to run lightweight automation server instead of Jenkins.
@@ -31,13 +34,12 @@ $ firefox http://localhost/index.php
 Note. If you have a firewall in your network, please make sure that ports for CI server are opened and can accept requests.
 
 ## How to set-up domain name address
-If you want to use your own domain name address instead of IP address, we recommend that you try to get a host name
-free of charge at https://freedns.afraid.org.
+If you want to use your own domain name address instead of IP address for effective maintenance, we recommend that you try to get a host name free of charge at https://freedns.afraid.org.
 
 ```bash
 $ sudo vi /etc/apache2/sites-enabled/000-default.conf 
 <VirtualHost *:80>
-        # You can get a free dns such as {your_host}.mooo.com free of charge at http://freedns.afraid.org.
+        # You can get five host names such as {your_host}.mooo.com free of charge at http://freedns.afraid.org.
         ServerName {your_host}.mooo.com
         ServerAdmin webmaster@localhost
         DocumentRoot /home/taos-ci/public_html
@@ -81,7 +83,10 @@ When you complete all of the set-up procedure, please replace `/bin/bash` with `
 
 ```bash
 # sudo vi /etc/passwd
+# Replace "/bin/no-login" with "/bin/bash",
+# Note that restore the original value for security after completing setup procedures.
 www-data:x:33:33:www-data:/var/www:/bin/bash
+#
 # cd /var/www/
 # chown -R www-data:www-data /var/www/
 # cp /root/.bashrc /var/www/
@@ -100,15 +105,15 @@ machine github.com
 ## Ubuntu: Set-up configuration file
 It contains default values used in the pbuilder program invocation.
 `/etc/pbuilderrc` and `${HOME}/.pbuilderrc` are read in when pbuilder is invoked.
-* /etc/pbuilderrc: The configuration file for pbuilder, used in pdebuild.
-* /usr/share/pbuilder/pbuilderrc: The default configuration file for pbuilder, used in pdebuild.
-* ${HOME}/.pbuilderrc: Configuration file for pbuilder, used in pdebuild.  It overrides /etc/pbuilderrc
+* 1) /etc/pbuilderrc: The configuration file for pbuilder, used in pdebuild.
+* 2) /usr/share/pbuilder/pbuilderrc: The default configuration file for pbuilder, used in pdebuild.
+* 3) ${HOME}/.pbuilderrc: Configuration file for pbuilder, used in pdebuild.  It overrides /etc/pbuilderrc
 
 It is useful to use `--configfile` option to load up a preset configuration file when switching between configuration files for different distributions.
 The file itself is sourced by a shell script, so it is required that the file conforms to shell script conventions.
 For more details, refer to http://manpages.ubuntu.com/manpages/trusty/man5/pbuilderrc.5.html
 ```bash
-$ vi ~/.pbuilderrc
+$ vi /etc/pbuilderrc
 # man 5 pbuilderrc
 DISTRIBUTION=xenial
 OTHERMIRROR="deb http://archive.ubuntu.com/ubuntu xenial universe multiverse |deb [trusted=yes] http://[id]:[password]@[your-own-server]/tools/ubuntu16.04/ /"
