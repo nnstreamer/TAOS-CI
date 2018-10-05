@@ -21,6 +21,12 @@
 # @see      https://github.com/nnsuite/TAOS-CI
 # @see      https://github.com/nnsuite/nnstreamer/wiki/usage-examples-screenshots
 # @author   Sewon Oh <sewon.oh@samsung.com>
+#
+# This test needs usb camera. If you want to use virtual cam, follow the below.
+#   $ git clone https://github.com/umlaeute/v4l2loopback.git
+#   $ make && sudo make install
+#   $ sudo depmod -a
+#
 
 # @brief [MODULE] TAOS/pr-nnstreamer-ubuntu-apptest-wait-queue
 function pr-nnstreamer-ubuntu-apptest-wait-queue(){
@@ -48,6 +54,7 @@ function pr-nnstreamer-ubuntu-apptest-run-queue() {
     check_dependency make
     check_dependency wget
     check_dependency python
+    check_dependency Xvnc
 
     # Set-up environment variables.
     export NNST_ROOT="${dir_ci}/${dir_commit}/${PRJ_REPO_OWNER}"
@@ -114,46 +121,56 @@ function pr-nnstreamer-ubuntu-apptest-run-queue() {
     fi
     
     # Test with sample apps
-    # @todo We have to modify the commented test files below because this script requires a USB camera device.
-    # https://github.com/nnsuite/nnstreamer/issues/531
     # - [RunTest] fake USB camera for NNStreamer video apps
-    
-    if [[ -f /dev/video0 ]]; then
-        echo -e "[DEBUG] USB Camera device is enabled. It is required by {nnstreamer_example_filter|nnstreamer_example_cam}."
+    if [[ ! -f /dev/video0 ]]; then
+        echo -e "[DEBUG] USB Camera device is not enabled. It is required by {nnstreamer_example_filter|nnstreamer_example_cam}."
+        echo -e "[DEBUG] Enabling virtual cam camera..." 
 
-        # Test that video image classification.
-        # Testing while 2seconds. 2seconds is arbitrary.
-        # and then kill process, otherwise, process run forever.
-        echo -e "" >> ../../report/nnstreamer-apptest-output.log
-        echo -e "[DEBUG] Starting nnstreamer_example_filter test..." >> ../../report/nnstreamer-apptest-output.log
-        ./nnstreamer_example_filter 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log & 
-        pid=$!
-        sleep 2
-        kill ${pid}
-        result+=$?
+        # Create virtual camera device and change authority for all.
+        sudo modprobe v4l2loopback 
+        pushd /dev
+        sudo chmod 777 video0
+        popd
 
-        # Same as above. Differencs is to run with python.
-        echo -e "" >> ../../report/nnstreamer-apptest-output.log
-        echo -e "[DEBUG] Starting nnstreamer_example_filter.py test..." >> ../../report/pr-nnstreamer-apptest.log
-        python nnstreamer_example_filter.py 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log &
-        pid=$!
-        sleep 2
-        kill ${pid}
-        result+=$?
-
-        # Test that video mixer with nnstreamer plug-in
-        # Testing while 2seconds. 2seconds is arbitrary.
-        # and then kill process, otherwise, process run forever.
-        echo -e "" >> ../../nnstreamer-apptest-output.log
-        echo -e "[DEBUG] Starting nnstreamer_example_cam test..." >> ../../nnstreamer-apptest-output.log
-        ./nnstreamer_example_cam 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log &
-        pid=$!
-        sleep 2
-        kill ${pid}
-        result+=$?
-    else
-        echo -e "[DEBUG] USB Camera deivce is not enabled. It is required by {nnstreamer_example_filter|nnstreamer_example_cam}."
+        # Make virtual display on localhost:0.
+        Xvnc :0 &
+        export DISPLAY=0.0:0
+        
+        # Produce sample video frames.
+        gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0 &
+        producer_id=$!
     fi
+
+    # Test that video image classification.
+    # Testing while 2seconds. 2seconds is arbitrary.
+    # and then kill process, otherwise, process run forever.
+    echo -e "" >> ../../report/nnstreamer-apptest-output.log
+    echo -e "[DEBUG] Starting nnstreamer_example_filter test..." >> ../../report/nnstreamer-apptest-output.log
+    ./nnstreamer_example_filter 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log & 
+    pid=$!
+    sleep 2
+    kill ${pid}
+    result+=$?
+
+    # Same as above. Differencs is to run with python.
+    echo -e "" >> ../../report/nnstreamer-apptest-output.log
+    echo -e "[DEBUG] Starting nnstreamer_example_filter.py test..." >> ../../report/nnstreamer-apptest-output.log
+    python nnstreamer_example_filter.py 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log &
+    pid=$!
+    sleep 2
+    kill ${pid}
+    result+=$?
+
+    # Test that video mixer with nnstreamer plug-in
+    # Testing while 2seconds. 2seconds is arbitrary.
+    # and then kill process, otherwise, process run forever.
+    echo -e "" >> ../../nnstreamer-apptest-output.log
+    echo -e "[DEBUG] Starting nnstreamer_example_cam test..." >> ../../nnstreamer-apptest-output.log
+    ./nnstreamer_example_cam 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log &
+    pid=$!
+    sleep 2
+    kill ${pid}
+    result+=$?
 
     # Test to convert video images to tensor.
     echo -e "" >> ../../nnstreamer-apptest-output.log
@@ -173,6 +190,8 @@ function pr-nnstreamer-ubuntu-apptest-run-queue() {
     kill ${pid}
     result+=$?
     
+    kill ${producer_id}
+
     popd
 
     if [[ ${result} -ne 0 ]]; then
