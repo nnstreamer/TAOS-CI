@@ -68,10 +68,12 @@ function json_config(){
 
     // get id from json file
     $github_id = $json_config->github->id;
-    // Note that you have to use 'print_r' instead of echo function to display decoded json data.
-    // print_r ($json_config);
+    // Note that you have to use 'print_r' instead of echo function to display a decoded object (json data).
+    // Run print_r ($json_config) in case that you have to display an object class;
     printf ("[DEBUG] json config: your webhook ID: %s\n<br>", $json_config->github->id);
-    printf ("[DEBUG] json config: your webhook secret: %s\n<br>", substr_replace("$json_config->github->secret","******",3));
+    $vowels = array(" ", "\\", "$");
+    $secret_hidden = str_replace($vowels, "_", $json_config->github->secret);
+    printf ("[DEBUG] json config: your webhook secret: %s\n<br>", substr_replace($secret_hidden,"******",3));
 
     // Please, add "$hookSecret" value in Secret field at https://<github-address>/.../setting/hooks/
     // Set NULL if you want to disable this security.
