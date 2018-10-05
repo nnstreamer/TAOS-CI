@@ -90,7 +90,7 @@ www-data:x:33:33:www-data:/var/www:/bin/bash
 # cd /var/www/
 # chown -R www-data:www-data /var/www/
 # cp /root/.bashrc /var/www/
-# chwon -R www-data:www-data  /var/www/.bashrc
+# chown -R www-data:www-data  /var/www/.bashrc
 # su - www-data
 $
 ```
