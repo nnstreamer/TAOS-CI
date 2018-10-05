@@ -45,9 +45,12 @@ sudo apt -y install unoconv pdfunite  pdftk
 sudo apt -y install libreoffice
 sudo apt -y install evince
 
+echo -e "########## for CI-system: Installing packages for SLOCcount"
+sudo apt -y install sloccount
+
 echo -e "########## for CI-system: Setting-up a build environment of Tizen package (.rpm)"
 if [[ ! -f /etc/apt/sources.list.d/tizen.list ]]; then
-    sudo echo "deb [trusted=yes] http://download.tizen.org/tools/latest-release/Ubuntu_16.04/ / # upgraded to xenial" > /etc/apt/sources.list.d/tizen.list
+    sudo echo "deb [trusted=yes] http://download.tizen.org/tools/latest-release/Ubuntu_16.04/ / " > /etc/apt/sources.list.d/tizen.list
     sudo apt -y update
     sudo apt -y install mic gbs
 fi
