@@ -36,6 +36,7 @@ pwd
 check_dependency sloccount
 check_dependency git
 check_dependency file
+check_dependency mkdir
 
 # Read file names that a contributor modified(e.g., added, moved, deleted, and updated) from a last commit.
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
@@ -56,16 +57,20 @@ for i in ${FILELIST}; do
     # Handle only text files in case that there are lots of files in one commit.
     echo "[DEBUG] file name is ( $i )."
     if [[ `file $i | grep "ASCII text" | wc -l` -gt 0 ]]; then
-        # Run a SLOCCount module in case that PR includes source codes such as *.c,  *.cpp, *.py.
+        # Run a SLOCCount module in case that a PR includes source codes.
         case $i in
-            *.c | *.cpp | *.py)
+            *.c | *.cpp | *.py | *.sh | *.php )
                 echo "[DEBUG] ( $i ) file is a source code with a ASCII text format."
                 sloc_analysis_sw="sloccount"
-                sloc_analysis_rules="--wide --multiproject"
+                sloc_data_folder="~/.slocdata"
+                if [[ ! -d $sloc_data_folder ]]; then
+                    mkdir -p $sloc_data_folder
+                fi
+                sloc_analysis_rules="--wide --multiproject --datadir $sloc_data_folder"
                 sloc_target_dir=${SRC_PATH}
                 sloc_check_result="sloccount_result.txt"
 
-                # Run this module, then exit from 'for' loop statement to run just once.
+                # Run this module
                 $sloc_analysis_sw $sloc_analysis_rules $sloc_target_dir > ../report/${sloc_check_result}
                 run_result=$?
                 if [[ $run_result -eq 0 ]]; then
@@ -73,6 +78,7 @@ for i in ${FILELIST}; do
                 else
                     check_result="failure"
                 fi
+                # Exit from 'for' loop statement to run just once when a commit includes lots of source code files.
                 break
                 ;;
             * )
