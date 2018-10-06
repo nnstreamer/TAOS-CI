@@ -16,7 +16,7 @@
 
 ##
 # @file     pr-format-cppcheck.sh
-# @brief    Check dangerous coding constructs in source codes (*.c, *.cpp) with cppcheck
+# @brief    Check dangerous coding constructs in source codes (*.c, *.cpp) with a cppcheck tool
 #
 # The possible severities (e.g., --enable=warning,unusedFunction) for messages are as following:
 # Note that by default Cppcheck only writes error messages if it is certain.
@@ -39,6 +39,14 @@
 function pr-format-cppcheck(){
     echo "########################################################################################"
     echo "[MODULE] TAOS/pr-format-cppcheck: Check dangerous coding constructs in source codes (*.c, *.cpp) with cppcheck"
+    pwd
+
+    # Check if server administrator install required commands
+    check_dependency cppcheck
+    check_dependency file
+    check_dependency grep
+    check_dependency cat
+    check_dependency wc
 
     check_result="skip"
 
@@ -56,7 +64,7 @@ function pr-format-cppcheck(){
         # Handle only text files in case that there are lots of files in one commit.
         echo "[DEBUG] file name is ( $i )."
         if [[ `file $i | grep "ASCII text" | wc -l` -gt 0 ]]; then
-            # in case of source code files: *.c|*.cpp)
+            # in case of source code files (*.c, *.cpp)
             case $i in
                 # in case of C/C++ code
                 *.c|*.cpp)
@@ -90,7 +98,7 @@ function pr-format-cppcheck(){
                     fi
                     ;;
                 * )
-                    echo "[DEBUG] ( $i ) file can not be investigated by cppcheck (statid code analysis tool)."
+                    echo "[DEBUG] The cppcheck (a static code analysis) module does not examine ($i) file."
                     ;;
             esac
         fi
@@ -110,7 +118,7 @@ function pr-format-cppcheck(){
         cibot_pr_report $TOKEN "failure" "TAOS/pr-format-cppcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     
         # inform PR submitter of a hint in more detail
-        message=":octocat: **cibot**: $user_id, **$i** includes bug(s). You must fix incorrect coding constructs in the source code before entering a review process."
+        message=":octocat: **cibot**: $user_id, **$i** includes bug(s). Please fix incorrect coding constructs in your commit before entering a review process."
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     fi
     
