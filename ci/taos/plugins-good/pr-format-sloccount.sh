@@ -37,6 +37,7 @@ check_dependency sloccount
 check_dependency git
 check_dependency file
 check_dependency mkdir
+check_dependency grep
 
 # Read file names that a contributor modified(e.g., added, moved, deleted, and updated) from a last commit.
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
