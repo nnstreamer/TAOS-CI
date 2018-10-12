@@ -81,14 +81,13 @@ function pr-format-prohibited-words(){
 
         # Step 1: Run this module to filter prohibited words from a text file.
         # (e.g., grep --color -f "$PROHIBITED_WORDS" $filename)
-        result_content=$($bad_words_sw $bad_words_rules $target_files)
+        $bad_words_sw $bad_words_rules $target_files > ../report/${bad_word_log_file}
 
-        # Step 2: Save a log file for debugging in case of a failure
-        echo -e "$result_content"
-        echo -e "$result_content" > ../report/${bad_words_log_file}
+        # Step 2: Display the execution result for debugging in case of a failure
+        cat ../report/${bad_words_log_file}
 
         # Step 3: Count prohibited words from variable result_content
-        result_count=$(echo -e "$result_content" | grep -c '^' )
+        result_count=$(cat ../report/${bad_word_log_file} | grep -c '^' )
 
         # Step 4: change a value of the check result
         if [[ $result_count -gt 0 ]]; then
@@ -115,9 +114,14 @@ function pr-format-prohibited-words(){
         message="Skipped. Your PR does not include a text file."
         cibot_pr_report $TOKEN "success" "TAOS/pr-format-prohibited-words" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
-    else
+    elif [[ $check_result == "failure" ]]; then
         echo -e "[DEBUG] Failed. A prohibited words tool."
-        message="Oooops. A prohibited words checker is failed because the check_result is not either 'success' or 'skip'."
+        message="Failed. Your PR includes one of the prohibited words at least."
+        cibot_pr_report $TOKEN "failure" "TAOS/pr-format-prohibited-words" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+
+    else
+        echo -e "[DEBUG] Unexpected Error. A prohibited words tool."
+        message="Oooops. It seems that a prohibited words checker has a bug."
         cibot_pr_report $TOKEN "failure" "TAOS/pr-format-prohibited-words" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     fi
