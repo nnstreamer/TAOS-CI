@@ -107,22 +107,22 @@ function pr-format-prohibited-words(){
     if [[ $check_result == "success" ]]; then
         echo -e "[DEBUG] Passed. A prohibited words tool."
         message="Succeeded. A prohibited words checker is done successfully."
-        cibot_pr_report $TOKEN "success" "TAOS/pr-format-prohibited-words" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-format-prohibited-words" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     elif [[ $check_result == "skip" ]]; then
         echo -e "[DEBUG] Skipped. A prohibited words tool."
         message="Skipped. Your PR does not include a text file."
-        cibot_pr_report $TOKEN "success" "TAOS/pr-format-prohibited-words" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-format-prohibited-words" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     elif [[ $check_result == "failure" ]]; then
         echo -e "[DEBUG] Failed. A prohibited words tool."
         message="Failed. Your PR includes one of the prohibited words at least."
-        cibot_pr_report $TOKEN "failure" "TAOS/pr-format-prohibited-words" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-format-prohibited-words" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     else
         echo -e "[DEBUG] Unexpected Error. A prohibited words tool."
         message="Oooops. It seems that a prohibited words checker has a bug."
-        cibot_pr_report $TOKEN "failure" "TAOS/pr-format-prohibited-words" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-format-prohibited-words" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     fi
 

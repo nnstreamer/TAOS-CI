@@ -96,17 +96,17 @@ done
 if [[ $check_result == "success" ]]; then
     echo -e "[DEBUG] Passed. doxygen build verifier - doxygen."
     message="Successfully source code(s) is written without a incorrect doxygen grammar."
-    cibot_pr_report $TOKEN "success" "TAOS/pr-format-doxygen-build" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "TAOS/pr-format-doxygen-build" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 elif [[ $check_result == "skip" ]]; then
     echo -e "[DEBUG] Skipped. doxygen build verifier - doxygen."
     message="Skipped. Your PR does not include source code file(s) such as .c and .cpp."
-    cibot_pr_report $TOKEN "success" "TAOS/pr-format-doxygen-build" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "TAOS/pr-format-doxygen-build" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 else
     echo -e "[DEBUG] Failed. doxygen build verifier - doxygen."
     message="Oooops. doxygen build verifier is failed. Please, read $doxygen_check_result for more details."
-    cibot_pr_report $TOKEN "failure" "TAOS/pr-format-doxygen-build" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "TAOS/pr-format-doxygen-build" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
     message=":octocat: **cibot**: $user_id, It seems that **$i** includes incorrect doxygen tag(s). Please fix a invalid statement before starting a review process."

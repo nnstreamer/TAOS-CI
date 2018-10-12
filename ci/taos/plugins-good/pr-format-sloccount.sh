@@ -93,17 +93,17 @@ function pr-format-sloccount(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. A sloc check tool - sloccount."
         message="Successfully source code(s) is analyzed by sloccount command."
-        cibot_pr_report $TOKEN "success" "TAOS/pr-format-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-format-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     elif [[ $check_result == "skip" ]]; then
         echo "[DEBUG] Skipped. A sloc check tool - sloccount."
         message="Skipped. Your PR does not include source codes."
-        cibot_pr_report $TOKEN "success" "TAOS/pr-format-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-format-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     else
         echo "[DEBUG] Failed. A sloc check tool - sloccount."
         message="Oooops. sloccount checker is failed because the check_result is not either 'success' or 'skip'."
-        cibot_pr_report $TOKEN "failure" "TAOS/pr-format-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-format-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     fi
 

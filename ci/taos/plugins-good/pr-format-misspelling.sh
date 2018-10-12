@@ -94,7 +94,7 @@ done
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A spell check tool - aspell."
     message="Successfully source code(s) is written without a misspelled statement."
-    cibot_pr_report $TOKEN "success" "TAOS/pr-format-misspelling" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "TAOS/pr-format-misspelling" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
     message="**INFO:** You can read if there are misspelled characters at our misspelling check report. Please read ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${typo_check_result}."
@@ -103,12 +103,12 @@ if [[ $check_result == "success" ]]; then
 elif [[ $check_result == "skip" ]]; then
     echo "[DEBUG] Skipped. A spell check tool - aspell."
     message="Skipped. Your PR does not include document file(s) such as .txt and .md."
-    cibot_pr_report $TOKEN "success" "TAOS/pr-format-misspelling" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "TAOS/pr-format-misspelling" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 else
     echo "[DEBUG] Failed. A spell check tool - aspell."
     message="Oooops. spelling checker is failed. Please, read $typo_check_result for more details."
-    cibot_pr_report $TOKEN "failure" "TAOS/pr-format-misspelling" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "TAOS/pr-format-misspelling" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
     message=":octocat: **cibot**: $user_id, It seems that **$i** includes typo(s). Please modify a misspelled statement before starting a review process."

@@ -188,15 +188,15 @@ function pr-format-doxygen-tag(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. doxygen documentation."
         message="Successfully source code(s) includes doxygen document correctly."
-        cibot_pr_report $TOKEN "success" "TAOS/pr-format-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-format-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "skip" ]]; then
         echo "[DEBUG] Skipped. doxygen documentation"
         message="Skipped. Your PR does not include source code(s)."
-        cibot_pr_report $TOKEN "success" "TAOS/pr-format-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-format-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
         echo "[ERROR] Failed. doxygen documentation."
         message="Oooops. The doxygen checker is failed. Please, write doxygen document in your code."
-        cibot_pr_report $TOKEN "failure" "TAOS/pr-format-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-format-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     
         # inform PR submitter of a hint in more detail
         message=":octocat: **cibot**: $user_id, **$i** does not include doxygen tags such as $doxygen_basic_rules. You must include the doxygen tags in the source code at least."

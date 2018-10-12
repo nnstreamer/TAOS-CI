@@ -71,16 +71,16 @@ function pr-format-rpm-spec(){
         if [[ $check_result == "success" ]]; then
             echo "[DEBUG] Passed. the rpm spec checker."
             message="Successfully rpm spec checker is done."
-            cibot_pr_report $TOKEN "success" "TAOS/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+            cibot_report $TOKEN "success" "TAOS/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
         else
             echo "[DEBUG] Failed. the rpm spec checker."
             message="Oooops. The rpm spec checker is failed."
-            cibot_pr_report $TOKEN "failure" "TAOS/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+            cibot_report $TOKEN "failure" "TAOS/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
         fi
     else
         echo "[DEBUG] Skipped. the rpm spec checker."
         message="Skipped. rpm spec checker is jumped because you did not modify a spec file."
-        cibot_pr_report $TOKEN "success" "TAOS/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-format-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     
     fi
 }
