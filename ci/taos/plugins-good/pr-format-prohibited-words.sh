@@ -81,7 +81,7 @@ function pr-format-prohibited-words(){
 
         # Step 1: Run this module to filter prohibited words from a text file.
         # (e.g., grep --color -f "$PROHIBITED_WORDS" $filename)
-        $bad_words_sw $bad_words_rules $target_files > ../report/${bad_word_log_file}
+        $bad_words_sw $bad_words_rules $target_files > ../report/${bad_words_log_file}
 
         # Step 2: Display the execution result for debugging in case of a failure
         cat ../report/${bad_words_log_file}
