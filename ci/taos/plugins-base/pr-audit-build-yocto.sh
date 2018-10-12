@@ -49,19 +49,19 @@
 # @brief [MODULE] TAOS/pr-audit-build-yocto-wait-queue
 function pr-audit-build-yocto-wait-queue(){
     message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
-    cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 # @brief [MODULE] TAOS/pr-audit-build-yocto-ready-queue
 function pr-audit-build-yocto-ready-queue(){
     message="Trigger: ready queue. The commit number is $input_commit."
-    cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 # @brief [MODULE] TAOS/pr-audit-build-yocto-run-queue
 function pr-audit-build-yocto-run-queue(){
     message="Trigger: run queue. The commit number is $input_commit."
-    cibot_pr_report $TOKEN "pending" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     echo "########################################################################################"
     echo "[MODULE] TAOS/pr-audit-build-yocto: check build process for YOCTO distribution"
@@ -172,10 +172,10 @@ function pr-audit-build-yocto-run-queue(){
         echo -e "[DEBUG] So, we stop remained all tasks at this time."
 
         message="Skipped devtool procedure. No buildable files found. Commit number is $input_commit."
-        cibot_pr_report $TOKEN "success" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         message="Skipped devtool procedure. Successfully all audit modules are passed. Commit number is $input_commit."
-        cibot_pr_report $TOKEN "success" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         echo -e "[DEBUG] devtool procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as TAOS/pr-audit-all and TAOS/pr-format-all."
     elif [[ $YOCTO_ESDK_NAME == "" ]]; then
@@ -185,10 +185,10 @@ function pr-audit-build-yocto-run-queue(){
         echo -e "[DEBUG] So, we stop remained all tasks at this time."
 
         message="Skipped devtool procedure. eSDK is not installed. Commit number is $input_commit."
-        cibot_pr_report $TOKEN "success" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         message="Skipped devtool procedure. Successfully all audit modules are passed. Commit number is $input_commit."
-        cibot_pr_report $TOKEN "success" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         echo -e "[DEBUG] devtool procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as TAOS/pr-audit-all and TAOS/pr-format-all."
     else
@@ -207,10 +207,10 @@ function pr-audit-build-yocto-run-queue(){
         # Let's report build result of source code
         if [[ $check_result == "success" ]]; then
             message="Successfully  YOCTO build checker is passed. Commit number is '$input_commit'."
-            cibot_pr_report $TOKEN "success" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+            cibot_report $TOKEN "success" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
         else
             message="Oooops. YOCTO  build checker is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-            cibot_pr_report $TOKEN "failure" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+            cibot_report $TOKEN "failure" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
             # comment a hint on failed PR to author.
             message=":octocat: **cibot**: $user_id, Oooops. A YOCTO builder checker could not be completed. To get a hint, please go to ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/."

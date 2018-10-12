@@ -106,7 +106,7 @@ cd $dir_ci
 export dir_commit=${dir_worker}/${input_date}-${input_pr}-${input_commit}
 # --------------------------- CI Trigger (queued) --------------------------------------------------------------------
 message="Trigger: queued. The commit number is $input_commit."
-cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+cibot_report $TOKEN "pending" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 # --------------------------- git-clone module: clone git repository -------------------------------------------------
 echo -e "[DEBUG] Starting pr-format....\n"
@@ -184,8 +184,8 @@ echo -e "[DEBUG] Varaible global_check_result is $global_check_result."
 if [[ $global_check_result == "success" ]]; then
     # in case of success
     message="Successfully all format checkers are done."
-    cibot_pr_report $TOKEN "success" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
-    echo -e "[DEBUG] cibot_pr_report $TOKEN success (INFO)TAOS/pr-format-all $message ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/ ${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    echo -e "[DEBUG] cibot_report $TOKEN success (INFO)TAOS/pr-format-all $message ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/ ${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of success content to encourage review process
     echo -e "[DEBUG] (INFO)TAOS/pr-format-all: All format modules are passed - it is ready to review!"
@@ -194,7 +194,7 @@ if [[ $global_check_result == "success" ]]; then
 elif [[ $global_check_result == "failure" ]]; then
     # in case of failure
     message="Oooops. There is a failed format checker. Update your code correctly after reading error messages."
-    cibot_pr_report $TOKEN "failure" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint to fix issues
     message=":octocat: **cibot**: $user_id, One of the format checkers is failed. If you want to get a hint to fix this issue, please go to ${REPOSITORY_WEB}/wiki/."
@@ -203,7 +203,7 @@ elif [[ $global_check_result == "failure" ]]; then
 else
     # in case that CI is broken
     message="Oooops. It seems that CI bot has bug(s). CI bot has to be fixed."
-    cibot_pr_report $TOKEN "failure" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 fi
 

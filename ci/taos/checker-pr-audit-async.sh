@@ -147,7 +147,7 @@ echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-audit
 
 # create new context name to monitor progress status of a checker
 message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
-cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+cibot_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
 for plugin in ${audit_plugins[*]}
 do
@@ -278,7 +278,7 @@ done
 # users of current status of a pull request.
 
 message="Trigger: wait queue. The commit number is $input_commit."
-cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+cibot_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
 for plugin in ${audit_plugins[*]}
 do
@@ -302,7 +302,7 @@ done
 # if the current status of pull reqeust is building or not.
 
 message="Trigger: run queue. The commit number is $input_commit."
-cibot_pr_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+cibot_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
 for plugin in ${audit_plugins[*]}
 do
@@ -368,7 +368,7 @@ echo "send a total report with global_check_result variable. global_check_result
 if [[ $global_check_result == "success" ]]; then
     # The global check is succeeded.
     message="Successfully all audit modules are passed. Commit number is $input_commit."
-    cibot_pr_report $TOKEN "success" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "success" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     # If contributors want later, let's inform developers of CI test result to go to a review process as a final step before merging a PR
     echo "[DEBUG] All audit modules are passed - it is ready to review! :shipit:. Note that CI bot has two sub-bots such as TAOS/pr-audit-all and TAOS/pr-format-all."
@@ -376,11 +376,11 @@ if [[ $global_check_result == "success" ]]; then
 elif [[ $global_check_result == "failure" ]]; then
     # The global check is failed.
     message="Oooops. One of the audits is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-    cibot_pr_report $TOKEN "failure" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 else
     # The global check is failed due to CI error.
     message="CI Error. There is a bug in CI script. Please contact the CI administrator."
-    cibot_pr_report $TOKEN "error" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "error" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     echo -e "[DEBUG] It seems that this script has a bug. Please check value of \$global_check_result."
 fi
 

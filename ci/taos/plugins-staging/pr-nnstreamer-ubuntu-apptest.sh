@@ -32,21 +32,21 @@
 function pr-nnstreamer-ubuntu-apptest-wait-queue(){
     echo -e "[DEBUG] Waiting CI trigger to run nnstreamer sample app actually."
     message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
-    cibot_pr_report $TOKEN "pending" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 # @brief [MODULE] TAOS/pr-nnstreamer-ubuntu-apptest-ready-queue
 function pr-nnstreamer-ubuntu-apptest-ready-queue(){
     echo -e "[DEBUG] Readying CI trigger to run nnstreamer sample app actually."
     message="Trigger: ready queue. The commit number is $input_commit."
-    cibot_pr_report $TOKEN "pending" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 # @brief [MODULE] TAOS/pr-nnstreamer-ubuntu-apptest-run-queue
 function pr-nnstreamer-ubuntu-apptest-run-queue() {
     echo -e "[DEBUG] Starting CI trigger to run nnstreamer sample app actually."
     message="Trigger: run queue. The commit number is $input_commit."
-    cibot_pr_report $TOKEN "pending" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     echo -e "########################################################################################"
     echo -e "[MODULE] TAOS/pr-nnstreamer-apptest: Starting sample app test"
@@ -111,7 +111,7 @@ function pr-nnstreamer-ubuntu-apptest-run-queue() {
         global_check_result="failure"
 
         message="Oooops. apptest is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-        cibot_pr_report $TOKEN "failure" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     
         # comment a hint on failed PR to author.
         message=":octocat: **cibot**: $user_id, apptest could not be completed. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/checker-pr-audit.log"
@@ -207,10 +207,10 @@ function pr-nnstreamer-ubuntu-apptest-run-queue() {
     echo -e "[DEBUG] report the execution result of apptest. result is ${result}. "
     if [[ $check_result == "success" ]]; then
         message="Successfully apptest is passed. Commit number is '$input_commit'."
-        cibot_pr_report $TOKEN "success" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         message="Oooops. apptest is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-        cibot_pr_report $TOKEN "failure" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     
         # comment a hint on failed PR to author.
         message=":octocat: **cibot**: $user_id, apptest could not be completed. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/checker-pr-audit.log"

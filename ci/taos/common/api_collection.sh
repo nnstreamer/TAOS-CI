@@ -56,10 +56,10 @@ function cibot_comment(){
 # arg4: description
 # arg5: target_url
 # arg5: commit address
-function cibot_pr_report(){
+function cibot_report(){
     # check if input argument is correct.
     if [[ $1 == "" || $2 == ""  || $3 == ""  || $4 == ""  || $5 == "" || $6 == "" ]]; then
-        printf "[DEBUG] ERROR: Please, input correct arguments to run cibot_pr_report function.\n"
+        printf "[DEBUG] ERROR: Please, input correct arguments to run cibot_report function.\n"
         exit 1
     fi
     # argeuments
