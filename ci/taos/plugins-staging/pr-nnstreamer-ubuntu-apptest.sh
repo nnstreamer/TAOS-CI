@@ -22,11 +22,7 @@
 # @see      https://github.com/nnsuite/nnstreamer/wiki/usage-examples-screenshots
 # @author   Sewon Oh <sewon.oh@samsung.com>
 #
-# This test needs usb camera. If you want to use virtual cam, follow the below.
-#   $ git clone https://github.com/umlaeute/v4l2loopback.git
-#   $ make && sudo make install
-#   $ sudo depmod -a
-#
+
 
 # @brief [MODULE] TAOS/pr-nnstreamer-ubuntu-apptest-wait-queue
 function pr-nnstreamer-ubuntu-apptest-wait-queue(){
@@ -55,6 +51,8 @@ function pr-nnstreamer-ubuntu-apptest-run-queue() {
     check_dependency wget
     check_dependency python
     check_dependency Xvnc
+    check_dependency git
+    check_dependency insmod
 
     # Set-up environment variables.
     export NNST_ROOT="${dir_ci}/${dir_commit}/${PRJ_REPO_OWNER}"
@@ -126,12 +124,29 @@ function pr-nnstreamer-ubuntu-apptest-run-queue() {
         echo -e "[DEBUG] USB Camera device is not enabled. It is required by {nnstreamer_example_filter|nnstreamer_example_cam}."
         echo -e "[DEBUG] Enabling virtual cam camera..." 
 
+        # Install a 'v4l2loopback' kernel module to use a virtual camera device
+        # if it is not installed.
+        if [[ ! -d ${REFERENCE_REPOSITORY}/v4l2loopback ]]; then
+            echo -e "[DEBUG] Install virtual camera device..."
+            pushd ${REFERENCE_REPOSITORY}
+            git clone https://github.com/umlaeute/v4l2loopback.git
+            popd
+        fi        
+
         # Create virtual camera device and change authority for all.
-        sudo modprobe v4l2loopback 
+        pushd ${REFERENCE_REPOSITORY}/v4l2loopback
+        make clean && make
+        # Dependency of kernel modules: media.ko --> videodev.ko --> v4l2loopback.ko
+        sudo insmod /lib/modules/`uname -r`/kernel/drivers/media/media.ko
+        sudo insmod /lib/modules/`uname -r`/kernel/drivers/media/v4l2-core/videodev.ko
+        sudo insmod ./v4l2loopback.ko
         pushd /dev
         sudo chmod 777 video0
+        # Leave '/dev' directory
         popd
-
+        # Leave '${REFERENCE_REPOSITORY}/v4l2loopback' directory
+        popd    
+        
         # Make virtual display on localhost:0.
         Xvnc :0 &
         export DISPLAY=0.0:0
