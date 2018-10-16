@@ -85,7 +85,7 @@ IFS="\/"; declare -a Array=($*); unset IFS;
 user_id="@${Array[3]}"
 
 # Set folder name uniquely to run CI in different folder per a PR.
-dir_worker="repo-workers/pr-format"
+dir_worker="repo-workers/pr-checker"
 
 # Set project repo name
 PRJ_REPO_OWNER=`echo $(basename "${input_repo%.*}")`
@@ -108,44 +108,11 @@ export dir_commit=${dir_worker}/${input_date}-${input_pr}-${input_commit}
 message="Trigger: queued. The commit number is $input_commit."
 cibot_report $TOKEN "pending" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
-# --------------------------- git-clone module: clone git repository -------------------------------------------------
+
+
+# --------------------------- CI module: start -----------------------------------------------------
 echo -e "[DEBUG] Starting pr-format....\n"
 
-# check if existing folder exists.
-if [[ -d $dir_commit ]]; then
-    echo -e "[DEBUG] WARN: mkdir command is failed because $dir_commit directory already exists."
-fi
-
-# check if github project folder already exists
-cd $dir_commit
-if [[ -d ${PRJ_REPO_OWNER} ]]; then
-    echo -e "[DEBUG] WARN: ${PRJ_REPO_OWNER} already exists and is not an empty directory."
-    echo -e "[DEBUG] WARN: So removing the existing directory..."
-    rm -rf ./${PRJ_REPO_OWNER}
-fi
-
-# create 'report' folder to archive log files.
-mkdir ./report
-
-# run "git clone" command to download git source
-pwd
-sudo -Hu www-data git clone --reference ${REFERENCE_REPOSITORY} $input_repo
-if [[ $? != 0 ]]; then
-    echo -e "git clone --reference ${REFERENCE_REPOSITORY} $input_repo "
-    echo -e "[DEBUG] ERROR: Oooops. 'git clone' command failed."
-    exit 1
-else
-    echo -e "[DEBUG] 'git clone' command is successfully finished."
-fi
-
-# run "git branch" to use commits from PR branch
-cd ./${PRJ_REPO_OWNER}
-git checkout -b $input_branch origin/$input_branch
-git branch
-
-echo -e "Make sure commit all changes before running this checker."
-
-# --------------------------- Jenkins module: start -----------------------------------------------------
 # archive a patch file of latest commit with 'format-patch' option
 # This *.patch file is used for nobody check.
 git format-patch -1 $input_commit --output-directory ../report/

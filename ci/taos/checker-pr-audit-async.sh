@@ -82,7 +82,7 @@ IFS="\/"; declare -a Array=($*); unset IFS;
 user_id="@${Array[3]}"
 
 # Set folder name uniquely to run CI in different folder per a PR.
-dir_worker="repo-workers/pr-audit"
+dir_worker="repo-workers/pr-checker"
 
 # Set project repo name of contributor
 PRJ_REPO_OWNER=`echo $(basename "${input_repo%.*}")`
@@ -164,50 +164,6 @@ do
     fi
 done
 
-
-
-# --------------------------- git-clone module: clone git repository -------------------------------------------------
-echo "[DEBUG] Starting pr-audit....\n"
-
-# check if existing folder already exists
-if [[ -d $dir_commit ]]; then
-    echo "[DEBUG] WARN: mkdir command is failed because $dir_commit directory already exists."
-else
-    echo "[DEBUG] WARN: mkdir command is failed because $dir_commit directory does not exists."
-fi
-
-# check if github project folder already exists
-pwd
-cd $dir_commit
-if [[ -d ${PRJ_REPO_OWNER} ]]; then
-    echo "[DEBUG] WARN: ${PRJ_REPO_OWNER} already exists and is not an empty directory."
-    echo "[DEBUG] WARN: Removing the existing directory..."
-    rm -rf ./${PRJ_REPO_OWNER}
-fi
-
-# create 'report' folder to archive log files.
-mkdir ./report
-
-# run "git clone" command to download git source
-# options of 'sudo' command: 
-# 1) The -H (HOME) option sets the HOME environment variable to the home directory of the target user (root by default)
-# as specified in passwd. By default, sudo does not modify HOME.
-# 2) The -u (user) option causes sudo to run the specified command as a user other than root. To specify a uid instead of a username, use #uid.
-pwd
-sudo -Hu www-data git clone --reference ${REFERENCE_REPOSITORY} $input_repo
-if [[ $? != 0 ]]; then
-    echo "[DEBUG] ERROR: 'git clone' command is failed because of incorrect setting of CI server."
-    echo "[DEBUG] Please check /var/www/ permission, /var/www/html/.netrc, and /var/www/html/.gbs.conf."
-    echo "[DEBUG] current id: $(id)"
-    echo "[DEBUG] current path: $(pwd)"
-    echo "[DEBUG] $ sudo -Hu www-data git clone --reference ${REFERENCE_REPOSITORY} $input_repo"
-    exit 1
-fi
-
-# run "git branch" to use commits from PR branch
-cd ./${PRJ_REPO_OWNER}
-git checkout -b $input_branch origin/$input_branch
-git branch
 
 # --------------------------- audit module: start -----------------------------------------------------
 
