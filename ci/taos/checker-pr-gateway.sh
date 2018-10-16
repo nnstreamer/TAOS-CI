@@ -31,7 +31,7 @@
 #  arg6: delivery id
 #
 # @see variables to control the directories
-#  $dir_ci directory is CI folder
+#  $dir_ci directory is CI folder (Absolute path)
 #  $dir_worker   directory is PR worker folder
 #  $dir_commit   directory is commit folder
 
@@ -77,7 +77,7 @@ dir_worker="repo-workers/pr-checker"
 export dir_worker=$dir_worker
 export dir_commit=${dir_worker}/${input_date}-${input_pr}-${input_commit}
 
-# Remove it if there are existing folders
+# Check if a same commit folder already exists
 if [[ -d $dir_commit ]]; then
     echo -e "[DEBUG] 'mkdir' command is failed because $dir_commit directory already exists."
     echo -e "[DEBUG] So removing the existing directory..."
@@ -87,6 +87,54 @@ fi
 # Create a commit folder
 cd $dir_ci
 mkdir -p $dir_commit
+echo "[DEBUG] $dir_commit folder is created."
+
+# --------------------------- git-clone module: clone a git repository ----------------------
+echo "[DEBUG] Starting 'git clone' command to get a git repository...."
+
+# Set project repo name of contributor
+PRJ_REPO_OWNER=`echo $(basename "${input_repo%.*}")`
+
+# Check if a git repository already exists
+cd $dir_commit
+if [[ -d ${PRJ_REPO_OWNER} ]]; then
+    echo -e "[DEBUG] ${PRJ_REPO_OWNER} already exists and is not an empty directory."
+    echo -e "[DEBUG] Removing the existing directory..."
+    rm -rf ./${PRJ_REPO_OWNER}
+fi
+
+# create 'report' folder to archive log files.
+pwd
+mkdir ./report
+echo -e "[DEBUG] The 'report' folder is created."
+
+# run "git clone" command to download git source
+# options of 'sudo' command: 
+# 1) The -H (HOME) option sets the HOME environment variable to the home directory of the target user (root by default)
+# as specified in passwd. By default, sudo does not modify HOME.
+# 2) The -u (user) option causes sudo to run the specified command as a user other than root. To specify a uid instead of a username, use #uid.
+pwd
+run_git_clone="sudo -Hu www-data git clone --reference ${REFERENCE_REPOSITORY} $input_repo"
+echo -e "[DEBUG] $run_git_clone"
+$run_git_clone
+if [[ $? != 0 ]]; then
+    echo "[DEBUG] ERROR: 'git clone' command is failed because of incorrect setting of CI server."
+    echo "[DEBUG] Please check /var/www/ permission, /var/www/html/.netrc, and /var/www/html/.gbs.conf."
+    echo "[DEBUG] current id: $(id)"
+    echo "[DEBUG] current path: $(pwd)"
+    echo "[DEBUG] $run_git_clone"
+    exit 1
+fi
+
+# run "git branch" to use commits from PR branch
+echo -e "[DEBUG] PRJ_REPO_OWNER is ./${PRJ_REPO_OWNER}"
+cd ./${PRJ_REPO_OWNER}
+checkout_branch="git checkout -b $input_branch origin/$input_branch"
+echo -e "[DEBUG] $checkout_branch"
+$checkout_branch
+git branch
+pwd
+
 
 # --------------------------- Run a checker: format ---------------------------------------
 cd $dir_ci
