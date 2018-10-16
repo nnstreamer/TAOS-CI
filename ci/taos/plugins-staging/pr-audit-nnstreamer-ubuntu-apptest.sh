@@ -15,7 +15,7 @@
 #
 
 ##
-# @file     pr-nnstreamer-ubuntu-apptest.sh
+# @file     pr-audit-nnstreamer-ubuntu-apptest.sh
 # @brief    Check if nnstreamer sample apps normally work 
 #           with a commit of a Pull Request (PR).
 # @see      https://github.com/nnsuite/TAOS-CI
@@ -24,22 +24,22 @@
 #
 
 
-# @brief [MODULE] TAOS/pr-nnstreamer-ubuntu-apptest-wait-queue
-function pr-nnstreamer-ubuntu-apptest-wait-queue(){
+# @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-wait-queue
+function pr-audit-nnstreamer-ubuntu-apptest-wait-queue(){
     echo -e "[DEBUG] Waiting CI trigger to run nnstreamer sample app actually."
     message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
     cibot_report $TOKEN "pending" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
-# @brief [MODULE] TAOS/pr-nnstreamer-ubuntu-apptest-ready-queue
-function pr-nnstreamer-ubuntu-apptest-ready-queue(){
+# @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-ready-queue
+function pr-audit-nnstreamer-ubuntu-apptest-ready-queue(){
     echo -e "[DEBUG] Readying CI trigger to run nnstreamer sample app actually."
     message="Trigger: ready queue. The commit number is $input_commit."
     cibot_report $TOKEN "pending" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
-# @brief [MODULE] TAOS/pr-nnstreamer-ubuntu-apptest-run-queue
-function pr-nnstreamer-ubuntu-apptest-run-queue() {
+# @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-run-queue
+function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     echo -e "[DEBUG] Starting CI trigger to run nnstreamer sample app actually."
     message="Trigger: run queue. The commit number is $input_commit."
     cibot_report $TOKEN "pending" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
