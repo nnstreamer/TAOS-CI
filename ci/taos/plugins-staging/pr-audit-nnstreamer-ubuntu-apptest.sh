@@ -22,6 +22,10 @@
 # @see      https://github.com/nnsuite/nnstreamer/wiki/usage-examples-screenshots
 # @author   Sewon Oh <sewon.oh@samsung.com>
 #
+# Note: In order to run this module, A server administrator must add
+# 'www-data' (user id of Apache webserver) into the video group (/etc/group) as follows.
+# $ sudo usermod -a -G video www-data
+#
 
 
 # @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-wait-queue
@@ -62,7 +66,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NNST_ROOT/lib
     export GST_PLUGIN_PATH=$GST_PLUGIN_PATH:$NNST_ROOT/lib
     echo -e "[DEBUG] NNST_ROOT is '$NNST_ROOT'"
-    echo -e "[DEBUG] LD_LIBRARY_PATH is '$LD_LIBRARYT_PATH'"
+    echo -e "[DEBUG] LD_LIBRARY_PATH is '$LD_LIBRARY_PATH'"
     echo -e "[DEBUG] GST_PLUGIN_PATH is '$GST_PLUGIN_PATH'"
     
     declare -i result=0
@@ -146,16 +150,16 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
         # Note that the server administrator must add 'www-data' (webapp id) account to 'video' group to access /dev/video*
         # Do not use '777' permission  to avoid a security vulnerability
-        sudo usermod -a -G video www-data
         echo -e "[DEBUG] The group account 'video' includes the below user accounts:"
         cat /etc/group | grep video
 
         # Leave '${REFERENCE_REPOSITORY}/v4l2loopback' directory
         popd    
         
-        # Make virtual display on localhost:0.
-        Xvnc :0 &
-        export DISPLAY=0.0:0
+        # To avoid a conflict possiblity with existing vnc service ports(5900 ~ 5910),
+        # run a vnc service with a port number more than 5911.
+        Xvnc :11 &
+        export DISPLAY=0.0:11
         
         # Produce sample video frames.
         gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0 &
@@ -165,8 +169,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # Test that video image classification.
     # Testing while 2seconds. 2seconds is arbitrary.
     # and then kill process, otherwise, process run forever.
-    echo -e "" >> ../../report/nnstreamer-apptest-output.log
-    echo -e "[DEBUG] Starting nnstreamer_example_filter test..." >> ../../report/nnstreamer-apptest-output.log
+    echo -e "" >> ../../report/nnstreamer-apptest-error.log
+    echo -e "[DEBUG] Starting nnstreamer_example_filter test..." >> ../../report/nnstreamer-apptest-error.log
     ./nnstreamer_example_filter 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log & 
     pid=$!
     sleep 2
@@ -174,8 +178,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     result+=$?
 
     # Same as above. Differencs is to run with python.
-    echo -e "" >> ../../report/nnstreamer-apptest-output.log
-    echo -e "[DEBUG] Starting nnstreamer_example_filter.py test..." >> ../../report/nnstreamer-apptest-output.log
+    echo -e "" >> ../../report/nnstreamer-apptest-error.log
+    echo -e "[DEBUG] Starting nnstreamer_example_filter.py test..." >> ../../report/nnstreamer-apptest-error.log
     python nnstreamer_example_filter.py 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log &
     pid=$!
     sleep 2
@@ -185,8 +189,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # Test that video mixer with nnstreamer plug-in
     # Testing while 2seconds. 2seconds is arbitrary.
     # and then kill process, otherwise, process run forever.
-    echo -e "" >> ../../nnstreamer-apptest-output.log
-    echo -e "[DEBUG] Starting nnstreamer_example_cam test..." >> ../../nnstreamer-apptest-output.log
+    echo -e "" >> ../../report/nnstreamer-apptest-error.log
+    echo -e "[DEBUG] Starting nnstreamer_example_cam test..." >> ../../report/nnstreamer-apptest-error.log
     ./nnstreamer_example_cam 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log &
     pid=$!
     sleep 2
@@ -194,8 +198,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     result+=$?
 
     # Test to convert video images to tensor.
-    echo -e "" >> ../../nnstreamer-apptest-output.log
-    echo -e "[DEBUG] Starting nnstreamer_sink_example test..." >> ../../nnstreamer-apptest-output.log
+    echo -e "" >> ../../report/nnstreamer-apptest-error.log
+    echo -e "[DEBUG] Starting nnstreamer_sink_example test..." >> ../../report/nnstreamer-apptest-error.log
     ./nnstreamer_sink_example 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log
     result+=$?
     
@@ -203,8 +207,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # and convert tensor to video images.
     # Testing while 2seconds. 2seconds is arbitrary.
     # and then kill process, otherwise, process run forever.
-    echo -e "" >> ../../nnstreamer-apptest-output.log
-    echo -e "[DEBUG] Starting nnstreamer_sink_example_play test..." >> ../../nnstreamer-apptest-output.log
+    echo -e "" >> ../../report/nnstreamer-apptest-error.log
+    echo -e "[DEBUG] Starting nnstreamer_sink_example_play test..." >> ../../report/nnstreamer-apptest-error.log
     ./nnstreamer_sink_example_play 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log &
     pid=$!
     sleep 2
