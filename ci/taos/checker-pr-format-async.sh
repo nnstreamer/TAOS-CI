@@ -85,7 +85,7 @@ IFS="\/"; declare -a Array=($*); unset IFS;
 user_id="@${Array[3]}"
 
 # Set folder name uniquely to run CI in different folder per a PR.
-dir_worker="repo-workers/pr-format"
+dir_worker="repo-workers/pr-checker"
 
 # Set project repo name
 PRJ_REPO_OWNER=`echo $(basename "${input_repo%.*}")`
