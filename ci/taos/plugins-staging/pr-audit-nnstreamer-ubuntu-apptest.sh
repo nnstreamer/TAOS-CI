@@ -53,6 +53,9 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     check_dependency Xvnc
     check_dependency git
     check_dependency insmod
+    check_dependency cat
+    check_dependency grep
+    check_dependency usermod
 
     # Set-up environment variables.
     export NNST_ROOT="${dir_ci}/${dir_commit}/${PRJ_REPO_OWNER}"
@@ -140,10 +143,13 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
         sudo insmod /lib/modules/`uname -r`/kernel/drivers/media/media.ko
         sudo insmod /lib/modules/`uname -r`/kernel/drivers/media/v4l2-core/videodev.ko
         sudo insmod ./v4l2loopback.ko
-        pushd /dev
-        sudo chmod 777 video0
-        # Leave '/dev' directory
-        popd
+
+        # Note that the server administrator must add 'www-data' (webapp id) account to 'video' group to access /dev/video*
+        # Do not use '777' permission  to avoid a security vulnerability
+        sudo usermod -a -G video www-data
+        echo -e "[DEBUG] The group account 'video' includes the below user accounts:"
+        cat /etc/group | grep video
+
         # Leave '${REFERENCE_REPOSITORY}/v4l2loopback' directory
         popd    
         
