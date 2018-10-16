@@ -258,11 +258,11 @@ function github_event_handling(){
             printf ("\n\n");
             check_open_sesame();
 
-            // Checker: checker-pr-format.sh
+            // Checker: checker-pr-gateway.sh
             if ($payload->action == "opened" || ($payload->action == "edited" && $open_sesame == "true")||
                 $payload->action == "synchronize"){
                 printf ("\n\n");
-                printf ("[DEBUG] #### checker: starting ./checker-pr-format.sh ...)\n");
+                printf ("[DEBUG] #### checker: starting ./checker-pr-gateway.sh ...)\n");
                 echo ("[DEBUG] action: '$payload->action'. \n");
                 $date=date_time_us();
                 $commit = $payload->pull_request->head->sha;
@@ -272,55 +272,26 @@ function github_event_handling(){
                 $pr_no=$payload->pull_request->number;
                 $delivery_id = $_SERVER['HTTP_X_GITHUB_DELIVERY'];
                 printf ("[DEBUG] current PR number: $pr_no \n");
-                printf ("[DEBUG] checker-pr-format.sh - arg1) date: $date \n");
-                printf ("[DEBUG] checker-pr-format.sh - arg2) commit: $commit \n");
-                printf ("[DEBUG] checker-pr-format.sh - arg3) repo: $repo \n");
-                printf ("[DEBUG] checker-pr-format.sh - arg4) branch: $branch \n");
-                printf ("[DEBUG] checker-pr-format.sh - arg5) pr no: $pr_no \n");
-                printf ("[DEBUG] checker-pr-format.sh - arg6) X-GitHub-Delivery: $delivery_id \n");
-                $result=0;
-                // Run a script asynchronously to avoid service timeout generated due to long build time.
+                printf ("[DEBUG] arg1) date: $date \n");
+                printf ("[DEBUG] arg2) commit: $commit \n");
+                printf ("[DEBUG] arg3) repo: $repo \n");
+                printf ("[DEBUG] arg4) branch: $branch \n");
+                printf ("[DEBUG] arg5) pr no: $pr_no \n");
+                printf ("[DEBUG] arg6) X-GitHub-Delivery: $delivery_id \n");
+
+                // Run a shell script asynchronously to avoid service timeout generated
+                // due to a long execution time.
                 // https://stackoverflow.com/questions/222414/asynchronous-shell-exec-in-php
                 // https://stackoverflow.com/questions/2368137/asynchronous-shell-commands
-                $cmd = "./checker-pr-format.sh $date $commit $repo $branch $pr_no $delivery_id > /dev/null 2>/dev/null &";
-                $result = shell_exec($cmd);
-                printf ("[DEBUG] checker: checker-pr-format.sh is done asynchronously. \n");
-                printf ("[DEBUG] It means that checker-pr-format.sh is still running now.\n");
-                printf ("[DEBUG] ./checker-pr-format.sh $date $commit $repo $branch $pr_no $delivery_id \n");
+                $result=0;
+                $cmd="./checker-pr-gateway.sh $date $commit $repo $branch $pr_no $delivery_id > /dev/null 2>/dev/null &";
+                $result=shell_exec($cmd);
+                printf ("[DEBUG] checker: checker-pr-gateway.sh is done asynchronously. \n");
+                printf ("[DEBUG] It means that checker-pr-gateway.sh is still running now.\n");
+                printf ("[DEBUG] ./checker-pr-gateway.sh $date $commit $repo $branch $pr_no $delivery_id \n");
+
             }
 
-            // Checker: checker-pr-audit.sh
-            // Todo: handle the case that has multiple commits per PR
-            // with "foreach $payload->head as $key => $value" statement.
-            if ($payload->action == "opened" || ($payload->action == "edited" && $open_sesame == "true")||
-                $payload->action == "synchronize"){
-                printf ("\n\n");
-                printf ("[DEBUG] #### checker: starting ./checker-pr-audit.sh ...)\n");
-                echo ("[DEBUG] action: '$payload->action'. \n");
-                $date=date_time_us();
-                $commit = $payload->pull_request->head->sha;
-                $full_name = $payload->pull_request->head->repo->full_name;
-                $repo = "https://${github_dns}/${full_name}.git";
-                $branch = $payload->pull_request->head->ref;
-                $pr_no=$payload->pull_request->number;
-                $delivery_id = $_SERVER['HTTP_X_GITHUB_DELIVERY'];
-                printf ("[DEBUG] current PR number: $pr_no \n");
-                printf ("[DEBUG] checker-pr-audit.sh - arg1) date: $date \n");
-                printf ("[DEBUG] checker-pr-audit.sh - arg2) commit: $commit \n");
-                printf ("[DEBUG] checker-pr-audit.sh - arg3) repo: $repo \n");
-                printf ("[DEBUG] checker-pr-audit.sh - arg4) branch: $branch \n");
-                printf ("[DEBUG] checker-pr-audit.sh - arg5) pr no: $pr_no \n");
-                printf ("[DEBUG] checker-pr-audit.sh - arg6) X-GitHub-Delivery: $delivery_id \n");
-                $result=0;
-                // Run a script asynchronously to avoid service timeout generated due to long build time.
-                // https://stackoverflow.com/questions/222414/asynchronous-shell-exec-in-php
-                // https://stackoverflow.com/questions/2368137/asynchronous-shell-commands
-                $cmd = "./checker-pr-audit.sh $date $commit $repo $branch $pr_no $delivery_id > /dev/null 2>/dev/null &";
-                $result = shell_exec($cmd);
-                printf ("[DEBUG] checker: checker-pr-audit.sh  is done asynchronously. \n");
-                printf ("[DEBUG] It means that checker-pr-audit.sh is still running now.\n");
-                printf ("[DEBUG] ./checker-pr-audit.sh $date $commit $repo $branch $pr_no $delivery_id \n");
-            }
             break;
         case 'pull_request_review':
             break;
