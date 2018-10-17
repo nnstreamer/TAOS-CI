@@ -145,10 +145,6 @@ echo "[DEBUG] The current path: $(pwd)."
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh"
 source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh
 
-echo "[DEBUG] The current path: $(pwd)."
-echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh"
-source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh
-
 
 ##################################################################################################################
 echo "[MODULE] plugins-staging: Plugin group that does not have an evaluation and aging test enough"
