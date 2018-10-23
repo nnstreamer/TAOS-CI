@@ -45,6 +45,7 @@ gbs build -A x86_64 --define "testcoverage 1" -B $dirpath $build_root --clean
 cp $dirpath/local/repos/tizen/x86_64/RPMS/nnstreamer-unittest-coverage* $dirpath
 pushd $dirpath
 rpm2cpio $dirpath/nnstreamer-unittest-coverage* | cpio -idvm 
+rm $dirpath/nnstreamer-unittest-coverage*
 if [[ -d ../gcov_html ]]; then
     rm -rf ../gcov_html
 fi
