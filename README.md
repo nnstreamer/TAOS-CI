@@ -74,5 +74,5 @@ Please refer to [How to build a package](ci/doc/self-assessment-before-submittin
 * https://curl.haxx.se/docs/ 
 * Papers
    * [ICSE2018, "Modern code review: a case study at google"](https://dl.acm.org/citation.cfm?id=3183525)
-   * [ICSE2015, "Do Not Find Bugs: how the Current Code Review Best Practive Slows Us Down"](https://dl.acm.org/citation.cfm?id=2819015)
+   * [ICSE2015, "Do Not Find Bugs: how the Current Code Review Best Practice Slows Us Down"](https://dl.acm.org/citation.cfm?id=2819015)
    * [IFIPAICT, "The Impact of a Low Level of Agreement Among Reviewers in a Code Review Process"](https://link.springer.com/chapter/10.1007/978-3-319-39225-7_8)
