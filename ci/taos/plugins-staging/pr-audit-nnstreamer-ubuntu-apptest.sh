@@ -32,24 +32,34 @@
 function pr-audit-nnstreamer-ubuntu-apptest-wait-queue(){
     echo -e "[DEBUG] Waiting CI trigger to run nnstreamer sample app actually."
     message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 # @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-ready-queue
 function pr-audit-nnstreamer-ubuntu-apptest-ready-queue(){
     echo -e "[DEBUG] Readying CI trigger to run nnstreamer sample app actually."
     message="Trigger: ready queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+}
+
+# @brief function that append log to appropriate log file via result($1)
+function add_log() {
+     if [[ $1 -ne 0 ]]; then
+        cat log >> ../../report/nnstreamer-apptest-error.log
+     else
+        cat log >> ../../report/nnstreamer-apptest-output.log
+     fi
+     echo "add_log=$1"
 }
 
 # @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-run-queue
 function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     echo -e "[DEBUG] Starting CI trigger to run nnstreamer sample app actually."
     message="Trigger: run queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     echo -e "########################################################################################"
-    echo -e "[MODULE] TAOS/pr-nnstreamer-apptest: Starting sample app test"
+    echo -e "[MODULE] TAOS/pr-audit-nnstreamer-apptest: Starting sample app test"
     check_dependency cmake
     check_dependency make
     check_dependency wget
@@ -98,13 +108,13 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # Download tensorflow-lite model file and labels.
     mkdir tflite_model
     cd tflite_model
-    echo -e "" >> ../../../report/nnstreamer-apptest-output.log
-    echo -e "[DEBUG] Starting wget tflite model..." >> ../../../report/nnstreamer-apptest-output.log
-    wget https://github.com/nnsuite/testcases/raw/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/mobilenet_v1_1.0_224_quant.tflite 2>> ../../../report/nnstreamer-apptest-error.log 1>> ../../../report/nnstreamer-apptest-output.log
+    echo -e "" > wget.log
+    echo -e "[DEBUG] Starting wget tflite model..." >> wget.log
+    wget -a wget.log https://github.com/nnsuite/testcases/raw/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/mobilenet_v1_1.0_224_quant.tflite 
     result+=$?
-    echo -e "" >> ../../../report/nnstreamer-apptest-output.log
-    echo -e "[DEBUG] Starting wget tflite label..." >> ../../../report/nnstreamer-apptest-output.log
-    wget https://raw.githubusercontent.com/nnsuite/testcases/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/labels.txt 2>> ../../../report/nnstreamer-apptest-error.log 1>> ../../../report/nnstreamer-apptest-output.log
+    echo -e "" >> wget.log
+    echo -e "[DEBUG] Starting wget tflite label..." >> wget.log
+    wget -a wget.log https://raw.githubusercontent.com/nnsuite/testcases/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/labels.txt 
     result+=$?
     cd ..
 
@@ -112,8 +122,10 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
         echo -e "[DEBUG][FAILED] Oooops!!!!!! apptest is failed."
         echo -e "[DEBUG][FAILED] The data files was not downloaded. Please check the log file to get a hint"
         echo -e ""
+        
         check_result="failure"
         global_check_result="failure"
+        cat tflite_model/wget.log >> ../../report/nnstreamer-apptest-error.log
 
         message="Oooops. apptest is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
         cibot_report $TOKEN "failure" "TAOS/pr-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
@@ -124,6 +136,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
         return ${result}
     fi
+
+    cat tflite_model/wget.log >> ../../report/nnstreamer-apptest-output.log
     
     # Test with sample apps
     # - [RunTest] fake USB camera for NNStreamer video apps
@@ -169,51 +183,51 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # Test that video image classification.
     # Testing while 2seconds. 2seconds is arbitrary.
     # and then kill process, otherwise, process run forever.
-    echo -e "" >> ../../report/nnstreamer-apptest-error.log
-    echo -e "[DEBUG] Starting nnstreamer_example_filter test..." >> ../../report/nnstreamer-apptest-error.log
-    ./nnstreamer_example_filter 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log & 
+    echo -e "" > log
+    echo -e "[DEBUG] Starting nnstreamer_example_filter test..." >> log
+    ./nnstreamer_example_filter &>> log & 
     pid=$!
     sleep 2
     kill ${pid}
-    result+=$?
+    result+=$(add_log $?)
 
     # Same as above. Differencs is to run with python.
-    echo -e "" >> ../../report/nnstreamer-apptest-error.log
-    echo -e "[DEBUG] Starting nnstreamer_example_filter.py test..." >> ../../report/nnstreamer-apptest-error.log
-    python nnstreamer_example_filter.py 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log &
+    echo -e "" > log
+    echo -e "[DEBUG] Starting nnstreamer_example_filter.py test..." >> log
+    python nnstreamer_example_filter.py &>> log & 
     pid=$!
     sleep 2
     kill ${pid}
-    result+=$?
+    result+=$(add_log $?)
 
     # Test that video mixer with nnstreamer plug-in
     # Testing while 2seconds. 2seconds is arbitrary.
     # and then kill process, otherwise, process run forever.
-    echo -e "" >> ../../report/nnstreamer-apptest-error.log
-    echo -e "[DEBUG] Starting nnstreamer_example_cam test..." >> ../../report/nnstreamer-apptest-error.log
-    ./nnstreamer_example_cam 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log &
+    echo -e "" > log
+    echo -e "[DEBUG] Starting nnstreamer_example_cam test..." >> log
+    ./nnstreamer_example_cam &>> log & 
     pid=$!
     sleep 2
     kill ${pid}
-    result+=$?
+    result+=$(add_log $?)
 
     # Test to convert video images to tensor.
-    echo -e "" >> ../../report/nnstreamer-apptest-error.log
-    echo -e "[DEBUG] Starting nnstreamer_sink_example test..." >> ../../report/nnstreamer-apptest-error.log
-    ./nnstreamer_sink_example 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log
-    result+=$?
+    echo -e "" > log
+    echo -e "[DEBUG] Starting nnstreamer_sink_example test..." >> log
+    ./nnstreamer_sink_example &>> log  
+    result+=$(add_log $?)
     
     # Test to convert video images to tensor, tensor buffer pass another pipeline,
     # and convert tensor to video images.
     # Testing while 2seconds. 2seconds is arbitrary.
     # and then kill process, otherwise, process run forever.
-    echo -e "" >> ../../report/nnstreamer-apptest-error.log
-    echo -e "[DEBUG] Starting nnstreamer_sink_example_play test..." >> ../../report/nnstreamer-apptest-error.log
-    ./nnstreamer_sink_example_play 2>> ../../report/nnstreamer-apptest-error.log 1>> ../../report/nnstreamer-apptest-output.log &
+    echo -e "" > log
+    echo -e "[DEBUG] Starting nnstreamer_sink_example_play test..." >> log
+    ./nnstreamer_sink_example_play &>> log & 
     pid=$!
     sleep 2
     kill ${pid}
-    result+=$?
+    result+=$(add_log $?)
     
     kill ${producer_id}
 
