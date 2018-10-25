@@ -23,7 +23,7 @@ The submitter has the first responsibility of keeping the created PR clean and n
 
 Each commit is required to be signed-off by the corresponding author.
 With properly configured development environment, you can add sign-off for a commit with ```-s``` option: e.g., ```git commit -s```.
-[Here is some stories on sign-off](https://stackoverflow.com/questions/1962094/what-is-the-sign-off-feature-in-git-for)
+[Here is some stories on sign-off](https://stackoverflow.com/questions/1962094/what-is-the-sign-off-feature-in-git-for).
 
 - How to give the developers zero cost:
 ```bash
@@ -38,9 +38,9 @@ $ git commit -s <file-name>
 ### What does it mean to sign off commits for authors?
 
 It means that you are legally responsible for the given commit that, according to your best knowledge,
-- It is the original work of the author (no plagiarism or copy-pasting from external work)
+- It is the original work of the author (no plagiarism or copy-pasting from external work).
 - It does not have any patents, license, or copyright issues.
-- You are granting all related rights to the community or project (depending on the licenses)
+- You are granting all related rights to the community or project (depending on the licenses).
 
 Usually, you are not allowed to push commits of other's work; however, you may do so if you
 - Maintain the original authorship in the git commit (you can edit authors of a given commit: ```$ man git commit```)
