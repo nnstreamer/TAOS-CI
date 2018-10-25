@@ -14,7 +14,7 @@ $ cd TAOS-CI
 $ sudo ./ci/taos/webapp/install-packages.sh
 ```
 
-## Install Apache+PHP for CI Server
+## Install Apache+PHP for CI Server!
 The CI server to run TAOS-CI has to be equipped with Apache and PHP script language to run lightweight automation server instead of Jenkins.
 Builds has been triggered by last commit number by scheduling a Pull Request (PR) with a bot, that is based on Webhook API and JSON.
 
