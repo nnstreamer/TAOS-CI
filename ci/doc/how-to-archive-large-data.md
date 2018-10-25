@@ -23,7 +23,7 @@ If you are using another Linux distribution such as Fedora, Please refer to the 
 Note that default branch must be `tizen` instead of `master` in case of TAOS. We assume that you have to upload LibreOffice Installer
 (251MB) in a github repository.
 
-Clone the github repository with upstream and origin.
+Clone the github repository with upstream and origin. 
 ```bash
 $ mkdir dataset
 $ cd    dataset
