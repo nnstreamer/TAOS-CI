@@ -17,7 +17,7 @@ Please, refer to http://releases.llvm.org/3.9.0/tools/clang/docs/ClangFormatStyl
 $ sudo apt-cache search clang-format
 $ sudo apt-get install -y clang-format-XX.XX
 ```
-2. Copy clang-format file from AuDri/ROS/catkin/style/.clang-format to your caktin workspace (catkin_ws), or copy .clang-format to root path of source code.
+2. Copy clang-format file from AuDri/ROS/catkin/style/.clang-format to your caktin workspace (catkin_ws), or copy .clang-format to root path of source codes.
 3. Run clang-format with --style=File option:
 ```bash
 $ clang-format-XX.XX -i --style=File [my_source_code_file]
