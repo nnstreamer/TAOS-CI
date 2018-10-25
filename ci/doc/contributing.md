@@ -47,7 +47,7 @@ Usually, you are not allowed to push commits of other's work; however, you may d
 - You can sure there is no patents, licenses, or copyright issues.
 - You can grant all related rights to the community or project (depending on the licenses)
 
-From Torvalds' (original author of Linux and git) git repo, (documentation about git commit message tags)[https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/5.Posting.rst]
+From Torvalds' (original author of Linux and git) git repo, (documentation about git commit message tags)[https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/5.Posting.rst].
 > Signed-off-by: this is a developer's certification that he or she has
    the right to submit the patch for inclusion into the kernel.  It is an
    agreement to the Developer's Certificate of Origin, the full text of
