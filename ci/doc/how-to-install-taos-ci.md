@@ -77,3 +77,4 @@ We will deliver event details when this hook is triggered.
 
 As a final step, press `Add webhook` button. That's all. 
 From now on, enjoy a CI world for more collaborative and productive software development!!!
+Thanks!
