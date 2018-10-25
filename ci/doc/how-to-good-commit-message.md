@@ -25,7 +25,7 @@ In a mixed environment of…
 ```
 
 ### A properly formed git commit subject line should always be able to complete the following sentence
-If applied, this commit will *\<your subject line here\>*
+If applied, this commit will be *\<your subject line here\>*
 
 ### Rules for a great git commit message style
 * Separate subject from body with a blank line
