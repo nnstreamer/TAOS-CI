@@ -1,4 +1,4 @@
-taos-ci (1.0-1) unstable; urgency=medium
+taos-ci (1.0) unstable; urgency=medium
 
   * Initial packaging work with dpkg-buildpackage for Ubuntu sever.
 
