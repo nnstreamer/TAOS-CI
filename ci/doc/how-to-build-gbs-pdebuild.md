@@ -1,3 +1,4 @@
+PR TET
 # How to Build for Tizen Target
 
 - [Build with Tizen-GBS. Full, Standard](#build)
