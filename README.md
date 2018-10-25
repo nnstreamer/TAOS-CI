@@ -8,7 +8,7 @@
 
 
 # Introduction
-TAOS-CI is an automated project coordinator to achieve "**Review less, merge faster**" with a tool-based review system. It accelerates a software development based on the GitHub webhook API. We aim to prevent a regression, find bugs, and reduce a nonproductive review process because of incorrect PRs in https://github.com. Actually, Submitting the incorrect PRs is a PITA in case of continuous integration. Basically, PRs causing regressions will not be automatically merged. As a result of that, it drastically reduces the existing burdens of reviewers.
+TAOS-CI is an automated project coordinator to achieve "**Review less, merge faster**" with a tool-based review system. It accelerates a software development based on the GitHub webhook API. We aim to prevent a regression, find bugs, and reduce a nonproductive review process due to incorrect PRs in https://github.com. Actually, submitting incorrect PRs is a PITA in case of continuous integration. Basically, PRs causing regressions will not be automatically merged. As a result, it drastically reduces the existing burdens of reviewers.
 
 - Minimize a nonproductive review process
 - Provide a test automation (both build and run)
@@ -29,17 +29,17 @@ TAOS-CI is an automated project coordinator to achieve "**Review less, merge fas
 
 
 ## Goals	
-It is designed and implemented with a light-weight system approach to support a desktop computer based servers that have out-of-date CPUs and low memory capacity. Also, if you want to enable your project specific CI facilities, It will be easily customizable for your github repository because it just requires APACHE, PHP, and BASH package. Especially, we are mainly concentrating on the three goals as follows among a lot of action items.
+It is designed and implemented with a light-weight system approach to support a desktop computer based servers that have out-of-date CPUs and low memory capacity. Also, if you want to enable your project specific CI facilities, it will be easily customizable for your github repository because it just requires APACHE, PHP, and BASH packages. Especially, we are mainly concentrating on the following three goals among a number of action items.
 
 * Test automation (both build and run)
 * Preventing Performance regression
 * Finding potential bugs at a proper time
 
 ## Maintenance
-Please refer to [Here](./ci/doc/maintenance.md).
+Please refer [Here](./ci/doc/maintenance.md).
 
 # Overall flow
-The below diagram shows an overall flow of our system. The TAOS-CI system performs (1) the format checker (before the build) and (2) the audit checker (after the build) by separating an inspection procedure with two steps whenever contributors submit a Pull Request (PR).
+The diagram below shows an overall flow of our system. The TAOS-CI system performs (1) the format checker (before the build) and (2) the audit checker (after the build) by separating an inspection procedure with two steps whenever contributors submit a Pull Request (PR).
 
 * Geunsik Lim, MyungJoo Ham, Jijoong Moon, Wook Song, Sangjung Woo, and Sewon Oh, "**TAOS-CI: Lightweight & Modular Continuous Integration System for Edge Computing,**" 37th IEEE International Conference on Consumer Electronics (ICCE), Las Vegas, USA, Jan. 2019. (Accepted)
 
