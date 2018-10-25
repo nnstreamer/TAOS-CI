@@ -31,7 +31,7 @@ TAOS-CI is an automated project coordinator to achieve "**Review less, merge fas
 ## Goals	
 It is designed and implemented with a light-weight system approach to support a desktop computer based servers that have out-of-date CPUs and low memory capacity. Also, if you want to enable your project specific CI facilities, It will be easily customizable for your github repository because it just requires APACHE, PHP, and BASH package. Especially, we are mainly concentrating on the three goals as follows among a lot of action items.
 
-* Test automation (both build and run)
+* Automating tests (both build and run)
 * Preventing Performance regression
 * Finding potential bugs at a proper time
 
