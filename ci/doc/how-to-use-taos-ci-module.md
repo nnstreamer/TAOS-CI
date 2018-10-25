@@ -21,3 +21,4 @@ When you submit a pull request to merge your CI module to TAOS-CI repository, Pl
 * Readability: Most of the developer should be able to read source code of the CI module without difficulty.
 * Execution time: The time required to execute the module should not be long.
 * Compatibility: The module should be able to run on most Linux distributions as well as Ubuntu.
+Interesting.
