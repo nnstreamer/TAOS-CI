@@ -181,3 +181,4 @@ for the number of times the lines have been executed.
 * http://gcc.gnu.org/onlinedocs/gcc/Gcov.html
 * http://ltp.sourceforge.net/coverage/lcov.php
 
+Understood
