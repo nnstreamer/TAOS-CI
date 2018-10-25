@@ -6,8 +6,10 @@ Please implement a module in `./plugins-{base|good|staging}` folder if you need 
    - `plugins-staging`: it is a set of plug-ins that are not up to par compared to the rest. They might be close to being good quality, but they are missing something - be it a good code review, some documentation, a set of tests, or aging test.
 
 
+
 ## How to enable new module
 First, open `./config/config-plugins-{format|audit}.sh`. Then, append a function name of a module that you want to attach newly. If you are poor at CI module, we recommend that you refer to the existing examples.
+
 
 
 ## Requirement before submitting a pull request
