@@ -56,6 +56,8 @@ function pr-audit-build-tizen-run-queue(){
     BUILD_MODE=$BUILD_MODE_TIZEN
 
     # build package
+    echo -e "[DEBUG] gbs build start at :"
+    date -R
     if [[ $BUILD_MODE == 99 ]]; then
         echo -e "BUILD_MODE = 99"
         echo -e "Skipping 'gbs build -A $1' procedure temporarily."
@@ -84,6 +86,8 @@ function pr-audit-build-tizen-run-queue(){
         --define "_skip_debug_rpm 1" \
         --buildroot ./GBS-ROOT/ 2> ../report/build_log_${input_pr}_tizen_$1_error.txt 1> ../report/build_log_${input_pr}_tizen_$1_output.txt
     fi
+    echo -e "[DEBUG] gbs build finished at :"
+    date -R
     result=$?
     echo "[DEBUG] The variable result value is $result."
     
