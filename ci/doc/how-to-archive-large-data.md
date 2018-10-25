@@ -10,7 +10,7 @@ Git Large File Storage (LFS) replaces large files such as audio samples, videos,
 with text pointers inside Git, while storing the file contents on a remote server like GitHub.com 
 or GitHub Enterprise. Note that Git LFS requires Git v1.8.5 or higher.
 
-# Install git-lfs package
+# Install git-lfs package !
 Packagecloud (https://packagecloud.io) hosts `git-lfs` packages with apt/deb for popular Linux distribution such as Ubuntu.
 ```bash
 $ curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
