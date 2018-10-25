@@ -54,3 +54,4 @@ From Torvalds' (original author of Linux and git) git repo, (documentation about
    which can be found in Documentation/process/submitting-patches.rst.  Code without a
    proper signoff cannot be merged into the mainline.
 
+Thanks
