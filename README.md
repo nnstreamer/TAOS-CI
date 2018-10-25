@@ -10,15 +10,15 @@
 # Introduction
 TAOS-CI is an automated project coordinator to achieve "**Review less, merge faster**" with a tool-based review system. It accelerates a software development based on the GitHub webhook API. We aim to prevent a regression, find bugs, and reduce a nonproductive review process because of incorrect PRs in https://github.com. Actually, Submitting the incorrect PRs is a PITA in case of continuous integration. Basically, PRs causing regressions will not be automatically merged. As a result of that, it drastically reduces the existing burdens of reviewers.
 
-- Minimize a nonproductive review process
-- Provide a test automation (both build and run)
-- Prevent a performance regression
-- Find bugs at a proper time before merging buggy codes
-- Generate a doxygen-based developer manual
-- Support modulable facilities with plug-in interface
-- Integrate the existing opensource tools easily
-- Verify an integrity of a package by supporting a platform build
-- Support multiple operating systems as following:
+- Minimizes a nonproductive review process
+- Provides a test automation (both build and run)
+- Prevents a performance regression
+- Finds bugs at a proper time before merging buggy codes
+- Generates a doxygen-based developer manual
+- Supports modulable facilities with plug-in interface
+- Integrates the existing opensource tools easily
+- Verifies an integrity of a package by supporting a platform build
+- Supports multiple operating systems as following:
   - Ubuntu: https://www.ubuntu.com/
   - Tizen: https://www.tizen.org/
   - Yocto: https://www.yoctoproject.org/
