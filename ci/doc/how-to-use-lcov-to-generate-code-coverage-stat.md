@@ -1,4 +1,5 @@
 
+
 # Using gcov/lcov to generate code coverage statistics  !!!
 
 This document describes how to write a test coverage with GCOV and LCOV. LCOV is a graphical front-end
