@@ -38,14 +38,14 @@ $ git commit -s <file-name>
 ### What does it mean to sign off commits for authors?
 
 It means that you are legally responsible for the given commit that, according to your best knowledge,
-- It is the original work of the author (no plagiarism or copy-pasting from external work)
+- It is the original work of the author (no plagiarism or copy-pasting from external work).
 - It does not have any patents, license, or copyright issues.
-- You are granting all related rights to the community or project (depending on the licenses)
+- You are granting all related rights to the community or project (depending on the licenses).
 
 Usually, you are not allowed to push commits of other's work; however, you may do so if you
 - Maintain the original authorship in the git commit (you can edit authors of a given commit: ```$ man git commit```)
 - You can sure there is no patents, licenses, or copyright issues.
-- You can grant all related rights to the community or project (depending on the licenses)
+- You can grant all related rights to the community or project (depending on the licenses).
 
 From Torvalds' (original author of Linux and git) git repo, (documentation about git commit message tags)[https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/5.Posting.rst]
 > Signed-off-by: this is a developer's certification that he or she has
