@@ -9,16 +9,15 @@
 
 # Introduction
 TAOS-CI is an automated project coordinator to achieve "**Review less, merge faster**" with a tool-based review system. It accelerates a software development based on the GitHub webhook API. We aim to prevent a regression, find bugs, and reduce a nonproductive review process because of incorrect PRs in https://github.com. Actually, Submitting the incorrect PRs is a PITA in case of continuous integration. Basically, PRs causing regressions will not be automatically merged. As a result of that, it drastically reduces the existing burdens of reviewers.
-
-- Minimizes a nonproductive review process
-- Provides a test automation (both build and run)
-- Prevents a performance regression
-- Finds bugs at a proper time before merging buggy codes
-- Generates a doxygen-based developer manual
-- Supports modulable facilities with plug-in interface
-- Integrates the existing opensource tools easily
-- Verifies an integrity of a package by supporting a platform build
-- Supports multiple operating systems as following:
+- Minimize a nonproductive review process
+- Provide a test automation (both build and run)
+- Prevent a performance regression
+- Find bugs at a proper time before merging buggy codes
+- Generate a doxygen-based developer manual
+- Support modulable facilities with plug-in interface
+- Integrate the existing opensource tools easily
+- Verify an integrity of a package by supporting a platform build
+- Support multiple operating systems as follows:
   - Ubuntu: https://www.ubuntu.com/
   - Tizen: https://www.tizen.org/
   - Yocto: https://www.yoctoproject.org/
@@ -31,7 +30,7 @@ TAOS-CI is an automated project coordinator to achieve "**Review less, merge fas
 ## Goals	
 It is designed and implemented with a light-weight system approach to support a desktop computer based servers that have out-of-date CPUs and low memory capacity. Also, if you want to enable your project specific CI facilities, It will be easily customizable for your github repository because it just requires APACHE, PHP, and BASH package. Especially, we are mainly concentrating on the three goals as follows among a lot of action items.
 
-* Test automation (both build and run)
+* Automating tests (both build and run)
 * Preventing Performance regression
 * Finding potential bugs at a proper time
 
@@ -50,7 +49,7 @@ Please refer to [How to install TAOS-CI](ci/doc/how-to-install-taos-ci.md).
 
 # How to use new CI module
 Please refer to [How to use new CI module](ci/doc/how-to-use-taos-ci-module.md).
-Current plugable facilities are as following:
+Current plugable facilities are as follows:
    - **Format** (before a build): File size, New line, No body, Signed-off, Clang-format, Doxygen, Timestamp, Hardcoded-path, Executable, RPM-spec, CPPcheck, Pylint, Indent, Resource checker, and so on.
    - **Audit** (after a build): Ubuntu builder, Tizen builder, Yocto builder, and Android (Coming Soon).
 
