@@ -6,7 +6,7 @@ A few rules might be ignored depending on modules. For the full list of ignored 
 
 ## C/C++
 When you push your commits, ALWAYS run clang-format & cpplint to submit a commit with style change. If there is a change due to code style issues, make two separate commits: (Please do not include other codes' style change in the same commit)
-- commit with style change only (i.e., commit clang-formatted original code - not your code change)
+- commit with style change only (i.e., commit clang-formatted original code - not your code change).
 - commit with your code change only (i.e., contents only).
 
 ### clang-format (https://clang.llvm.org/docs/ClangFormat.html)
