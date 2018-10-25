@@ -18,7 +18,7 @@ TAOS-CI is an automated project coordinator to achieve "**Review less, merge fas
 - Support modulable facilities with plug-in interface
 - Integrate the existing opensource tools easily
 - Verify an integrity of a package by supporting a platform build
-- Support multiple operating systems as following:
+- Support multiple operating systems as follows:
   - Ubuntu: https://www.ubuntu.com/
   - Tizen: https://www.tizen.org/
   - Yocto: https://www.yoctoproject.org/
@@ -50,6 +50,7 @@ Please refer to [How to install TAOS-CI](ci/doc/how-to-install-taos-ci.md).
 
 # How to use new CI module
 Please refer to [How to use new CI module](ci/doc/how-to-use-taos-ci-module.md).
+
 Currently available facilities are as following:
    - **Format** (before a build): File size, New line, No body, Signed-off, Clang-format, Doxygen, Timestamp, Hardcoded-path, Executable, RPM-spec, CPPcheck, Pylint, Indent, Resource checker, and so on.
    - **Audit** (after a build): Ubuntu builder, Tizen builder, Yocto builder, and Android (Coming Soon).
