@@ -50,7 +50,8 @@ Please refer to [How to install TAOS-CI](ci/doc/how-to-install-taos-ci.md).
 
 # How to use new CI module
 Please refer to [How to use new CI module](ci/doc/how-to-use-taos-ci-module.md).
-Current plugable facilities are as follows:
+
+Currently available facilities are as following:
    - **Format** (before a build): File size, New line, No body, Signed-off, Clang-format, Doxygen, Timestamp, Hardcoded-path, Executable, RPM-spec, CPPcheck, Pylint, Indent, Resource checker, and so on.
    - **Audit** (after a build): Ubuntu builder, Tizen builder, Yocto builder, and Android (Coming Soon).
 
