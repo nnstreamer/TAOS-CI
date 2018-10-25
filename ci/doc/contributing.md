@@ -1,4 +1,4 @@
-# How to Contribute
+# How to Contribute.
 
 ## Coding Convention
 Consistent code conventions are important for several reasons:
