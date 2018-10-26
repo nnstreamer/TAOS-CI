@@ -2,12 +2,12 @@
 # How to archive large files with git-lfs
 In order to archive a big data such as map, training, network model, and image data,
 We recommend that you use `git-lfs`command as a official process.
-Note that github does not support uploading big files more than +100MB by default. 
+Note that github does not support uploading big files more than +100MB by default.
 You do not need to operate your own development server to archive big files thanks to `git-lfs` facility.
 You can upload +100MB data files to a github website with `git-lfs` package.
 
 Git Large File Storage (LFS) replaces large files such as audio samples, videos, datasets, and graphics
-with text pointers inside Git, while storing the file contents on a remote server like GitHub.com 
+with text pointers inside Git, while storing the file contents on a remote server like GitHub.com
 or GitHub Enterprise. Note that Git LFS requires Git v1.8.5 or higher.
 
 # Install git-lfs package
@@ -19,7 +19,7 @@ $ sudo apt install git-lfs
 If you are using another Linux distribution such as Fedora, Please refer to the below webpage.
 * Installing git-lfs: https://github.com/git-lfs/git-lfs/blob/v2.4.0/INSTALLING.md#installing-on-linux-using-packagecloud
 
-# Case study: dataset repository 
+# Case study: dataset repository
 Note that default branch must be `tizen` instead of `master` in case of TAOS. We assume that you have to upload LibreOffice Installer
 (251MB) in a github repository.
 
@@ -53,7 +53,7 @@ $ git commit -m "add msi file"
 You can confirm that Git LFS is managing your *.msi file.
 ```bash
 $ git lfs ls-files
-# Push your files to the Git remote 
+# Push your files to the Git remote
 $ git push origin <your-branch-name>
 ```
 
