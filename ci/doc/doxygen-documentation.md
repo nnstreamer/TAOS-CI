@@ -145,8 +145,8 @@ class ring_cache
   public:
 
     /**
-     * An enum type. 
-     * The documentation block cannot be put after the enum! 
+     * An enum type.
+     * The documentation block cannot be put after the enum!
      */
     enum EnumType
     {
@@ -158,7 +158,7 @@ class ring_cache
      * a member function.
      */
     void member();
-    
+
   protected:
     int value;       /**< an integer value */
 };
@@ -305,4 +305,3 @@ EXTENSION_MAPPING = sh=C
 # References
   * Getting started: http://www.stack.nl/~dimitri/doxygen/manual/starting.html
   * Case study (Linux kernel): https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/sched/core.c?h=v4.13-rc1#n4454
-
