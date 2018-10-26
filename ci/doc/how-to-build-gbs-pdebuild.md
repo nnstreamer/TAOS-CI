@@ -260,7 +260,7 @@ AuDri/ROS/component_name/build$ sudo sh -c ". ${CIP}setup.sh; make install"
 Here is a shell script I'm using for Ubuntu 14.04 Docker-AD (ROS Indigo):
 ```bash
 $ cd AuDri/ROS
-$ cat run.sh 
+$ cat run.sh
 . /opt/ros/indigo/setup.sh
 pushd $1
 echo $1
