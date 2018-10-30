@@ -23,7 +23,7 @@ TAOS-CI is an automated project coordinator to achieve "**Review less, merge fas
   - Ubuntu: https://www.ubuntu.com/
   - Tizen: https://www.tizen.org/
   - Yocto: https://www.yoctoproject.org/
-  - TBD & TBI
+  - Wish whish one is on the next upcoming supported list!
 
 <img src=./image/screenshot01.png border=0 width=350 height=250></img>
 <img src=./image/screenshot03.png border=0 width=350 height=250></img>
