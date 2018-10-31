@@ -286,6 +286,12 @@ do
     fi
 done
 
+if [[ ${BUILD_TEST_FAIL} -eq 1 ]]; then
+    # comment a hint on failed PR to author.
+    message=":octocat: **cibot**: $user_id, A builder checker could not be completed because one of the checkers is not completed. In order to find out a reason, please go to ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
+fi
+
 # --------------------------- Report module: generate a log file and checke other conditions --------------------------
 
 # save webhook information for debugging

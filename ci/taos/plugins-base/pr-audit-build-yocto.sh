@@ -212,9 +212,7 @@ function pr-audit-build-yocto-run-queue(){
             message="Oooops. YOCTO  build checker is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
             cibot_report $TOKEN "failure" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-            # comment a hint on failed PR to author.
-            message=":octocat: **cibot**: $user_id, Oooops. A YOCTO builder checker could not be completed. To get a hint, please go to ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/."
-            cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
+            export BUILD_TEST_FAIL=1
         fi
     fi
  
