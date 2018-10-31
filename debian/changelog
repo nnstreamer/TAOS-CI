@@ -1,5 +1,28 @@
+taos-ci (1.1) unstable; urgency=medium
+
+  * Added a spelling module, issue #168
+  * Added a prohibited-words module
+  * Added a sloccount module
+  * Added a doxygen build module
+  * Supported easy-setting with configuration files
+  * Changed folder structure: replaced 'standalone' with 'taos'
+  * Added a virtual camera based apptest module for nnstreamer repository
+  * Refactored to support completely one git-clone procedure
+
+ -- Geunsik Lim <geunsik.lim@samsung.com>  Thu, 01 Nov 2018 09:30:32 +0900
+
 taos-ci (1.0) unstable; urgency=medium
 
   * Initial packaging work with dpkg-buildpackage for Ubuntu sever.
+  * Support a plug-in interface
+  * Minimize a nonproductive review process
+  * Provide a test automation (both build and run)
+  * Prevent a performance regression
+  * Find bugs at a proper time before merging buggy codes
+  * Generate a doxygen-based developer manual
+  * Support modulable facilities with plug-in interface
+  * Integrate the existing opensource tools easily
+  * Verify an integrity of a package by supporting a platform build
+  * Support multiple operating systems such as Ubuntu, Tizen, and Yocto
 
  -- Geunsik Lim <geunsik.lim@samsung.com>  Sat, 08 Sep 2018 17:35:32 +0900
