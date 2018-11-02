@@ -108,11 +108,10 @@ function pr-audit-build-ubuntu-run-queue(){
         echo -e "[DEBUG] pdebuild start at :"
         date -R
         time pdebuild  --use-pdebuild-internal 2> ../report/build_log_${input_pr}_ubuntu_error.txt 1> ../report/build_log_${input_pr}_ubuntu_output.txt
+        result=$?
         echo -e "[DEBUG] pdebuild finished at :"
         date -R
     fi
-
-    result=$?
     echo "[DEBUG] The variable result value is $result."
 
     # report execution result

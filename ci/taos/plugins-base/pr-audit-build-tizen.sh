@@ -86,9 +86,9 @@ function pr-audit-build-tizen-run-queue(){
         --define "_skip_debug_rpm 1" \
         --buildroot ./GBS-ROOT/ 2> ../report/build_log_${input_pr}_tizen_$1_error.txt 1> ../report/build_log_${input_pr}_tizen_$1_output.txt
     fi
+    result=$?
     echo -e "[DEBUG] gbs build finished at :"
     date -R
-    result=$?
     echo "[DEBUG] The variable result value is $result."
     
     if [[ $BUILD_MODE == 99 ]]; then
