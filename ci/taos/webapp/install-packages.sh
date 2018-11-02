@@ -57,7 +57,7 @@ fi
 
 echo -e "########## for CI-system: Setting-up a build environment of Ubuntu package (.deb)"
 sudo apt -y install pbuilder debootstrap devscripts
-echo -e "[DEBUG] Note that you have to write ~/.pbuildrc file"
+echo -e "[DEBUG] Note that you have to write ~/.pbuilderrc file"
 
 
 echo -e "########## for CI-system: Setting-up a build environment of Yocto package (.deb)"
