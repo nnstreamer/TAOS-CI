@@ -18,22 +18,6 @@ $ sudo apt-get -y install php php-cgi libapache2-mod-php php-common php-pear php
 $ sudo systemctl restart apache2
 ```
 
-### How to install base packages for Jenkins (Optional)
-It is optional. We assume that you are using Ubuntu 16.04 64bit distribution. You can easily install Jenkins package with apt-get command. Utilize script files of `./jenkins/` folder after installing Jenkins software (https://jenkins.io/) in case that your team develop a large & scalable project. For more details, please visit https://jenkins.io.
-
-```bash
-wget -q -O - http://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
-sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
-sudo apt-get update
-sudo apt-get install jenkins
-sudo echo 'jenkins ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-sudo service jenkins stop 
-sudo service jenkins start 
-sudo service jenkins restart
-firefox http://localhost:8080/
-```
-
 # Step 3: How to install TAOS-CI system
 ```bash
 $ cd /var/www/html/
