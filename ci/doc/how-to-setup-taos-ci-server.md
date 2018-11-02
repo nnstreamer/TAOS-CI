@@ -1,7 +1,25 @@
 # Administrator guide for TAOS-CI server
 
+First of all, let's enable www-data as a system account for debugging and setting-up the TAOS-CI solution.
+Please replace "/bin/no-login" with "/bin/bash".
+Note that you must restore "/bin/no-login" to avoid an unexpected security issue after doing all setup procedures.
+
+```bash
+$ sudo vi /etc/passwd
+www-data:x:33:33:www-data:/var/www:/bin/bash
+# cd /var/www/
+# chown -R www-data:www-data /var/www/
+# cp /root/.bashrc /var/www/
+# chown -R www-data:www-data  /var/www/.bashrc
+# exit
+$
+```
+
 ## Prerequisites
 We assume that you already installed Ubuntu 16.04 x86_64 distribution in your own computer.
+* For a physical machine, http://mirror.kakao.com/ubuntu-releases/xenial/
+* For a virtual machine, https://www.osboxes.org/ubuntu/
+* For a docker image, https://hub.docker.com/_/ubuntu/
 
 ```
 $ cat /etc/os-release |grep VERSION_ID
@@ -25,30 +43,15 @@ $ sudo apt-get install apache2
 $ sudo apt-get install php php-cgi libapache2-mod-php php-common php-pear php-mbstring
 $ sudo a2enconf php7.0-cgi
 $ sudo systemctl restart apache2
+$ sudo mv /var/www/html/index.php /var/www.html/index.php.backup
 $ sudo vi /var/www/html/index.php
 <?php
 phpinfo();
 ?>
 $ firefox http://localhost/index.php
 ```
-Note. If you have a firewall in your network, please make sure that ports for CI server are opened and can accept requests.
+Note that you have to apply for a firwall access to a security team in case that your nework is controlled by a firewall equipment. 
 
-## How to set-up domain name address
-If you want to use your own domain name address instead of IP address for effective maintenance, we recommend that you try to get a host name free of charge at https://freedns.afraid.org.
-
-```bash
-$ sudo vi /etc/apache2/sites-enabled/000-default.conf 
-<VirtualHost *:80>
-        # You can get five host names such as {your_host}.mooo.com free of charge at http://freedns.afraid.org.
-        ServerName {your_host}.mooo.com
-        ServerAdmin webmaster@localhost
-        DocumentRoot /home/taos-ci/public_html
-        # Alias /nnstreamer-link /home/taos-ci/public_html/{your_github_repo_name}/ci/taos
-        ErrorLog ${APACHE_LOG_DIR}/error.{your_github_repo_name}.log
-        CustomLog ${APACHE_LOG_DIR}/access.{your_github_repo_name}.log combined
-</VirtualHost>
-$ sudo systemctl restart apache2
-```
 
 ## Install clang-format-4.0 for C/C++ format checker
 You have to install clang-format-4.0 (official version to check C++ formatting).
@@ -64,7 +67,7 @@ $ sudo apt update
 $ sudo apt install clang-format-4.0
 ```
 
-## Allowing www-data to do sudo privilege
+## Allowing www-data to do a sudo privilege
 
 You have to update `/etc/sudoers` to give `www-data` user sudo access with **NOPASSWD**  in order to run "git clone" command normally
 in Apache/PHP environment as following:
@@ -78,22 +81,6 @@ or
 www-data    ALL=(ALL) NOPASSWD: /usr/bin/git , NOPASSWD: /usr/bin/mount
 ```
 
-Then, let's enable www-data as a system account for debugging and setting-up the TAOS-CI solution.
-When you complete all of the set-up procedure, please replace `/bin/bash` with `/bin/nologin` for security.
-
-```bash
-# sudo vi /etc/passwd
-# Replace "/bin/no-login" with "/bin/bash",
-# Note that restore the original value for security after completing setup procedures.
-www-data:x:33:33:www-data:/var/www:/bin/bash
-#
-# cd /var/www/
-# chown -R www-data:www-data /var/www/
-# cp /root/.bashrc /var/www/
-# chown -R www-data:www-data  /var/www/.bashrc
-# su - www-data
-$
-```
 If you want to push your commits without a password input procedure, please create `~/.netrc` file as follows.
 ```bash
 $ vi ~/.netrc
@@ -280,4 +267,21 @@ git clone https://github.com/nexB/scancode-toolkit.git
 sudo chown -R www-data:www-data /opt/scancode-toolkit/
 mkdir  /var/www/html/{your_prj_name}/scancode/
 /opt/scancode-toolkit/scancode  --license /var/www/html/{your_prj_name}/{src_folder}  --html-app /var/www/html/{your_prj_name}/scancode/index.html
+```
+
+## How to set-up a domain name address
+If you want to use your own domain name address instead of IP address for effective maintenance, we recommend that you try to get a host name free of charge at https://freedns.afraid.org.
+
+```bash
+$ sudo vi /etc/apache2/sites-enabled/000-default.conf 
+<VirtualHost *:80>
+        # You can get five host names such as {your_host}.mooo.com free of charge at http://freedns.afraid.org.
+        ServerName {your_host}.mooo.com
+        ServerAdmin webmaster@localhost
+        DocumentRoot /home/taos-ci/public_html
+        # Alias /nnstreamer-link /home/taos-ci/public_html/{your_github_repo_name}/ci/taos
+        ErrorLog ${APACHE_LOG_DIR}/error.{your_github_repo_name}.log
+        CustomLog ${APACHE_LOG_DIR}/access.{your_github_repo_name}.log combined
+</VirtualHost>
+$ sudo systemctl restart apache2
 ```
