@@ -26,6 +26,9 @@
 function pr-format-indent(){
     echo "########################################################################################"
     echo "[MODULE] TAOS/pr-format-indent: Check the code formatting style with GNU indent"
+
+    check_dependency indent
+    
     # Note that you have to install up-to-date GNU intent package.
     INDENTFORMAT=NA
     INDENT_COMMAND="indent"
