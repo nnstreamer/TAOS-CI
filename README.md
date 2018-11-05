@@ -77,3 +77,6 @@ Please refer to [How to build a package](ci/doc/self-assessment-before-submittin
    * [ICSE2018, "Modern code review: a case study at google"](https://dl.acm.org/citation.cfm?id=3183525)
    * [ICSE2015, "Do Not Find Bugs: how the Current Code Review Best Practice Slows Us Down"](https://dl.acm.org/citation.cfm?id=2819015)
    * [IFIPAICT, "The Impact of a Low Level of Agreement Among Reviewers in a Code Review Process"](https://link.springer.com/chapter/10.1007/978-3-319-39225-7_8)
+   * [ASE2014, "Automated Unit Test Generation for Classes with Environment Dependencies"](https://dl.acm.org/citation.cfm?id=2642986)
+   * [FSE2016, "Why We Refactor? Confessions of GitHub Contributors"](https://dl.acm.org/citation.cfm?id=2950305)
+   * [FSE2016, "Factors Influencing Code Review Processes in Industry"](https://dl.acm.org/citation.cfm?id=2950323)
