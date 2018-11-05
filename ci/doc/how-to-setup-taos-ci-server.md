@@ -89,9 +89,9 @@ machine github.com
         password your_token_key_bdd8f27d1e718f878ff5c7120a4544
 ```
 
-## Ubuntu: Set-up configuration file
-It contains default values used in the pbuilder program invocation.
-`/etc/pbuilderrc` and `${HOME}/.pbuilderrc` are read in when pbuilder is invoked.
+## Ubuntu/pbuilder: Set-up configuration file
+The pbuilderrc file contains default values used in the pbuilder program invocation.
+When pbuilder is invoked by www-data (user id of Apache webserver), `/etc/pbuilderrc` and `${HOME}/.pbuilderrc` are read.
 * 1) /etc/pbuilderrc: The configuration file for pbuilder, used in pdebuild.
 * 2) /usr/share/pbuilder/pbuilderrc: The default configuration file for pbuilder, used in pdebuild.
 * 3) ${HOME}/.pbuilderrc: Configuration file for pbuilder, used in pdebuild.  It overrides /etc/pbuilderrc
@@ -101,23 +101,30 @@ The file itself is sourced by a shell script, so it is required that the file co
 For more details, refer to http://manpages.ubuntu.com/manpages/trusty/man5/pbuilderrc.5.html
 ```bash
 $ vi /etc/pbuilderrc
-# man 5 pbuilderrc
+# If you want to see more details, please run 'man 5 pbuilderrc' command.
 DISTRIBUTION=xenial
 OTHERMIRROR="deb http://archive.ubuntu.com/ubuntu xenial universe multiverse |deb [trusted=yes] http://[id]:[password]@[your-own-server]/tools/ubuntu16.04/ /"
+$
+$ chown -R www-data:www-data /var/cache/pbuilder
+$
 $ sudo vi /etc/crontab
-#### Update pdebuild/pbuilder to keep latest apt repositories, /var/cache/pbuilder/base.tgz
+## Update a base Ubuntu image (e.g., /var/cache/pbuilder/base.tgz) of pdebuild/pbuilder to keep latest apt repositories.
 30 7 * * * root pbuilder update --override-config
 ```
+**(Optional)**: How to suppress a storage usage of /var/cache/pbuilder folder
+If /var/cache/pbuilder increases a storage usage, we recommend that you try to use a symbolic link.
+For example, $ sudo ln -s /var/www/pbuilder /var/cache/pbuilder.
 
-**(OPTIONAL, not yet tested)** If you have lots of RAM (more than 4 GB) putting the pbuilder 'build' chroot on tmpfs will speed it up immensely.
-so add the following to /etc/fstab (it should be all on one line starting with 'tmpfs' and ending with the second zero).
+**(Optional)**: How to use a tmpfs filesystem to spee-up an execution time of pbuilder
+If you have lots of RAM (more than 4 GB) putting the pbuilder 'build' chroot on tmpfs will speed it up immensely.
+So, add the below statement to `/etc/fstab`. It should be all on one line starting with 'tmpfs' and ending with the second zero.
 ```bash
 $ sudo vi /etc/fstab
 tmpfs   /var/cache/pbuilder/build       tmpfs   defaults,size=2400M 0 0
 $ sudo mount /var/cache/pbuilder/build
 ```
 
-## Tizen: Set-up configuration file
+## Tizen/gbs: Set-up configuration file
 
 You have to write `~/.gbs.conf` in order that `www-data` id build a package with `gbs build` command.
 We assume that you are using your id as a default id of a repository webserver.
@@ -162,7 +169,7 @@ url = http://download.tizen.org/snapshots/tizen/unified/latest/repos/standard/pa
 url = http://<your_id>:<your_pass>@<your_team_server>/download/latest/repos/standard/packages/
 ```
 
-## Yocto: Set-up configuration file
+## Yocto/devtool: Set-up configuration file
 
 In case of Yocto, you can build a package with OpenEmbedded/devtool to verify a build validation on YOCTO platform
 For more details, please refer to https://wiki.yoctoproject.org/wiki/Application_Development_with_Extensible_SDK
