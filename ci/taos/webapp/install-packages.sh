@@ -28,7 +28,12 @@ sudo systemctl restart apache2
 
 
 echo -e "########## for CI-system: Installing packages that are required for modules"
-sudo apt -y install  sed ps cat aha git which grep touch find wc cppcheck
+sudo apt -y install sed ps cat aha git
+sudo apt -y install which grep touch
+sudo apt -y install find wc cppcheck
+
+echo -e "########## for CI-system: Installing packages that are required for gcov/lcov"
+sudo apt -y install lcov
 
 echo -e "########## for CI-system: Installing clang-format"
 if [[ -f /etc/apt/sources.list.d/clang.list ]]; then
@@ -41,7 +46,9 @@ echo -e "########## for CI-system: Installing packages for doxygen documentation
 sudo apt -y install doxygen
 sudo apt -y install texlive-latex-base texlive-latex-extra
 sudo apt -y install latex-xcolor
-sudo apt -y install unoconv pdfunite  pdftk
+sudo apt -y install unoconv
+sudo apt -y install pdftk
+sudo apt -y install poppler-utils
 sudo apt -y install libreoffice
 sudo apt -y install evince
 
@@ -67,3 +74,5 @@ echo -e "[DEBUG] Note that you have to install Extensible SDK (eSDK) directly"
 
 
 echo -e "[DEBUG] Required packages are successfully installed...."
+echo -e "[DEBUG] If some packages are not installed, Please install the packages again."
+echo -e "[DEBUG] Then, install the TAOS-CI software as a next step."
