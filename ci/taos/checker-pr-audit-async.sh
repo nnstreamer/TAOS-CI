@@ -231,11 +231,15 @@ popd
 # $RANDOM is an internal bash function (not a constant) - http://tldp.org/LDP/abs/html/randomvar.html
 # To enhance a job queue, refer to http://hackthology.com/a-job-queue-in-bash.html
 
-# Pull-Request scheduler for Tizen build (gbs)
+# The Pull-Request scheduler to manage the run queues that start gbs build (Tizen)
 # The default RUN Queue is declared in the configuration file
-while [ `ps aux | grep "sudo.*gbs build" | wc -l` -gt $RUN_QUEUE_PR_JOBS ]; do
-    WAITTIME=$(( ( RANDOM % 20 ) + 20 ))
+current_jobs_cmd="ps aux | grep "sudo.*gbs build" | wc -l"
+current_jobs=$(eval "$current_jobs_cmd")
+while [ $current_jobs -gt $RUN_QUEUE_PR_JOBS ]; do
+    WAITTIME=$(( ( RANDOM % 10 ) + 50 ))
+    echo -e "[DEBUG] PID $$ is sleeping for $WAITTIME seconds, # of running jobs is $current_jobs."
     sleep $WAITTIME
+    current_jobs=$(eval "$current_jobs_cmd")
 done
 
 # Todo: NYI, Implement the PR scheduler for Ubuntu build (pdebuild)
