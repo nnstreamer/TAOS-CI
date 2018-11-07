@@ -129,6 +129,10 @@ do
     fi
 done
 
+# Todo: NYI, Implement the OOP killer for Ubuntu build (pdebuild)
+# Todo: NYI, Implement the OOP killer for Yocto  build (devtool)
+
+
 # --------------------------- CI Trigger (wait queue) -----------------------------------------------------------------
 
 if [[ $pr_comment_pr_updated == 1 ]]; then
@@ -220,23 +224,22 @@ pushd ./GBS-ROOT/local
 ln -s $REPOCACHE cache
 popd
 
-# --------------------------- Commit scheduler: manage hardware resource in case of too many PRs ----------------------
+# --------------------------- Pull-Request scheduler: control a server overhead due to too many PRs -----------
 
-# Let's accommodate upto 8 gbs tasks (one is "grep" process) to maintain a available system resource of the build server.
+# Control gbs tasks (use -gt operator because one is "grep" process) to maintain an available system resource
 # Job queue: Fairness or FCFS is not guaranteed.
 # $RANDOM is an internal bash function (not a constant) - http://tldp.org/LDP/abs/html/randomvar.html
 # To enhance a job queue, refer to http://hackthology.com/a-job-queue-in-bash.html
 
-# Commit scheduler for Tizen build (gbs)
-JOBS_PR=8
-while [ `ps aux | grep "sudo.*gbs build" | wc -l` -gt $JOBS_PR ]
-do
+# Pull-Request scheduler for Tizen build (gbs)
+# The default RUN Queue is declared in the configuration file
+while [ `ps aux | grep "sudo.*gbs build" | wc -l` -gt $RUN_QUEUE_PR_JOBS ]; do
     WAITTIME=$(( ( RANDOM % 20 ) + 20 ))
     sleep $WAITTIME
 done
 
-# Todo: Commit scheduler for Ubuntu build (pdebuild)
-# Todo: Commit scheduler for Yocto  build (devtool)
+# Todo: NYI, Implement the PR scheduler for Ubuntu build (pdebuild)
+# Todo: NYI, Implement the PR scheduler for Yocto  build (devtool)
 
 # --------------------------- CI Trigger (ready queue) --------------------------------------------------------
 

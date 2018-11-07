@@ -119,6 +119,9 @@ BUILD_MODE_TIZEN=99
 BUILD_MODE_UBUNTU=99
 BUILD_MODE_YOCTO=99
 
+# Pull-Request scheduler for Tizen build (gbs)
+RUN_QUEUE_PR_JOBS=8
+
 # Version format: Major.Minor
 VERSION="1.20180820"
 
