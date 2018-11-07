@@ -225,35 +225,6 @@ function github_event_handling(){
                 printf ("[DEBUG] result of shell script:\n %s", $result);
                 printf ("[DEBUG] ./checker-pr-comment.sh $pr_no \n");
             }
-            // checker: let's inspect if there are a "Signed-off-by" string in PR body
-            // let's verify all commits that include signed-off statement in PR body in advance
-            // Note that the "Signed-off-by" statement is automatically mirrored from a commit message when send 'git push'.
-            // Todo: handle  PR that has multiple commits using "foreach $payload->head as $key => $value" statement.
-            if ($payload->action == "opened" ||
-            $payload->action == "edited" ||
-            $payload->action == "synchronize"){
-                printf ("\n\n");
-                echo ("[DEBUG] #### checker: starting checker-pr-signed-off-by.sh ... \n");
-                echo ("[DEBUG] action: '$payload->action'. \n");
-                $pr_no=$payload->pull_request->number;
-                $pr_commit=$payload->pull_request->head->sha;
-                echo ("[DEBUG] sha: $pr_commit . \n");
-                $pr_body=$payload->{"pull_request"}->{"body"};
-                if (preg_match('/Signed-off-by/i', $pr_body)) {
-                    echo "[DEBUG] Passed. $pr_commit is signed-off with 'Signed-off-by:' string.\n";
-                    $sign_off_result="success";
-                }
-                else {
-                    echo "[DEBUG] Failed. $pr_commit is not signed-off with 'Signed-off-by:' string.\n";
-                $sign_off_result="failure";
-                }
-                printf ("[DEBUG] pr_no result: (%s)\n", $pr_no);
-                printf ("[DEBUG] pr_commit result: (%s)\n", $pr_commit);
-                printf ("[DEBUG] signed_off result: (%s)\n", $sign_off_result);
-                $result = shell_exec("./checker-pr-signed-off-by.sh $pr_no $pr_commit $sign_off_result");
-                //printf ("[DEBUG] result of shell script:\n (%s)", $result);
-                printf ("[DEBUG] ./checker-pr-signed-off-by.sh $pr_no $pr_commit $sign_off_result \n");
-            }
 
             printf ("\n\n");
             check_open_sesame();
