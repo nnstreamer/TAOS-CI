@@ -31,7 +31,6 @@ function pr-format-nobody(){
         echo " * $filename " >> ../report/nobody-result.txt
         line_count=0
         body_count=0
-        nobody_result=0
         # let's do the while-loop statement to read data line by line
         while IFS= read -r line; do
             #If the line starts with "Subject*" then set var to "yes".
@@ -67,7 +66,6 @@ function pr-format-nobody(){
         else
             echo "[DEBUG] commit body checker is PASSED. patch file name: $filename"
             echo "[DEBUG] current directory is `pwd`"
-            check_result="success"
         fi
     done
     if [[ $check_result == "success" ]]; then
