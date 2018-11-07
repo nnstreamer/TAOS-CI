@@ -102,16 +102,16 @@ export dir_worker=$dir_worker
 cd $dir_ci
 export dir_commit=${dir_worker}/${input_date}-${input_pr}-${input_commit}
 
-# --------------------------- Out-of-commit (OOC) killer: kill duplicated PR request ----------------------------------
+# --------------------------- Out-of-Pr (OOP) killer: kill duplicated PR request ----------------------------------
 
-# kill PIDs that were previously invoked by checker-pr-audit.sh with the same PR number.
-echo "[DEBUG] Starting killing activity to kill previously invoked checker-pr-audit.sh with the same PR number.\n"
-ps aux | grep "^www-data.*bash \./checker-pr-audit.sh" | while read line
+# kill PIDs that were previously invoked by checker-pr-gateway.sh with the same PR number.
+echo "[DEBUG] Starting killing activity to kill previously invoked checker-pr-gateway.sh with the same PR number.\n"
+ps aux | grep "^www-data.*bash \./checker-pr-gateway.sh" | while read line
 do
     victim_pr=`echo $line  | awk '{print $17}'`
     victim_date=`echo $line  | awk '{print $13}'`
-    # Info: pid1 is checker-pr-audit.sh, pid2 is checker-pr-audit-async.sh, and pid3 is "gbs build" command.
-    victim_pid1=`ps -ef | grep bash | grep checker-pr-audit.sh       | grep $input_pr | grep $victim_date | awk '{print $2}'`
+    # Info: pid1 is checker-pr-gateway.sh, pid2 is checker-pr-audit-async.sh, and pid3 is "gbs build" command.
+    victim_pid1=`ps -ef | grep bash | grep checker-pr-gateway.sh       | grep $input_pr | grep $victim_date | awk '{print $2}'`
     victim_pid2=`ps -ef | grep bash | grep checker-pr-audit-async.sh | grep $input_pr | grep $victim_date | awk '{print $2}'`
     victim_pid3=`ps -ef | grep python | grep gbs | grep "_pr_number $input_pr" | grep $victim_date | awk '{print $2}'`
 
