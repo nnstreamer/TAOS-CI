@@ -24,7 +24,7 @@
 
 #-------------------- Configuration --------------------------------------------------------
 $TITLE="State Transition Monitor for PR";
-$PATTERN_REQ       ="[^]] bash ./checker-pr-audit.sh";
+$PATTERN_REQ       ="[^]] bash ./checker-pr-gateway.sh";
 $PATTERN_RUN_TIZEN ="[^]]/usr/bin/python /usr/bin/gbs build";
 $PATTERN_RUN_UBUNTU="[^]]/bin/bash /usr/bin/pdebuild";
 $STRING_NUM_TIZEN  =5;
