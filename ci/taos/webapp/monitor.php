@@ -26,7 +26,7 @@
 $TITLE="State Transition Monitor for PR";
 $PATTERN_REQ       ="[^]] bash ./checker-pr-gateway.sh";
 $PATTERN_RUN_TIZEN ="[^]]/usr/bin/python /usr/bin/gbs build";
-$PATTERN_RUN_UBUNTU="[^]]/bin/bash /usr/bin/pdebuild";
+$PATTERN_RUN_UBUNTU="[^]]sudo.*pbuilder";
 $STRING_NUM_TIZEN  =5;
 $STRING_NUM_UBUNTU =5;
 
