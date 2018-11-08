@@ -109,7 +109,7 @@ $ chown -R www-data:www-data /var/cache/pbuilder
 $
 $ sudo vi /etc/crontab
 ## Update a base Ubuntu image (e.g., /var/cache/pbuilder/base.tgz) of pdebuild/pbuilder to keep latest apt repositories.
-30 7 * * * www-data pbuilder update --override-config
+30 7 * * * root pbuilder update --override-config
 ```
 **(Optional)**: How to suppress a storage usage of /var/cache/pbuilder folder
 If /var/cache/pbuilder increases a storage usage, we recommend that you try to use a symbolic link.
