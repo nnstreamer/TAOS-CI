@@ -26,6 +26,8 @@ sudo apt -y install php php-cgi libapache2-mod-php php-common php-pear php-mbstr
 sudo a2enconf php7.0-cgi
 sudo systemctl restart apache2
 
+echo -e "########## for CI-system: Installing packages that are required for webapp"
+sudo apt -y install top htop
 
 echo -e "########## for CI-system: Installing packages that are required for modules"
 sudo apt -y install sed ps cat aha git
