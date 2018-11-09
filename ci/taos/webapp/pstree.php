@@ -1,17 +1,16 @@
 <html>
 <head>
-<title>PR: Resource Usage (htop)</title>
-<meta http-equiv="refresh" content="9; URL=./top.php">
+<title>PR: Resource Usage (pstree)</title>
+<meta http-equiv="refresh" content="6; URL=./pstree.php">
 <meta name="keywords" content="automatic redirection">
 </head>
 <body>
-<img src=monitor-icon.png border=0><font color=whiteblue> <b>PR: Resource Usage (htop)</b></font>
+<img src=monitor-icon.png border=0><font color=whiteblue> <b>PR: Resource Usage (pstree)</b></font>
 <br><br>
 
 <font color=green>
-When PR does not completed in time due to a system overload, it is to monitor CPU,<br>
-Memory, and SWAP usage. So you can see all the processes and threads running<br>
-on the system as well as viewing them as a process tree.<br>
+When PR does not completed in time due to a system overload, it is to show running<br>
+processes as a tree. The tree is rooted at either pid or init if pid is omitted.<br>
 </font>
 
 <?php
@@ -31,7 +30,8 @@ on the system as well as viewing them as a process tree.<br>
  */
 
 echo "========================================================";
-$output = shell_exec("echo q | htop | aha --black --line-fix > htop.html");
+$cmd = "pstree -p | aha --black --line-fix";
+$output = shell_exec($cmd);
 echo "$output";
 echo "========================================================";
 ?>
