@@ -76,6 +76,9 @@ check_dependency awk
 check_dependency basename
 echo "[DEBUG] Checked dependency packages.\n"
 
+# Include a PR scheduler module to handle a run-queue and wait-queue while running a build tasks
+source ./common/pr-scheduler.sh
+
 # get user ID from the input_repo string
 set -- "${input_repo}"
 IFS="\/"; declare -a Array=($*); unset IFS;
@@ -224,32 +227,6 @@ pushd ./GBS-ROOT/local
 ln -s $REPOCACHE cache
 popd
 
-# --------------------------- Pull-Request scheduler: control a server overhead due to too many PRs -----------
-
-# Control gbs tasks (use -gt operator because one is "grep" process) to maintain an available system resource
-# Job queue: Fairness or FCFS is not guaranteed.
-# $RANDOM is an internal bash function (not a constant) - http://tldp.org/LDP/abs/html/randomvar.html
-# To enhance a job queue, refer to http://hackthology.com/a-job-queue-in-bash.html
-# The default RUN Queue is declared in the configuration file
-
-# Todo: how to avoid a PR hang situation while running build tasks in AWS instance
-# a. This routine need to be executed in front of the Ubuntu build as well as this location
-# b. Make module files in common folder for maintenance consistently
-
-current_jobs_tizen_cmd="ps aux | grep \"sudo.*gbs build\" | wc -l"
-current_jobs_ubuntu_cmd="ps aux | grep \"sudo.*pbuilder\" | wc -l"
-current_jobs_yocto_cmd="" # NYI
-
-# Append "-2" to subtract that two 'grep' values are counted
-current_jobs=$(( $(eval "$current_jobs_tizen_cmd") + $(eval "$current_jobs_ubuntu_cmd") - 2 ))
-while [ $current_jobs -gt $RUN_QUEUE_PR_JOBS ]; do
-    WAITTIME=$(( ( RANDOM % 10 ) + 50 ))
-    echo -e "[DEBUG] Platfomr package builder: The PID $$ is sleeping for $WAITTIME seconds."
-    echo -e "[DEBUG] # of running jobs is $current_jobs. # of maxium run queues is $RUN_QUEUE_PR_JOBS."
-    sleep $WAITTIME
-    current_jobs=$(( $(eval "$current_jobs_tizen_cmd") + $(eval "$current_jobs_ubuntu_cmd") ))
-done
-
 
 # --------------------------- CI Trigger (ready queue) --------------------------------------------------------
 
@@ -286,6 +263,11 @@ cibot_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}$
 
 for plugin in ${audit_plugins[*]}
 do
+    # Run the pull request scheduler: manage queues to minimize overhead possibility of the server
+    # due to (1) too many PRs and (2) the low-end server equipment.
+    # The 'pr_sched_runqueue' function is located in 'common' folder.
+    pr_sched_runqueue "The $plugin plugin module"
+
     echo -e "-----------------------------"
     if [[ ${plugin} == "pr-audit-build-tizen" ]]; then
         for arch in $pr_build_arch_type
