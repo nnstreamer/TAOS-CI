@@ -49,12 +49,13 @@ function check_running_jobs(){
 #  arg1  location that we execute this module
 function pr_sched_runqueue(){
     check_running_jobs
+    echo -e "[DEBUG] # of running jobs is $current_jobs_all. # of maxium run queues is $RUN_QUEUE_PR_JOBS."
+    echo -e "[DEBUG] The location of this function is $1."
+
     # if running jobs exceed the maxium number of the run-queue, go to wait-queue.
-    while [ $current_jobs_all -gt $RUN_QUEUE_PR_JOBS ]; do
+    while [[ $current_jobs_all -gt $RUN_QUEUE_PR_JOBS ]]; do
         WAITTIME=$(( ( RANDOM % 10 ) + 50 ))
         echo -e "[DEBUG] Platfomr package builder: The PID $$ is sleeping for $WAITTIME seconds."
-        echo -e "[DEBUG] # of running jobs is $current_jobs_all. # of maxium run queues is $RUN_QUEUE_PR_JOBS."
-        echo -e "[DEBUG] The location of this function is $1."
         sleep $WAITTIME
         check_running_jobs
     done
