@@ -71,12 +71,12 @@ function pr-format-signed-off-by(){
         # in case of success
         echo "[DEBUG] Passed. There is no signed-off-by issue."
         message="Successfully signedoff! This PR includes Signed-off-by: string."
-        cibot_report $TOKEN "success" "TAOS/pr-format-signedoff" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-format-signed-off-by" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     elif [[ $check_result == "failure" ]]; then
         echo "[DEBUG] Failed. There is no signed-off-by in this commit."
         # in case of failure
         message="Oooops. No signedoff found. This PR does not include 'Signed-off-by:' string. The lawyers tell us we must have it."
-        cibot_report $TOKEN "failure" "TAOS/pr-format-signedoff" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-format-signed-off-by" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
         # inform contributors of meaning of Signed-off-by: statement
         message="To contributor, We have used '**Signed-off-by:**' notation by default to handle the license issues, that result from contributors. Note that 'Is there a Signed-off-by line?' is important because lawyers tell us we must have to it **to cleanly maintain the open-source license issues** even though it has nothing to do with the code itself."
@@ -84,7 +84,7 @@ function pr-format-signed-off-by(){
     else
         # in case of CI error
         message="Oooops. It seems that CI bot includes bug(s). CI bot has to be fixed."
-        cibot_report $TOKEN "error" "TAOS/pr-format-signedoff" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "error" "TAOS/pr-format-signed-off-by" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     fi
 }
 
