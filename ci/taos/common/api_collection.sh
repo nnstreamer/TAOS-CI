@@ -102,6 +102,18 @@ function cibot_report(){
 }
 
 ##
+# @brief API to move to a git repository folder that imported a specified branch name
+# @param
+# argument: none
+function goto_repodir(){
+    echo -e "[DEBUG] Let's move to a git repository folder."
+    cd $dir_ci
+    cd $dir_commit
+    cd ./${PRJ_REPO_OWNER}
+    echo -e "Current path: $(pwd)."
+}
+
+##
 #  @brief check if a pcakge is installed
 #  @param
 #   arg1: package name
