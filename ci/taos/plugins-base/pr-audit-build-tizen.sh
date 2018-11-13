@@ -55,6 +55,12 @@ function pr-audit-build-tizen-run-queue(){
     # BUILD_MODE=99: skip "gbs build" procedures
     BUILD_MODE=$BUILD_MODE_TIZEN
 
+    # TODO: We need to decide a prefix policy consistently for maintenance and
+    # compatibility of TAOS-CI,
+    # For example,
+    # 1) _common_*****
+    # 2) _nnstreamer_****
+    # 3) _another_****
     # build package
     echo -e "[DEBUG] gbs build start at :"
     date -R
@@ -75,16 +81,30 @@ function pr-audit-build-tizen-run-queue(){
         --buildroot ./GBS-ROOT/  | tee ../report/build_log_${input_pr}_tizen_$1_output.txt
     else
         echo -e "BUILD_MODE = 0"
-        sudo -Hu www-data gbs build \
-        -A $1 \
-        --clean \
-        --define "_smp_mflags -j${CPU_NUM}" \
-        --define "_pr_context pr-audit" \
-        --define "_pr_number ${input_pr}" \
-        --define "__ros_verify_enable 1" \
-        --define "_pr_start_time ${input_date}" \
-        --define "_skip_debug_rpm 1" \
-        --buildroot ./GBS-ROOT/ 2> ../report/build_log_${input_pr}_tizen_$1_error.txt 1> ../report/build_log_${input_pr}_tizen_$1_output.txt
+        if [[ $1 == "x86_64" ]]; then
+            sudo -Hu www-data gbs build \
+            -A $1 \
+            --clean \
+            --define "_smp_mflags -j${CPU_NUM}" \
+            --define "_pr_context pr-audit" \
+            --define "_pr_number ${input_pr}" \
+            --define "__ros_verify_enable 1" \
+            --define "_pr_start_time ${input_date}" \
+            --define "_skip_debug_rpm 1" \
+            --define "unit_test 1" \ 
+            --buildroot ./GBS-ROOT/ 2> ../report/build_log_${input_pr}_tizen_$1_error.txt 1> ../report/build_log_${input_pr}_tizen_$1_output.txt
+        else
+            sudo -Hu www-data gbs build \
+            -A $1 \
+            --clean \
+            --define "_smp_mflags -j${CPU_NUM}" \
+            --define "_pr_context pr-audit" \
+            --define "_pr_number ${input_pr}" \
+            --define "__ros_verify_enable 1" \
+            --define "_pr_start_time ${input_date}" \
+            --define "_skip_debug_rpm 1" \
+            --buildroot ./GBS-ROOT/ 2> ../report/build_log_${input_pr}_tizen_$1_error.txt 1> ../report/build_log_${input_pr}_tizen_$1_output.txt
+        fi        
     fi
     result=$?
     echo -e "[DEBUG] gbs build finished at :"
