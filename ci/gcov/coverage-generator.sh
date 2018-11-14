@@ -39,7 +39,7 @@ check_dependency cpio
 
 # Build a RPM file to geneate a code coverage statistics with gcov/lcov.
 # gbs command needs 'sudo' command to get 'root' privilege
-gbs build -A x86_64 --define "testcoverage 1" -B $dirpath $build_root --clean
+gbs build -A x86_64 --define "testcoverage 1" --define "unit_test 1" -B $dirpath $build_root --clean
 
 # Extract rpm to gcov_html folder
 cp $dirpath/local/repos/tizen/x86_64/RPMS/nnstreamer-unittest-coverage* $dirpath
