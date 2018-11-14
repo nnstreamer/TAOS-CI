@@ -4,5 +4,11 @@
         "id": "<your-github-id>",
         "email": "<your-github-id>@github.io",
         "secret": "<github-setting-secret-name>"
+    },
+    "broken_arrow": {
+        "id": "<id-for-broken-arrow>",
+        "pass": "<password-for-broken-arrow>",
+        "ip": "<ip-address-for-broken-arrow>"
     }
 }
+
