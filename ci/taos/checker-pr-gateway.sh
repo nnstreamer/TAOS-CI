@@ -75,7 +75,7 @@ export dir_ci=`pwd`
 cd $dir_ci
 dir_worker="repo-workers/pr-checker"
 export dir_worker=$dir_worker
-export dir_commit=${dir_worker}/${input_date}-${input_pr}-${input_commit}
+export dir_commit=${dir_worker}/${input_pr}-${input_date}-${input_commit}
 
 # Check if a same commit folder already exists
 if [[ -d $dir_commit ]]; then
