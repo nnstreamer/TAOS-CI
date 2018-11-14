@@ -91,7 +91,7 @@ function pr-audit-build-tizen-run-queue(){
             --define "__ros_verify_enable 1" \
             --define "_pr_start_time ${input_date}" \
             --define "_skip_debug_rpm 1" \
-            --define "unit_test 1" \ 
+            --define "unit_test 1" \
             --buildroot ./GBS-ROOT/ 2> ../report/build_log_${input_pr}_tizen_$1_error.txt 1> ../report/build_log_${input_pr}_tizen_$1_output.txt
         else
             sudo -Hu www-data gbs build \
