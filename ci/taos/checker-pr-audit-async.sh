@@ -57,13 +57,13 @@ source ./config/config-server-administrator.sh
 # instead of in this file in order to support asynchronous operation from cibot.php
 source ./config/config-environment.sh
 
-# check if input argument is correct.
+# Check if input argument is correct.
 if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; then
     printf "[DEBUG] ERROR: Please, input correct arguments.\n"
     exit 1
 fi
 
-# check if dependent packages are installed
+# Check if dependent packages are installed
 source ./common/api_collection.sh
 check_dependency gbs
 check_dependency tee
@@ -79,7 +79,10 @@ echo "[DEBUG] Checked dependency packages.\n"
 # Include a PR scheduler module to handle a run-queue and wait-queue while running a build tasks
 source ./common/pr-scheduler.sh
 
-# get user ID from the input_repo string
+# Include a Out-of-PR(OOP) killer to handle lots of duplicated same PRs with LRU approach
+source ./common/out-of-pr-killer.sh
+
+# Get user ID from the input_repo string
 set -- "${input_repo}"
 IFS="\/"; declare -a Array=($*); unset IFS;
 user_id="@${Array[3]}"
@@ -93,58 +96,32 @@ PRJ_REPO_OWNER=`echo $(basename "${input_repo%.*}")`
 cd ..
 export dir_ci=`pwd`
 
-# create dir_work folder
+# Create dir_work folder
 if [[ ! -d $dir_worker ]]; then
     mkdir -p $dir_worker
 fi
 cd $dir_worker
 export dir_worker=$dir_worker
 
-# check if dir_commit folder exists, then, create dir_commit folder
+# Check if dir_commit folder exists, then, create dir_commit folder
 # let's keep the existing result although the same target directory already exists.
 cd $dir_ci
 export dir_commit=${dir_worker}/${input_pr}-${input_date}-${input_commit}
 
-# --------------------------- Out-of-Pr (OOP) killer: kill duplicated PR request ----------------------------------
-
-# kill PIDs that were previously invoked by checker-pr-gateway.sh with the same PR number.
-echo "[DEBUG] Starting killing activity to kill previously invoked checker-pr-gateway.sh with the same PR number.\n"
-ps aux | grep "^www-data.*bash \./checker-pr-gateway.sh" | while read line
-do
-    victim_pr=`echo $line  | awk '{print $17}'`
-    victim_date=`echo $line  | awk '{print $13}'`
-    # Info: pid1 is checker-pr-gateway.sh, pid2 is checker-pr-audit-async.sh, and pid3 is "gbs build" command.
-    victim_pid1=`ps -ef | grep bash | grep checker-pr-gateway.sh       | grep $input_pr | grep $victim_date | awk '{print $2}'`
-    victim_pid2=`ps -ef | grep bash | grep checker-pr-audit-async.sh | grep $input_pr | grep $victim_date | awk '{print $2}'`
-    victim_pid3=`ps -ef | grep python | grep gbs | grep "_pr_number $input_pr" | grep $victim_date | awk '{print $2}'`
-
-    # The process killer allows to kill only task(s) in case that there are running lots of tasks with same PR number.
-    if [[ ("$victim_pr" -eq "$input_pr") && (1 -eq "$(echo "$victim_date < $input_date" | bc)") ]]; then
-        echo "[DEBUG] victim_pr=$victim_pr, input_pr=$input_pr, victim_date=$victim_date, input_date=$input_date "
-        echo "[DEBUG] killing PR $victim_pr (pid <$victim_pid1> <$victim_pid2> <$victim_pid3>)."
-        kill $victim_pid1
-        kill $victim_pid2
-        kill $victim_pid3
-        sleep 1
-        # Handle a possibility that someone updates a single PR multiple times within 1 second.
-        echo "[DEBUG] removing the ./${dir_worker}/${victim_date}-${victim_pr}-* folder"
-        rm -rf ./${dir_worker}/${victim_date}-${victim_pr}-*
-    fi
-done
-
-# Todo: NYI, Implement the OOP killer for Ubuntu build (pdebuild)
-# Todo: NYI, Implement the OOP killer for Yocto  build (devtool)
-
+# Out-of-Pr (OOP) killer:
+# Stop compulsorily the previous same PRs invoked by checker-pr-gateway.sh
+# when the developers try to send a lot of same PRs repeatedly.
+run_oop_killer
 
 # --------------------------- CI Trigger (wait queue) -----------------------------------------------------------------
 
 if [[ $pr_comment_pr_updated == 1 ]]; then
-    # inform all developers of their activity whenever PR submitter resubmit their PR after applying comments of reviews
+    # Inform all developers of their activity whenever PR submitter resubmit their PR after applying comments of reviews
     message=":dart: **cibot**: $user_id has updated the pull request."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
-# load the configuraiton file that user defined to build selectively.
+# Load the configuraiton file that user defined to build selectively.
 echo "[MODULE] plugins-base: Plugin group that does have well-maintained features as a base module."
 echo "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
 echo "[MODULE] plugins-staging: Plugin group that does not has evaluation and aging test enough"
@@ -152,7 +129,7 @@ echo "Current path: $(pwd)."
 source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-audit.sh 2>> ../audit_module_error.log
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-audit.sh"
 
-# create new context name to monitor progress status of a checker
+# Create new context name to monitor progress status of a checker
 message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
 cibot_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
@@ -208,7 +185,7 @@ do
 done
 
 
-# declare default variables
+# Declare default variables
 check_result="success"
 global_check_result="success"
 
@@ -282,14 +259,14 @@ do
 done
 
 if [[ ${BUILD_TEST_FAIL} -eq 1 ]]; then
-    # comment a hint on failed PR to author.
+    # Comment a hint on failed PR to author.
     message=":octocat: **cibot**: $user_id, A builder checker could not be completed because one of the checkers is not completed. In order to find out a reason, please go to ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
 # --------------------------- Report module: generate a log file and checke other conditions --------------------------
 
-# save webhook information for debugging
+# Save webhook information for debugging
 echo ""
 echo "[DEBUG] Start time       : ${input_date}"        >> ../report/build_log_${input_pr}_output.txt
 echo "[DEBUG] Commit number    : ${input_commit}"      >> ../report/build_log_${input_pr}_output.txt
@@ -298,7 +275,7 @@ echo "[DEBUG] Branch name      : ${input_branch}"      >> ../report/build_log_${
 echo "[DEBUG] PR number        : ${input_pr}"          >> ../report/build_log_${input_pr}_output.txt
 echo "[DEBUG] X-GitHub-Delivery: ${input_delivery_id}" >> ../report/build_log_${input_pr}_output.txt
 
-# optimize size of log file (e.g., from 20MB to 1MB)
+# Optimize size of log file (e.g., from 20MB to 1MB)
 # remove unnecessary contents that are created by resource checker
 __log_size_filter="/]]$\|for.*req_build.*in\|for.*}'\|']'$\|found=\|basename\|search_res\|local.*'target=/ d"
 sed "${__log_size_filter}" ../report/build_log_${input_pr}_output.txt > ../report/build_log_${input_pr}_output_tmp.txt
@@ -306,7 +283,7 @@ rm -f  ../report/build_log_${input_pr}_output.txt
 mv ../report/build_log_${input_pr}_output_tmp.txt ../report/build_log_${input_pr}_output.txt
 ls -al
 
-# inform developers of the warning message in case that the log file exceeds 10MB.
+# Inform developers of the warning message in case that the log file exceeds 10MB.
 echo "Check if the log file size exceeds 10MB."
 
 FILESIZE=$(stat -c%s "../report/build_log_${input_pr}_output.txt")
@@ -330,7 +307,7 @@ else
 fi
 
 # --------------------------- Report module: submit  global check result -----------------------------------------------
-# report if all modules are successfully completed or not.
+# Report if all modules are successfully completed or not.
 echo "send a total report with global_check_result variable. global_check_result is ${global_check_result}. "
 
 if [[ $global_check_result == "success" ]]; then
@@ -353,7 +330,7 @@ else
 fi
 
 # --------------------------- Cleaner: remove ./GBS-ROOT/ folder to keep available storage space --------------------
-# let's do not keep the ./GBS-ROOT/ folder because it needs a storage space more than 9GB on average.
+# Let's do not keep the ./GBS-ROOT/ folder because it needs a storage space more than 9GB on average.
 sleep 3
 
 if [[ -d GBS-ROOT ]]; then
