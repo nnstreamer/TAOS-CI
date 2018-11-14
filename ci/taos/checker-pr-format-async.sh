@@ -103,7 +103,7 @@ export dir_worker=$dir_worker
 # check if dir_commit folder exists, then, create dir_commit folder
 # let's keep the existing result although the same target directory already exists.
 cd $dir_ci
-export dir_commit=${dir_worker}/${input_date}-${input_pr}-${input_commit}
+export dir_commit=${dir_worker}/${input_pr}-${input_date}-${input_commit}
 # --------------------------- CI Trigger (queued) --------------------------------------------------------------------
 message="Trigger: queued. The commit number is $input_commit."
 cibot_report $TOKEN "pending" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
