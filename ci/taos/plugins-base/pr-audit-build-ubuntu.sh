@@ -18,6 +18,7 @@
 # @file pr-audit-build-ubuntu.sh
 # @brief Build package with pbuilder/pdebuild to verify build validation on Ubuntu distribution
 # @see      https://wiki.ubuntu.com/PbuilderHowto
+# @see      https://pbuilder-docs.readthedocs.io/en/latest/usage.html#configuration-files
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @requirement
@@ -94,23 +95,22 @@ function pr-audit-build-ubuntu-run-queue(){
             fi
         fi
 
-        # It extracts the chroot, invoke "apt-get update" and "apt-get dist-upgrade" inside the chroot,
-        # and then recreate the base.tgz (the base tar-ball)
-        # Caution: we recommend that you append the below statement into /etc/crontab to avoid a traffic jam
-        # such as a busy waiting situation in case of too many PRs.
-        # echo -e "[DEBUG] starting 'pdebuild update' command."
-        # sudo pbuilder update  --override-config
+        # Note that you have to append the below statement in '/etc/crontab' to apply the latest
+        # changes from '/etc/pbuilderrc' file.
+        # 30 6 * * * root pbuilder update  --override-config
 
-        echo -e "[DEBUG] starting 'pdebuild --use-pdebuild-internal' command."
-        # --use-pdebuild-internal runs "debian/rules clean"inside the chroot
-        # http://pbuilder-docs.readthedocs.io/en/latest/usage.html
-        # example: sudo -Hu www-data pdebuild
-        echo -e "[DEBUG] pdebuild start at :"
-        date -R
-        time pdebuild  --use-pdebuild-internal 2> ../report/build_log_${input_pr}_ubuntu_error.txt 1> ../report/build_log_${input_pr}_ubuntu_output.txt
+        # Options:
+        # a. The '--use-pdebuild-internal' option is to run "debian/rules clean" inside the chroot.
+        # b. The '--logfile' option is to be used as PR number and PR time (a trick) to support Out-of-PR (OOP) killer.
+        # The example for a local test: sudo -Hu www-data pdebuild
+        echo -e "[DEBUG] Starting 'pdebuild --use-pdebuild-internal ...' command."
+        echo -e "[DEBUG] The pdebuild start at $(date -R)"
+        time pdebuild --use-pdebuild-internal \
+        --logfile ${input_pr} --logfile ${input_date} \
+        2> ../report/build_log_${input_pr}_ubuntu_error.txt \
+        1> ../report/build_log_${input_pr}_ubuntu_output.txt
         result=$?
-        echo -e "[DEBUG] pdebuild finished at :"
-        date -R
+        echo -e "[DEBUG] The pdebuild finished at $(date -R)"
     fi
     echo "[DEBUG] The variable result value is $result."
 

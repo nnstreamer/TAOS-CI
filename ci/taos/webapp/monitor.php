@@ -17,9 +17,9 @@
 
 ##
 # @file  monitor.php
-# @brief Monitoring PRs that possess hardware resources
+# @brief Monitoring running PRs that possess hardware resources
 # @param None
-# @dependency: procps
+# @dependency: procps (ps), grep (grep)
 #
 
 #-------------------- Configuration --------------------------------------------------------
@@ -99,9 +99,9 @@ function generate_running_pr_tizen(){
 }
 
 ## @brief display only running PR numbers for Ubuntu/pdebuild
-#  @todo have to make wrapper script (e.g., pdebuild.sh --pr xxx --commit xxx ...) to run
-#        pdebuild command in order that we display a helpful message including PR number,
-#        commit number, and so on.
+#
+#        Display all pdebuild commands in order that we monitor running PRs for a Ubuntu build.
+#        including PR number, PR time, and commit number.
 function generate_running_pr_ubuntu(){
     global $PATTERN_RUN_UBUNTU;
     global $STRING_NUM_UBUNTU;
