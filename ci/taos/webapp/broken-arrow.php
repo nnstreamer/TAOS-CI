@@ -14,9 +14,12 @@ or components which does not create the risk of nuclear war. These include unexp
 nuclear detonation, non-nuclear detonation, radioactive contamination, and public hazard.
 </li>
 </ul>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<img src=./broken-arrow.png border=0></img>
 <br><br>
 
-<form action="broken_arrow_proceed.php" method="post">
+<form action="broken-arrow-proceed.php" method="post">
 <table border=0>
 <tr>
 <td><img src=./circle.png with=20 height=20>ID</td><td><input type="text" name="id"><br></td>
