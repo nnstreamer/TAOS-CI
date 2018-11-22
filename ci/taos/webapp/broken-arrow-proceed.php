@@ -61,19 +61,29 @@ $ba_ipaddress = $json_config->broken_arrow->ip;
 // Security: Check if a IP address of a system administrator is equal to an allowed IP address.
 $ipaddress = get_client_ip();
 if ( $ba_ipaddress != "" && $ba_ipaddress != $ipaddress )
-   die ("Unable to do the broken arrow. Specify IP address in the configuration file.")
+   die ("Unable to do the broken arrow.<br>Specify IP address in the configuration file.");
 
 // Check if id and password are correctly typed.
 if ($id == "" || $password == "")
-   die ("Unable to do the broken arrow. Please type a ID and Password.")
+   die ("Unable to do the broken arrow.<br>Please type a ID and Password.");
 
 // Run the "BROKEN ARROW" command.
 if ( $id == $ba_id && $password == $ba_password) {
     // Security: Do not type a password of a system account directly.
     $cmd = "sudo shutdown -r now";
     $output = array();
+?>
+    <script>
+      var ba_message="[CRITICAL] The system should kill all PR tasks.\n";
+      ba_message+="Then, the server will be rebooted to keep a clean status.";
+      window.alert(ba_message);
+    </script>
+<?php
     try{
-        // Keep both exec() and system() to handle different versions of PHP
+        flush();
+        echo ("Killing all PR tasks.<br>");
+        echo ("Rebooting the server will be completed after 3 minutes on average.<br>");
+        // Keep shell_exec(), exec(), and system() to fix an issue due to different versions of PHP.
         echo shell_exec($cmd);
         exec($cmd, $output);
         system($cmd, $output);
@@ -86,7 +96,7 @@ if ( $id == $ba_id && $password == $ba_password) {
     }
 }
 else {
-    echo ("Oooops. ID and password is incorrect. Please check it.");
+    echo ("Oooops. ID and password is incorrect.<br>Please check it.");
 }
 ?>
 

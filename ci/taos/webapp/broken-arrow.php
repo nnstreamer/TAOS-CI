@@ -18,6 +18,16 @@ nuclear detonation, non-nuclear detonation, radioactive contamination, and publi
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <img src=./broken-arrow.png border=0></img>
 <br><br>
+<script>
+function ConfirmCmd()
+{
+    var x = confirm("Are you sure you want to run Broken Arrow?");
+    if (x)
+        return true;
+    else 
+        return false;
+}
+</script>
 
 <form action="broken-arrow-proceed.php" method="post">
 <table border=0>
@@ -29,7 +39,8 @@ nuclear detonation, non-nuclear detonation, radioactive contamination, and publi
 </tr>
 <tr>
 <td>
-<input type="submit"></td>
+<br>
+<input type="submit" onClick="return ConfirmCmd()" value="Click"></td>
 <td></td>
 </tr>
 </form>
