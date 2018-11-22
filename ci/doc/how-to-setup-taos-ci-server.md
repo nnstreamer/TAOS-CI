@@ -292,3 +292,49 @@ $ sudo vi /etc/apache2/sites-enabled/000-default.conf
 </VirtualHost>
 $ sudo systemctl restart apache2
 ```
+
+
+
+## How to enable .htaccess to protect password files from web access
+Open the default Apache configuration file to enable .htaccess file to protect configuration files that include passwords. Then, restart Apache webserver to put these changes into effect.
+
+```bash
+$ sudo vim /etc/apache2/apache2.conf
+------------- apache2.conf: start ----------------------------
+# First,
+AccessFileName .htaccess # <--- Remove comment.
+
+# Second,
+<Directory /var/www/>
+     Options Indexes FollowSymLinks
+     AllowOverride None # <--- Replace "None" with "All".
+     Require all granted
+</Directory>
+------------- apache2.conf: end   ----------------------------
+$ sudo a2enmod rewrite
+$ sudo /etc/init.d/apache2 restart
+```
+
+An .htaccess file allows us to modify rewrite rules without accessing server configuration files. 
+For this reason, .htaccess is critical to the security of your web application. 
+
+```bash
+$ cd   /var/www/html/TAOS-CI/ci/taos/config/
+$ cat ./.htaccess
+------------- .htaccess: start ----------------------------
+AuthName "Restricted area"
+AuthType Basic
+AuthUserFile /var/www/html/TAOS-CI/ci/taos/config/.htpasswd
+<Limit GET POST>
+require valid-user
+</Limit>
+------------- .htaccess: end   ----------------------------
+$ touch .htpasswd
+$ htpasswd -n {user_id} > .htpasswd
+New password: *****
+Re-type new password: *****
+$ cat .htpasswd
+```
+
+
+
