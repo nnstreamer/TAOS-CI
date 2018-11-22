@@ -61,7 +61,9 @@ function pr-audit-build-tizen-run-queue(){
     # 1) _common_*****
     # 2) _nnstreamer_****
     # 3) _another_****
-    # build package
+
+    # Build a package with gbs command.
+    # TODO: Simplify the existing if...else statement for readability and maintenance
     echo -e "[DEBUG] gbs build start at :"
     date -R
     if [[ $BUILD_MODE == 99 ]]; then
@@ -81,7 +83,8 @@ function pr-audit-build-tizen-run-queue(){
         --buildroot ./GBS-ROOT/  | tee ../report/build_log_${input_pr}_tizen_$1_output.txt
     else
         echo -e "BUILD_MODE = 0"
-        if [[ $1 == "x86_64" ]]; then
+        # In case of x86_64 or i586
+        if [[ $1 == "x86_64" || $1 == "i586" ]]; then
             sudo -Hu www-data gbs build \
             -A $1 \
             --clean \
@@ -93,6 +96,7 @@ function pr-audit-build-tizen-run-queue(){
             --define "_skip_debug_rpm 1" \
             --define "unit_test 1" \
             --buildroot ./GBS-ROOT/ 2> ../report/build_log_${input_pr}_tizen_$1_error.txt 1> ../report/build_log_${input_pr}_tizen_$1_output.txt
+        # In case of armv7l or aarch64
         else
             sudo -Hu www-data gbs build \
             -A $1 \
