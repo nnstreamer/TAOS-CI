@@ -15,36 +15,36 @@
 #
 
 ##
-# @file config-environment.sh
-# @brief Environment file to control all scripts commonly for CI bot
+# @file     config-environment.sh
+# @brief    The configuration file to maintain all scripts
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
-# This script to maintain consistently all scripts files via this file. 
-# In the near future, all configuration variables will be integrated into this file. 
+# This script is to maintain consistently all scripts files.
 #
-# In case that you have to run this CI script at the below environment, Please change
+# If you have to run this CI script at the below environment, Please change
 # the contents appropriately.
 # a. In case that you want to apply this CI script to another repository
 # b. In case that you have to install CI in a new CI server for more high-performance
 # c. In case that you need to create new project
 #
 
-################# Default: Modify the below statements for your server  #######################
+################# Modify the below statements for your server  #######################
 
 
 #### Repository setting
-# Connecting to a repository using token id instead of your-gitbot-id@github.io id
-# because of two-authentification. Refer to https://github.com/settings/tokens
-TOKEN="××××××××××c1546d78aa78686b9806b1acf8785d"
 
-# Name of account (or orgranzation)
+# Token ID: Connecting to a repository using token id instead of id-name@github.io
+# in case of two-authentification situation. Refer to https://github.com/settings/tokens
+TOKEN="xxxxxxxxxxxxc1546d78aa78686b9806b1acf8785d"
+
+# Account name (or organization name)
 GITHUB_ACCOUNT="nnsuite"
 
 # Project name of github website
 PRJ_REPO_UPSTREAM="TAOS-CI"
 
-# CI Server webaddress. Should end with /
+# CI Server's web address. Should end with /
 CISERVER="http://<your-ci-dns>.mooo.com/"
 
 # Format area (pr-format)
@@ -54,15 +54,15 @@ CISERVER="http://<your-ci-dns>.mooo.com/"
 # 2) to check code formatting sytele with clang-format
 SRC_PATH="./ci/"
 
-# Audit Area (pr-audit)
-# Skip build-checker / unit-test checker if all changes are limited to:
-# The path starts without / and it denotes the full paths in the git repo. (regex)
-SKIP_CI_PATHS_AUDIT="^ci/.*|^Documentation/.*|^\.github/.*|^obsolete/.*|^README\.md|^external/.*|^temporal-bin/.*"
-
-# Format Area (pr-format)
+# Skip Paths: Format Area (pr-format)
 # declare a folder name to skip the file size and newline inspection.
 # (e.g., <github-repository-name>/temproal-bin/)
 SKIP_CI_PATHS_FORMAT="temporal-bin"
+
+# Skip Paths: Audit Area (pr-audit)
+# Skip build-checker / unit-test checker if all changes are limited to:
+# The path starts without / and it denotes the full paths in the git repo. (regex)
+SKIP_CI_PATHS_AUDIT="^ci/.*|^Documentation/.*|^\.github/.*|^obsolete/.*|^README\.md|^external/.*|^temporal-bin/.*"
 
 # Define the number of CPUs to build source codes in parallel
 # We recommend that you define appropriate # of CPUs that does not result in
@@ -86,7 +86,8 @@ pr_comment_many_commit=0
 # inform PR submitter of the webpage address in order that they can monitor the current status of their PR.
 pr_comment_pr_monitor=0
 
-#### Build test: Write build type to test ex) "x86_64 armv7l" 
+#### Build test: Write a build type to test ex) "x86_64 i586 armv7l aarch64" 
+# Currently, this variable is declared to hande the "gbs build" command on Tizen.
 pr_build_arch_type="x86_64"
 
 ### Check level of doxygen tag:
@@ -119,11 +120,11 @@ BUILD_MODE_TIZEN=99
 BUILD_MODE_UBUNTU=99
 BUILD_MODE_YOCTO=99
 
-# Pull-Request scheduler for Tizen build (gbs)
+# Pull Request Scheduler: The number of jobs on Run-Queue to process PRs
 RUN_QUEUE_PR_JOBS=8
 
 # Version format: Major.Minor
-VERSION="1.20180820"
+VERSION="1.20181123"
 
 #### Location
 
