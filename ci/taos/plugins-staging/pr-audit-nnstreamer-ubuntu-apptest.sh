@@ -2,7 +2,7 @@
 
 ##
 # Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 ##
 # @file     pr-audit-nnstreamer-ubuntu-apptest.sh
-# @brief    Check if nnstreamer sample apps normally work 
+# @brief    Check if nnstreamer sample apps normally work
 #           with a commit of a Pull Request (PR).
 # @see      https://github.com/nnsuite/TAOS-CI
 # @see      https://github.com/nnsuite/nnstreamer/wiki/usage-examples-screenshots
@@ -78,7 +78,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     echo -e "[DEBUG] NNST_ROOT is '$NNST_ROOT'"
     echo -e "[DEBUG] LD_LIBRARY_PATH is '$LD_LIBRARY_PATH'"
     echo -e "[DEBUG] GST_PLUGIN_PATH is '$GST_PLUGIN_PATH'"
-    
+
     declare -i result=0
 
     # Build and install nnstreamer library
@@ -103,18 +103,18 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     cp build/nnstreamer_example/example_sink/nnstreamer_sink_example bin/
     cp build/nnstreamer_example/example_sink/nnstreamer_sink_example_play bin/
     rm -rf build
-    cd bin    
+    cd bin
 
     # Download tensorflow-lite model file and labels.
     mkdir tflite_model
     cd tflite_model
     echo -e "" > wget.log
     echo -e "[DEBUG] Starting wget tflite model..." >> wget.log
-    wget -a wget.log https://github.com/nnsuite/testcases/raw/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/mobilenet_v1_1.0_224_quant.tflite 
+    wget -a wget.log https://github.com/nnsuite/testcases/raw/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/mobilenet_v1_1.0_224_quant.tflite
     result+=$?
     echo -e "" >> wget.log
     echo -e "[DEBUG] Starting wget tflite label..." >> wget.log
-    wget -a wget.log https://raw.githubusercontent.com/nnsuite/testcases/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/labels.txt 
+    wget -a wget.log https://raw.githubusercontent.com/nnsuite/testcases/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/labels.txt
     result+=$?
     cd ..
 
@@ -122,14 +122,14 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
         echo -e "[DEBUG][FAILED] Oooops!!!!!! apptest is failed."
         echo -e "[DEBUG][FAILED] The data files was not downloaded. Please check the log file to get a hint"
         echo -e ""
-        
+
         check_result="failure"
         global_check_result="failure"
         cat tflite_model/wget.log >> ../../report/nnstreamer-apptest-error.log
 
         message="Oooops. apptest is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
         cibot_report $TOKEN "failure" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
-    
+
         # comment a hint on failed PR to author.
         message=":octocat: **cibot**: $user_id, apptest could not be completed. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/checker-pr-audit.log"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
@@ -138,12 +138,12 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     fi
 
     cat tflite_model/wget.log >> ../../report/nnstreamer-apptest-output.log
-    
+
     # Test with sample apps
     # - [RunTest] fake USB camera for NNStreamer video apps
     if [[ ! -f /dev/video0 ]]; then
         echo -e "[DEBUG] USB Camera device is not enabled. It is required by {nnstreamer_example_filter|nnstreamer_example_cam}."
-        echo -e "[DEBUG] Enabling virtual cam camera..." 
+        echo -e "[DEBUG] Enabling virtual cam camera..."
 
         # Install a 'v4l2loopback' kernel module to use a virtual camera device
         # if it is not installed.
@@ -152,7 +152,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
             pushd ${REFERENCE_REPOSITORY}
             git clone https://github.com/umlaeute/v4l2loopback.git
             popd
-        fi        
+        fi
 
         # Create virtual camera device and change authority for all.
         pushd ${REFERENCE_REPOSITORY}/v4l2loopback
@@ -168,13 +168,13 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
         cat /etc/group | grep video
 
         # Leave '${REFERENCE_REPOSITORY}/v4l2loopback' directory
-        popd    
-        
+        popd
+
         # To avoid a conflict possiblity with existing vnc service ports(5900 ~ 5910),
         # run a vnc service with a port number more than 5911.
         Xvnc :11 &
         export DISPLAY=0.0:11
-        
+
         # Produce sample video frames.
         gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0 &
         producer_id=$!
@@ -185,7 +185,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # and then kill process, otherwise, process run forever.
     echo -e "" > log
     echo -e "[DEBUG] Starting nnstreamer_example_filter test..." >> log
-    ./nnstreamer_example_filter &>> log & 
+    ./nnstreamer_example_filter &>> log &
     pid=$!
     sleep 2
     kill ${pid}
@@ -194,7 +194,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # Same as above. Differencs is to run with python.
     echo -e "" > log
     echo -e "[DEBUG] Starting nnstreamer_example_filter.py test..." >> log
-    python nnstreamer_example_filter.py &>> log & 
+    python nnstreamer_example_filter.py &>> log &
     pid=$!
     sleep 2
     kill ${pid}
@@ -205,7 +205,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # and then kill process, otherwise, process run forever.
     echo -e "" > log
     echo -e "[DEBUG] Starting nnstreamer_example_cam test..." >> log
-    ./nnstreamer_example_cam &>> log & 
+    ./nnstreamer_example_cam &>> log &
     pid=$!
     sleep 2
     kill ${pid}
@@ -214,21 +214,21 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # Test to convert video images to tensor.
     echo -e "" > log
     echo -e "[DEBUG] Starting nnstreamer_sink_example test..." >> log
-    ./nnstreamer_sink_example &>> log  
+    ./nnstreamer_sink_example &>> log
     result+=$(add_log $?)
-    
+
     # Test to convert video images to tensor, tensor buffer pass another pipeline,
     # and convert tensor to video images.
     # Testing while 2seconds. 2seconds is arbitrary.
     # and then kill process, otherwise, process run forever.
     echo -e "" > log
     echo -e "[DEBUG] Starting nnstreamer_sink_example_play test..." >> log
-    ./nnstreamer_sink_example_play &>> log & 
+    ./nnstreamer_sink_example_play &>> log &
     pid=$!
     sleep 2
     kill ${pid}
     result+=$(add_log $?)
-    
+
     kill ${producer_id}
 
     popd
@@ -242,7 +242,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
         echo -e "[DEBUG][PASSED] Successfully apptest is passed."
         check_result="success"
     fi
-    
+
     echo -e "[DEBUG] report the execution result of apptest. result is ${result}. "
     if [[ $check_result == "success" ]]; then
         message="Successfully apptest is passed. Commit number is '$input_commit'."
@@ -250,7 +250,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     else
         message="Oooops. apptest is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
         cibot_report $TOKEN "failure" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
-    
+
         # comment a hint on failed PR to author.
         message=":octocat: **cibot**: $user_id, apptest could not be completed. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/checker-pr-audit.log"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
