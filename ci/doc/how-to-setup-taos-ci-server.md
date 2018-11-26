@@ -1,5 +1,6 @@
 # Administrator guide for TAOS-CI server
 
+We assume that you already installed Ubuntu 16.04 x86_64 distribution in your own computer.
 First of all, let's enable www-data as a system account for debugging and setting-up the TAOS-CI solution.
 Please replace "/bin/no-login" with "/bin/bash".
 Note that you must restore "/bin/no-login" to avoid an unexpected security issue after doing all setup procedures.
@@ -16,7 +17,6 @@ $
 ```
 
 ## Prerequisites
-We assume that you already installed Ubuntu 16.04 x86_64 distribution in your own computer.
 * For a physical machine, http://mirror.kakao.com/ubuntu-releases/xenial/
 * For a virtual machine, https://www.osboxes.org/ubuntu/
 * For a docker image, https://hub.docker.com/_/ubuntu/
@@ -26,45 +26,10 @@ $ cat /etc/os-release |grep VERSION_ID
 VERSION_ID="16.04.3"
 ```
 In order to run all modules of TAOS-CI normally, you have to install required packages as a first step.
-Please run **install-packages.sh** that is located in the [ci/taos/webapp](../taos/webapp/) folder.
+Please run **install-packages-base.sh** that is located in the [ci/taos/webapp](../taos/webapp/) folder.
 ```bash
 $ cd TAOS-CI
-$ sudo ./ci/taos/webapp/install-packages.sh
-```
-
-## Install Apache+PHP for CI Server
-The CI server to run TAOS-CI has to be equipped with Apache and PHP script language to run lightweight automation server instead of Jenkins.
-Builds has been triggered by last commit number by scheduling a Pull Request (PR) with a bot, that is based on Webhook API and JSON.
-
-**for Ubuntu 16.04**
-
-```bash
-$ sudo apt-get install apache2
-$ sudo apt-get install php php-cgi libapache2-mod-php php-common php-pear php-mbstring
-$ sudo a2enconf php7.0-cgi
-$ sudo systemctl restart apache2
-$ sudo mv /var/www/html/index.php /var/www.html/index.php.backup
-$ sudo vi /var/www/html/index.php
-<?php
-phpinfo();
-?>
-$ firefox http://localhost/index.php
-```
-Note that you have to apply for a firwall access to a security team in case that your nework is controlled by a firewall equipment. 
-
-
-## Install clang-format-4.0 for C/C++ format checker
-You have to install clang-format-4.0 (official version to check C++ formatting).
-
-**for Ubuntu 16.04**
-
-```bash
-$ sudo vi /etc/apt/sources.list.d/clang.list
-  # clang/llvm 4.0 repository for Ubuntu 16.04 (Xenial)
-  deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main
-  deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main
-$ sudo apt update
-$ sudo apt install clang-format-4.0
+$ sudo ./ci/taos/webapp/install-packages-base.sh
 ```
 
 ## Allowing www-data to do a sudo privilege
@@ -86,13 +51,13 @@ If you want to push your commits without a password input procedure, please crea
 $ vi ~/.netrc
 machine github.com
         login {your_gihub_id}
-        password your_token_key_bdd8f27d1e718f878ff5c7120a4544
+        password {your_token_key_bdff5c7120a4544}
 ```
 
-## Ubuntu/pbuilder: Set-up configuration file
+## Ubuntu/pdebuild: Set-up configuration file
 The pbuilderrc file contains default values used in the pbuilder program invocation.
 When pbuilder is invoked by www-data (user id of Apache webserver), `/etc/pbuilderrc` and `${HOME}/.pbuilderrc` are read.
-* 1) /etc/pbuilderrc: The configuration file for pbuilder, used in pdebuild.
+* 1) /etc/pbuilderrc (by default): The configuration file for pbuilder, used in pdebuild.
 * 2) /usr/share/pbuilder/pbuilderrc: The default configuration file for pbuilder, used in pdebuild.
 * 3) ${HOME}/.pbuilderrc: Configuration file for pbuilder, used in pdebuild.  It overrides /etc/pbuilderrc
 
