@@ -74,7 +74,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # Set-up environment variables.
     export NNST_ROOT="${dir_ci}/${dir_commit}/${PRJ_REPO_OWNER}"
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NNST_ROOT/lib
-    export GST_PLUGIN_PATH=$GST_PLUGIN_PATH:$NNST_ROOT/lib
+    export GST_PLUGIN_PATH=$GST_PLUGIN_PATH:$NNST_ROOT/lib/gstreamer-1.0
     echo -e "[DEBUG] NNST_ROOT is '$NNST_ROOT'"
     echo -e "[DEBUG] LD_LIBRARY_PATH is '$LD_LIBRARY_PATH'"
     echo -e "[DEBUG] GST_PLUGIN_PATH is '$GST_PLUGIN_PATH'"
@@ -90,8 +90,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     fi
     cd build
     cmake -DCMAKE_INSTALL_PREFIX=${NNST_ROOT} \
-    -DINCLUDE_INSTALL_DIR=${NNST_ROOT}/include \
-    -DGST_INSTALL_DIR=${NNST_ROOT}/lib ..
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        ..
     make install
     cd ..
 
