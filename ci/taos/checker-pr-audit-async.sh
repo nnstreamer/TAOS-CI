@@ -329,17 +329,45 @@ else
     echo -e "[DEBUG] It seems that this script has a bug. Please check value of \$global_check_result."
 fi
 
-# --------------------------- Cleaner: remove ./GBS-ROOT/ folder to keep available storage space --------------------
-# Let's do not keep the ./GBS-ROOT/ folder because it needs a storage space more than 9GB on average.
-sleep 3
+# --------------------------- Cleaner: (1) Archive pcakge files, (2) Remove unnecessary directories --------------------
+pwd
+BIN_FOLDER="binary_repository"
+mkdir ../$BIN_FOLDER/
 
-if [[ -d GBS-ROOT ]]; then
-    echo "Removing ./GBS-ROOT/ folder."
+# Tizen (gbs build)
+# Remove the ./GBS-ROOT/ folder. Not that this folder consumes a storage space more than 9GB on average.
+# Then, archive .rpm files.
+if [[ $BUILD_MODE_TIZEN -ne 99 && -d GBS-ROOT ]]; then
+    echo "Archiving .rpm files..."
+    cp ./GBS-ROOT/local/repos/tizen/*/RPMS/ ../$BIN_FOLDER/
+    echo "Removing ./GBS-ROOT/ folder..."
     sudo rm -rf ./GBS-ROOT/
     if [[ $? -ne 0 ]]; then
-            echo "[DEBUG][FAILED] Oooops!!!!!! ./GBS-ROOT folder is not removed."
+        echo "[DEBUG][FAILED] Tizen/gbs: Oooops!!!!! ./GBS-ROOT folder is not removed."
     else
-            echo "[DEBUG][PASSED] Successfully ./GBS-ROOT folder is removed."
+        echo "[DEBUG][PASSED] Tizen/gbs: It is okay. ./GBS-ROOT folder is successfully removed."
     fi
 fi
 pwd
+
+# Ubuntu (pdebuild)
+# Remove the unnecessary debian files
+# Then, archive .deb files.
+debfiles=(./*.dsc)
+if [[ $BUILD_MODE_UBNTU -ne 99 && -f ${debfiles[0]} ]]; then
+    echo "Archiving .deb files..."
+    cp ../*.deb ../$BIN_FOLDER/
+    echo "Removing unnecessary debian files..."
+    echo "The binary files will be temporarily archived in /var/cache/pbuilder/ folder."
+    sudo rm -rf ../*.tar.gz ../*.dsc ../*.changes ../*.deb
+    if [[ $? -ne 0 ]]; then
+        echo "[DEBUG][FAILED] Ubuntu/pdebuild: Oooops!!!!! Unnecessary files are not removed."
+    else
+        echo "[DEBUG][PASSED] Ubuntu/pdebuild: It is okay. Unnecessary files are successfully removed."
+    fi
+fi
+pwd
+
+# TODO: NYI, Yocto (devtool)
+
+
