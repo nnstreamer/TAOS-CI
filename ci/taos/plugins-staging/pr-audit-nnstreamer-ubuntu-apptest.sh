@@ -27,7 +27,6 @@
 # $ sudo usermod -a -G video www-data
 #
 
-
 # @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-wait-queue
 function pr-audit-nnstreamer-ubuntu-apptest-wait-queue(){
     echo -e "[DEBUG] Waiting CI trigger to run nnstreamer sample app actually."
@@ -42,24 +41,26 @@ function pr-audit-nnstreamer-ubuntu-apptest-ready-queue(){
     cibot_report $TOKEN "pending" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
-# @brief function that append log to appropriate log file via result($1)
-function add_log() {
+# @brief function that append a log message to an appropriate log file via result($1)
+# @param
+# arg1: The return value of a command
+function add_log_msg() {
      if [[ $1 -ne 0 ]]; then
-        cat log >> ../../report/nnstreamer-apptest-error.log
+        cat temp.log >> ../../report/nnstreamer-apptest-error.log
      else
-        cat log >> ../../report/nnstreamer-apptest-output.log
+        cat temp.log >> ../../report/nnstreamer-apptest-output.log
      fi
-     echo "add_log=$1"
+     echo "add_log_msg=$1"
 }
 
 # @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-run-queue
 function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
-    echo -e "[DEBUG] Starting CI trigger to run nnstreamer sample app actually."
+    echo -e "[DEBUG] Starting CI trigger to run a sample app of nnstreamer actually."
     message="Trigger: run queue. The commit number is $input_commit."
     cibot_report $TOKEN "pending" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-    echo -e "########################################################################################"
-    echo -e "[MODULE] TAOS/pr-audit-nnstreamer-apptest: Starting sample app test"
+    echo -e "################################################################################################################################################################################"
+    echo -e "[MODULE] TAOS/pr-audit-nnstreamer-apptest: Starting a sample app test"
     check_dependency cmake
     check_dependency make
     check_dependency wget
@@ -71,7 +72,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     check_dependency grep
     check_dependency usermod
 
-    # Set-up environment variables.
+    ########## Step 1: Set-up environment variables.
     export NNST_ROOT="${dir_ci}/${dir_commit}/${PRJ_REPO_OWNER}"
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NNST_ROOT/lib
     export GST_PLUGIN_PATH=$GST_PLUGIN_PATH:$NNST_ROOT/lib/gstreamer-1.0
@@ -81,21 +82,25 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     declare -i result=0
 
-    # Build and install nnstreamer library
     pushd ${NNST_ROOT}
+
+    ########## Step 2: Build and install source codes.
+    # Check if a 'build' folder already exists.
     if [[ -d ./build ]]; then
         rm -rf ./build/*
     else
         mkdir build
     fi
+
+    # Build a source code
     cd build
-    cmake -DCMAKE_INSTALL_PREFIX=${NNST_ROOT} \
-        -DCMAKE_INSTALL_LIBDIR=lib \
-        ..
+    cmake -DCMAKE_INSTALL_PREFIX=${NNST_ROOT} -DCMAKE_INSTALL_LIBDIR=lib ..
+
+    # Install a nnstreamer library
     make install
     cd ..
 
-    # Set-up testing environment.
+    # Copy binary files to 'bin' folder to setup a test environment.
     mkdir bin
     cp build/nnstreamer_example/example_filter/nnstreamer_example_filter bin/
     cp nnstreamer_example/example_filter/nnstreamer_example_filter.py bin/
@@ -105,15 +110,16 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     rm -rf build
     cd bin
 
-    # Download tensorflow-lite model file and labels.
+    ########## Step 3: Download a Tensorflow model and lable.
+    # Download a tensorflow-lite model file and label.
     mkdir tflite_model
     cd tflite_model
     echo -e "" > wget.log
-    echo -e "[DEBUG] Starting wget tflite model..." >> wget.log
+    echo -e "[DEBUG] Starting 'wget tflite model' command ..." >> wget.log
     wget -a wget.log https://github.com/nnsuite/testcases/raw/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/mobilenet_v1_1.0_224_quant.tflite
     result+=$?
     echo -e "" >> wget.log
-    echo -e "[DEBUG] Starting wget tflite label..." >> wget.log
+    echo -e "[DEBUG] Starting 'wget tflite label' command ..." >> wget.log
     wget -a wget.log https://raw.githubusercontent.com/nnsuite/testcases/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/labels.txt
     result+=$?
     cd ..
@@ -139,10 +145,10 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     cat tflite_model/wget.log >> ../../report/nnstreamer-apptest-output.log
 
-    # Test with sample apps
-    # - [RunTest] fake USB camera for NNStreamer video apps
+    ########## Step 4: Install a fake USB camera device
+    # Prepare a fake (=virtual) USB camera to run video applications.
     if [[ ! -f /dev/video0 ]]; then
-        echo -e "[DEBUG] USB Camera device is not enabled. It is required by {nnstreamer_example_filter|nnstreamer_example_cam}."
+        echo -e "[DEBUG] An USB Camera device is not enabled. It is required by {nnstreamer_example_filter|nnstreamer_example_cam}."
         echo -e "[DEBUG] Enabling virtual cam camera..."
 
         # Install a 'v4l2loopback' kernel module to use a virtual camera device
@@ -157,6 +163,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
         # Create virtual camera device and change authority for all.
         pushd ${REFERENCE_REPOSITORY}/v4l2loopback
         make clean && make
+
         # Dependency of kernel modules: media.ko --> videodev.ko --> v4l2loopback.ko
         sudo insmod /lib/modules/`uname -r`/kernel/drivers/media/media.ko
         sudo insmod /lib/modules/`uname -r`/kernel/drivers/media/v4l2-core/videodev.ko
@@ -170,7 +177,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
         # Leave '${REFERENCE_REPOSITORY}/v4l2loopback' directory
         popd
 
-        # To avoid a conflict possiblity with existing vnc service ports(5900 ~ 5910),
+        # In orde to avoid a conflict possiblity with existing vnc service ports(5900 ~ 5910),
         # run a vnc service with a port number more than 5911.
         Xvnc :11 &
         export DISPLAY=0.0:11
@@ -180,59 +187,63 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
         producer_id=$!
     fi
 
-    # Test that video image classification.
-    # Testing while 2seconds. 2seconds is arbitrary.
-    # and then kill process, otherwise, process run forever.
-    echo -e "" > log
-    echo -e "[DEBUG] Starting nnstreamer_example_filter test..." >> log
-    ./nnstreamer_example_filter &>> log &
+    ########## Step 5: Test sample applications
+
+    # We designed the below test scenario to experiment sample applications.
+    #  a. Run an appliction while 2 seconds arbitrarily in virtual network environment.
+    #  b. Kill a process after 2 seconds. Otherwise, the process runs forever.
+
+    # App: ./nnstreamer_example_filter for a video image classification.
+    echo -e "" > temp.log
+    echo -e "[DEBUG] Starting nnstreamer_example_filter test..." >> temp.log
+    ./nnstreamer_example_filter &>> temp.log &
     pid=$!
     sleep 2
     kill ${pid}
-    result+=$(add_log $?)
+    result+=$(add_log_msg $?)
 
-    # Same as above. Differencs is to run with python.
-    echo -e "" > log
-    echo -e "[DEBUG] Starting nnstreamer_example_filter.py test..." >> log
-    python nnstreamer_example_filter.py &>> log &
+    # App: ./nnstreamer_example_filter.py for a video image classification.
+    # Same as above. The difference is that it just runs with python.
+    echo -e "" > temp.log
+    echo -e "[DEBUG] Starting nnstreamer_example_filter.py test..." >> temp.log
+    python nnstreamer_example_filter.py &>> temp.log &
     pid=$!
     sleep 2
     kill ${pid}
-    result+=$(add_log $?)
+    result+=$(add_log_msg $?)
 
-    # Test that video mixer with nnstreamer plug-in
-    # Testing while 2seconds. 2seconds is arbitrary.
-    # and then kill process, otherwise, process run forever.
-    echo -e "" > log
-    echo -e "[DEBUG] Starting nnstreamer_example_cam test..." >> log
-    ./nnstreamer_example_cam &>> log &
+    # App: ./nnstreamer_example_cam to test a video mixer with nnstreamer plug-in.
+    echo -e "" > temp.log
+    echo -e "[DEBUG] Starting nnstreamer_example_cam test..." >> temp.log
+    ./nnstreamer_example_cam &>> temp.log &
     pid=$!
     sleep 2
     kill ${pid}
-    result+=$(add_log $?)
+    result+=$(add_log_msg $?)
 
-    # Test to convert video images to tensor.
-    echo -e "" > log
-    echo -e "[DEBUG] Starting nnstreamer_sink_example test..." >> log
-    ./nnstreamer_sink_example &>> log
-    result+=$(add_log $?)
+    # App: ./nnstreamer_sink_example to convert video images to tensor.
+    echo -e "" > temp.log
+    echo -e "[DEBUG] Starting nnstreamer_sink_example test..." >> temp.log
+    ./nnstreamer_sink_example &>> temp.log
+    result+=$(add_log_msg $?)
 
-    # Test to convert video images to tensor, tensor buffer pass another pipeline,
-    # and convert tensor to video images.
-    # Testing while 2seconds. 2seconds is arbitrary.
-    # and then kill process, otherwise, process run forever.
-    echo -e "" > log
-    echo -e "[DEBUG] Starting nnstreamer_sink_example_play test..." >> log
-    ./nnstreamer_sink_example_play &>> log &
+    # App: ./nnstreamer_sink_example.py to convert video images to tensor,
+    # tensor buffer pass another pipeline, and convert tensor to video images.
+    echo -e "" > temp.log
+    echo -e "[DEBUG] Starting nnstreamer_sink_example_play test..." >> temp.log
+    ./nnstreamer_sink_example_play &>> temp.log &
     pid=$!
     sleep 2
     kill ${pid}
-    result+=$(add_log $?)
+    result+=$(add_log_msg $?)
 
     kill ${producer_id}
 
     popd
 
+    ########## Step 6: Report a execution result
+
+    # Summarize a test result before doing final report.
     if [[ ${result} -ne 0 ]]; then
         echo -e "[DEBUG][FAILED] Oooops!!!!!! apptest is failed. Resubmit the PR after fixing correctly."
         echo -e ""
@@ -243,7 +254,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
         check_result="success"
     fi
 
-    echo -e "[DEBUG] report the execution result of apptest. result is ${result}. "
+    # Report a test result as a finale step.
+    echo -e "[DEBUG] report the execution result of apptest. The result value is ${result}. "
     if [[ $check_result == "success" ]]; then
         message="Successfully apptest is passed. Commit number is '$input_commit'."
         cibot_report $TOKEN "success" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
