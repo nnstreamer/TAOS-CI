@@ -72,28 +72,17 @@ function pr-audit-build-ubuntu-run-queue(){
     # BUILD_MODE=99: skip "pdebuild" procedures
     BUILD_MODE=$BUILD_MODE_UBUNTU
 
-    # build package
+    # Build a package
     if [[ $BUILD_MODE == 99 ]]; then
         # skip build procedure
         echo -e "BUILD_MODE = 99"
         echo -e "Skipping 'pdebuild' procedure temporarily."
         $result=999
     else
-        # build package with pdebuild
+        # Build a package with pdebuild
         # Note that you have to set no-password condition after running 'visudo' command.
         # www-data    ALL=(ALL) NOPASSWD:ALL
         echo -e "[DEBUG] current folder is $(pwd)."
-
-        # if ./GBS-ROOT/ folder exists, let's remove this folder for pdebuild.
-        if [[ -d GBS-ROOT ]]; then
-            echo -e "Removing ./GBS-ROOT/ folder."
-            sudo rm -rf ./GBS-ROOT/
-            if [[ $? -ne 0 ]]; then
-                    echo -e "[DEBUG][FAILED] Oooops!!!!!! ./GBS-ROOT folder is not removed."
-            else
-                    echo -e "[DEBUG][PASSED] Successfully ./GBS-ROOT folder is removed."
-            fi
-        fi
 
         # Note that you have to append the below statement in '/etc/crontab' to apply the latest
         # changes from '/etc/pbuilderrc' file.
@@ -111,6 +100,23 @@ function pr-audit-build-ubuntu-run-queue(){
         1> ../report/build_log_${input_pr}_ubuntu_output.txt
         result=$?
         echo -e "[DEBUG] The pdebuild finished at $(date -R)"
+
+        # If the debian files exists, let's remove these files.
+        debfiles=(../*.dsc)
+        if [[ -f ${debfiles[0]} ]]; then
+            mkdir ../$PACK_BIN_FOLDER
+            echo "Removing unnecessary debian files..."
+            echo "The binary files will be temporarily archived in /var/cache/pbuilder/ folder."
+            sudo mv ../*.deb ../$PACK_BIN_FOLDER
+            sudo rm -rf ../*.tar.gz ../*.dsc ../*.changes
+            if [[ $? -ne 0 ]]; then
+                echo "[DEBUG][FAILED] Ubuntu/pdebuild: Oooops!!!!! Unnecessary files are not removed."
+            else
+                echo "[DEBUG][PASSED] Ubuntu/pdebuild: It is okay. Unnecessary files are successfully removed."
+            fi
+        fi
+        echo "[DEBUG] The current directory: $(pwd)."
+
     fi
     echo "[DEBUG] The variable result value is $result."
 
