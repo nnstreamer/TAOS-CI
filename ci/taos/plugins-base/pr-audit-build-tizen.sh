@@ -40,7 +40,7 @@ function pr-audit-build-tizen-run-queue(){
     message="Trigger: run queue. The commit number is $input_commit."
     cibot_report $TOKEN "pending" "TAOS/pr-audit-build-tizen-$1" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-    echo "[MODULE] TAOS/pr-audit-build-tizen-$1: Check if 'gbs build -A $1' can be successfully passed."
+    echo -e "[MODULE] TAOS/pr-audit-build-tizen-$1: Check if 'gbs build -A $1' can be successfully passed."
     pwd
 
     # check if dependent packages are installed
@@ -64,8 +64,7 @@ function pr-audit-build-tizen-run-queue(){
 
     # Build a package with gbs command.
     # TODO: Simplify the existing if...else statement for readability and maintenance
-    echo -e "[DEBUG] gbs build start at :"
-    date -R
+    echo -e "[DEBUG] gbs build start at : $(date -R)."
     if [[ $BUILD_MODE == 99 ]]; then
         echo -e "BUILD_MODE = 99"
         echo -e "Skipping 'gbs build -A $1' procedure temporarily."
@@ -111,9 +110,26 @@ function pr-audit-build-tizen-run-queue(){
         fi        
     fi
     result=$?
-    echo -e "[DEBUG] gbs build finished at :"
-    date -R
-    echo "[DEBUG] The variable result value is $result."
+    echo -e "[DEBUG] gbs build finished at : $(date -R)."
+    echo -e "[DEBUG] The variable result value is $result."
+
+    # If the ./GBS-ROOT/ folder exists, let's remove this folder.
+    # Note that this folder consume too many storage space (on average 9GiB).
+    if [[ -d GBS-ROOT ]]; then
+        mkdir ../$PACK_BIN_FOLDER
+        echo "Archiving .rpm files for $1 ..."
+        ls -al  ./GBS-ROOT/local/repos/tizen/$1/RPMS/
+        sudo cp -arf ./GBS-ROOT/local/repos/tizen/$1/RPMS ../$PACK_BIN_FOLDER || echo -e "[DEBUG] Can't copy .rpm files."
+        echo "Removing ./GBS-ROOT/ folder..."
+        sudo rm -rf ./GBS-ROOT/
+        if [[ $? -ne 0 ]]; then
+            echo "[DEBUG][FAILED] Tizen/gbs: Oooops!!!!! ./GBS-ROOT folder is not removed."
+        else
+            echo "[DEBUG][PASSED] Tizen/gbs: It is okay. ./GBS-ROOT folder is successfully removed."
+        fi
+    fi
+    echo "[DEBUG] The current directory: $(pwd)"
+
     
     if [[ $BUILD_MODE == 99 ]]; then
         # Do not run "gbs build" command in order to skip unnecessary examination if there are no buildable files.
@@ -133,10 +149,10 @@ function pr-audit-build-tizen-run-queue(){
         echo -e "[DEBUG] The return value of gbs build -A $1 command is $result."
         # Let's check if build procedure is normally done.
         if [[ $result -eq 0 ]]; then
-                echo "[DEBUG][PASSED] Successfully build checker is passed. Return value is ($result)."
+                echo -e "[DEBUG][PASSED] Successfully build checker is passed. Return value is ($result)."
                 check_result="success"
         else
-                echo "[DEBUG][FAILED] Oooops!!!!!! build checker is failed. Return value is ($result)."
+                echo -e "[DEBUG][FAILED] Oooops!!!!!! build checker is failed. Return value is ($result)."
                 check_result="failure"
                 global_check_result="failure"
         fi

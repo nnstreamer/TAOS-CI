@@ -63,6 +63,9 @@ if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; t
     exit 1
 fi
 
+# Import global variables
+source ./common/global-variable.sh
+
 # Check if dependent packages are installed
 source ./common/api_collection.sh
 check_dependency gbs
@@ -125,7 +128,8 @@ fi
 echo "[MODULE] plugins-base: Plugin group that does have well-maintained features as a base module."
 echo "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
 echo "[MODULE] plugins-staging: Plugin group that does not has evaluation and aging test enough"
-echo "Current path: $(pwd)."
+
+echo "[DEBUG] The current directory: $(pwd)"
 source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-audit.sh 2>> ../audit_module_error.log
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-audit.sh"
 
@@ -150,7 +154,8 @@ done
 
 
 # --------------------------- audit module: start -----------------------------------------------------
-pwd
+
+echo "[DEBUG] The current directory: $(pwd)"
 echo -e "[DEBUG] Starting an audit checker...."
 echo -e "[DEBUG] dir_ci is '$dir_ci'" 
 echo -e "[DEBUG] dir_worker is '$dir_worker'" 
@@ -160,7 +165,7 @@ echo -e "[DEBUG] Let's move to a git repository folder."
 cd $dir_ci
 cd $dir_commit
 cd ./${PRJ_REPO_OWNER}
-echo -e "Current path: $(pwd)."
+echo "[DEBUG] The current directory: $(pwd)"
 
 echo -e "[MODULE] Exception Handling: Let's skip CI-Build/UnitTest in case of no buildable files. "
 
@@ -284,7 +289,7 @@ mv ../report/build_log_${input_pr}_output_tmp.txt ../report/build_log_${input_pr
 ls -al
 
 # Inform developers of the warning message in case that the log file exceeds 10MB.
-echo "Check if the log file size exceeds 10MB."
+echo "[DEBUG] Check if the log file size exceeds 10MB."
 
 FILESIZE=$(stat -c%s "../report/build_log_${input_pr}_output.txt")
 if  [[ $FILESIZE -le 10*1024*1024 ]]; then
@@ -308,7 +313,7 @@ fi
 
 # --------------------------- Report module: submit  global check result -----------------------------------------------
 # Report if all modules are successfully completed or not.
-echo "send a total report with global_check_result variable. global_check_result is ${global_check_result}. "
+echo "[DEBUG] Send a total report with global_check_result variable. global_check_result is ${global_check_result}. "
 
 if [[ $global_check_result == "success" ]]; then
     # The global check is succeeded.
@@ -329,45 +334,9 @@ else
     echo -e "[DEBUG] It seems that this script has a bug. Please check value of \$global_check_result."
 fi
 
-# --------------------------- Cleaner: (1) Archive pcakge files, (2) Remove unnecessary directories --------------------
-pwd
-BIN_FOLDER="binary_repository"
-mkdir ../$BIN_FOLDER/
-
-# Tizen (gbs build)
-# Remove the ./GBS-ROOT/ folder. Not that this folder consumes a storage space more than 9GB on average.
-# Then, archive .rpm files.
-if [[ $BUILD_MODE_TIZEN -ne 99 && -d GBS-ROOT ]]; then
-    echo "Archiving .rpm files..."
-    cp ./GBS-ROOT/local/repos/tizen/*/RPMS/ ../$BIN_FOLDER/
-    echo "Removing ./GBS-ROOT/ folder..."
-    sudo rm -rf ./GBS-ROOT/
-    if [[ $? -ne 0 ]]; then
-        echo "[DEBUG][FAILED] Tizen/gbs: Oooops!!!!! ./GBS-ROOT folder is not removed."
-    else
-        echo "[DEBUG][PASSED] Tizen/gbs: It is okay. ./GBS-ROOT folder is successfully removed."
-    fi
-fi
-pwd
-
-# Ubuntu (pdebuild)
-# Remove the unnecessary debian files
-# Then, archive .deb files.
-debfiles=(./*.dsc)
-if [[ $BUILD_MODE_UBNTU -ne 99 && -f ${debfiles[0]} ]]; then
-    echo "Archiving .deb files..."
-    cp ../*.deb ../$BIN_FOLDER/
-    echo "Removing unnecessary debian files..."
-    echo "The binary files will be temporarily archived in /var/cache/pbuilder/ folder."
-    sudo rm -rf ../*.tar.gz ../*.dsc ../*.changes ../*.deb
-    if [[ $? -ne 0 ]]; then
-        echo "[DEBUG][FAILED] Ubuntu/pdebuild: Oooops!!!!! Unnecessary files are not removed."
-    else
-        echo "[DEBUG][PASSED] Ubuntu/pdebuild: It is okay. Unnecessary files are successfully removed."
-    fi
-fi
-pwd
-
-# TODO: NYI, Yocto (devtool)
+# --------------------------- Cleaner:  Remove unnecessary directories --------------------
+# If you have to remove unnecessary directory or files as a final step
+# Please append a command below. 
+echo "[DEBUG] The current directory: $(pwd)."
 
 
