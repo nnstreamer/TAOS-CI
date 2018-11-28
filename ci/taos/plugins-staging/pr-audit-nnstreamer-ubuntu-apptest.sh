@@ -147,7 +147,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     ########## Step 4: Install a fake USB camera device
     # Prepare a fake (=virtual) USB camera to run video applications.
-    if [[ ! -f /dev/video0 ]]; then
+    # Use '-e' option instead of '-f' because /dev/video0 file is a device file (without a normal file).
+    if [[ ! -e /dev/video0 ]]; then
         echo -e "[DEBUG] An USB Camera device is not enabled. It is required by {nnstreamer_example_filter|nnstreamer_example_cam}."
         echo -e "[DEBUG] Enabling virtual cam camera..."
 
@@ -184,13 +185,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
         # with existing Xvnc service ports(6000 ~ 6010),
         Xvnc :11 &
         export DISPLAY=0.0:11
-        # Display connection status for debugging
-        netstat -natp | grep [^]]:60
 
-        # Make a producer with a 'videotestsrc' plugin and /dev/video0 (fake USB camera).
-        declare -i producer_id=0
-        gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0 &
-        producer_id=$!
     fi
 
     ########## Step 5: Test sample applications as a consumer
@@ -199,71 +194,77 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     #  a. Run an appliction while 2 seconds arbitrarily in virtual network environment.
     #  b. Kill a process after 2 seconds. Otherwise, the process runs forever.
 
-    if [[ ${producer_id} -ne 0 ]]; then
-        echo -e "[DEBUG] Congraturation. It's okay. The producer (pid: ${producer_id}) is successfully started."
+    # Display connection status for debugging
+    netstat -natp | grep [^]]:60
 
-        ## App: Test /dev/video0 status with gst-lanch-1.0 command 
-        ## The dependency: /dev/video0, VNC
-        #echo -e "" > temp.log
-        #echo -e "[DEBUG] Starting 'gst-launch-1.0 v4l2src device=/dev/video0 ! xvimagesink' test..." >> temp.log
-        #gst-launch-1.0 v4l2src device=/dev/video0 ! xvimagesink &>> temp.log &
-        #pid=$!
-        #sleep 2
-        #kill ${pid}
-        #result+=$(add_log_msg $?)
+    # Make a producer with a 'videotestsrc' plugin and /dev/video0 (fake USB camera).
+    export DISPLAY=0.0:11
 
-        ## App: ./nnstreamer_example_filter for a video image classification.
-        ## The dependency: /dev/video0, VNC
-        #echo -e "" > temp.log
-        #echo -e "[DEBUG] Starting nnstreamer_example_filter test..." >> temp.log
-        #./nnstreamer_example_filter &>> temp.log &
-        #pid=$!
-        #sleep 2
-        #kill ${pid}
-        #result+=$(add_log_msg $?)
+    declare -i producer_id=0
+    gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0 &
+    producer_id=$!
 
-        ## App: ./nnstreamer_example_filter.py for a video image classification.
-        ## Same as above. The difference is that it just runs with python.
-        ## The dependency: /dev/video0, VNC
-        #echo -e "" > temp.log
-        #echo -e "[DEBUG] Starting nnstreamer_example_filter.py test..." >> temp.log
-        #python nnstreamer_example_filter.py &>> temp.log &
-        #pid=$!
-        #sleep 2
-        #kill ${pid}
-        #result+=$(add_log_msg $?)
+    echo -e "[DEBUG] The producer (pid: ${producer_id}) is successfully started."
 
-        ## App: ./nnstreamer_example_cam to test a video mixer with nnstreamer plug-in.
-        ## The dependency: /dev/video0, VNC
-        #echo -e "" > temp.log
-        #echo -e "[DEBUG] Starting nnstreamer_example_cam test..." >> temp.log
-        #./nnstreamer_example_cam &>> temp.log &
-        #pid=$!
-        #sleep 2
-        #kill ${pid}
-        #result+=$(add_log_msg $?)
+    ## App: Test /dev/video0 status with gst-lanch-1.0 command 
+    ## The dependency: /dev/video0, VNC
+    #echo -e "" > temp.log
+    #echo -e "[DEBUG] Starting 'gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink' test for VNC envronment..." >> temp.log
+    #gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink &>> temp.log &
+    #pid=$!
+    #sleep 2
+    #kill ${pid}
+    #result+=$(add_log_msg $?)
 
-        # App: ./nnstreamer_sink_example to convert video images to tensor.
-        ## The dependency: Nothing
-        echo -e "" > temp.log
-        echo -e "[DEBUG] Starting nnstreamer_sink_example test..." >> temp.log
-        ./nnstreamer_sink_example &>> temp.log
-        result+=$(add_log_msg $?)
+    ## App: ./nnstreamer_example_filter for a video image classification.
+    ## The dependency: /dev/video0, VNC
+    #echo -e "" > temp.log
+    #echo -e "[DEBUG] Starting nnstreamer_example_filter test..." >> temp.log
+    #./nnstreamer_example_filter &>> temp.log &
+    #pid=$!
+    #sleep 2
+    #kill ${pid}
+    #result+=$(add_log_msg $?)
 
-        ## App: ./nnstreamer_sink_example.py to convert video images to tensor,
-        ## tensor buffer pass another pipeline, and convert tensor to video images.
-        ## The dependency: VNC
-        #echo -e "" > temp.log
-        #echo -e "[DEBUG] Starting nnstreamer_sink_example_play test..." >> temp.log
-        #./nnstreamer_sink_example_play &>> temp.log &
-        #pid=$!
-        #sleep 2
-        #kill ${pid}
-        #result+=$(add_log_msg $?)
+    ## App: ./nnstreamer_example_filter.py for a video image classification.
+    ## Same as above. The difference is that it just runs with python.
+    ## The dependency: /dev/video0, VNC
+    #echo -e "" > temp.log
+    #echo -e "[DEBUG] Starting nnstreamer_example_filter.py test..." >> temp.log
+    #python nnstreamer_example_filter.py &>> temp.log &
+    #pid=$!
+    #sleep 2
+    #kill ${pid}
+    #result+=$(add_log_msg $?)
 
-    else
-        echo -e "[DEBUG] Oooops. It's failed. The producer (pid: ${producer_id}) is not launched."
-    fi
+    ## App: ./nnstreamer_example_cam to test a video mixer with nnstreamer plug-in.
+    ## The dependency: /dev/video0, VNC
+    #echo -e "" > temp.log
+    #echo -e "[DEBUG] Starting nnstreamer_example_cam test..." >> temp.log
+    #./nnstreamer_example_cam &>> temp.log &
+    #pid=$!
+    #sleep 2
+    #kill ${pid}
+    #result+=$(add_log_msg $?)
+
+    # App: ./nnstreamer_sink_example to convert video images to tensor.
+    ## The dependency: Nothing
+    echo -e "" > temp.log
+    echo -e "[DEBUG] Starting nnstreamer_sink_example test..." >> temp.log
+    ./nnstreamer_sink_example &>> temp.log
+    result+=$(add_log_msg $?)
+
+    ## App: ./nnstreamer_sink_example.py to convert video images to tensor,
+    ## tensor buffer pass another pipeline, and convert tensor to video images.
+    ## The dependency: VNC
+    #echo -e "" > temp.log
+    #echo -e "[DEBUG] Starting nnstreamer_sink_example_play test..." >> temp.log
+    #./nnstreamer_sink_example_play &>> temp.log &
+    #pid=$!
+    #sleep 2
+    #kill ${pid}
+    #result+=$(add_log_msg $?)
+
 
     # Let's stop the existing producer ID when all test applications (=consumer) are finished.
     kill ${producer_id}
