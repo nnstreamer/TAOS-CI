@@ -160,27 +160,31 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
             popd
         fi
 
-        # Create virtual camera device and change authority for all.
+        # Go to '${REFERENCE_REPOSITORY}/v4l2loopback' directory
         pushd ${REFERENCE_REPOSITORY}/v4l2loopback
         make clean && make
 
         # Dependency of kernel modules: media.ko --> videodev.ko --> v4l2loopback.ko
+        # Loade kernel modules to run a virtual camera device.
         sudo insmod /lib/modules/`uname -r`/kernel/drivers/media/media.ko
         sudo insmod /lib/modules/`uname -r`/kernel/drivers/media/v4l2-core/videodev.ko
         sudo insmod ./v4l2loopback.ko
 
-        # Note that the server administrator must add 'www-data' (webapp id) account to 'video' group to access /dev/video*
-        # Do not use '777' permission  to avoid a security vulnerability
-        echo -e "[DEBUG] The group account 'video' includes the below user accounts:"
+        # Note that the server administrator must add a 'www-data' (for Apache)
+        # into the 'video' group of /etc/group in order that 'www-data' accesses /dev/video*.
+        # Please, do not specify a '777' permission to avoid a security vulnerability.
+        echo -e "[DEBUG] The group 'video' has to include 'www-data' in the 'video' group."
         cat /etc/group | grep video
 
         # Leave '${REFERENCE_REPOSITORY}/v4l2loopback' directory
         popd
 
-        # In orde to avoid a conflict possiblity with existing vnc service ports(5900 ~ 5910),
-        # run a vnc service with a port number more than 5911.
+        # The VNC server listens on three ports: 5800 (for VNC web), 5900 (for VNC), and 6000 (for Xvnc)
+        # Run a Xvnc service with a port number 6011 in order to avoid a conflict possibility
+        # with existing Xvnc service ports(6000 ~ 6010),
         Xvnc :11 &
         export DISPLAY=0.0:11
+        netstat -natp | grep [^]]:60
 
         # Produce sample video frames.
         gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0 &
