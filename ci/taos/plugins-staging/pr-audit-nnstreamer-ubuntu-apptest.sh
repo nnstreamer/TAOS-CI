@@ -226,8 +226,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     xauth list
     echo -e "[DEBUG] -------------------- xauth: end   ----------------------"
 
-    ## App (Producer): Make a producer with a 'videotestsrc' plugin and /dev/video0 (fake USB camera)
-    ## The dependency: /dev/video0, VNC
+    # App (Producer): Make a producer with a 'videotestsrc' plugin and /dev/video0 (fake USB camera)
+    # The dependency: /dev/video0, VNC
     export DISPLAY=0.0:11
     declare -i producer_id=0
 
@@ -242,8 +242,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     fi
 
 
-    ## App (Consumer): Test /dev/video0 status with gst-lanch-1.0 command 
-    ## The dependency: /dev/video0, VNC
+    # App (Consumer): Test /dev/video0 status with gst-lanch-1.0 command 
+    # The dependency: /dev/video0, VNC
     echo -e "" > temp.log
     echo -e "[DEBUG] App (Consumer): Starting 'gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink' test on the Xvnc environment..." >> temp.log
     gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink &>> temp.log &
@@ -252,36 +252,36 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     kill ${pid}
     result+=$(save_consumer_msg $?)
 
-    ## App (Consumer): ./nnstreamer_example_filter for a video image classification.
-    ## The dependency: /dev/video0, VNC
-    #echo -e "" > temp.log
-    #echo -e "[DEBUG] App (Consumer): Starting nnstreamer_example_filter test..." >> temp.log
-    #./nnstreamer_example_filter &>> temp.log &
-    #pid=$!
-    #sleep 2
-    #kill ${pid}
-    #result+=$(save_consumer_msg $?)
+    # App (Consumer): ./nnstreamer_example_filter for a video image classification.
+    # The dependency: /dev/video0, VNC
+    echo -e "" > temp.log
+    echo -e "[DEBUG] App (Consumer): Starting nnstreamer_example_filter test..." >> temp.log
+    ./nnstreamer_example_filter &>> temp.log &
+    pid=$!
+    sleep 2
+    kill ${pid}
+    result+=$(save_consumer_msg $?)
 
-    ## App (Consumer): ./nnstreamer_example_filter.py for a video image classification.
-    ## Same as above. The difference is that it just runs with python.
-    ## The dependency: /dev/video0, VNC
-    #echo -e "" > temp.log
-    #echo -e "[DEBUG] App (Consumer): Starting nnstreamer_example_filter.py test..." >> temp.log
-    #python nnstreamer_example_filter.py &>> temp.log &
-    #pid=$!
-    #sleep 2
-    #kill ${pid}
-    #result+=$(save_consumer_msg $?)
+    # App (Consumer): ./nnstreamer_example_filter.py for a video image classification.
+    # Same as above. The difference is that it just runs with python.
+    # The dependency: /dev/video0, VNC
+    echo -e "" > temp.log
+    echo -e "[DEBUG] App (Consumer): Starting nnstreamer_example_filter.py test..." >> temp.log
+    python nnstreamer_example_filter.py &>> temp.log &
+    pid=$!
+    sleep 2
+    kill ${pid}
+    result+=$(save_consumer_msg $?)
 
-    ## App (Consumer): ./nnstreamer_example_cam to test a video mixer with nnstreamer plug-in.
-    ## The dependency: /dev/video0, VNC
-    #echo -e "" > temp.log
-    #echo -e "[DEBUG] App (Consumer): Starting nnstreamer_example_cam test..." >> temp.log
-    #./nnstreamer_example_cam &>> temp.log &
-    #pid=$!
-    #sleep 2
-    #kill ${pid}
-    #result+=$(save_consumer_msg $?)
+    # App (Consumer): ./nnstreamer_example_cam to test a video mixer with nnstreamer plug-in.
+    # The dependency: /dev/video0, VNC
+    echo -e "" > temp.log
+    echo -e "[DEBUG] App (Consumer): Starting nnstreamer_example_cam test..." >> temp.log
+    ./nnstreamer_example_cam &>> temp.log &
+    pid=$!
+    sleep 2
+    kill ${pid}
+    result+=$(save_consumer_msg $?)
 
     # App (Consumer): ./nnstreamer_sink_example to convert video images to tensor.
     # The dependency: Nothing
