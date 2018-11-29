@@ -211,6 +211,11 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     #  a. Run an appliction while 2 seconds arbitrarily in virtual network environment.
     #  b. Kill a process after 2 seconds. Otherwise, the process runs forever.
 
+    # Display a current locale setting.
+    echo -e "[DEBUG] -------------------- locale: start --------------------"
+    locale
+    echo -e "[DEBUG] -------------------- locale: start --------------------"
+
     # Display a port status to check a port that Xvnc has opened.
     echo -e "[DEBUG] -------------------- netstat: start --------------------"
     netstat -natp | grep [^]]:60
