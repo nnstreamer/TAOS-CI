@@ -67,13 +67,13 @@ function pr-audit-build-yocto-run-queue(){
     echo "[MODULE] TAOS/pr-audit-build-yocto: check build process for YOCTO distribution"
 
     # Note that you have to declare language set to avoid the execution error of "devtool add/build" command because
-    # Python can not change the filesystem locale after loading so we need a utf-8 when python starts or things won't work.
+    # Python can not change the filesystem locale after loading so we need a UTF-8 when python starts or things won't work.
     # Use a locale setting which supports utf-8.
     # See https://github.com/openembedded/openembedded-core/blob/master/scripts/devtool#L212
     # See https://github.com/openembedded/bitbake/blob/master/bin/bitbake#L38
-    export LANG=en_US.UTF-8
     export LC_ALL=en_US.UTF-8
-    export LANGUAGE=en_US.UTF-8
+    export LANG=en_US.UTF-8
+    export LANGUAGE=en_US:en
     echo "[DEBUG] locale information: start ---------------------------------------------"
     locale
     echo "[DEBUG] locale information: end   ---------------------------------------------"
