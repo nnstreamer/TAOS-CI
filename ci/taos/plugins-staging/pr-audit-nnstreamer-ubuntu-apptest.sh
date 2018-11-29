@@ -205,6 +205,9 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     producer_id=$!
 
     echo -e "[DEBUG] The producer (pid: ${producer_id}) is successfully started."
+    echo -e "[DEBUG] -------------------- env: start --------------------"
+    env
+    echo -e "[DEBUG] -------------------- env: start --------------------"
 
     ## App: Test /dev/video0 status with gst-lanch-1.0 command 
     ## The dependency: /dev/video0, VNC
