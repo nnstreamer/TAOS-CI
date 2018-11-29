@@ -22,27 +22,13 @@
 # @author  Sewon Oh <sewon.oh@samsung.com>
 # @author  Geunsik Lim <geunsik.lim@samsung.com>
 #
-# @note:   If you try to modify ths script, Do not foreget that you also ahve to update the below wiki page.
+# @note:   If you try to modify ths script, Do not foreget that you also have to update the below wiki page.
 #          https://github.com/nnsuite/nnstreamer/wiki/usage-examples-screenshots
 #
 # @note::  In order to run this module, A server administrator must add
 #          'www-data' (user id of Apache webserver) into the video group (/etc/group) as follows.
 #          $ sudo usermod -a -G video www-data
 #
-
-# @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-wait-queue
-function pr-audit-nnstreamer-ubuntu-apptest-wait-queue(){
-    echo -e "[DEBUG] Waiting CI trigger to run nnstreamer sample app actually."
-    message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
-}
-
-# @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-ready-queue
-function pr-audit-nnstreamer-ubuntu-apptest-ready-queue(){
-    echo -e "[DEBUG] Readying CI trigger to run nnstreamer sample app actually."
-    message="Trigger: ready queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
-}
 
 # @brief function that append a log message to an appropriate log file via result($1)
 # @param
@@ -56,6 +42,20 @@ function save_consumer_msg() {
         echo "[DEBUG][PASS] It's okay. The consumer applicaiton is successfully completed." >> ../../report/nnstreamer-apptest-output.log
      fi
      echo "save_consumer_msg=$1"
+}
+
+# @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-wait-queue
+function pr-audit-nnstreamer-ubuntu-apptest-wait-queue(){
+    echo -e "[DEBUG] Waiting CI trigger to run nnstreamer sample app actually."
+    message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
+    cibot_report $TOKEN "pending" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+}
+
+# @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-ready-queue
+function pr-audit-nnstreamer-ubuntu-apptest-ready-queue(){
+    echo -e "[DEBUG] Readying CI trigger to run nnstreamer sample app actually."
+    message="Trigger: ready queue. The commit number is $input_commit."
+    cibot_report $TOKEN "pending" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 # @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-run-queue
@@ -211,6 +211,21 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     #  a. Run an appliction while 2 seconds arbitrarily in virtual network environment.
     #  b. Kill a process after 2 seconds. Otherwise, the process runs forever.
 
+    # App (Producer): Make a producer with a 'videotestsrc' plugin and /dev/video0 (fake USB camera)
+    # The dependency: /dev/video0, VNC
+    export DISPLAY=0.0:11
+    declare -i producer_id=0
+
+    echo -e "[DEBUG] App (Producer): Starting 'gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0' test on the Xvnc environment..."  >> ../../report/nnstreamer-apptest-output.log
+    gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0 &
+    producer_id=$!
+
+    if [[ $producer_id -ne 0 ]]; then
+        echo -e "[DEBUG] It's okay. The producer (pid: ${producer_id}) is successfully started."
+    else
+        echo -e "[DEBUG] It's failed. The producer (pid: ${producer_id}) is not established."
+    fi
+
     # Display a current locale setting.
     echo -e "[DEBUG] -------------------- locale: start --------------------"
     locale
@@ -230,21 +245,6 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     echo -e "[DEBUG] -------------------- xauth: start ----------------------"
     xauth list
     echo -e "[DEBUG] -------------------- xauth: end   ----------------------"
-
-    # App (Producer): Make a producer with a 'videotestsrc' plugin and /dev/video0 (fake USB camera)
-    # The dependency: /dev/video0, VNC
-    export DISPLAY=0.0:11
-    declare -i producer_id=0
-
-    echo -e "[DEBUG] App (Producer): Starting 'gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0' test on the Xvnc environment..."  >> ../../report/nnstreamer-apptest-output.log
-    gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0 &
-    producer_id=$!
-
-    if [[ $producer_id -ne 0 ]]; then
-        echo -e "[DEBUG] It's okay. The producer (pid: ${producer_id}) is successfully started."
-    else
-        echo -e "[DEBUG] It's failed. The producer (pid: ${producer_id}) is not established."
-    fi
 
 
     # App (Consumer): Test /dev/video0 status with gst-lanch-1.0 command 
