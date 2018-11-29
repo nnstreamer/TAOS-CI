@@ -104,10 +104,10 @@ function pr-audit-build-ubuntu-run-queue(){
         # If the debian files exists, let's remove these files.
         debfiles=(../*.dsc)
         if [[ -f ${debfiles[0]} ]]; then
-            mkdir ../$PACK_BIN_FOLDER
+            mkdir -p ../$PACK_BIN_FOLDER/DEBS
             echo "Removing unnecessary debian files..."
             echo "The binary files will be temporarily archived in /var/cache/pbuilder/ folder."
-            sudo mv ../*.deb ../$PACK_BIN_FOLDER
+            sudo mv ../*.deb ../$PACK_BIN_FOLDER/DEBS
             sudo rm -rf ../*.tar.gz ../*.dsc ../*.changes
             if [[ $? -ne 0 ]]; then
                 echo "[DEBUG][FAILED] Ubuntu/pdebuild: Oooops!!!!! Unnecessary files are not removed."
