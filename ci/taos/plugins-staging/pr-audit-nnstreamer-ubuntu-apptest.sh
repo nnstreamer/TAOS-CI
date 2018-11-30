@@ -198,10 +198,10 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
         fi
 
         # The VNCserver listens on three ports: 5800 (for VNCweb), 5900 (for VNC), and 6000 (for Xvnc)
-        # Run a Xvnc service with a port number 6011 in order to avoid a conflict possibility
-        # with existing Xvnc service ports(6000 ~ 6010),
-        Xvnc :11 &
-        export DISPLAY=0.0:11
+        # Run a Xvnc service with a port number 6031 in order to avoid a conflict possibility
+        # with existing Xvnc service ports(6000 ~ 6030),
+        Xvnc :31 &
+        export DISPLAY=0.0:31
 
     fi
 
@@ -213,10 +213,10 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     # App (Producer): Make a producer with a 'videotestsrc' plugin and /dev/video0 (fake USB camera)
     # The dependency: /dev/video0, VNC
-    export DISPLAY=0.0:11
+    export DISPLAY=0.0:31
     declare -i producer_id=0
 
-    echo -e "[DEBUG] App (Producer): Starting 'gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0' test on the Xvnc environment..."  >> ../../report/nnstreamer-apptest-output.log
+    echo -e "[DEBUG] App (Producer): Starting 'gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0' test on the VNC environment..."  >> ../../report/nnstreamer-apptest-output.log
     gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0 &
     producer_id=$!
 
@@ -231,10 +231,13 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     locale
     echo -e "[DEBUG] -------------------- locale: start --------------------"
 
-    # Display a port status to check a port that Xvnc has opened.
-    echo -e "[DEBUG] -------------------- netstat: start --------------------"
+    # Display a port status to check a port that VNC and Xvnc has opened.
+    echo -e "[DEBUG] -------------------- netstat(Xvnc:59xx): start --------------------"
+    netstat -natp | grep [^]]:59
+    echo -e "[DEBUG] -------------------- netstat(Xvnc:59xx): end   --------------------"
+    echo -e "[DEBUG] -------------------- netstat(Xvnc:60xx): start --------------------"
     netstat -natp | grep [^]]:60
-    echo -e "[DEBUG] -------------------- netstat: end   --------------------"
+    echo -e "[DEBUG] -------------------- netstat(Xvnc:60xx): end   --------------------"
 
     # Display an environment setting status that is set by Apache/www-data.
     echo -e "[DEBUG] -------------------- env: start ------------------------"
