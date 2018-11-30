@@ -78,6 +78,9 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     check_dependency usermod
     check_dependency xauth
     check_dependency touch
+    check_dependency awk
+    check_dependency grep
+    check_dependency ps
 
     ########## Step 1: Set-up environment variables.
     export NNST_ROOT="${dir_ci}/${dir_commit}/${PRJ_REPO_OWNER}"
@@ -195,6 +198,16 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
             echo -e "[DEBUG][FAIL] It's failed. We can not find ~/${xauth_file}."
             echo -e "[DEBUG] Initializing ~/${xauth_file} newly ..."
             touch ~/${xauth_file}
+        fi
+
+
+        # Kill the Xvnc service if (1)/dev/video0 file does not exist and (2)port 6031 is still opened.
+        declare -i xvnc_port=0
+        xvnc_port=$(ps -A -o pid,cmd | grep "[\:]31" | awk '{printf $1}')
+        if [[ $xvnc_port -ne 0 ]]; then
+            echo -e "[DEBUG] It seems that the network port of the existing Xvnc is not stopped."
+            echo -e "[DEBUG] Killing the existing Xvnc (PID: $xvnc_port) ...."
+            kill $xvnc_port
         fi
 
         # The VNCserver listens on three ports: 5800 (for VNCweb), 5900 (for VNC), and 6000 (for Xvnc)
