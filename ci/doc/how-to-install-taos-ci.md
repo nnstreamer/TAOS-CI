@@ -3,22 +3,12 @@
 We explain how to set-up your own CI server on Ubuntu 16.04 x86_64 (Recommended) even though TAOS-CI is completely compatible with most of the Linux distributions. Please refer to a set-up guide of a CI server to install required packages.
 * [Setting up a CI server](./how-to-setup-taos-ci-server.md) 
 
-# Step 2: Install base packages
-### How to install base packages for TAOS-CI
+
+# Step 2: How to install TAOS-CI system
 * PHP: a widely-used general-purpose scripting language can be embedded into HTML.
 * Bash: sh-compatible command language interpreter that can be configured to be POSIX-conformant by default.
 * Curl: tool to transfer data to a CI server using the supported protocol such as HTTP/HTTPS.
 
-You can easily install required packages with `apt-get` command as follows.
-
-```bash
-$ sudo apt-get -y install bash php curl
-$ sudo apt-get -y install apache2
-$ sudo apt-get -y install php php-cgi libapache2-mod-php php-common php-pear php-mbstring
-$ sudo systemctl restart apache2
-```
-
-# Step 3: How to install TAOS-CI system
 ```bash
 $ cd /var/www/html/
 $ git clone https://github.com/{your_github_account}/{your_prj_name}.git
@@ -35,7 +25,7 @@ $ vi ./ci/taos/config/config-environment.sh
 ```
 That's all. Enjoy TAOS-CI after setting-up webhook API of github.
 
-# Step 4: How to set-up github webhook API
+# Step 3: How to set-up github webhook API
 A webhook handler of TAOS-CI receives an event message from a github repository, in order to inspect pull requests that are submitted by contributors.
 ```bash
 $ firefox https://github.com/{your_github_account}/{your_prj_name}/settings
