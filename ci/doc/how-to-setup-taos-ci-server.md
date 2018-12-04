@@ -145,24 +145,17 @@ $ sudo apt-get -y install build-essential chrpath socat libsdl1.2-dev xterm
 Note that a devtool command are the configuration file (e.g.,environment-setup-i586-poky-linux) are located in the Extensible Software Development Kit (eSDK) folder. It means that you cannot install the devtool command via the apt command.
 
 
-## Cron Job to auto delete folder older than 15 days
+## Cron Job to auto delete folder older than 6 days
 
-For example, the description of crontab for deleting files older than 15 days
-under the `/var/www/html/<your_prj_name>/ci/repo-workers/` every day at 5:30 AM is as follows.
+For example, the description of crontab for deleting files older than 6 days
+under the `/var/www/html/<your_prj_name>/ci/repo-workers/pr-checker/*` every day at 5:30 AM is as follows.
 mtime means the last modification timestamp and the results of find may not be
 the expected files depending on the backup method. Note that too many inodes
 results in "No space left on device" issue despite available storage spaces.
 
 ```bash
 $ sudo vi /etc/crontab
-30 5 * * * root find /var/www/html/{your_prj_name}/ci/repo-workers/ -maxdepth 2 -type d -mtime +15 -exec rm -rf {} \;
-```
-
-Please make sure before executing a rm command whether a target folder is correct or not. 
-You can check the target folders by specifying **maxdepth** option as an argument of find command.
-
-```bash
-$ find /var/www/html/{your_prj_name}/ci/repo-workers/ -maxdepth 2 -type d -mtime +15
+30 5 * * * root find /var/www/html/{your_prj_name}/ci/repo-workers/pr-checker/* -maxdepth 2 -type d -mtime +6 -exec rm -rf {} \;
 ```
 
 ## How to speed-up a build time
