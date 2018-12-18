@@ -156,6 +156,11 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     cat tflite_model/wget.log >> ../../report/nnstreamer-apptest-output.log
 
     ########## Step 4: Install a fake USB camera device
+
+    # Run a Xvnc service with a port number 6031 in order to avoid a conflict possibility
+    # with existing Xvnc service ports(6000 ~ 6030),
+    declare -i xvnc_port=31
+
     # Prepare a fake (=virtual) USB camera to run video applications.
     # Use '-e' option instead of '-f' because /dev/video0 file is a device file (without a normal file).
     if [[ ! -e /dev/video0 ]]; then
@@ -202,19 +207,17 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
 
         # Kill the Xvnc service if (1)/dev/video0 file does not exist and (2)port 6031 is still opened.
-        declare -i xvnc_port=0
-        xvnc_port=$(ps -A -o pid,cmd | grep "[\:]31" | awk '{printf $1}')
-        if [[ $xvnc_port -ne 0 ]]; then
+        declare -i xvnc_pid=0
+        xvnc_pid=$(ps -A -o pid,cmd | grep "[\:]${xvnc_port}" | awk '{printf $1}')
+        if [[ $xvnc_pid -ne 0 ]]; then
             echo -e "[DEBUG] It seems that the network port of the existing Xvnc is not stopped."
-            echo -e "[DEBUG] Killing the existing Xvnc (PID: $xvnc_port) ...."
-            kill $xvnc_port
+            echo -e "[DEBUG] Killing the existing Xvnc (PID: $xvnc_pid) ...."
+            kill $xvnc_pid
         fi
 
         # The VNCserver listens on three ports: 5800 (for VNCweb), 5900 (for VNC), and 6000 (for Xvnc)
-        # Run a Xvnc service with a port number 6031 in order to avoid a conflict possibility
-        # with existing Xvnc service ports(6000 ~ 6030),
-        Xvnc :31 &
-        export DISPLAY=0.0:31
+        Xvnc :${xvnc_port} &
+        export DISPLAY=0.0:${xvnc_port}
 
     fi
 
@@ -226,7 +229,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     # App (Producer): Make a producer with a 'videotestsrc' plugin and /dev/video0 (fake USB camera)
     # The dependency: /dev/video0, VNC
-    export DISPLAY=0.0:31
+    export DISPLAY=0.0:${xvnc_port}
     declare -i producer_id=0
 
     echo -e "[DEBUG] App (Producer): Starting 'gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0' test on the VNC environment..."  >> ../../report/nnstreamer-apptest-output.log
