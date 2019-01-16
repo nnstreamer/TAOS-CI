@@ -66,8 +66,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     echo -e "################################################################################################################################################################################"
     echo -e "[MODULE] TAOS/pr-audit-nnstreamer-apptest: Starting a sample app test"
-    check_dependency cmake
-    check_dependency make
+    check_dependency meson
+    check_dependency ninja
     check_dependency wget
     check_dependency python
     check_dependency Xvnc
@@ -103,20 +103,12 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     fi
 
     # Build a source code
-    cd build
-    cmake -DCMAKE_INSTALL_PREFIX=${NNST_ROOT} -DCMAKE_INSTALL_LIBDIR=lib ..
+    meson --buildtype=plain --werror --prefix=${NNST_ROOT} --libdir=lib --bindir=bin --includedir=include build
 
-    # Install a nnstreamer library
-    make install
-    cd ..
+    # Install a nnstreamer library and examples
+    ninja -C build install
 
-    # Copy binary files to 'bin' folder to setup a test environment.
-    mkdir bin
-    cp build/nnstreamer_example/example_filter/nnstreamer_example_filter bin/
-    cp nnstreamer_example/example_filter/nnstreamer_example_filter.py bin/
-    cp build/nnstreamer_example/example_cam/nnstreamer_example_cam bin/
-    cp build/nnstreamer_example/example_sink/nnstreamer_sink_example bin/
-    cp build/nnstreamer_example/example_sink/nnstreamer_sink_example_play bin/
+    # After installation, binary files are installed to 'bin' folder.
     rm -rf build
     cd bin
 
@@ -130,7 +122,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     result+=$?
     echo -e "" >> wget.log
     echo -e "[DEBUG] Downloading 'tflite label' with wget command ..." >> wget.log
-    wget -a wget.log https://raw.githubusercontent.com/nnsuite/testcases/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/labels.txt
+    wget -a wget.log https://github.com/nnsuite/testcases/raw/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/labels.txt
     result+=$?
     cd ..
 
@@ -164,7 +156,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # Prepare a fake (=virtual) USB camera to run video applications.
     # Use '-e' option instead of '-f' because /dev/video0 file is a device file (without a normal file).
     if [[ ! -e /dev/video0 ]]; then
-        echo -e "[DEBUG] An USB Camera device is not enabled. It is required by {nnstreamer_example_filter|nnstreamer_example_cam}."
+        echo -e "[DEBUG] An USB Camera device is not enabled. It is required by {nnstreamer_example_image_classification|nnstreamer_example_cam}."
         echo -e "[DEBUG] Enabling virtual cam camera..."
 
         # Install a 'v4l2loopback' kernel module to use a virtual camera device
@@ -276,22 +268,22 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     kill ${pid}
     result+=$(save_consumer_msg $?)
 
-    # App (Consumer): ./nnstreamer_example_filter for a video image classification.
+    # App (Consumer): ./nnstreamer_example_image_classification for a video image classification.
     # The dependency: /dev/video0, VNC
     echo -e "" > temp.log
-    echo -e "[DEBUG] App (Consumer): Starting nnstreamer_example_filter test..." >> temp.log
-    ./nnstreamer_example_filter &>> temp.log &
+    echo -e "[DEBUG] App (Consumer): Starting nnstreamer_example_image_classification test..." >> temp.log
+    ./nnstreamer_example_image_classification &>> temp.log &
     pid=$!
     sleep 2
     kill ${pid}
     result+=$(save_consumer_msg $?)
 
-    # App (Consumer): ./nnstreamer_example_filter.py for a video image classification.
+    # App (Consumer): ./nnstreamer_example_image_classification.py for a video image classification.
     # Same as above. The difference is that it just runs with python.
     # The dependency: /dev/video0, VNC
     echo -e "" > temp.log
-    echo -e "[DEBUG] App (Consumer): Starting nnstreamer_example_filter.py test..." >> temp.log
-    python nnstreamer_example_filter.py &>> temp.log &
+    echo -e "[DEBUG] App (Consumer): Starting nnstreamer_example_image_classification.py test..." >> temp.log
+    python nnstreamer_example_image_classification.py &>> temp.log &
     pid=$!
     sleep 2
     kill ${pid}
@@ -314,7 +306,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     ./nnstreamer_sink_example &>> temp.log
     result+=$(save_consumer_msg $?)
 
-    # App (Consumer): ./nnstreamer_sink_example.py to convert video images to tensor,
+    # App (Consumer): ./nnstreamer_sink_example_play to convert video images to tensor,
     # tensor buffer pass another pipeline, and convert tensor to video images.
     # The dependency: VNC
     echo -e "" > temp.log

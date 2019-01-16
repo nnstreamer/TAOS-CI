@@ -42,8 +42,11 @@ echo -e "[DEBUG] Installing dependent packages by reading debian/control file."
 sudo mk-build-deps --install debian/control > /dev/null
 popd
 
-echo -e "########## for CI-system: Installing base packages for "
+echo -e "########## for CI-system: Installing base packages for nnstreaemr app test "
 sudo apt -y install rpmlint ctags sudo
+
+echo -e " Installing the 'meson=0.40' package requires 'xenial-backports'."
+sudo apt -y install ninja-build meson=0.40*
 
 echo -e "########## for CI-system: Installing python packages for nnstreaemr app test "
 sudo apt -y install python-gi python3-gi  
