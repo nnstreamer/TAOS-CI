@@ -203,7 +203,7 @@ function pr-format-doxygen-tag(){
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     
         message=":octocat: **cibot**: $user_id, You wrote code with incorrect doxygen statements. Please check a doxygen rule at"
-        message="$message http://github.com/nnsuite/TAOS-CI/blob/tizen/ci/doc/doxygen-documentation.md"
+        message="$message http://github.com/nnsuite/TAOS-CI/blob/master/ci/doc/doxygen-documentation.md"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     fi
 }
