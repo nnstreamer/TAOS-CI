@@ -1,6 +1,6 @@
 [![GitHub license](https://dmlc.github.io/img/apache2.svg)](./LICENSE)
 
-[Build Status](http://invain.mooo.com/TAOS-CI/ci/taos/) |
+[Build Status](http://nnsuite.mooo.com/TAOS-CI/ci/taos/) |
 [Documentation](ci/doc/doxygen-documentation.md) |
 [Contributing](ci/doc/contributing.md) |
 [Chat Room](https://gitter.im/login) |
