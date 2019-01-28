@@ -16,11 +16,12 @@
 
 ##
 # @file    pr-audit-nnstreamer-ubuntu-apptest.sh
-# @brief   Check if nnstreamer sample apps normally work
+# @brief   Check if nnstreamer sample applications normally work
 #          with a commit of a Pull Request (PR).
 # @see     https://github.com/nnsuite/TAOS-CI
-# @author  Sewon Oh <sewon.oh@samsung.com>
 # @author  Geunsik Lim <geunsik.lim@samsung.com>
+# @author  Sewon Oh <sewon.oh@samsung.com>
+# @author  Jaeyun Jung <jy1210.jung@samsung.com>
 #
 # @note:   If you try to modify ths script, Do not foreget that you also have to update the below wiki page.
 #          https://github.com/nnsuite/nnstreamer/wiki/usage-examples-screenshots
@@ -112,8 +113,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     rm -rf build
     cd bin
 
-    ########## Step 3: Download a Tensorflow model and lable.
-    # Download a tensorflow-lite model file and label.
+    ########## Step 3: Download a model and label file for Tensorflow-lite.
+    # Download a network model file and label from github.com repository.
     mkdir tflite_model
     cd tflite_model
     echo -e "" > wget.log
@@ -213,7 +214,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     fi
 
-    ########## Step 5: Test sample applications (A producer and consumers)
+    ########## Step 5: Test sample applications (Based on a producer and consumer model)
 
     # Our test scenario to evaluate sample applications, is as following:
     #  a. Run an appliction while 2 seconds arbitrarily in virtual network environment.
@@ -258,59 +259,59 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     echo -e "[DEBUG] -------------------- xauth: end   ----------------------"
 
 
-    # App (Consumer): Test /dev/video0 status with gst-lanch-1.0 command 
+    # App (Consumer1): Test /dev/video0 status with gst-lanch-1.0 command 
     # The dependency: /dev/video0, VNC
     echo -e "" > temp.log
-    echo -e "[DEBUG] App (Consumer): Starting 'gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink' test on the Xvnc environment..." >> temp.log
+    echo -e "[DEBUG] App (Consumer1): Starting 'gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink' test on the Xvnc environment..." >> temp.log
     gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink &>> temp.log &
     pid=$!
     sleep 2
     kill ${pid}
     result+=$(save_consumer_msg $?)
 
-    # App (Consumer): ./nnstreamer_example_image_classification for a video image classification.
+    # App (Consumer2): ./nnstreamer_example_image_classification for a video image classification.
     # The dependency: /dev/video0, VNC
     echo -e "" > temp.log
-    echo -e "[DEBUG] App (Consumer): Starting nnstreamer_example_image_classification test..." >> temp.log
+    echo -e "[DEBUG] App (Consumer2): Starting nnstreamer_example_image_classification test..." >> temp.log
     ./nnstreamer_example_image_classification &>> temp.log &
     pid=$!
     sleep 2
     kill ${pid}
     result+=$(save_consumer_msg $?)
 
-    # App (Consumer): ./nnstreamer_example_image_classification.py for a video image classification.
+    # App (Consumer3): ./nnstreamer_example_image_classification.py for a video image classification.
     # Same as above. The difference is that it just runs with python.
     # The dependency: /dev/video0, VNC
     echo -e "" > temp.log
-    echo -e "[DEBUG] App (Consumer): Starting nnstreamer_example_image_classification.py test..." >> temp.log
+    echo -e "[DEBUG] App (Consumer3): Starting nnstreamer_example_image_classification.py test..." >> temp.log
     python nnstreamer_example_image_classification.py &>> temp.log &
     pid=$!
     sleep 2
     kill ${pid}
     result+=$(save_consumer_msg $?)
 
-    # App (Consumer): ./nnstreamer_example_cam to test a video mixer with nnstreamer plug-in.
+    # App (Consumer4): ./nnstreamer_example_cam to test a video mixer with nnstreamer plug-in.
     # The dependency: /dev/video0, VNC
     echo -e "" > temp.log
-    echo -e "[DEBUG] App (Consumer): Starting nnstreamer_example_cam test..." >> temp.log
+    echo -e "[DEBUG] App (Consumer4): Starting nnstreamer_example_cam test..." >> temp.log
     ./nnstreamer_example_cam &>> temp.log &
     pid=$!
     sleep 2
     kill ${pid}
     result+=$(save_consumer_msg $?)
 
-    # App (Consumer): ./nnstreamer_sink_example to convert video images to tensor.
+    # App (Consumer5): ./nnstreamer_sink_example to convert video images to tensor.
     # The dependency: Nothing
     echo -e "" > temp.log
-    echo -e "[DEBUG] App (Consumer): Starting nnstreamer_sink_example test..." >> temp.log
+    echo -e "[DEBUG] App (Consumer5): Starting nnstreamer_sink_example test..." >> temp.log
     ./nnstreamer_sink_example &>> temp.log
     result+=$(save_consumer_msg $?)
 
-    # App (Consumer): ./nnstreamer_sink_example_play to convert video images to tensor,
+    # App (Consumer6): ./nnstreamer_sink_example_play to convert video images to tensor,
     # tensor buffer pass another pipeline, and convert tensor to video images.
     # The dependency: VNC
     echo -e "" > temp.log
-    echo -e "[DEBUG] App (Consumer): Starting nnstreamer_sink_example_play test..." >> temp.log
+    echo -e "[DEBUG] App (Consumer6): Starting nnstreamer_sink_example_play test..." >> temp.log
     ./nnstreamer_sink_example_play &>> temp.log &
     pid=$!
     sleep 2
@@ -336,16 +337,18 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
         check_result="success"
     fi
 
-    # Report a test result as a finale step.
+    # Report a test result as a final step.
     echo -e "[DEBUG] report the execution result of apptest. The result value is ${result}. "
     if [[ $check_result == "success" ]]; then
+        # Report a success.
         message="Successfully apptest is passed. Commit number is '$input_commit'."
         cibot_report $TOKEN "success" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
+        # Report a failure.
         message="Oooops. apptest is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
         cibot_report $TOKEN "failure" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-        # comment a hint on failed PR to author.
+        # comment a hint why a submitted PR is failed.
         message=":octocat: **cibot**: $user_id, apptest could not be completed. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/checker-pr-audit.log"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     fi
