@@ -39,6 +39,12 @@ echo "[DEBUG] Current path: $(pwd)."
 source ${REFERENCE_REPOSITORY}/ci/taos/plugins-base/${audit_plugins[idx]}.sh
 
 
+audit_plugins[++idx]="pr-audit-build-android"
+echo "[DEBUG] The default BUILD_MODE of ${audit_plugins[idx]} is declared with 99 (SKIP MODE) by default in plugins-base folder."
+echo "[DEBUG] ${audit_plugins[idx]} is started."
+echo "[DEBUG] TAOS/${audit_plugins[idx]}: Check if Android package is successfully generated."
+echo "[DEBUG] Current path: $(pwd)."
+source ${REFERENCE_REPOSITORY}/ci/taos/plugins-base/${audit_plugins[idx]}.sh
 
 ###### plugins-good ###############################################################################################
 echo "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
