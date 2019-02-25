@@ -112,7 +112,7 @@ BUILD_MODE_YOCTO=99
 RUN_QUEUE_PR_JOBS=8
 
 # Version format: Major.Minor
-VERSION="1.20181123"
+VERSION="1.20190225"
 
 #### Location
 
