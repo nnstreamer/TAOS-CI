@@ -32,11 +32,11 @@ TOKEN="xxx"
 # Type your website address
 WEB_URL="http://nnsuite.mooo.com"
 
-# Append a context name of a plugin module
+# Add a context name of a plugin module that you want to mark a success symbol.
 declare -i idx=-1
+context_modules[++idx]="(INFO)TAOS/pr-format-all"
+context_modules[++idx]="(INFO)TAOS/pr-audit-all"
 context_modules[++idx]="TAOS/pr-audit-build-tizen-aarch64"
-context_modules[++idx]="TAOS/pr-audit-build-tizen-armv7l"
-context_modules[++idx]="TAOS/pr-audit-build-tizen-x86_64"
 
 #----------- Code area: Do not edit the below statements -----------------------
 # Type a commit number.
