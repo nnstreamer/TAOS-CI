@@ -100,13 +100,20 @@ filesize_limit=5
 # BUILD_MODE_***=1  : execute a build process with a debug file.
 # BUILD_MODE_***=99 : skip a build process (by default)
 #
-# Note: if a packaging management is not normally executed for package build, you must declare `BUILD_MODE_***=99` unavoidably
-# 1) Tizen (packaging/*.spec): If a maintainer done the gbs based build process, you may change builde mode from 99 to 0.
-# 2) Ubuntu (debian/*.rule)  : If a maintainer done the pdebuild based build process, you may change builde mode from 99 to 0.
-# 3) Yocto (CMakeLists.txt)  : If a maintainer done the devtool based build process, you may change builde mode from 99 to 0.
+# Note: if a package builder is not normally executed to generate package file,
+# Please declare `BUILD_MODE_***=99` untile the issue will be fixed.
+# 1) Tizen (packaging/*.spec): If a maintainer done the 'gbs' based build process,
+#    you may change builde mode among 0, 1, and 99.
+# 2) Ubuntu (debian/*.rule)  : If a maintainer done the 'pdebuild' based build process,
+#    you may change builde mode among 0, 1, and 99.
+# 3) Yocto (CMakeLists.txt)  : If a maintainer done the 'devtool' based build process,
+#    you may change builde mode among 0, 1, and 99.
+# 4) Android (jni/Android.mk)  : If a maintainer done the 'ndk-build' based build process,
+#    you may change builde mode among 0, 1, and 99.
 BUILD_MODE_TIZEN=99
 BUILD_MODE_UBUNTU=99
 BUILD_MODE_YOCTO=99
+BUILD_MODE_ANDROID=99
 
 # Pull Request Scheduler: The number of jobs on Run-Queue to process PRs
 RUN_QUEUE_PR_JOBS=8
