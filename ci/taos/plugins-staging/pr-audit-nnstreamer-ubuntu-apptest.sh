@@ -91,6 +91,14 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     echo -e "[DEBUG] LD_LIBRARY_PATH is '$LD_LIBRARY_PATH'"
     echo -e "[DEBUG] GST_PLUGIN_PATH is '$GST_PLUGIN_PATH'"
 
+    # nnstreamer env variables and include paths
+    export NNSTREAMER_CONF=$NNST_ROOT
+    export NNSTREAMER_FILTERS=$NNST_ROOT/lib/nnstreamer/filters
+    export NNSTREAMER_DECODERS=$NNST_ROOT/lib/nnstreamer/decoders
+    export NNSTREAMER_CUSTOMFILTERS=$NNST_ROOT/lib/nnstreamer/customfilters
+    export C_INCLUDE_PATH=$C_INCLUDE_PATH:$NNST_ROOT/include
+    export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$NNST_ROOT/include
+
     declare -i result=0
 
     pushd ${NNST_ROOT}
@@ -104,7 +112,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     fi
 
     # Build a source code
-    meson --buildtype=plain --werror --prefix=${NNST_ROOT} --libdir=lib --bindir=bin --includedir=include build
+    meson --prefix=${NNST_ROOT} --sysconfdir=${NNST_ROOT} --libdir=lib --bindir=bin --includedir=include build
 
     # Install a nnstreamer library and examples
     ninja -C build install
@@ -259,7 +267,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     echo -e "[DEBUG] -------------------- xauth: end   ----------------------"
 
 
-    # App (Consumer1): Test /dev/video0 status with gst-lanch-1.0 command 
+    # App (Consumer1): Test /dev/video0 status with gst-lanch-1.0 command
     # The dependency: /dev/video0, VNC
     echo -e "" > temp.log
     echo -e "[DEBUG] App (Consumer1): Starting 'gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink' test on the Xvnc environment..." >> temp.log
