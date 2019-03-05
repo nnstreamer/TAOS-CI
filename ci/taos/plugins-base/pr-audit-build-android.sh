@@ -28,7 +28,6 @@
 # Note that the ndk-build command is located in the Android NDK toolkit.
 # It means that you cannot install it with apt command.
 #
-#
 # @note
 # CI administrator has to execute this instruction as a mandatory obligation
 # to enable this module in order that this CI module compile the nnstreamer
@@ -39,8 +38,6 @@
 # mkdir -p /var/www/html/android/
 # cd /var/www/html/android/
 # wget https://dl.google.com/android/repository/android-ndk-r12b-linux-x86_64.zip
-# wget https://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip
-# wget https://dl.google.com/android/repository/android-ndk-r18b-linux-x86_64.zip
 # vi ~/.bashrc
 # # Android NDK
 # export ANDROID_NDK=/var/www/html/android/android-ndk-r12b
@@ -48,7 +45,15 @@
 #
 # Step 2/2: Download prebuilt gst-android libraries
 # You must copy your custom prebuilt gst-android files to the below folder.
-# In case of ARM64 architecture, the folder has to be /var/www/html/android/gst_root_android/arm64.
+# For arm64, /var/www/html/android/gst_root_android/arm64/ directory.
+#
+# mkdir -p /var/www/html/android/gst_root_android/arm64/
+# cd /var/www/html/android/gst_root_android/arm64/
+# wget http://nnsuite.mooo.com/warehouse/gstreamer-prebuilts-for-android-device/gst_root_android-custom-1.12.4-ndkr12b-20190213-0900/gstreamer-1.0-android-arm64-1.12.4-runtime.tar.bz2
+# wget http://nnsuite.mooo.com/warehouse/gstreamer-prebuilts-for-android-device/gst_root_android-custom-1.12.4-ndkr12b-20190213-0900/gstreamer-1.0-android-arm64-1.12.4.tar.bz2
+# tar xjf gstreamer-1.0-android-arm64-1.12.4-runtime.tar.bz2
+# tar xjf gstreamer-1.0-android-arm64-1.12.4.tar.bz2
+#
 # vi ~/.bashrc
 # # gst-android prebuilt binary (e.g., .a, .so, .h)
 # export GSTREAMER_ROOT_ANDROID=/var/www/html/android/gst_root_android/
@@ -74,8 +79,21 @@ function pr-audit-build-android-run-queue(){
     echo "########################################################################################"
     echo "[MODULE] TAOS/pr-audit-build-android: check a build process for Android platform"
 
-    echo "source /etc/environment"
+    echo "Running 'source /etc/environment'"
     source /etc/environment
+
+    # Android NDK
+    export ANDROID_NDK=/var/www/html/android/android-ndk-r12b
+    export PATH=$ANDROID_NDK:$PATH
+    echo "Exporting an ANDROID_NDK path ..."
+    echo $PATH
+    ndk-build --help
+
+    # gst-android prebuilt binary (e.g., .a, .so, .h)
+    export GSTREAMER_ROOT_ANDROID=/var/www/html/android/gst_root_android/
+    echo "Exporting a GSTREMER_ROOT_ANDROID path..."
+    echo $GSTREAMER_ROOT_ANDROID
+
     # Check if dependent packages are installed. Please add required packages here.
     check_dependency sudo
     check_dependency curl
@@ -89,6 +107,7 @@ function pr-audit-build-android-run-queue(){
     BUILD_MODE=$BUILD_MODE_ANDROID
 
     # Build a package
+    result=0
     if [[ $BUILD_MODE == 99 ]]; then
         # Skip a build procedure
         echo -e "BUILD_MODE = 99"
@@ -109,15 +128,29 @@ function pr-audit-build-android-run-queue(){
         echo -e "[DEBUG] The ndk-build starts at $(date -R)"
         echo -e "[DEBUG] The current directory: $(pwd)."
         pushd ./jni/
-        time ndk-build -j2 \
-        2> ../report/build_log_${input_pr}_android_error.txt \
-        1> ../report/build_log_${input_pr}_android_output.txt
-        result=$?
+        # Build a nnstreamer library (e.g., libnnstreamer.so)
+        echo -e "[DEBUG] Compiling  a nnstreamer library: $(pwd)."
+        rm -f $GSTREAMER_ROOT_ANDROID/arm64/lib/gstreamer-1.0/libnnstreamer.so
+        echo -e "time ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=./Android-nnstreamer.mk NDK_APPLICATION_MK=./Application.mk -j$(nproc)"
+        time ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=./Android-nnstreamer.mk NDK_APPLICATION_MK=./Application.mk -j$(nproc) \
+        2> ../../report/build_log_${input_pr}_android_error.txt \
+        1> ../../report/build_log_${input_pr}_android_output.txt
+        result=$(($result+$?))
+        cp ./libs/arm64-v8a/libnnstreamer.so $GSTREAMER_ROOT_ANDROID/arm64/lib/gstreamer-1.0/
+        # Build a test application
+        echo -e "[DEBUG] Compiling  a nnstreamer-based application: $(pwd)."
+        echo -e "time ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=./Android-app.mk NDK_APPLICATION_MK=./Application.mk -j$(nproc)"
+        time ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=./Android-app.mk NDK_APPLICATION_MK=./Application.mk -j$(nproc) \
+        2>> ../../report/build_log_${input_pr}_android_error.txt \
+        1>> ../../report/build_log_${input_pr}_android_output.txt
+        result=$(($result+$?))
+        ls -al ./libs/arm64-v8a/
+
         echo -e "[DEBUG] The ndk-build finished at $(date -R)"
 
         # If the binary files are generated, let's remove these files after archiving the files.
-        android_files=(../out/)
-        if [[ -d ${android_files[0]} ]]; then
+        android_dirs=(../out/)
+        if [[ -d ${android_dirs[0]} ]]; then
             echo "Archiving generated Android binary files..."
             mkdir -p ../$PACK_BIN_FOLDER/ANDROID
             sudo mv ../out ../$PACK_BIN_FOLDER/ANDROID/
