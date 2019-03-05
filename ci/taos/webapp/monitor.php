@@ -16,19 +16,22 @@
 
 
 ##
-# @file  monitor.php
-# @brief Monitoring running PRs that possess hardware resources
-# @param None
+# @file   monitor.php
+# @author Geunsik Lim <geunsik.lim@samsung.com> 
+# @brief  Monitoring running PRs that possess hardware resources
+# @param  None
 # @dependency: procps (ps), grep (grep)
 #
 
 #-------------------- Configuration --------------------------------------------------------
 $TITLE="State Transition Monitor for PR";
-$PATTERN_REQ       ="[^]] bash ./checker-pr-gateway.sh";
-$PATTERN_RUN_TIZEN ="[^]]/usr/bin/python /usr/bin/gbs build";
-$PATTERN_RUN_UBUNTU="[^]]sudo.*pbuilder";
-$STRING_NUM_TIZEN  =5;
-$STRING_NUM_UBUNTU =5;
+$PATTERN_REQ        ="[^]] bash ./checker-pr-gateway.sh";
+$PATTERN_RUN_TIZEN  ="[^]]/usr/bin/python /usr/bin/gbs build";
+$PATTERN_RUN_UBUNTU ="[^]]sudo.*pbuilder";
+$PATTERN_RUN_ANDROID="[^]]sudo.*ndk-build";
+$STRING_NUM_TIZEN   =5;
+$STRING_NUM_UBUNTU  =5;
+$STRING_NUM_ANDROID =5;
 
 # debugging: 1 (enabling), 0 (disabling)
 $DEBUG=0;
@@ -79,6 +82,9 @@ function generate_requested_pr(){
 }
 
 ## @brief display only running PR numbers for Tizen/gbs build
+#
+#        Display all pdebuild commands to monitor running PRs for building Tizen binaries
+#        including PR number, PR time, and commit number.
 function generate_running_pr_tizen(){
     global $PATTERN_RUN_TIZEN;
     global $STRING_NUM_TIZEN;
@@ -100,7 +106,7 @@ function generate_running_pr_tizen(){
 
 ## @brief display only running PR numbers for Ubuntu/pdebuild
 #
-#        Display all pdebuild commands in order that we monitor running PRs for a Ubuntu build.
+#        Display all pdebuild commands to monitor running PRs for building Ubuntu binaries
 #        including PR number, PR time, and commit number.
 function generate_running_pr_ubuntu(){
     global $PATTERN_RUN_UBUNTU;
@@ -122,6 +128,29 @@ function generate_running_pr_ubuntu(){
     echo "<br><br>\n";
 }
 
+## @brief display only running PR numbers for Android/ndk-build
+#
+#        Display all ndk-build commands to monitor running PRs for building Android binaries
+#        For example, PR number, PR time, and commit number.
+function generate_running_pr_android(){
+    global $PATTERN_RUN_ANDROID;
+    global $STRING_NUM_ANDROID;
+    echo "<hr>\n";
+    echo "<img src=monitor-icon.png border=0> <b>Run Queue: Building Android PRs</b> <br>\n";
+    $output = shell_exec("ps -ef | grep \"$PATTERN_RUN_ANDROID\"");
+    display_msg ("[DEBUG]   (".str_word_count($output)." >= $STRING_NUM_ANDROID)<br>");
+    echo "<font size=2 color=red>\n";
+    if (str_word_count($output) >= $STRING_NUM_ANDROID){
+        $output = str_replace("\n","<br><br>",$output);
+        echo nl2br($output);
+    }
+    else{
+        echo "<br>\n";
+        echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
+    }
+    echo "</font>\n";
+    echo "<br><br>\n";
+}
 
 ## @brief generate HTML head tag
 function generate_foot(){
@@ -138,5 +167,6 @@ generate_title();
 generate_requested_pr();
 generate_running_pr_tizen();
 generate_running_pr_ubuntu();
+generate_running_pr_android();
 generate_foot();
 ?>
