@@ -18,7 +18,7 @@
 # @author Geunsik Lim <geunsik.lim@samsung.com>
 # @brief Check if your hard disk is nearly full.
 # @description
-# This script does a simple test to checke disk space.
+# This script is a simple test to check a disk space.
 # If a mounted partition is under certain quota(10GB), alert us via 1) email.
 # -----------------------------------------------------------------------------------------
 
