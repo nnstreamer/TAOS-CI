@@ -50,6 +50,10 @@ function pr-format-cppcheck(){
 
     check_result="skip"
 
+    # Display the cppcheck version that is installed in the CI server.
+    # Note that the out-of-date version can generate an incorrect result.
+    cppcheck --version
+
     # investigate generated all *.patch files
     FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
     for i in ${FILELIST}; do
