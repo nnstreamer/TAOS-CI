@@ -1,3 +1,16 @@
+taos-ci (1.2) unstable; urgency=medium
+
+  * WEB: Added monitor to show running PRs to build Android binaries
+  * Android/ARM64: interconnect android build module and apache web
+  * Audit group: Support a Android build module for C/C++
+  * Published ICCE paper
+  * admin: update the webhoo api script for maintenance
+  * module: doxygen-tag: Fix broken link to doxygen-documentation
+  * [nnstreamer/apptest] run apptest with meson
+  * nnstreamer/apptest: Renamed Xvnc variables for maintenance
+
+ -- Geunsik Lim <geunsik.lim@samsung.com>  Thu, 07 Mar 2019 07:30:32 +0900
+
 taos-ci (1.1) unstable; urgency=medium
 
   * Added a spelling module, issue #168

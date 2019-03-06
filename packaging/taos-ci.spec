@@ -1,7 +1,10 @@
 Name:		taos-ci
 Summary:	TAOS CI Suite
-Version:	1.0
-Release:	1
+# Synchronize the version information between Ubuntu and Tizen.
+# 1. Ubuntu : ./debian/changelog
+# 2. Tizen  : ./packaging/nnstreamer.spec
+Version:	1.2
+Release:	0
 License:	Apache-2.0
 Group:		Development
 BuildArch:	noarch
