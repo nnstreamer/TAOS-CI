@@ -20,8 +20,9 @@ TAOS-CI is an automated project coordinator to achieve "**Review less, merge fas
 - Verify an integrity of a package by supporting a platform build
 - Support multiple operating systems as follows:
   - Ubuntu: https://www.ubuntu.com/
-  - Tizen: https://www.tizen.org/
+  - Tizen: https://source.tizen.org/
   - Yocto: https://www.yoctoproject.org/
+  - Android: https://source.android.org
   - TBD & TBI
 
 <img src=./image/screenshot01.png border=0 width=350 height=250></img>
