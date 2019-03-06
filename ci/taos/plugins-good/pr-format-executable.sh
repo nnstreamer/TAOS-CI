@@ -29,7 +29,7 @@ echo "##########################################################################
     # Please add more types if you feel proper.
     FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
     for X in $FILELIST; do
-        echo "[DEBUG] exectuable checke - file name is \"$FILELIST\"."
+        echo "[DEBUG] exectuable check - file name is \"$FILELIST\"."
         if [[ $X =~ \.cpp$ || $X =~ \.c$ || $X =~ \.hpp$ || $X =~ \.h$ || $X =~ \.prototxt$ || $X =~ \.caffemodel$ || $X =~ \.txt$ || $X =~ \.ini$ ]]; then
             if [[ -f "$X" && -x "$X" ]]; then
                 # It is a text file (.cpp, .c, ...) and is executable. This is invalid!

@@ -269,7 +269,7 @@ if [[ ${BUILD_TEST_FAIL} -eq 1 ]]; then
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
-# --------------------------- Report module: generate a log file and checke other conditions --------------------------
+# --------------------------- Report module: generate a log file and check other conditions --------------------------
 
 # Save webhook information for debugging
 echo ""
