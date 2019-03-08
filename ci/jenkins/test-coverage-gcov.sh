@@ -19,12 +19,10 @@ mkdir -p /var/www/html/<prj_name>/gcov
 pushd /var/www/html/<prj_name>/gcov
 
 rm -Rf unittest_old
-USERNAME=git.bot.sec
-PASSWORD=npuxxxx
 
 # download nnstream-unittest-coverar.rpm files.
 mv index.html index_reference.html
-wget http://$USERNAME:$PASSWORD@10.113.136.32/download_trbs/newlive/Tizen:/5.0:/TAOS/unittest/x86_64/
+wget http://download.tizen.org/live/devel:/AIC:/Tizen:/5.0:/nnsuite/unittest/x86_64/
 FILENAME=`grep "nnstreamer-unittest-coverage.*\.rpm" index.html | sed "s|.*\(nnstreamer-unittest-.*\)\.rpm.*|\1.rpm|"`
 
 echo $FILENAME
@@ -46,7 +44,7 @@ rm -f nnstreamer-unittest-coverage*.rpm
 rm -Rf rpmextract
 mkdir -p rpmextract
 
-wget http://$USERNAME:$PASSWORD@10.113.136.32/download_trbs/newlive/Tizen:/5.0:/TAOS/unittest/x86_64/$FILENAME
+wget http://download.tizen.org/live/devel:/AIC:/Tizen:/5.0:/nnsuite/unittest/x86_64/$FILENAME
 
 # decompress latest rpm file.
 pushd rpmextract
