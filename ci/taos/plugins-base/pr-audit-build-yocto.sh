@@ -109,6 +109,9 @@ function pr-audit-build-yocto-run-queue(){
     # BUILD_MODE=99: skip "gbs build" procedures
     BUILD_MODE=$BUILD_MODE_YOCTO
 
+    # Put a timer in front of the build job to check a start time.
+    time_start=$(date +"%s")
+
     # Build a package for Yocto
     if [[ $BUILD_MODE == 99 ]]; then
         # Skip a build procedure because BUILD_MODE is 99
@@ -163,6 +166,11 @@ function pr-audit-build-yocto-run-queue(){
 
     echo "[DEBUG] The return value (build_result) of 'devtool build' command is $build_result."
 
+    # Put a timer behind the build job to check an end time.
+    time_end=$(date +"%s")
+    time_diff=$(($time_end-$time_start))
+    time_build_cost="$(($time_diff / 60)) minutes and $(($time_diff % 60)) seconds"
+
     # Report a build result of Yocto package
     # Let's do the build procedure of or skip the build procedure according to $BUILD_MODE
     if [[ $BUILD_MODE == 99 ]]; then
@@ -206,10 +214,10 @@ function pr-audit-build-yocto-run-queue(){
 
         # Let's report build result of source code
         if [[ $check_result == "success" ]]; then
-            message="Successfully  YOCTO build checker is passed. Commit number is '$input_commit'."
+            message="Yocto.build Successful in $time_build_cost. Commit number is '$input_commit'."
             cibot_report $TOKEN "success" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
         else
-            message="Oooops. YOCTO  build checker is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
+            message="Yocto.build Failure after $time_build_cost. Commit number is $input_commit."
             cibot_report $TOKEN "failure" "TAOS/pr-audit-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
             export BUILD_TEST_FAIL=1

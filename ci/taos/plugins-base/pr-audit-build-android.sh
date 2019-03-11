@@ -106,6 +106,9 @@ function pr-audit-build-android-run-queue(){
     # BUILD_MODE=99: skip "ndk-build" procedures
     BUILD_MODE=$BUILD_MODE_ANDROID
 
+    # Put a timer in front of the build job to check a start time.
+    time_start=$(date +"%s")
+
     # Build a package
     result=0
     if [[ $BUILD_MODE == 99 ]]; then
@@ -168,6 +171,11 @@ function pr-audit-build-android-run-queue(){
     fi
     echo "[DEBUG] The result value is '$result'."
 
+    # Put a timer behind the build job to check an end time.
+    time_end=$(date +"%s")
+    time_diff=$(($time_end-$time_start))
+    time_build_cost="$(($time_diff / 60)) minutes and $(($time_diff % 60)) seconds"
+
     # Report a test result
     # Let's run the build procedure. Or skip the build procedure according to $BUILD_MODE.
     if [[ $BUILD_MODE == 99 ]]; then
@@ -198,10 +206,10 @@ function pr-audit-build-android-run-queue(){
 
         # Let's report build result of source code
         if [[ $check_result == "success" ]]; then
-            message="Successfully Android build checker is passed. Commit number is '$input_commit'."
+            message="Android.build Successful in $time_build_cost. Commit number is '$input_commit'."
             cibot_report $TOKEN "success" "TAOS/pr-audit-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
         else
-            message="Oooops. Android build checker is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
+            message="Android.build Failure after $time_build_cost. Resubmit the PR after fixing correctly. Commit number is $input_commit."
             cibot_report $TOKEN "failure" "TAOS/pr-audit-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
             export BUILD_TEST_FAIL=1
