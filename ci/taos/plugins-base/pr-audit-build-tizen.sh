@@ -62,6 +62,9 @@ function pr-audit-build-tizen-run-queue(){
     # 2) _nnstreamer_****
     # 3) _another_****
 
+    # Put a timer in front of the build job to check a start time.
+    time_start=$(date +"%s")
+
     # Build a package with gbs command.
     # TODO: Simplify the existing if...else statement for readability and maintenance
     echo -e "[DEBUG] gbs build start at : $(date -R)."
@@ -113,6 +116,11 @@ function pr-audit-build-tizen-run-queue(){
     echo -e "[DEBUG] gbs build finished at : $(date -R)."
     echo -e "[DEBUG] The variable result value is $result."
 
+    # Put a timer behind the build job to check an end time.
+    time_end=$(date +"%s")
+    time_diff=$(($time_end-$time_start))
+    time_build_cost="$(($time_diff / 60)) minutes and $(($time_diff % 60)) seconds"
+
     # If the ./GBS-ROOT/ folder exists, let's remove this folder.
     # Note that this folder consume too many storage space (on average 9GiB).
     if [[ -d GBS-ROOT ]]; then
@@ -159,10 +167,10 @@ function pr-audit-build-tizen-run-queue(){
     
         # Let's report build result of source code
         if [[ $check_result == "success" ]]; then
-            message="Successfully a build checker is passed. Commit number is '$input_commit'."
+            message="Tizen.build Successful in $time_build_cost. Commit number is '$input_commit'."
             cibot_report $TOKEN "success" "TAOS/pr-audit-build-tizen-$1" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
         else
-            message="Oooops. A build checker is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
+            message="Tizen.build Failure after $time_build_cost. Commit number is $input_commit."
             cibot_report $TOKEN "failure" "TAOS/pr-audit-build-tizen-$1" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
             export BUILD_TEST_FAIL=1

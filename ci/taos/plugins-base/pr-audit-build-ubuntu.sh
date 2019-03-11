@@ -72,6 +72,8 @@ function pr-audit-build-ubuntu-run-queue(){
     # BUILD_MODE=99: skip "pdebuild" procedures
     BUILD_MODE=$BUILD_MODE_UBUNTU
 
+    # Put a timer in front of the build job to check a start time.
+    time_start=$(date +"%s")
     # Build a package
     if [[ $BUILD_MODE == 99 ]]; then
         # skip build procedure
@@ -120,6 +122,12 @@ function pr-audit-build-ubuntu-run-queue(){
     fi
     echo "[DEBUG] The variable result value is $result."
 
+    # Put a timer behind the build job to check an end time.
+    time_end=$(date +"%s")
+    time_diff=$(($time_end-$time_start))
+    time_build_cost="$(($time_diff / 60)) minutes and $(($time_diff % 60)) seconds"
+
+
     # report execution result
     # let's do the build procedure of or skip the build procedure according to $BUILD_MODE
     if [[ $BUILD_MODE == 99 ]]; then
@@ -140,20 +148,20 @@ function pr-audit-build-ubuntu-run-queue(){
         echo -e "[DEBUG] The return value of pdebuild command is $result."
         # Let's check if build procedure is normally done.
         if [[ $result -eq 0 ]]; then
-                echo -e "[DEBUG][PASSED] Successfully Ubunu build checker is passed. Return value is ($result)."
+                echo -e "[DEBUG][PASSED] Successfully Ubunu build checker is passed in $time_build_cost."
                 check_result="success"
         else
-                echo -e "[DEBUG][FAILED] Oooops!!!!!! Ubuntu build checker is failed. Return value is ($result)."
+                echo -e "[DEBUG][FAILED] Oooops!!!!!! Ubuntu build checker is failed after $time_build_cost. "
                 check_result="failure"
                 global_check_result="failure"
         fi
 
         # Let's report build result of source code
         if [[ $check_result == "success" ]]; then
-            message="Successfully  Ubuntu build checker is passed. Commit number is '$input_commit'."
+            message="Ubuntu.build Successful in $time_build_cost. Commit number is '$input_commit'."
             cibot_report $TOKEN "success" "TAOS/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
         else
-            message="Oooops. Ubuntu  build checker is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
+            message="Ubuntu.build Failure after $time_build_cost. Commit number is $input_commit."
             cibot_report $TOKEN "failure" "TAOS/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
             export BUILD_TEST_FAIL=1
