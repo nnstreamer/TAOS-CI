@@ -119,7 +119,7 @@ function pr-audit-build-tizen-run-queue(){
     # Put a timer behind the build job to check an end time.
     time_end=$(date +"%s")
     time_diff=$(($time_end-$time_start))
-    time_build_cost="$(($time_diff / 60)) minutes and $(($time_diff % 60)) seconds"
+    time_build_cost="$(($time_diff / 60))m $(($time_diff % 60))s"
 
     # If the ./GBS-ROOT/ folder exists, let's remove this folder.
     # Note that this folder consume too many storage space (on average 9GiB).
