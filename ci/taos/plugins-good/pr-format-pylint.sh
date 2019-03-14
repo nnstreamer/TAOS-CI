@@ -48,14 +48,20 @@ for i in ${FILELIST}; do
                 py_analysis_sw="pylint"
                 py_analysis_rules=" --reports=y "
                 py_check_result="pylint_result.txt"
-                # Check C/C++ file, enable all checks.
+
                 if [[ ! -e ~/.pylintrc ]]; then
                     $py_analysis_sw --generate-rcfile > ~/.pylintrc
                 fi
-                $py_analysis_sw $py_analysis_rules  > ../report/${py_check_result}
-                line_count=`wc -l $cppcheck_result`
+
+                # Check Python files
+                $py_analysis_sw $py_analysis_rules $i > ../report/${py_check_result}
+                line_count=$((`cat $py_check_result | grep W: | wc -l` + \
+                    `cat $py_check_result | grep C: | wc -l` + \
+                    `cat $py_check_result | grep E: | wc -l` + \
+                    `cat $py_check_result | grep R: | wc -l`))
+
                 # TODO: apply strict rule with pass/failure instead of report when developers understand investigation result of pylint.
-                if  [[ $line_count -lt 0 ]]; then
+                if  [[ $line_count -gt 0 ]]; then
                     echo "[DEBUG] $py_analysis_sw: failed. file name: $i, There are $line_count bug(s)."
                     check_result="failure"
                     global_check_result="failure"
