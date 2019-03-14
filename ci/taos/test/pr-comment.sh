@@ -34,7 +34,7 @@ TOKEN="xxx"
 input_pr=$1
 
 if [[ $1 == "" ]]; then
-    echo "Oooops. Run '$0 {PR_NO}'"
+    echo -e "Oooops. Run '$0 {PR_NO}'"
     exit 1
 fi
 
@@ -44,5 +44,4 @@ MESSAGE="This PR looks great - This message is manually sent by administrator."
  -H "Authorization: token "$TOKEN"  " \
  --data "{\"body\":\":octocat: **cibot**: :+1: $MESSAGE \"}" \
  ${GITHUB_WEBHOOK_API}/issues/${input_pr}/comments
-
 

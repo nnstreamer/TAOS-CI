@@ -60,7 +60,7 @@ do
      ${GITHUB_WEBHOOK_API}/statuses/$input_commit
 done
 
-# Display helpfule messages to administrator.
+# Inform a CI administrator of a helpful message for debugging.
 echo -e "[DEBUG] Tip: How to fix a trouble"
 echo -e "[DEBUG]   a. If webhook server replies \"message\": \"Not Found\", add a privileged user id at 'Setting - Collaborators'."
 echo -e "[DEBUG]   b. The privileged user id has to be appended by \"Write\" permission."
