@@ -114,10 +114,20 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # Build a source code
     meson --prefix=${NNST_ROOT} --sysconfdir=${NNST_ROOT} --libdir=lib --bindir=bin --includedir=include build
 
-    # Install a nnstreamer library and examples
+    # Install a nnstreamer library
     ninja -C build install
 
+    # Clone the nnstreamer-example repository
+    git clone https://github.com/nnsuite/nnstreamer-example.git exam-tmp
+
+    # Build and install nnstreamer examples
+    cd exam-tmp
+    meson --prefix=${NNST_ROOT} --sysconfdir=${NNST_ROOT} --libdir=lib --bindir=bin --includedir=include build
+    ninja -C build install
+    cd ..
+
     # After installation, binary files are installed to 'bin' folder.
+    rm -rf exam-tmp
     rm -rf build
     cd bin
 
