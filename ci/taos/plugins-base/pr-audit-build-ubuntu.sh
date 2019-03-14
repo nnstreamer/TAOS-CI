@@ -15,8 +15,8 @@
 #
 
 ##
-# @file pr-audit-build-ubuntu.sh
-# @brief Build package with pbuilder/pdebuild to verify build validation on Ubuntu distribution
+# @file     pr-audit-build-ubuntu.sh
+# @brief    Build package with pbuilder/pdebuild to verify build validation on Ubuntu distribution
 # @see      https://wiki.ubuntu.com/PbuilderHowto
 # @see      https://pbuilder-docs.readthedocs.io/en/latest/usage.html#configuration-files
 # @see      https://github.com/nnsuite/TAOS-CI
@@ -52,10 +52,10 @@ function pr-audit-build-ubuntu-run-queue(){
     message="Trigger: run queue. The commit number is $input_commit."
     cibot_report $TOKEN "pending" "TAOS/pr-audit-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-    echo "########################################################################################"
-    echo "[MODULE] TAOS/pr-audit-build-ubuntu: check build process for Ubuntu distribution"
+    echo -e "########################################################################################"
+    echo -e "[MODULE] TAOS/pr-audit-build-ubuntu: check build process for Ubuntu distribution"
 
-    echo "source /etc/environment"
+    echo -e "source /etc/environment"
     source /etc/environment
     # check if dependent packages are installed
     # the required packages are pbuilder(pdebuild), debootstrap(debootstrap), and devscripts(debuild)
@@ -65,7 +65,7 @@ function pr-audit-build-ubuntu-run-queue(){
     check_dependency debootstrap
     check_dependency debuild
 
-    echo "[DEBUG] starting TAOS/pr-audit-build-ubuntu facility"
+    echo -e "[DEBUG] starting TAOS/pr-audit-build-ubuntu facility"
 
     # BUILD_MODE=0 : run "pdebuild" command without generating debugging information.
     # BUILD_MODE=1 : run "pdebuild" command with a debug file.
@@ -107,20 +107,20 @@ function pr-audit-build-ubuntu-run-queue(){
         debfiles=(../*.dsc)
         if [[ -f ${debfiles[0]} ]]; then
             mkdir -p ../$PACK_BIN_FOLDER/DEBS
-            echo "Removing unnecessary debian files..."
-            echo "The binary files will be temporarily archived in /var/cache/pbuilder/ folder."
+            echo -e "Removing unnecessary debian files..."
+            echo -e "The binary files will be temporarily archived in /var/cache/pbuilder/ folder."
             sudo mv ../*.deb ../$PACK_BIN_FOLDER/DEBS
             sudo rm -rf ../*.tar.gz ../*.dsc ../*.changes
             if [[ $? -ne 0 ]]; then
-                echo "[DEBUG][FAILED] Ubuntu/pdebuild: Oooops!!!!! Unnecessary files are not removed."
+                echo -e "[DEBUG][FAILED] Ubuntu/pdebuild: Oooops!!!!! Unnecessary files are not removed."
             else
-                echo "[DEBUG][PASSED] Ubuntu/pdebuild: It is okay. Unnecessary files are successfully removed."
+                echo -e "[DEBUG][PASSED] Ubuntu/pdebuild: It is okay. Unnecessary files are successfully removed."
             fi
         fi
-        echo "[DEBUG] The current directory: $(pwd)."
+        echo -e "[DEBUG] The current directory: $(pwd)."
 
     fi
-    echo "[DEBUG] The variable result value is $result."
+    echo -e "[DEBUG] The variable result value is $result."
 
     # Put a timer behind the build job to check an end time.
     time_end=$(date +"%s")
