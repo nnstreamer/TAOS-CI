@@ -135,8 +135,9 @@ $checkout_branch
 git branch
 pwd
 
-
-# --------------------------- Run a checker: format ---------------------------------------
+# Run the format (prog1) and audit (prog2) group in parallel.
+# Prog1 and Prog2 woudl be started in the background.
+# --------------------------- Run a checker: format group ---------------------------------------
 cd $dir_ci
 echo -e "[DEBUG] dir_commit is $dir_commit. This folder is created." | tee    $log_file_format
 echo -e "[DEBUG] current path: $(pwd)."                              | tee -a $log_file_format
@@ -146,12 +147,12 @@ echo -e "[DEBUG] ./checker-pr-format-async.sh $1 $2 $3 $4 $5 $6 "    | tee -a $l
 echo -e "[DEBUG] Starting a format checker...            "           | tee -a $log_file_format
 # Run format checker
 pushd ./taos/
-./checker-pr-format-async.sh $1 $2 $3 $4 $5 $6                       | tee -a $log_file_format
+./checker-pr-format-async.sh $1 $2 $3 $4 $5 $6                       | tee -a $log_file_format &
 popd
 echo -e "[DEBUG] Running..."                                         | tee -a $log_file_format
 echo -e "[DEBUG] Completed."                                         | tee -a $log_file_format
 
-# --------------------------- Run a checker: audit ----------------------------------------
+# --------------------------- Run a checker: audit group ----------------------------------------
 cd $dir_ci
 echo -e "[DEBUG] dir_commit is $dir_commit. This folder is created." | tee    $log_file_audit
 echo -e "[DEBUG] current path: $(pwd)."                              | tee -a $log_file_audit
@@ -161,7 +162,7 @@ echo -e "[DEBUG] ./checker-pr-audit-async.sh $1 $2 $3 $4 $5 $6 "     | tee -a $l
 echo -e "[DEBUG] Starting a audit checker...             "           | tee -a $log_file_audit
 # Run audit checker
 pushd ./taos/
-./checker-pr-audit-async.sh $1 $2 $3 $4 $5 $6                        | tee -a $log_file_audit
+./checker-pr-audit-async.sh $1 $2 $3 $4 $5 $6                        | tee -a $log_file_audit &
 popd
 echo -e "[DEBUG] Running..."                                         | tee -a $log_file_audit
 echo -e "[DEBUG] Completed."                                         | tee -a $log_file_audit
