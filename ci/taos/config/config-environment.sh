@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# Do not append a license statement in the configuration file for a differnet license-based repository.
+# Do not append a license statement in the configuration file
+# for a differnet license-based repository.
 
 ##
 # @file     config-environment.sh
@@ -23,16 +24,19 @@
 #### Repository setting
 
 # Token ID: Connecting to a repository using token id instead of id-name@github.io
-# in case of two-authentification situation. Refer to https://github.com/settings/tokens
+# in case of the two-authentification situation.
+# Refer to https://github.com/settings/tokens
 TOKEN="xxxxxxxxxxxxc1546d78aa78686b9806b1acf8785d"
 
-# Account name (or organization name)
+# Write an account name (or organization name) of the '{master|upstream}' branch
+# e.g., https://github-website/{account_name}/{project_name}/
 GITHUB_ACCOUNT="nnsuite"
 
-# Project name of github website
+# Write a project name of a github website of the '{master|upstream}' branch
+# e.g., https://github-website/{account_name}/{project_name}/
 PRJ_REPO_UPSTREAM="TAOS-CI"
 
-# CI Server's web address. Should end with /
+# Specify the web address of the CI server. Should end with /
 CISERVER="http://<your-ci-dns>.mooo.com/"
 
 # Format area (pr-format)
@@ -59,19 +63,19 @@ CPU_NUM=3
 
 #### Automatic PR commenter: enabling(1), disabling(0)
 
-# inform PR submitter of a rule to pass the CI process
+# Inform a PR submitter of a rule to pass the CI process
 pr_comment_notice=1
 
-# inform all developers of their activity whenever PR submitter resubmit their PR after applying comments of reviews
+# Inform all developers of their activity whenever PR submitter resubmit their PR after applying comments of reviews
 pr_comment_pr_updated=0
 
-# inform PR submitter that they do not have to merge their own PR directly.
+# Inform a PR submitter that they do not have to merge their own PR directly.
 pr_comment_self_merge=0
 
-# infrom PR submitter of how to submit a PR that include lots of commits.
+# infrom a PR submitter of how to submit a PR that include lots of commits.
 pr_comment_many_commit=0
 
-# inform PR submitter of the webpage address in order that they can monitor the current status of their PR.
+# Inform a PR submitter of the webpage address in order that they can monitor the current status of their PR.
 pr_comment_pr_monitor=0
 
 #### Build test: Write a build type to test ex) "x86_64 i586 armv7l aarch64" 
@@ -122,6 +126,7 @@ RUN_QUEUE_PR_JOBS=8
 VERSION="1.20190225"
 
 #### Location
+# We assume that the default folder of the 'www-data' is '/var/www/html/' folder. 
 
 # Reference repository to speed up "git clone" command
 REFERENCE_REPOSITORY="/var/www/html/$PRJ_REPO_UPSTREAM/"
