@@ -112,6 +112,9 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     pushd ${NNST_ROOT}
 
     ########## Step 2/6: Build and install source codes.
+    # Put a timer in front of the build job to check a start time.
+    time_start=$(date +"%s")
+
     # Check if a 'build' folder already exists.
     if [[ -d ./build ]]; then
         rm -rf ./build/*
@@ -344,22 +347,26 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     kill ${pid}
     result+=$(save_consumer_msg $?)
 
-
     # Let's stop the existing producer ID when all test applications (=consumers) are tested.
     kill ${producer_id}
 
     popd
 
+    # Put a timer behind the build job to check an end time.
+    time_end=$(date +"%s")
+    time_diff=$(($time_end-$time_start))
+    time_build_cost="$(($time_diff / 60))m $(($time_diff % 60))s"
+
     ########## Step 6/6: Report a execution result
 
     # Summarize a test result before doing final report.
     if [[ ${result} -ne 0 ]]; then
-        echo -e "[DEBUG][FAILED] Oooops!!!!!! apptest is failed. Resubmit the PR after fixing correctly."
+        echo -e "[DEBUG][FAILED] Oooops!!!!!! apptest is failed after $time_build_cost."
         echo -e ""
         check_result="failure"
         global_check_result="failure"
     else
-        echo -e "[DEBUG][PASSED] Successfully apptest is passed."
+        echo -e "[DEBUG][PASSED] Successfully apptest is passed in $time_build_cost."
         check_result="success"
     fi
 
@@ -367,7 +374,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     echo -e "[DEBUG] report the execution result of apptest. The result value is ${result}. "
     if [[ $check_result == "success" ]]; then
         # Report a success.
-        message="Successfully apptest is passed. Commit number is '$input_commit'."
+        message="Ubuntu.apptest Successful in $time_build_cost. Commit number is '$input_commit'."
         cibot_report $TOKEN "success" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         # Report a failure.
