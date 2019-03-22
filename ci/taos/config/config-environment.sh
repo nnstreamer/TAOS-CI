@@ -97,12 +97,6 @@ pr_cppcheck_check_level=0
 # unit of the file size is MB.
 filesize_limit=5
 
-#### Dependency policy between PR groups
-# No dependency = 0
-# Dependency = 1 (based on the order of definition)
-# If dependency, PR group running order follows FCFS ordering
-dep_policy_between_groups=0
-
 
 #### Build mode of software platform
 
