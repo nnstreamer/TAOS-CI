@@ -38,6 +38,32 @@
 #          $ sudo usermod -a -G video www-data
 #
 
+##
+# @brief Caching the file after getting the specified files
+#
+# This function downloads a file from the specified URL at first.
+# Then, it archives the files /tmp folder. It means that the download
+# files are continually archived in /tmp folder until the server willbe rebooted.
+# @param
+#  arg1: FILENAME    The file name
+#  arg2: URL         The web address to download a file
+#  arg3: CACHE_PATH  The file path that the file is archived (=cached)
+#  arg4: LINK_PATH   The symbolic link path
+function func_get_file_cached(){
+    echo -e "[DEBUG] ${1} ${2} ${3} ${4}"
+    if [[ -f "${3}/${1}" ]]; then
+        echo -e "[DEBUG] Caching the file, because the file was downloaded previously."
+        ln -s ${3}/${1} ${4}/{1}
+        result+=$?
+    else
+        echo -e "[DEBUG] Downloading the ${1} from the specified URL."
+        wget -a wget.log ${2}/${1}
+        mkdir -p ${3}
+        cp ${4}/${1} ${3}
+        result+=$?
+    fi
+}
+
 # @brief function that append a log message to an appropriate log file via result($1)
 # @param
 # arg1: The return value of a command
@@ -143,19 +169,34 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     cd bin
 
     ########## Step 3/6: Download a model and label file for Tensorflow-lite.
-    # Download a network model file and label from github.com repository.
     mkdir tflite_model
-    cd tflite_model
+    pushd tflite_model
+
+    # Download a network model file from the github.com
+    # For more details on /tmp/ folder, read /etc/default/rcS and /lib/systemd/system/systemd-tmpfiles-clean.service
     echo -e "" > wget.log
     echo -e "[DEBUG] Downloading 'tflite model' with wget command ..." >> wget.log
-    wget -a wget.log https://github.com/nnsuite/testcases/raw/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/mobilenet_v1_1.0_224_quant.tflite
-    result+=$?
+
+    func_get_file_cached \
+    "mobilenet_v1_1.0_224_quant.tflite" \
+    "https://github.com/nnsuite/testcases/raw/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant" \
+    "/tmp/nnsuite/tflite_model" \
+    "."
+
+    # Download a label file from the github.com
+    # For more details on /tmp folder, read /etc/default/rcS and /lib/systemd/system/systemd-tmpfiles-clean.service
     echo -e "" >> wget.log
     echo -e "[DEBUG] Downloading 'tflite label' with wget command ..." >> wget.log
-    wget -a wget.log https://github.com/nnsuite/testcases/raw/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant/labels.txt
-    result+=$?
-    cd ..
 
+    func_get_file_cached \
+    "labels.txt" \
+    "https://github.com/nnsuite/testcases/raw/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant" \
+    "/tmp/nnsuite/tflite_model" \
+    "."
+
+    popd
+
+    # Check if the files are normally downloaded
     if [[ ${result} -ne 0 ]]; then
         echo -e "[DEBUG][FAILED] Oooops!!!!!! apptest is failed."
         echo -e "[DEBUG][FAILED] The data files was not downloaded. Please check the log file to get a hint"
