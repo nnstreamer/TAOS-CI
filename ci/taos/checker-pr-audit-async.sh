@@ -314,7 +314,6 @@ fi
 # --------------------------- Report module: submit  global check result -----------------------------------------------
 # Report if all modules are successfully completed or not.
 echo "[DEBUG] Send a total report with global_check_result variable. global_check_result is ${global_check_result}. "
-exit_code=0
 
 if [[ $global_check_result == "success" ]]; then
     # The global check is succeeded.
@@ -328,13 +327,11 @@ elif [[ $global_check_result == "failure" ]]; then
     # The global check is failed.
     message="Oooops. One of the audits is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
     cibot_report $TOKEN "failure" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
-    exit_code=1
 else
     # The global check is failed due to CI error.
     message="CI Error. There is a bug in CI script. Please contact the CI administrator."
     cibot_report $TOKEN "error" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     echo -e "[DEBUG] It seems that this script has a bug. Please check value of \$global_check_result."
-    exit_code=1
 fi
 
 # --------------------------- Cleaner:  Remove unnecessary directories --------------------
@@ -342,5 +339,4 @@ fi
 # Please append a command below. 
 echo "[DEBUG] The current directory: $(pwd)."
 
-# Return with exit code
-exit $exit_code
+

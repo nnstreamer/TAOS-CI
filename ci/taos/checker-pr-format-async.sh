@@ -157,7 +157,7 @@ done
 
 ##################################################################################################################
 
-exit_code=0
+
 # --------------------- Report module: submit webhook API for global check result to github website --------------
 # report if all modules are successfully completed or not.
 echo -e "[DEBUG] Varaible global_check_result is $global_check_result."
@@ -179,15 +179,11 @@ elif [[ $global_check_result == "failure" ]]; then
     # inform PR submitter of a hint to fix issues
     message=":octocat: **cibot**: $user_id, One of the format checkers is failed. If you want to get a hint to fix this issue, please go to ${REPOSITORY_WEB}/wiki/."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
-    exit_code=1
 
 else
     # in case that CI is broken
     message="Oooops. It seems that CI bot has bug(s). CI bot has to be fixed."
     cibot_report $TOKEN "failure" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
-    exit_code=1
 
 fi
 
-# Return with exit code
-exit $exit_code
