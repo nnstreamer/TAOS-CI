@@ -2,7 +2,7 @@
 
 ##
 # Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -17,9 +17,9 @@
 ##
 # @file     checker-pr-gateway.sh
 # @brief    A PR gateway to control two PR checkers such as format and audit
-# First of all, it clones a github repository with "git clone" command 
+# First of all, it clones a github repository with "git clone" command
 # when a contributor submits a PR. Then, it run format and audit checker sequentially.
-# 
+#
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @param arguments are received from CI manager
@@ -109,7 +109,7 @@ mkdir ./report
 echo -e "[DEBUG] The 'report' folder is created."
 
 # run "git clone" command to download git source
-# options of 'sudo' command: 
+# options of 'sudo' command:
 # 1) The -H (HOME) option sets the HOME environment variable to the home directory of the target user (root by default)
 # as specified in passwd. By default, sudo does not modify HOME.
 # 2) The -u (user) option causes sudo to run the specified command as a user other than root. To specify a uid instead of a username, use #uid.
@@ -135,34 +135,70 @@ $checkout_branch
 git branch
 pwd
 
-# Run the format (prog1) and audit (prog2) group in parallel.
-# Prog1 and Prog2 woudl be started in the background.
-# --------------------------- Run a checker: format group ---------------------------------------
-cd $dir_ci
-echo -e "[DEBUG] dir_commit is $dir_commit. This folder is created." | tee    $log_file_format
-echo -e "[DEBUG] current path: $(pwd)."                              | tee -a $log_file_format
-# Save a log file to debug a format cheker
-log_file_format="${dir_ci}/${dir_commit}/checker-pr-format.log"
-echo -e "[DEBUG] ./checker-pr-format-async.sh $1 $2 $3 $4 $5 $6 "    | tee -a $log_file_format
-echo -e "[DEBUG] Starting a format checker...            "           | tee -a $log_file_format
-# Run format checker
-pushd ./taos/
-./checker-pr-format-async.sh $1 $2 $3 $4 $5 $6                       | tee -a $log_file_format &
-popd
-echo -e "[DEBUG] Running..."                                         | tee -a $log_file_format
-echo -e "[DEBUG] Completed."                                         | tee -a $log_file_format
 
-# --------------------------- Run a checker: audit group ----------------------------------------
-cd $dir_ci
-echo -e "[DEBUG] dir_commit is $dir_commit. This folder is created." | tee    $log_file_audit
-echo -e "[DEBUG] current path: $(pwd)."                              | tee -a $log_file_audit
-# Save a log file to debug a audit checker
-log_file_audit="${dir_ci}/${dir_commit}/checker-pr-audit.log"
-echo -e "[DEBUG] ./checker-pr-audit-async.sh $1 $2 $3 $4 $5 $6 "     | tee -a $log_file_audit
-echo -e "[DEBUG] Starting a audit checker...             "           | tee -a $log_file_audit
-# Run audit checker
-pushd ./taos/
-./checker-pr-audit-async.sh $1 $2 $3 $4 $5 $6                        | tee -a $log_file_audit &
-popd
-echo -e "[DEBUG] Running..."                                         | tee -a $log_file_audit
-echo -e "[DEBUG] Completed."                                         | tee -a $log_file_audit
+# @brief checker runner to run the checkers based on the dependency policy
+# Run the first group, then depending on the dependency policy, run the remaining groups
+# @param arguments received by the function
+#  arg1: list of checkers (like format, audit, etc)
+#  arg2: list of checker's name
+#  arg3: list of checker's log file
+#  arg@: all remaining arguments are to be passed to the checkers (common for all the checkers)
+function run_all_checkers(){
+  local -n cmd_list=$1
+  local -n name_list=$2
+  local -n logfile_list=$3
+  local checker_args=${@:4}
+
+  local num_checkers=${#cmd_list[@]}
+  for (( i=0; i<$num_checkers; i++ )); do
+    local logfile=${logfile_list[$i]}
+
+    cd $dir_ci
+    echo -e "[DEBUG] dir_commit is $dir_commit. This folder is created." | tee    $logfile
+    echo -e "[DEBUG] current path: $(pwd)."                              | tee -a $logfile
+    # Save a log file to debug the cheker
+    echo -e "[DEBUG] ${cmd_list[$i]} $checker_args "                     | tee -a $logfile
+    echo -e "[DEBUG] Starting a ${name_list[$i]} checker... "            | tee -a $logfile
+    # Run checker
+    pushd ./taos/
+    ${cmd_list[$i]} $checker_args                                        | tee -a $logfile &
+    local pid=$!
+    popd
+    echo -e "[DEBUG] Running..."                                         | tee -a $logfile
+
+    # if the dependency between groups is to be enforced and current group fails, skip remaining groups
+    if [[ $dep_policy_between_groups == 1 ]]; then
+      wait $pid
+      if [[ $? != 0 ]]; then
+        break
+      fi
+    fi
+  done
+}
+
+# --------------------------- Create and run checkers -------------------------------------
+# Create an empty list for the checkers to be run with the corresponding elements
+# The order of the checkers in the list creates a dependency between them determining the order in which they will run
+# 1) Checker itself to be run
+# 2) Name of the checker
+# 3) Log file to log the output of the checker
+declare -a checker_cmd_list
+declare -a checker_name_list
+declare -a checker_logfile_list
+
+# Ready a checker: format
+checker_cmd_list+=("./checker-pr-format-async.sh")
+checker_name_list+=("format")
+checker_logfile_list+=("${dir_ci}/${dir_commit}/checker-pr-format.log")
+echo -e "[DEBUG] Added ${checker_name_list[-1]} checker"
+
+# Ready a checker: audit
+checker_cmd_list+=("./checker-pr-audit-async.sh")
+checker_name_list+=("audit")
+checker_logfile_list+=("${dir_ci}/${dir_commit}/checker-pr-audit.log")
+echo -e "[DEBUG] Added ${checker_name_list[-1]} checker"
+
+# Run all the checkers
+echo -e "[DEBUG] Running all checkers"
+run_all_checkers checker_cmd_list checker_name_list checker_logfile_list $1 $2 $3 $4 $5 $6
+echo -e "[DEBUG] Completed all checkers"
