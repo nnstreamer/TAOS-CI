@@ -1,4 +1,4 @@
-Name:		taos-ci
+Name   :	taos-ci
 Summary:	TAOS CI Suite
 # Synchronize the version information between Ubuntu and Tizen.
 # 1. Ubuntu : ./debian/changelog
@@ -6,13 +6,13 @@ Summary:	TAOS CI Suite
 Version:	1.2
 Release:	0
 License:	Apache-2.0
-Group:		Development
-BuildArch:	noarch
+Group  :	Development
+BuildArch   :	noarch
 Distribution:	whatever
-Vendor:		Samsung Electronics
-Packager:	MyungJoo Ham <myungjoo.ham@samsung.com>
-Source0:	%{name}-%{version}.tar.gz
-Source1001:	%{name}.manifest
+Vendor      :	Samsung Electronics
+Packager    :	MyungJoo Ham <myungjoo.ham@samsung.com>
+Source0     :	%{name}-%{version}.tar.gz
+Source1001  :	%{name}.manifest
 
 %description
 TAOS-CI, The Per-PR CI System for TAOS Packages.
@@ -41,7 +41,7 @@ cp %{SOURCE1001} .
 
 %install
 mkdir -p %{buildroot}%{_bindir}
-install -m 0755 ci/gcov/unittestcoverage.py %{buildroot}%{_bindir}/
+install -m 0755 ci/gcov/coverage-generator.sh %{buildroot}%{_bindir}/
 
 mkdir -p %{buildroot}/var/www/html/TAOS-CI
 cp -arfp ./* %{buildroot}/var/www/html/TAOS-CI
@@ -52,7 +52,7 @@ cp -arfp ./* %{buildroot}/var/www/html/TAOS-CI
 
 %files unittest-coverage-assessment
 %manifest %{name}.manifest
-%{_bindir}/unittestcoverage.py
+%{_bindir}/coverage-generator.sh
 
 %changelog
 * Sat Sep 08 2018 Geunsik Lim <geunsik.lim@samsung.com>
