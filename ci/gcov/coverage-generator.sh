@@ -28,6 +28,7 @@
 
 # Calculate the gcov and git directory from this file that include a absolute path
 gcov_dir="$( cd "$( dirname "$0")" && pwd )"
+cd $gcov_dir
 cd ../../
 git_dir="$(pwd)"
 cd -
