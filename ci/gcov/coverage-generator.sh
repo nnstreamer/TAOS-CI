@@ -68,6 +68,9 @@ if [[ -d ../gcov_html ]]; then
 fi
 mkdir -p ../gcov_html
 mv -f usr/share/nnstreamer/unittest/result/* ../gcov_html
+if [[ -f ../gcov_html/index.html ]]; then
+    ../badge/gen_badge.py codecoverage ../gcov_html/index.html ../badge/codecoverage.svg
+fi
 cd -
 
 # Remove unused folder. 
