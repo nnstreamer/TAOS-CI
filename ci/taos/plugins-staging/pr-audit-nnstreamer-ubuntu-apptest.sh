@@ -53,7 +53,7 @@ function func_get_file_cached(){
     echo -e "[DEBUG] ${1} ${2} ${3} ${4}"
     if [[ -f "${3}/${1}" ]]; then
         echo -e "[DEBUG] Caching the file, because the file was downloaded previously."
-        ln -s ${3}/${1} ${4}/{1}
+        ln -s ${3}/${1} ${4}/${1}
         result+=$?
     else
         echo -e "[DEBUG] Downloading the ${1} from the specified URL."
