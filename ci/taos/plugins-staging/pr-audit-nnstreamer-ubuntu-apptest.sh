@@ -64,34 +64,38 @@ function func_get_file_cached(){
     fi
 }
 
+##
 # @brief function that append a log message to an appropriate log file via result($1)
 # @param
 # arg1: The return value of a command
 function save_consumer_msg() {
-     if [[ $1 -ne 0 ]]; then
-        cat temp.log >> ../../report/nnstreamer-apptest-error.log
-        echo "[DEBUG][FAIL] It's failed. Oooops. The consumer application is not executed." >> ../../report/nnstreamer-apptest-output.log
-     else
-        cat temp.log >> ../../report/nnstreamer-apptest-output.log
-        echo "[DEBUG][PASS] It's okay. The consumer application is successfully completed." >> ../../report/nnstreamer-apptest-output.log
-     fi
-     echo "save_consumer_msg=$1"
+    if [[ $1 -ne 0 ]]; then
+       cat temp.log >> ../../report/nnstreamer-apptest-error.log
+       echo "[DEBUG][FAIL] It's failed. Oooops. The consumer application is not executed." >> ../../report/nnstreamer-apptest-output.log
+    else
+       cat temp.log >> ../../report/nnstreamer-apptest-output.log
+       echo "[DEBUG][PASS] It's okay. The consumer application is successfully completed." >> ../../report/nnstreamer-apptest-output.log
+    fi
+    echo "save_consumer_msg=$1"
 }
 
+##
 # @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-wait-queue
-function pr-audit-nnstreamer-ubuntu-apptest-wait-queue(){
+function pr-audit-nnstreamer-ubuntu-apptest-wait-queue() {
     echo -e "[DEBUG] Waiting CI trigger to run nnstreamer sample app actually."
     message="Trigger: wait queue. There are other build jobs and we need to wait for some minutes. The commit number is $input_commit."
     cibot_report $TOKEN "pending" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
+##
 # @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-ready-queue
-function pr-audit-nnstreamer-ubuntu-apptest-ready-queue(){
+function pr-audit-nnstreamer-ubuntu-apptest-ready-queue() {
     echo -e "[DEBUG] Readying CI trigger to run nnstreamer sample app actually."
     message="Trigger: ready queue. The commit number is $input_commit."
     cibot_report $TOKEN "pending" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
+##
 # @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-run-queue
 function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     echo -e "[DEBUG] Starting CI trigger to run a sample app of nnstreamer actually."
