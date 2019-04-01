@@ -30,12 +30,13 @@
 # @author  Sewon Oh <sewon.oh@samsung.com>
 # @author  Jaeyun Jung <jy1210.jung@samsung.com>
 #
-# @note:   If you try to modify ths script, Do not forget that you also have to update the below wiki page.
-#          https://github.com/nnsuite/nnstreamer/wiki/usage-examples-screenshots
+# @note:
+#  1. If you must modify this script, Do not forget that you must update the below wiki page.
+#     https://github.com/nnsuite/nnstreamer/wiki/usage-examples-screenshots
 #
-# @note::  In order to run this module, A server administrator must add
-#          'www-data' (user id of Apache webserver) into the video group (/etc/group) as follows.
-#          $ sudo usermod -a -G video www-data
+#  2. A server administrator must update the existing 'video' group as a follow to run this module.
+#     'www-data' (an user ID of Apache webserver) has to belong to the video group (/etc/group).
+#     $ sudo usermod -a -G video www-data
 #
 
 ##
@@ -43,7 +44,7 @@
 #
 # This function downloads a file from the specified URL at first.
 # Then, it archives the files /tmp folder. It means that the download
-# files are continually archived in /tmp folder until the server willbe rebooted.
+# files are continually archived in /tmp folder until the server will be rebooted.
 # @param
 #  arg1: FILENAME    The file name
 #  arg2: URL         The web address to download a file
@@ -291,7 +292,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     ########## Step 5/6: Test sample applications (Based on a producer and consumer model)
 
     # Our test scenario to evaluate sample applications, is as following:
-    #  a. Run an appliction while 2 seconds arbitrarily in virtual network environment.
+    #  a. Run an application while 2 seconds arbitrarily in virtual network environment.
     #  b. Kill a process after 2 seconds. Otherwise, the process runs forever.
 
     # App (Producer): Make a producer with a 'videotestsrc' plugin and /dev/video0 (fake USB camera)
