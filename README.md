@@ -39,12 +39,16 @@ It is designed and implemented with a light-weight system approach to support a 
 ## Maintenance
 Please refer [Here](./ci/doc/maintenance.md).
 
-# Overall flow
+## Overall flow
+<img src=./image/architecture.png border=0 width=550 height=400></img>
+
 The diagram below shows an overall flow of our system. The TAOS-CI system performs (1) the format checker (before the build) and (2) the audit checker (after the build) by separating an inspection procedure with two steps whenever contributors submit a Pull Request (PR).
 
+## Publications
 * Geunsik Lim, MyungJoo Ham, Jijoong Moon, Wook Song, Sangjung Woo, and Sewon Oh, "**<a href=https://www.researchgate.net/publication/329752376_TAOS-CI_Lightweight_Modular_Continuous_Integration_System_for_Edge_Computing>TAOS-CI: Lightweight & Modular Continuous Integration System for Edge Computing,</a>**" 37th IEEE International Conference on Consumer Electronics (ICCE), Las Vegas, USA, Jan. 2019.
 
-<img src=./image/architecture.png border=0 width=550 height=400></img>
+* Geunsik Lim, MyungJoo Ham, and Jaeyun Jung, "**VTB: Cloud-based Testbed for On-Device AI,**" Proc. of KIISE Korea Computer Congress (Domestic Conference), Jeju, South Korea, Jun. 2019. (Submitted)
+
 
 # How to install
 Please refer to [How to install TAOS-CI](ci/doc/how-to-install-taos-ci.md).
