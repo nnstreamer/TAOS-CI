@@ -103,6 +103,17 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     message="Trigger: run queue. The commit number is $input_commit."
     cibot_report $TOKEN "pending" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
+    # The 'wget' command saves a log message with the "-o logfile" option while downloading files.
+    # Run a locale setting which supports 'utf-8' to avoid an issue  that some file names
+    # in the log file are broken.
+    # https://github.com/nnsuite/nnstreamer/issues/1280
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+    export LANGUAGE=en_US:en
+    echo "[DEBUG] locale information: start ---------------------------------------------"
+    locale
+    echo "[DEBUG] locale information: end   ---------------------------------------------"
+
     echo -e "#######################################################################"
     echo -e "[MODULE] TAOS/pr-audit-nnstreamer-apptest: Starting a sample app test"
     echo -e "[DEBUG] Checking dependencies of required command..."
