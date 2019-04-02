@@ -53,12 +53,12 @@
 function func_get_file_cached(){
     echo -e "[DEBUG] ${1} ${2} ${3} ${4}"
     if [[ -f "${3}/${1}" ]]; then
-        echo -e "[DEBUG] Caching the file, because the file was downloaded previously."
+        echo -e "[DEBUG] Caching the file, because the file was downloaded previously." >> wget_status.log
         ln -s ${3}/${1} ${4}/${1}
         result+=$?
     else
-        echo -e "[DEBUG] Downloading the ${1} from the specified URL."
-        wget -a wget.log ${2}/${1}
+        echo -e "[DEBUG] Downloading the ${1} from the specified URL." >> wget_status.log
+        wget -a wget_status.log ${2}/${1}
         mkdir -p ${3}
         cp ${4}/${1} ${3}
         result+=$?
@@ -190,8 +190,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     # Download a network model file from the github.com
     # For more details on /tmp/ folder, read /etc/default/rcS and /lib/systemd/system/systemd-tmpfiles-clean.service
-    echo -e "" > wget.log
-    echo -e "[DEBUG] Downloading 'tflite model' with wget command ..." >> wget.log
+    echo -e "" > wget_status.log
+    echo -e "[DEBUG] Getting 'tflite model' with wget command ..." >> wget_status.log
 
     func_get_file_cached \
     "mobilenet_v1_1.0_224_quant.tflite" \
@@ -201,8 +201,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     # Download a label file from the github.com
     # For more details on /tmp folder, read /etc/default/rcS and /lib/systemd/system/systemd-tmpfiles-clean.service
-    echo -e "" >> wget.log
-    echo -e "[DEBUG] Downloading 'tflite label' with wget command ..." >> wget.log
+    echo -e "" >> wget_status.log
+    echo -e "[DEBUG] Getting 'tflite label' with wget command ..." >> wget_status.log
 
     func_get_file_cached \
     "labels.txt" \
@@ -220,7 +220,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
         check_result="failure"
         global_check_result="failure"
-        cat tflite_model/wget.log >> ../../report/nnstreamer-apptest-error.log
+        cat tflite_model/wget_status.log >> ../../report/nnstreamer-apptest-error.log
 
         message="Oooops. apptest is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
         cibot_report $TOKEN "failure" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
@@ -232,7 +232,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
         return ${result}
     fi
 
-    cat tflite_model/wget.log >> ../../report/nnstreamer-apptest-output.log
+    cat tflite_model/wget_status.log >> ../../report/nnstreamer-apptest-output.log
 
     ########## Step 4/6: Install a fake USB camera device
 
