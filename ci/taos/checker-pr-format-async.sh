@@ -145,7 +145,9 @@ echo -e "[MODULE] plugins-staging: Plugin group that does not have evaluation an
 echo -e " "
 echo -e "Current path: $(pwd)."
 echo -e "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-format.sh"
-source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-format.sh  2>> ../format_module_error.log
+
+# If there are incorrect statements in a configuration file of the format group, Let's report it.
+source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-format.sh 2>> ../pr-plugins-format_error.txt
 
 
 for plugin in ${format_plugins[*]}
