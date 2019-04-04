@@ -15,10 +15,10 @@
 #
 
 ##
-# @file checker-pr-audit-async.sh
-# @brief It executes a build test whenever a PR is submitted.
-# @see      https://github.com/nnsuite/TAOS-CI
-# @author   Geunsik Lim <geunsik.lim@samsung.com>
+# @file        checker-pr-audit-async.sh
+# @brief       It executes a build test whenever a PR is submitted.
+# @see         https://github.com/nnsuite/TAOS-CI
+# @author      Geunsik Lim <geunsik.lim@samsung.com>
 # @dependency: gbs, tee, curl, grep, wc, cat, sed, awk, basename
 # @param arguments are received by ci bot
 #  arg1: date(YmdHisu)
@@ -37,7 +37,8 @@
 # [MODULE] TAOS/pr-audit-build-tizen-x86_64     Check if 'gbs build -A x86_64' can be successfully passed.
 # [MODULE] TAOS/pr-audit-build-tizen-armv7l     Check if 'gbs build -A armv7l' can be successfully passed.
 # [MODULE] TAOS/pr-audit-build-ubuntu           Check if 'pdebuild' can be successfully passed.
-# [MODULE] TAOS/pr-audit-build-yocto              Check if 'devtool' can be successfully passed.
+# [MODULE] TAOS/pr-audit-build-yocto            Check if 'devtool' can be successfully passed.
+# [MODULE] TAOS/pr-audit-build-android          Check if 'ndk-build' can be successfully passed.
 # [MODULE] plugins-base                         Plugin group that consist of a well-maintained modules
 # [MODULE] plugins-good                         Plugin group that follow Apache license with good quality
 # [MODULE] plugins-staging                      Plugin group that does not have evaluation and aging test enough
@@ -50,20 +51,23 @@ input_branch=$4
 input_pr=$5
 input_delivery_id=$6
 
-# Note that the server administrator has to specify appropriate variables after installing required packages.
+# Note that the server administrator must declare variables after installing required packages.
+echo "[DEBUG] Importing the config-server-admistrator.sh file.\n"
 source ./config/config-server-administrator.sh
 
 # Note the "source ./config/config-environment.sh" file can be called in another script
-# instead of in this file in order to support asynchronous operation from cibot.php
+# instead of in this file. It is to support asynchronous operation from cibot.php
+echo "[DEBUG] Importing the config-environment.sh file.\n"
 source ./config/config-environment.sh
 
-# Check if input argument is correct.
+# Check if input arguments are correct.
 if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; then
     printf "[DEBUG] ERROR: Please, input correct arguments.\n"
     exit 1
 fi
 
 # Import global variables
+echo "[DEBUG] Importing a global variable module.\n"
 source ./common/global-variable.sh
 
 # Check if dependent packages are installed
@@ -80,9 +84,11 @@ check_dependency basename
 echo "[DEBUG] Checked dependency packages.\n"
 
 # Include a PR scheduler module to handle a run-queue and wait-queue while running a build tasks
+echo "[DEBUG] Importing the PR scheduler.\n"
 source ./common/pr-scheduler.sh
 
 # Include a Out-of-PR(OOP) killer to handle lots of duplicated same PRs with LRU approach
+echo "[DEBUG] Importing the OOP Killer.\n"
 source ./common/out-of-pr-killer.sh
 
 # Get user ID from the input_repo string
@@ -111,9 +117,9 @@ export dir_worker=$dir_worker
 cd $dir_ci
 export dir_commit=${dir_worker}/${input_pr}-${input_date}-${input_commit}
 
-# Out-of-Pr (OOP) killer:
-# Stop compulsorily the previous same PRs invoked by checker-pr-gateway.sh
-# when the developers try to send a lot of same PRs repeatedly.
+# Run the Out-of-PR (OOP) killer:
+# Condition: If the developers try to re-send a lot of same PRs repeatedly,
+# the OOP killer stops compulsorily the previous same PRs invoked by checker-pr-gateway.sh
 run_oop_killer
 
 # --------------------------- CI Trigger (wait queue) -----------------------------------------------------------------
