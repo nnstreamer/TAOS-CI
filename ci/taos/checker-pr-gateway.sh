@@ -189,13 +189,13 @@ declare -a checker_logfile_list
 # Ready a checker: format
 checker_cmd_list+=("./checker-pr-format-async.sh")
 checker_name_list+=("format")
-checker_logfile_list+=("${dir_ci}/${dir_commit}/checker-pr-format.log")
+checker_logfile_list+=("${dir_ci}/${dir_commit}/pr-format-group.txt")
 echo -e "[DEBUG] Added ${checker_name_list[-1]} checker"
 
 # Ready a checker: audit
 checker_cmd_list+=("./checker-pr-audit-async.sh")
 checker_name_list+=("audit")
-checker_logfile_list+=("${dir_ci}/${dir_commit}/checker-pr-audit.log")
+checker_logfile_list+=("${dir_ci}/${dir_commit}/pr-aduit-group.txt")
 echo -e "[DEBUG] Added ${checker_name_list[-1]} checker"
 
 # Run all the checkers
