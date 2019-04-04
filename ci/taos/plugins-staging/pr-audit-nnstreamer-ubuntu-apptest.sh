@@ -53,12 +53,12 @@
 function func_get_file_cached(){
     echo -e "[DEBUG] ${1} ${2} ${3} ${4}"
     if [[ -f "${3}/${1}" ]]; then
-        echo -e "[DEBUG] Caching the file, because the file was downloaded previously." >> wget_status.log
+        echo -e "[DEBUG] Caching the file, because the file was downloaded previously." >> wget_status.txt
         ln -s ${3}/${1} ${4}/${1}
         result+=$?
     else
-        echo -e "[DEBUG] Downloading the ${1} from the specified URL." >> wget_status.log
-        wget -a wget_status.log ${2}/${1}
+        echo -e "[DEBUG] Downloading the ${1} from the specified URL." >> wget_status.txt
+        wget --header="Accept-Charset: utf-8" --header="Accept-Language: en" -a wget_status.txt ${2}/${1}
         mkdir -p ${3}
         cp ${4}/${1} ${3}
         result+=$?
@@ -66,16 +66,16 @@ function func_get_file_cached(){
 }
 
 ##
-# @brief function that append a log message to an appropriate log file via result($1)
+# @brief function that append a log message to an appropriate.txt file via result($1)
 # @param
 # arg1: The return value of a command
 function save_consumer_msg() {
     if [[ $1 -ne 0 ]]; then
-       cat temp.log >> ../../report/nnstreamer-apptest-error.log
-       echo "[DEBUG][FAIL] It's failed. Oooops. The consumer application is not executed." >> ../../report/nnstreamer-apptest-output.log
+       cat temp.txt >> ../../report/nnstreamer-apptest-error.txt
+       echo "[DEBUG][FAIL] It's failed. Oooops. The consumer application is not executed." >> ../../report/nnstreamer-apptest-output.txt
     else
-       cat temp.log >> ../../report/nnstreamer-apptest-output.log
-       echo "[DEBUG][PASS] It's okay. The consumer application is successfully completed." >> ../../report/nnstreamer-apptest-output.log
+       cat temp.txt >> ../../report/nnstreamer-apptest-output.txt
+       echo "[DEBUG][PASS] It's okay. The consumer application is successfully completed." >> ../../report/nnstreamer-apptest-output.txt
     fi
     echo "save_consumer_msg=$1"
 }
@@ -190,8 +190,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     # Download a network model file from the github.com
     # For more details on /tmp/ folder, read /etc/default/rcS and /lib/systemd/system/systemd-tmpfiles-clean.service
-    echo -e "" > wget_status.log
-    echo -e "[DEBUG] Getting 'tflite model' with wget command ..." >> wget_status.log
+    echo -e "" > wget_status.txt
+    echo -e "[DEBUG] Getting 'tflite model' with wget command ..." >> wget_status.txt
 
     func_get_file_cached \
     "mobilenet_v1_1.0_224_quant.tflite" \
@@ -201,8 +201,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     # Download a label file from the github.com
     # For more details on /tmp folder, read /etc/default/rcS and /lib/systemd/system/systemd-tmpfiles-clean.service
-    echo -e "" >> wget_status.log
-    echo -e "[DEBUG] Getting 'tflite label' with wget command ..." >> wget_status.log
+    echo -e "" >> wget_status.txt
+    echo -e "[DEBUG] Getting 'tflite label' with wget command ..." >> wget_status.txt
 
     func_get_file_cached \
     "labels.txt" \
@@ -220,19 +220,19 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
         check_result="failure"
         global_check_result="failure"
-        cat tflite_model/wget_status.log >> ../../report/nnstreamer-apptest-error.log
+        cat tflite_model/wget_status.txt >> ../../report/nnstreamer-apptest-error.txt
 
         message="Oooops. apptest is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
         cibot_report $TOKEN "failure" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         # Comment a hint on failed PR to author.
-        message=":octocat: **cibot**: $user_id, apptest could not be completed. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/checker-pr-audit.log"
+        message=":octocat: **cibot**: $user_id, apptest could not be completed. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/checker-pr-audit.txt"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 
         return ${result}
     fi
 
-    cat tflite_model/wget_status.log >> ../../report/nnstreamer-apptest-output.log
+    cat tflite_model/wget_status.txt >> ../../report/nnstreamer-apptest-output.txt
 
     ########## Step 4/6: Install a fake USB camera device
 
@@ -311,7 +311,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     export DISPLAY=0.0:${xvnc_port}
     declare -i producer_id=0
 
-    echo -e "[DEBUG] App (Producer): Starting 'gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0' test on the VNC environment..."  >> ../../report/nnstreamer-apptest-output.log
+    echo -e "[DEBUG] App (Producer): Starting 'gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0' test on the VNC environment..."  >> ../../report/nnstreamer-apptest-output.txt
     gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0 &
     producer_id=$!
 
@@ -347,9 +347,9 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     # App (Consumer 1): Test /dev/video0 status with gst-lanch-1.0 command
     # The dependency: /dev/video0, VNC
-    echo -e "" > temp.log
-    echo -e "[DEBUG] App (Consumer1): Starting 'gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink' test on the Xvnc environment..." >> temp.log
-    gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink &>> temp.log &
+    echo -e "" > temp.txt
+    echo -e "[DEBUG] App (Consumer1): Starting 'gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink' test on the Xvnc environment..." >> temp.txt
+    gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink &>> temp.txt &
     pid=$!
     sleep 2
     kill ${pid}
@@ -357,9 +357,9 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     # App (Consumer 2): ./nnstreamer_example_image_classification for a video image classification.
     # The dependency: /dev/video0, VNC
-    echo -e "" > temp.log
-    echo -e "[DEBUG] App (Consumer2): Starting nnstreamer_example_image_classification test..." >> temp.log
-    ./nnstreamer_example_image_classification &>> temp.log &
+    echo -e "" > temp.txt
+    echo -e "[DEBUG] App (Consumer2): Starting nnstreamer_example_image_classification test..." >> temp.txt
+    ./nnstreamer_example_image_classification &>> temp.txt &
     pid=$!
     sleep 2
     kill ${pid}
@@ -368,9 +368,9 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # App (Consumer 3): ./nnstreamer_example_image_classification.py for a video image classification.
     # Same as above. The difference is that it just runs with python.
     # The dependency: /dev/video0, VNC
-    echo -e "" > temp.log
-    echo -e "[DEBUG] App (Consumer3): Starting nnstreamer_example_image_classification.py test..." >> temp.log
-    python nnstreamer_example_image_classification.py &>> temp.log &
+    echo -e "" > temp.txt
+    echo -e "[DEBUG] App (Consumer3): Starting nnstreamer_example_image_classification.py test..." >> temp.txt
+    python nnstreamer_example_image_classification.py &>> temp.txt &
     pid=$!
     sleep 2
     kill ${pid}
@@ -378,9 +378,9 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     # App (Consumer 4): ./nnstreamer_example_cam to test a video mixer with nnstreamer plug-in.
     # The dependency: /dev/video0, VNC
-    echo -e "" > temp.log
-    echo -e "[DEBUG] App (Consumer4): Starting nnstreamer_example_cam test..." >> temp.log
-    ./nnstreamer_example_cam &>> temp.log &
+    echo -e "" > temp.txt
+    echo -e "[DEBUG] App (Consumer4): Starting nnstreamer_example_cam test..." >> temp.txt
+    ./nnstreamer_example_cam &>> temp.txt &
     pid=$!
     sleep 2
     kill ${pid}
@@ -388,17 +388,17 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     # App (Consumer 5): ./nnstreamer_sink_example to convert video images to tensor.
     # The dependency: Nothing
-    echo -e "" > temp.log
-    echo -e "[DEBUG] App (Consumer5): Starting nnstreamer_sink_example test..." >> temp.log
-    ./nnstreamer_sink_example &>> temp.log
+    echo -e "" > temp.txt
+    echo -e "[DEBUG] App (Consumer5): Starting nnstreamer_sink_example test..." >> temp.txt
+    ./nnstreamer_sink_example &>> temp.txt
     result+=$(save_consumer_msg $?)
 
     # App (Consumer 6): ./nnstreamer_sink_example_play to convert video images to tensor,
     # tensor buffer pass another pipeline, and convert tensor to video images.
     # The dependency: VNC
-    echo -e "" > temp.log
-    echo -e "[DEBUG] App (Consumer6): Starting nnstreamer_sink_example_play test..." >> temp.log
-    ./nnstreamer_sink_example_play &>> temp.log &
+    echo -e "" > temp.txt
+    echo -e "[DEBUG] App (Consumer6): Starting nnstreamer_sink_example_play test..." >> temp.txt
+    ./nnstreamer_sink_example_play &>> temp.txt &
     pid=$!
     sleep 2
     kill ${pid}
