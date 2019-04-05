@@ -78,7 +78,7 @@ function generate_requested_pr(){
         echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
     }
     echo "</font>\n";
-    echo "<br><br>\n";
+    echo "<br>\n";
 }
 
 ## @brief display only running PR numbers for Tizen/gbs build
@@ -101,7 +101,7 @@ function generate_running_pr_tizen(){
         echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
     }
     echo "</font>\n";
-    echo "<br><br>\n";
+    echo "<br>\n";
 }
 
 ## @brief display only running PR numbers for Ubuntu/pdebuild
@@ -125,7 +125,31 @@ function generate_running_pr_ubuntu(){
         echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
     }
     echo "</font>\n";
-    echo "<br><br>\n";
+    echo "<br>\n";
+}
+
+## @brief display only running PR numbers for Yocto/devtool
+#
+#        Display all devtool commands to monitor running PRs for building Yocto binaries
+#        For example, PR number, PR time, and commit number.
+function generate_running_pr_yocto(){
+    global $PATTERN_RUN_YOCTO;
+    global $STRING_NUM_YOCTO;
+    echo "<hr>\n";
+    echo "<img src=monitor-icon.png border=0> <b>Run Queue: Building Yocto PRs</b> <br>\n";
+    $output = shell_exec("ps -ef | grep \"$PATTERN_RUN_YOCTO\"");
+    display_msg ("[DEBUG]   (".str_word_count($output)." >= $STRING_NUM_YOCTO)<br>");
+    echo "<font size=2 color=red>\n";
+    if (str_word_count($output) >= $STRING_NUM_YOCTO){
+        $output = str_replace("\n","<br><br>",$output);
+        echo nl2br($output);
+    }
+    else{
+        echo "<br>\n";
+        echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
+    }
+    echo "</font>\n";
+    echo "<br>\n";
 }
 
 ## @brief display only running PR numbers for Android/ndk-build
@@ -149,7 +173,7 @@ function generate_running_pr_android(){
         echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
     }
     echo "</font>\n";
-    echo "<br><br>\n";
+    echo "<br>\n";
 }
 
 ## @brief generate HTML head tag
@@ -167,6 +191,7 @@ generate_title();
 generate_requested_pr();
 generate_running_pr_tizen();
 generate_running_pr_ubuntu();
+generate_running_pr_yocto();
 generate_running_pr_android();
 generate_foot();
 ?>
