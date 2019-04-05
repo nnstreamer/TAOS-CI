@@ -160,8 +160,12 @@ function run_all_checkers(){
     echo -e "[DEBUG] ${cmd_list[$i]} $checker_args "                     | tee -a $logfile
     echo -e "[DEBUG] Starting a ${name_list[$i]} checker... "            | tee -a $logfile
     # Run checker
+    # Currently, there are two checkers such as format and audit. The current format checker is not heavy.
+    # But, if the format checker needs more times to complete the modules, please consider introduce
+    # to run the checkers asynchronously with the background command (e.g., command | tee -a $logfile &).
+    # Note that you must modify the Out-of-PR (OOP) killer because OOP killer depends on synchronous method.
     pushd ./taos/
-    ${cmd_list[$i]} $checker_args                                        | tee -a $logfile &
+    ${cmd_list[$i]} $checker_args                                        | tee -a $logfile
     local pid=$!
     popd
     echo -e "[DEBUG] Running..."                                         | tee -a $logfile
