@@ -28,9 +28,11 @@ $TITLE="State Transition Monitor for PR";
 $PATTERN_REQ        ="[^]] bash ./checker-pr-gateway.sh";
 $PATTERN_RUN_TIZEN  ="[^]]/usr/bin/python /usr/bin/gbs build";
 $PATTERN_RUN_UBUNTU ="[^]]sudo.*pbuilder";
+$PATTERN_RUN_YOCTO  ="[^]]sudo.*devtool";
 $PATTERN_RUN_ANDROID="[^]]sudo.*ndk-build";
 $STRING_NUM_TIZEN   =5;
 $STRING_NUM_UBUNTU  =5;
+$STRING_NUM_YOCTO   =5;
 $STRING_NUM_ANDROID =5;
 
 # debugging: 1 (enabling), 0 (disabling)
@@ -75,7 +77,7 @@ function generate_requested_pr(){
     }
     else{
         echo "<br>\n";
-        echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
+        echo "<center><img src=sleep.png border=0 width=50 height=50></center>\n";
     }
     echo "</font>\n";
     echo "<br>\n";
@@ -98,7 +100,7 @@ function generate_running_pr_tizen(){
     }
     else{
         echo "<br>\n";
-        echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
+        echo "<center><img src=sleep.png border=0 width=50 height=50></center>\n";
     }
     echo "</font>\n";
     echo "<br>\n";
@@ -122,7 +124,7 @@ function generate_running_pr_ubuntu(){
     }
     else{
         echo "<br>\n";
-        echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
+        echo "<center><img src=sleep.png border=0 width=50 height=50></center>\n";
     }
     echo "</font>\n";
     echo "<br>\n";
@@ -146,7 +148,7 @@ function generate_running_pr_yocto(){
     }
     else{
         echo "<br>\n";
-        echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
+        echo "<center><img src=sleep.png border=0 width=50 height=50></center>\n";
     }
     echo "</font>\n";
     echo "<br>\n";
@@ -170,7 +172,7 @@ function generate_running_pr_android(){
     }
     else{
         echo "<br>\n";
-        echo "<center><img src=sleep.png border=0 width=100 height=100></center>\n";
+        echo "<center><img src=sleep.png border=0 width=50 height=50></center>\n";
     }
     echo "</font>\n";
     echo "<br>\n";
