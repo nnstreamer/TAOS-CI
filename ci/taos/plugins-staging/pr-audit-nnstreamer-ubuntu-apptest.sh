@@ -142,10 +142,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     echo -e "[DEBUG] GST_PLUGIN_PATH is '$GST_PLUGIN_PATH'"
 
     # nnstreamer env variables and include paths
-    export NNSTREAMER_CONF=$NNST_ROOT
-    export NNSTREAMER_FILTERS=$NNST_ROOT/lib/nnstreamer/filters
-    export NNSTREAMER_DECODERS=$NNST_ROOT/lib/nnstreamer/decoders
-    export NNSTREAMER_CUSTOMFILTERS=$NNST_ROOT/lib/nnstreamer/customfilters
+    export NNSTREAMER_CONF=$NNST_ROOT/nnstreamer.ini
     export C_INCLUDE_PATH=$C_INCLUDE_PATH:$NNST_ROOT/include
     export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$NNST_ROOT/include
 
