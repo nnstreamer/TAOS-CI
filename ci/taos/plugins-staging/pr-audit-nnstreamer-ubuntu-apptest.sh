@@ -302,15 +302,21 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
     ########## Step 5/6: Test sample applications (Based on a producer and consumer model)
 
-    # Our test scenario to evaluate sample applications, is as following:
-    #  a. Run an application while 2 seconds arbitrarily in virtual network environment.
-    #  b. Kill a process after 2 seconds. Otherwise, the process runs forever.
+    # The test scenario to evaluate a stability of applications, is as following:
+    #  a. Start a producer
+    #  b. Start consumer(s)
+    #     - Connect the producer to open a session for virtual display environment.
+    #     - Run an application while 2 seconds arbitrarily
+    #     - Kill a process of the application after 2 seconds. Otherwise, the process runs forever.
+    #  c. Report the execution result with a webhook API.
 
     # App (Producer): Make a producer with a 'videotestsrc' plugin and /dev/video0 (fake USB camera)
     # The dependency: /dev/video0, VNC
     export DISPLAY=0.0:${xvnc_port}
     declare -i producer_id=0
 
+    echo -e ""  >> ../../report/nnstreamer-apptest-output.txt
+    echo -e "[DEBUG] ------------------------------------------------------------------"  >> ../../report/nnstreamer-apptest-output.txt
     echo -e "[DEBUG] App (Producer): Starting 'gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0' test on the VNC environment..."  >> ../../report/nnstreamer-apptest-output.txt
     gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0 &
     producer_id=$!
@@ -348,7 +354,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # App (Consumer 1): Test /dev/video0 status with gst-lanch-1.0 command
     # The dependency: /dev/video0, VNC
     echo -e "" > temp.txt
-    echo -e "[DEBUG] App (Consumer1): Starting 'gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink' test on the Xvnc environment..." >> temp.txt
+    echo -e "[DEBUG] ------------------------------------------------------------------"  >> temp.txt
+    echo -e "[DEBUG] App (Consumer 1): Starting 'gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink' test on the Xvnc environment..." >> temp.txt
     gst-launch-1.0 v4l2src device=/dev/video0 ! videoconvert ! ximagesink &>> temp.txt &
     pid=$!
     sleep 2
@@ -358,7 +365,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # App (Consumer 2): ./nnstreamer_example_image_classification for a video image classification.
     # The dependency: /dev/video0, VNC
     echo -e "" > temp.txt
-    echo -e "[DEBUG] App (Consumer2): Starting nnstreamer_example_image_classification test..." >> temp.txt
+    echo -e "[DEBUG] ------------------------------------------------------------------"  >> temp.txt
+    echo -e "[DEBUG] App (Consumer 2): Starting nnstreamer_example_image_classification test..." >> temp.txt
     ./nnstreamer_example_image_classification &>> temp.txt &
     pid=$!
     sleep 2
@@ -369,7 +377,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # Same as above. The difference is that it just runs with python.
     # The dependency: /dev/video0, VNC
     echo -e "" > temp.txt
-    echo -e "[DEBUG] App (Consumer3): Starting nnstreamer_example_image_classification.py test..." >> temp.txt
+    echo -e "[DEBUG] ------------------------------------------------------------------"  >> temp.txt
+    echo -e "[DEBUG] App (Consumer 3): Starting nnstreamer_example_image_classification.py test..." >> temp.txt
     python nnstreamer_example_image_classification.py &>> temp.txt &
     pid=$!
     sleep 2
@@ -379,7 +388,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # App (Consumer 4): ./nnstreamer_example_cam to test a video mixer with nnstreamer plug-in.
     # The dependency: /dev/video0, VNC
     echo -e "" > temp.txt
-    echo -e "[DEBUG] App (Consumer4): Starting nnstreamer_example_cam test..." >> temp.txt
+    echo -e "[DEBUG] ------------------------------------------------------------------"  >> temp.txt
+    echo -e "[DEBUG] App (Consumer 4): Starting nnstreamer_example_cam test..." >> temp.txt
     ./nnstreamer_example_cam &>> temp.txt &
     pid=$!
     sleep 2
@@ -389,7 +399,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # App (Consumer 5): ./nnstreamer_sink_example to convert video images to tensor.
     # The dependency: Nothing
     echo -e "" > temp.txt
-    echo -e "[DEBUG] App (Consumer5): Starting nnstreamer_sink_example test..." >> temp.txt
+    echo -e "[DEBUG] ------------------------------------------------------------------"  >> temp.txt
+    echo -e "[DEBUG] App (Consumer 5): Starting nnstreamer_sink_example test..." >> temp.txt
     ./nnstreamer_sink_example &>> temp.txt
     result+=$(save_consumer_msg $?)
 
@@ -397,7 +408,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # tensor buffer pass another pipeline, and convert tensor to video images.
     # The dependency: VNC
     echo -e "" > temp.txt
-    echo -e "[DEBUG] App (Consumer6): Starting nnstreamer_sink_example_play test..." >> temp.txt
+    echo -e "[DEBUG] ------------------------------------------------------------------"  >> temp.txt
+    echo -e "[DEBUG] App (Consumer 6): Starting nnstreamer_sink_example_play test..." >> temp.txt
     ./nnstreamer_sink_example_play &>> temp.txt &
     pid=$!
     sleep 2
