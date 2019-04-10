@@ -52,5 +52,6 @@ echo -e "########## for CI-system: Installing python packages for nnstreaemr app
 sudo apt -y install python-gi python3-gi  
 sudo apt -y install python-gst-1.0 python3-gst-1.0
 sudo apt -y install python-gst-1.0-dbg python3-gst-1.0-dbg
+sudo apt -y install python-numpy python3-numpy
 
 echo -e "[DEBUG] Required packages are successfully installed...."
