@@ -64,9 +64,31 @@ In body:
 Fixes #123, #124
 ```
 
-### Sources
-* https://www.git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#Commit-Guidelines
-* https://mirrors.edge.kernel.org/pub/software/scm/git/docs/git-commit.html#_discussion
-* http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
-* https://wiki.openstack.org/wiki/GitCommitMessages
-* http://chris.beams.io/posts/git-commit/
+### Keep a changelog
+
+A changelog is a file which contains a chronologically ordered list of notable changes for each version of a commit.
+I has to be written to make it easier for users and contributors in order to see precisely what notable changes have been made between each version of the commit.
+When a commit changes, reviewers want to know why and how.
+
+**Guiding Principles**
+* Changelogs are for humans, not machines.
+* There should be an entry for every single version.
+* The same types of changes should be grouped.
+* Versions and sections should be linkable.
+* The latest version comes first.
+* The release date of each version is displayed.
+
+**Types of Changes**
+* `Added` for new features.
+* `Changed` for changes in existing functionality.
+* `Deprecated` for soon-to-be removed features.
+* `Removed` for now removed features.
+* `Fixed` for any bug fixes.
+* `Security` in case of vulnerabilities.
+
+**Case Study**
+* https://lkml.org/lkml/2019/4/9/51 : V5, Add support for MIPID02 CSI-2
+* https://lkml.org/lkml/2019/4/9/507 : V10, fieldbus_dev: add Fieldbus Device Subsystem
+* https://lkml.org/lkml/2019/4/2/941 : V5, Perf: Add Icelake support
+
+
