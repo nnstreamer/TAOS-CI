@@ -20,8 +20,8 @@
 #
 # We assume that you use Ubuntu 16.04 x86_64 distribution.
 
-echo -e "########## for CI-server: Setting-up a package repository of TensorFlow"
-# If you do not use Version 16.04, you have to modify /etc/apt/sources.list.d/nnstreamer.list file appropriately. 
+echo -e "########## for CI-server: Setting-up a package repository of TensorFlow/Pytorch"
+# If you do not use Version 16.04, you have to modify /etc/apt/sources.list.d/nnstreamer.list file appropriately.
 sudo apt -y install software-properties-common
 yes "" | sudo add-apt-repository ppa:nnstreamer/ppa
 sudo apt -y update
@@ -42,16 +42,19 @@ echo -e "[DEBUG] Installing dependent packages by reading debian/control file."
 sudo mk-build-deps --install debian/control > /dev/null
 popd
 
-echo -e "########## for CI-system: Installing base packages for nnstreaemr app test "
+echo -e "########## for CI-system: Installing base packages for nnstreamer app test "
 sudo apt -y install rpmlint ctags sudo
 
 echo -e " Installing the 'meson=0.40' package requires 'xenial-backports'."
 sudo apt -y install ninja-build meson=0.40*
 
-echo -e "########## for CI-system: Installing python packages for nnstreaemr app test "
-sudo apt -y install python-gi python3-gi  
+echo -e "########## for CI-system: Installing python packages for nnstreamer app test "
+sudo apt -y install python-gi python3-gi
 sudo apt -y install python-gst-1.0 python3-gst-1.0
 sudo apt -y install python-gst-1.0-dbg python3-gst-1.0-dbg
 sudo apt -y install python-numpy python3-numpy
+
+echo -e "########## for CI-system: Installing pytorch packages for nnstreamer app test "
+sudo apt -y install pytorch
 
 echo -e "[DEBUG] Required packages are successfully installed...."
