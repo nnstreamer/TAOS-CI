@@ -1,0 +1,6 @@
+AuthName "Restricted area"
+AuthType Basic
+AuthUserFile /var/www/html/TAOS-CI/ci/taos/config/.htpasswd
+<Limit GET POST>
+require valid-user
+</Limit>
