@@ -182,32 +182,8 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     cd bin
 
     ########## Step 3/6: Download a model and label file for Tensorflow-lite.
-    mkdir tflite_model
-    pushd tflite_model
-
-    # Download a network model file from the github.com
-    # For more details on /tmp/ folder, read /etc/default/rcS and /lib/systemd/system/systemd-tmpfiles-clean.service
-    echo -e "" > wget_status.txt
-    echo -e "[DEBUG] Getting 'tflite model' with wget command ..." >> wget_status.txt
-
-    func_get_file_cached \
-    "mobilenet_v1_1.0_224_quant.tflite" \
-    "https://github.com/nnsuite/testcases/raw/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant" \
-    "/tmp/nnsuite/tflite_model" \
-    "."
-
-    # Download a label file from the github.com
-    # For more details on /tmp folder, read /etc/default/rcS and /lib/systemd/system/systemd-tmpfiles-clean.service
-    echo -e "" >> wget_status.txt
-    echo -e "[DEBUG] Getting 'tflite label' with wget command ..." >> wget_status.txt
-
-    func_get_file_cached \
-    "labels.txt" \
-    "https://github.com/nnsuite/testcases/raw/master/DeepLearningModels/tensorflow-lite/Mobilenet_v1_1.0_224_quant" \
-    "/tmp/nnsuite/tflite_model" \
-    "."
-
-    popd
+    bash get-model-image-classification.sh
+    result=$?
 
     # Check if the files are normally downloaded
     if [[ ${result} -ne 0 ]]; then
@@ -217,7 +193,6 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
         check_result="failure"
         global_check_result="failure"
-        cat tflite_model/wget_status.txt >> ../../report/nnstreamer-apptest-error.txt
 
         message="Oooops. apptest is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
         cibot_report $TOKEN "failure" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
@@ -228,8 +203,6 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
 
         return ${result}
     fi
-
-    cat tflite_model/wget_status.txt >> ../../report/nnstreamer-apptest-output.txt
 
     ########## Step 4/6: Install a fake USB camera device
 
