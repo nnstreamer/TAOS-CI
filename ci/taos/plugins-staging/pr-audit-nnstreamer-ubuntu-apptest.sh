@@ -182,7 +182,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     cd bin
 
     ########## Step 3/6: Download a model and label file for Tensorflow-lite.
-    bash get-model-image-classification.sh
+    bash get-model-image-classification-tflite.sh
     result=$?
 
     # Check if the files are normally downloaded
@@ -213,7 +213,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     # Prepare a fake (=virtual) USB camera to run video applications.
     # Use '-e' option instead of '-f' because /dev/video0 file is a device file (without a normal file).
     if [[ ! -e /dev/video0 ]]; then
-        echo -e "[DEBUG] An USB Camera device is not enabled. It is required by {nnstreamer_example_image_classification|nnstreamer_example_cam}."
+        echo -e "[DEBUG] An USB Camera device is not enabled. It is required by {nnstreamer_example_image_classification_tflite|nnstreamer_example_cam}."
         echo -e "[DEBUG] Enabling virtual cam camera..."
 
         # Install a 'v4l2loopback' kernel module to use a virtual camera device
@@ -332,24 +332,24 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     kill ${pid}
     result+=$(save_consumer_msg $?)
 
-    # App (Consumer 2): ./nnstreamer_example_image_classification for a video image classification.
+    # App (Consumer 2): ./nnstreamer_example_image_classification_tflite for a video image classification.
     # The dependency: /dev/video0, VNC
     echo -e "" > temp.txt
     echo -e "[DEBUG] ------------------------------------------------------------------"  >> temp.txt
-    echo -e "[DEBUG] App (Consumer 2): Starting nnstreamer_example_image_classification test..." >> temp.txt
-    ./nnstreamer_example_image_classification &>> temp.txt &
+    echo -e "[DEBUG] App (Consumer 2): Starting nnstreamer_example_image_classification_tflite test..." >> temp.txt
+    ./nnstreamer_example_image_classification_tflite &>> temp.txt &
     pid=$!
     sleep 2
     kill ${pid}
     result+=$(save_consumer_msg $?)
 
-    # App (Consumer 3): ./nnstreamer_example_image_classification.py for a video image classification.
+    # App (Consumer 3): ./nnstreamer_example_image_classification_tflite.py for a video image classification.
     # Same as above. The difference is that it just runs with python.
     # The dependency: /dev/video0, VNC
     echo -e "" > temp.txt
     echo -e "[DEBUG] ------------------------------------------------------------------"  >> temp.txt
-    echo -e "[DEBUG] App (Consumer 3): Starting nnstreamer_example_image_classification.py test..." >> temp.txt
-    python nnstreamer_example_image_classification.py &>> temp.txt &
+    echo -e "[DEBUG] App (Consumer 3): Starting nnstreamer_example_image_classification_tflite.py test..." >> temp.txt
+    python nnstreamer_example_image_classification_tflite.py &>> temp.txt &
     pid=$!
     sleep 2
     kill ${pid}
