@@ -34,7 +34,7 @@
 # source code on Ubuntu 16.04
 #
 # Prerequisites
-# Step 1/2: Download Android NDK r12b to use ndk-build command
+# Step 1/4: Download Android NDK r12b to use ndk-build command
 # mkdir -p /var/www/html/android/
 # cd /var/www/html/android/
 # wget https://dl.google.com/android/repository/android-ndk-r12b-linux-x86_64.zip
@@ -43,7 +43,7 @@
 # export ANDROID_NDK=/var/www/html/android/android-ndk-r12b
 # export PATH=$ANDROID_NDK:$PATH
 #
-# Step 2/2: Download prebuilt gst-android libraries
+# Step 2/4: Download prebuilt gst-android libraries
 # You must copy your custom prebuilt gst-android files to the below folder.
 # For arm64, /var/www/html/android/gst_root_android/arm64/ directory.
 #
@@ -57,6 +57,20 @@
 # vi ~/.bashrc
 # # gst-android prebuilt binary (e.g., .a, .so, .h)
 # export GSTREAMER_ROOT_ANDROID=/var/www/html/android/gst_root_android/
+#
+# Step 3/4: Download GStreamer binaries (Static libraries from gstreamer, to build NNStreamer API)
+# cd /var/www/html/android
+# mkdir gstreamer-1.0-android-universal-1.16.0
+# cd gstreamer-1.0-android-universal-1.16.0
+# wget https://gstreamer.freedesktop.org/data/pkg/android/1.16.0/gstreamer-1.0-android-universal-1.16.0.tar.xz
+# tar xJf gstreamer-1.0-android-universal-1.16.0.tar.xz
+#
+# Step 4/4: Modify the script for ndk-build
+# In ./gstreamer-1.0-android-universal-1.16.0/<target-arch>/share/gst-android/ndk-build/gstreamer-1.0.mk
+#     ifdef SYSROOT_INC
+#        SYSROOT_GST_INC := $(SYSROOT_INC)     # Add this line
+#        SYSROOT_GST_LINK := $(SYSROOT_INC)    # Add this line
+#        #$(call assert-defined, SYSROOT_LINK) # Block this line
 #
 
 # @brief [MODULE] TAOS/pr-audit-build-android-wait-queue
@@ -82,15 +96,18 @@ function pr-audit-build-android-run-queue(){
     echo "Running 'source /etc/environment'"
     source /etc/environment
 
+    # Set the path about Android build tools
+    export ROOT_ANDROID_CI=/var/www/html/android
+
     # Android NDK
-    export ANDROID_NDK=/var/www/html/android/android-ndk-r12b
+    export ANDROID_NDK=$ROOT_ANDROID_CI/android-ndk-r12b
     export PATH=$ANDROID_NDK:$PATH
     echo "Exporting an ANDROID_NDK path ..."
     echo $PATH
     ndk-build --help
 
     # gst-android prebuilt binary (e.g., .a, .so, .h)
-    export GSTREAMER_ROOT_ANDROID=/var/www/html/android/gst_root_android/
+    export GSTREAMER_ROOT_ANDROID=$ROOT_ANDROID_CI/gst_root_android/
     echo "Exporting a GSTREMER_ROOT_ANDROID path..."
     echo $GSTREAMER_ROOT_ANDROID
 
@@ -98,6 +115,7 @@ function pr-audit-build-android-run-queue(){
     check_dependency sudo
     check_dependency curl
     check_dependency ndk-build
+    check_dependency sed
 
     echo "[DEBUG] starting TAOS/pr-audit-build-android facility"
 
@@ -168,6 +186,42 @@ function pr-audit-build-android-run-queue(){
         popd
         echo -e "[DEBUG] The current directory: $(pwd)."
 
+        # Start to build NNStreamer API for Android.
+        echo "[DEBUG] Starting gradle build for Android API."
+
+        # NNStreamer root directory for build.
+        export NNSTREAMER_ROOT=$(pwd)
+
+        # Make directory to build NNStreamer library.
+        mkdir -p build_android_lib
+
+        # Copy the files (native and java to build Android library) to build directory.
+        cp -r ./api/android/* ./build_android_lib
+
+        # Get the prebuilt libraries and build-script.
+        cp -r $ROOT_ANDROID_CI/nnstreamer-android-api/* ./build_android_lib
+
+        # Set NNStreamer root in gradle properties.
+        sed -i "s|nnstreamerRoot=nnstreamer-path|nnstreamerRoot=$NNSTREAMER_ROOT|" build_android_lib/gradle.properties
+
+        # Build Android API.
+        pushd ./build_android_lib
+        sh ./gradlew api:assembleRelease 1>> ../../report/build_log_${input_pr}_android_api.txt
+        popd
+
+        # Check if build procedure is done.
+        nnstreamer_android_api_lib=./build_android_lib/api/build/outputs/aar/api-release.aar
+        if [[ -e $nnstreamer_android_api_lib ]]; then
+            echo "[DEBUG][PASSED] Build procedure is done, copy Android library."
+            mkdir -p ../$PACK_BIN_FOLDER/ANDROID
+            cp $nnstreamer_android_api_lib ../$PACK_BIN_FOLDER/ANDROID/nnstreamer-api.aar
+        else
+            echo "[DEBUG][FAILED] Oooops!!!!! Failed to build Android library."
+            result=$(($result+2))
+        fi
+
+        # Remove build directory.
+        rm -rf build_android_lib
     fi
     echo "[DEBUG] The result value is '$result'."
 
@@ -215,5 +269,5 @@ function pr-audit-build-android-run-queue(){
             export BUILD_TEST_FAIL=1
         fi
     fi
- 
+
 }
