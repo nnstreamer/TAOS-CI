@@ -37,12 +37,12 @@ function cibot_comment(){
     TOKEN="$1"
     MESSAGE="$2"
     COMMIT_ADDRESS="$3"
-    
+
     echo -e "[DEBUG] Running the curl-based commenting procedure."
     echo -e "[DEBUG] TOKEN: $TOKEN"
     echo -e "[DEBUG] MESSAGE: $MESSAGE"
     echo -e "[DEBUG] COMMIT_ADDRESS: $COMMIT_ADDRESS"
-    
+
     # keep the message that exceeds 140 characters in case of comment creation of issue and PR
     # In case that cibot create deployment statuses for a given PR:
     # A short description of the status. Maximum length of 140 characters. Default: ""
@@ -84,10 +84,10 @@ function cibot_report(){
     DESCRIPTION="$4"
     TARGET_URL="$5"
     COMMIT_ADDRESS="$6"
-    
+
     echo -e "[DEBUG] Running the curl-based PR status change procedure."
 
-   
+
     # trim the message that exceeds 140 characters in case of PR status change.
     # In case that cibot create deployment statuses for a given PR:
     # A short description of the status. Maximum length of 140 characters. Default: ""
@@ -103,7 +103,7 @@ function cibot_report(){
         TRIM_DESCRIPTION="$DESCRIPTION"
     fi
     echo -e "[DEBUG] The edited TRIM_DESCRIPTION is \"$TRIM_DESCRIPTION\"."
- 
+
     # let's send PR report to change PR status
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
@@ -129,7 +129,7 @@ function goto_repodir(){
 }
 
 ##
-#  @brief check if a pcakge is installed
+#  @brief check if a package is installed
 #  @param
 #   arg1: package name
 function check_dependency() {
