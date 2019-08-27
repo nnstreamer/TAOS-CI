@@ -250,12 +250,12 @@ function pr-audit-build-android-run-queue(){
         echo -e "[DEBUG] The return value of ndk-build command is $result."
         # Let's check if build procedure is normally done.
         if [[ $result -eq 0 ]]; then
-                echo -e "[DEBUG][PASSED] Successfully Android C/C++ JNI build checker is passed. Return value is ($result)."
-                check_result="success"
+            echo -e "[DEBUG][PASSED] Successfully Android C/C++ JNI build checker is passed. Return value is ($result)."
+            check_result="success"
         else
-                echo -e "[DEBUG][FAILED] Oooops!!!!!! Android C/C++ JNI build checker is failed. Return value is ($result)."
-                check_result="failure"
-                global_check_result="failure"
+            echo -e "[DEBUG][FAILED] Oooops!!!!!! Android C/C++ JNI build checker is failed. Return value is ($result)."
+            check_result="failure"
+            global_check_result="failure"
         fi
 
         # Let's report build result of source code

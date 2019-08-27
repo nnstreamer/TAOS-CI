@@ -2,7 +2,7 @@
 
 ##
 # Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -108,7 +108,7 @@ function pr-audit-build-tizen-run-queue(){
             --define "_pr_start_time ${input_date}" \
             --define "_skip_debug_rpm 1" \
             --buildroot ./GBS-ROOT/ 2> ../report/build_log_${input_pr}_tizen_$1_error.txt 1> ../report/build_log_${input_pr}_tizen_$1_output.txt
-        fi        
+        fi
     fi
     result=$?
     echo -e "[DEBUG] gbs build finished at : $(date -R)."
@@ -136,33 +136,32 @@ function pr-audit-build-tizen-run-queue(){
     fi
     echo "[DEBUG] The current directory: $(pwd)"
 
-    
     if [[ $BUILD_MODE == 99 ]]; then
         # Do not run "gbs build" command in order to skip unnecessary examination if there are no buildable files.
         echo -e "BUILD_MODE == 99"
         echo -e "[DEBUG] Let's skip the 'gbs build -A $1' procedure because there is not source code. All files may be skipped."
         echo -e "[DEBUG] So, we stop remained all tasks at this time."
-    
+
         message="Skipped gbs build -A $1 procedure. No buildable files found. Commit number is $input_commit."
         cibot_report $TOKEN "success" "TAOS/pr-audit-build-tizen-$1" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
-    
+
         message="Skipped gbs build -A $1 procedure. Successfully all audit modules are passed. Commit number is $input_commit."
         cibot_report $TOKEN "success" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
-    
+
         echo -e "[DEBUG] All audit modules are passed (gbs build -A $1 procedure is skipped) - it is ready to review!"
     else
         echo -e "BUILD_MODE != 99"
         echo -e "[DEBUG] The return value of gbs build -A $1 command is $result."
         # Let's check if build procedure is normally done.
         if [[ $result -eq 0 ]]; then
-                echo -e "[DEBUG][PASSED] Successfully build checker is passed. Return value is ($result)."
-                check_result="success"
+            echo -e "[DEBUG][PASSED] Successfully build checker is passed. Return value is ($result)."
+            check_result="success"
         else
-                echo -e "[DEBUG][FAILED] Oooops!!!!!! build checker is failed. Return value is ($result)."
-                check_result="failure"
-                global_check_result="failure"
+            echo -e "[DEBUG][FAILED] Oooops!!!!!! build checker is failed. Return value is ($result)."
+            check_result="failure"
+            global_check_result="failure"
         fi
-    
+
         # Let's report build result of source code
         if [[ $check_result == "success" ]]; then
             message="Tizen.build Successful in $time_build_cost. Commit number is '$input_commit'."
@@ -174,5 +173,5 @@ function pr-audit-build-tizen-run-queue(){
             export BUILD_TEST_FAIL=1
         fi
     fi
-    
+
 }

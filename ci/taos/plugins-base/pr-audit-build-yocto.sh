@@ -2,7 +2,7 @@
 
 ##
 # Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -24,7 +24,7 @@
 # $ sudo apt-get -y install gawk wget git-core diffstat unzip texinfo gcc-multilib
 # $ sudo apt-get -y install build-essential chrpath socat libsdl1.2-dev xterm
 # Note that the devtool command is located in the Extensible SDK (eSDK). It means that you cannot install it with apt command.
-# 
+#
 # #### Case study: Poky eSDK (x86-i586)
 # wget https://downloads.yoctoproject.org/tools/support/workflow/poky-glibc-x86_64-core-image-minimal-i586-toolchain-ext-2.2.sh
 # chmod +x ./poky-glibc-x86_64-core-image-minimal-i586-toolchain-ext-2.2.sh
@@ -36,7 +36,7 @@
 # chmod +x kairos-glibc-x86_64-smartmachine-*-toolchain-ext-1.0.sh
 # ./kairos-glibc-x86_64-smartmachine-*-toolchain-ext-1.0.sh -d /var/www/kairos_sdk
 # source /var/www/kairos_sdk/environment-setup-core2-64-smp-linux
-# 
+#
 # $ devtool add hello-world-sample git@github.com:nnsuite/hello-world-sample.git
 # ($ devtool add hello-world-sample https://github.com/nnsuite/hello-world-sample.git)
 # $ cd /var/www/kairos_sdk/workspace/sources/hello-world-sample/
@@ -89,7 +89,7 @@ function pr-audit-build-yocto-run-queue(){
         echo "[DEBUG] Oooops. The variable YOCTO_ESDK_NAME is empty."
         echo "[INFO ] Note that administrator of a server has to specify the location of eSDK at first"
     fi
- 
+
     # Check if dependent packages are installed
     # The required packages are sudo, curl, and eYOCTO(devtool)
     if [[ $YOCTO_ESDK_NAME != "" ]]; then
@@ -204,12 +204,12 @@ function pr-audit-build-yocto-run-queue(){
         echo -e "[DEBUG] The return value of devtool command is $build_result."
         # Let's check if build procedure is normally done.
         if [[ $build_result -eq 0 ]]; then
-                echo -e "[DEBUG] Successfully YOCTO build checker is passed. Return value is ($build_result)."
-                check_result="success"
+            echo -e "[DEBUG] Successfully YOCTO build checker is passed. Return value is ($build_result)."
+            check_result="success"
         else
-                echo -e "[DEBUG] Oooops!!!!!! YOCTO build checker is failed. Return value is ($build_result)."
-                check_result="failure"
-                global_check_result="failure"
+            echo -e "[DEBUG] Oooops!!!!!! YOCTO build checker is failed. Return value is ($build_result)."
+            check_result="failure"
+            global_check_result="failure"
         fi
 
         # Let's report build result of source code
@@ -223,5 +223,5 @@ function pr-audit-build-yocto-run-queue(){
             export BUILD_TEST_FAIL=1
         fi
     fi
- 
+
 }
