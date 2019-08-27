@@ -115,7 +115,7 @@ function pr-audit-build-android-run-queue(){
         # Skip a build procedure
         echo -e "BUILD_MODE = 99"
         echo -e "Skipping the 'ndk-build' procedure temporarily."
-        $result=999
+        result=999
     else
         # Build a package with the 'ndk-build' command.
         # Note that you have to set no-password condition after running 'visudo' command.
