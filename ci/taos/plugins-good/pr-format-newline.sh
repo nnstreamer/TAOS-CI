@@ -2,7 +2,7 @@
 
 ##
 # Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -47,7 +47,7 @@ function pr-format-newline(){
             if  [[ $newline_count == 0 ]]; then
                 echo -e "[DEBUG] Newline checker is passed. patch file name: $current_file. The number of newlines is $newline_count."
                 check_result="success"
-    
+
             elif  [[ $current_file =~ "$SKIP_CI_PATHS_FORMAT" ]]; then
                 echo -e "[DEBUG] Newline checker skipped because a patch file $current_file is located in the $SKIP_CI_PATHS_FORMAT."
                 echo -e "[DEBUG] The file size is $FILESIZE_NUM."
@@ -62,13 +62,13 @@ function pr-format-newline(){
             fi
         # If a file is not "ASCII text" type, the file will be skipped.
         else
-                check_result="skip"
+            check_result="skip"
         fi
     done
-    
+
     # get just a file name from a path to avoid length limitation (e.g., max 140 characters) of 'description' tag
     i_filename=$(basename $current_file)
-    
+
     if [[ $check_result == "success" ]]; then
         echo -e "[DEBUG] Passed. No newline anomaly."
         message="Successfully all text files are passed without newline issue."
@@ -81,7 +81,7 @@ function pr-format-newline(){
         echo -e "[DEBUG] Failed. A newline anomaly happened."
         message="Oooops. New line checker is failed at $i_filename."
         cibot_report $TOKEN "failure" "TAOS/pr-format-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
-    
+
         # inform PR submitter of a hint in more detail
         message=":octocat: **cibot**: $user_id, The last line of a text file must have a newline character. Please append a new line at the end of the line in $current_file."
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"

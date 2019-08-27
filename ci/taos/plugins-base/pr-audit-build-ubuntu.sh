@@ -2,7 +2,7 @@
 
 ##
 # Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -127,7 +127,6 @@ function pr-audit-build-ubuntu-run-queue(){
     time_diff=$(($time_end-$time_start))
     time_build_cost="$(($time_diff / 60))m $(($time_diff % 60))s"
 
-
     # report execution result
     # let's do the build procedure of or skip the build procedure according to $BUILD_MODE
     if [[ $BUILD_MODE == 99 ]]; then
@@ -148,12 +147,12 @@ function pr-audit-build-ubuntu-run-queue(){
         echo -e "[DEBUG] The return value of pdebuild command is $result."
         # Let's check if build procedure is normally done.
         if [[ $result -eq 0 ]]; then
-                echo -e "[DEBUG][PASSED] Successfully Ubunu build checker is passed in $time_build_cost."
-                check_result="success"
+            echo -e "[DEBUG][PASSED] Successfully Ubunu build checker is passed in $time_build_cost."
+            check_result="success"
         else
-                echo -e "[DEBUG][FAILED] Oooops!!!!!! Ubuntu build checker is failed after $time_build_cost. "
-                check_result="failure"
-                global_check_result="failure"
+            echo -e "[DEBUG][FAILED] Oooops!!!!!! Ubuntu build checker is failed after $time_build_cost. "
+            check_result="failure"
+            global_check_result="failure"
         fi
 
         # Let's report build result of source code
@@ -167,5 +166,5 @@ function pr-audit-build-ubuntu-run-queue(){
             export BUILD_TEST_FAIL=1
         fi
     fi
- 
+
 }

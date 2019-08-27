@@ -68,11 +68,11 @@ function pr-format-clang(){
     # check a clang format rule with file size of patch file
     PATCHFILE_SIZE=$(stat -c%s ../report/${clang_format_file})
     if [[ $PATCHFILE_SIZE -ne 0 ]]; then
-            echo "[DEBUG] Format checker is failed. Update your code to follow convention after reading ${clang_format_file}."
-            check_result="failure"
-            global_check_result="failure"
+        echo "[DEBUG] Format checker is failed. Update your code to follow convention after reading ${clang_format_file}."
+        check_result="failure"
+        global_check_result="failure"
     else
-            check_result="success"
+        check_result="success"
     fi
 
     # report the clang inspection result
@@ -84,9 +84,7 @@ function pr-format-clang(){
         echo "[DEBUG] Failed. A clang-formatting style."
         message="Oooops. The component you are submitting with incorrect clang-format style."
         cibot_report $TOKEN "failure" "TAOS/pr-format-clang" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
-fi
-
-
+    fi
 
 }
 

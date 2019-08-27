@@ -71,11 +71,11 @@ function func_get_file_cached(){
 # arg1: The return value of a command
 function save_consumer_msg() {
     if [[ $1 -ne 0 ]]; then
-       cat temp.txt >> ../../report/nnstreamer-apptest-error.txt
-       echo "[DEBUG][FAIL] It's failed. Oooops. The consumer application is not executed." >> ../../report/nnstreamer-apptest-output.txt
+        cat temp.txt >> ../../report/nnstreamer-apptest-error.txt
+        echo "[DEBUG][FAIL] It's failed. Oooops. The consumer application is not executed." >> ../../report/nnstreamer-apptest-output.txt
     else
-       cat temp.txt >> ../../report/nnstreamer-apptest-output.txt
-       echo "[DEBUG][PASS] It's okay. The consumer application is successfully completed." >> ../../report/nnstreamer-apptest-output.txt
+        cat temp.txt >> ../../report/nnstreamer-apptest-output.txt
+        echo "[DEBUG][PASS] It's okay. The consumer application is successfully completed." >> ../../report/nnstreamer-apptest-output.txt
     fi
     echo "save_consumer_msg=$1"
 }
