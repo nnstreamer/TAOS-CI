@@ -79,7 +79,7 @@ function pr-audit-build-ubuntu-run-queue(){
         # skip build procedure
         echo -e "BUILD_MODE = 99"
         echo -e "Skipping 'pdebuild' procedure temporarily."
-        $result=999
+        result=999
     else
         # Build a package with pdebuild
         # Note that you have to set no-password condition after running 'visudo' command.
