@@ -204,21 +204,33 @@ function pr-audit-build-android-run-queue(){
         # Set NNStreamer root in gradle properties.
         sed -i "s|nnstreamerRoot=nnstreamer-path|nnstreamerRoot=$NNSTREAMER_ROOT|" build_android_lib/gradle.properties
 
-        # Build Android API.
+        # Build Android API and sample.
         pushd ./build_android_lib
+
+        nnstreamer_android_api_lib=./api/build/outputs/aar/api-release.aar
+        nnstreamer_android_api_sample=./sample/build/outputs/apk/release/sample-release-unsigned.apk
+
+        # Build Android library.
         sh ./gradlew api:assembleRelease 1>> ../../report/build_log_${input_pr}_android_api.txt
-        popd
+
+        # Build sample apk if api library exists.
+        if [[ -e $nnstreamer_android_api_lib ]]; then
+            cp $nnstreamer_android_api_lib ./sample/libs
+            sh ./gradlew sample:assembleRelease 1>> ../../report/build_log_${input_pr}_android_api.txt
+        fi
 
         # Check if build procedure is done.
-        nnstreamer_android_api_lib=./build_android_lib/api/build/outputs/aar/api-release.aar
-        if [[ -e $nnstreamer_android_api_lib ]]; then
+        if [[ -e $nnstreamer_android_api_sample ]]; then
             echo "[DEBUG][PASSED] Build procedure is done, copy Android library."
-            mkdir -p ../$PACK_BIN_FOLDER/ANDROID
-            cp $nnstreamer_android_api_lib ../$PACK_BIN_FOLDER/ANDROID/nnstreamer-api.aar
+            mkdir -p ../../$PACK_BIN_FOLDER/ANDROID
+            cp $nnstreamer_android_api_lib ../../$PACK_BIN_FOLDER/ANDROID/nnstreamer-api.aar
+            cp $nnstreamer_android_api_sample ../../$PACK_BIN_FOLDER/ANDROID/sample-release-unsigned.apk
         else
             echo "[DEBUG][FAILED] Oooops!!!!! Failed to build Android library."
             result=$(($result+2))
         fi
+
+        popd
 
         # Remove build directory.
         rm -rf build_android_lib
