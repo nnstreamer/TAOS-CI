@@ -47,7 +47,7 @@ The diagram below shows an overall flow of our system. The TAOS-CI system perfor
 ## Publications
 * Geunsik Lim, MyungJoo Ham, Jijoong Moon, Wook Song, Sangjung Woo, and Sewon Oh, "**<a href=https://www.researchgate.net/publication/329752376_TAOS-CI_Lightweight_Modular_Continuous_Integration_System_for_Edge_Computing>TAOS-CI: Lightweight & Modular Continuous Integration System for Edge Computing,</a>**" 37th IEEE International Conference on Consumer Electronics (ICCE), Las Vegas, USA, Jan. 2019.
 
-* Geunsik Lim, MyungJoo Ham, and Jaeyun Jung, "**VTB: Cloud-based Testbed for On-Device AI,**" Proc. of KIISE Korea Computer Congress (Domestic Conference), Jeju, South Korea, Jun. 2019. (Submitted)
+* Geunsik Lim, MyungJoo Ham, and Jaeyun Jung, "**VTB: Cloud-based Testbed for On-Device AI,**" Proc. of KIISE Korea Computer Congress (Domestic Conference), Jeju, South Korea, Jun. 2019.
 
 
 # How to install
