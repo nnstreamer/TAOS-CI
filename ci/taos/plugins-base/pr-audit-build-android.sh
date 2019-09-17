@@ -140,6 +140,11 @@ function pr-audit-build-android-run-queue(){
         # www-data    ALL=(ALL) NOPASSWD:ALL
         echo -e "[DEBUG] current folder is $(pwd)."
 
+        # Apply the patch for Android build
+        pushd ./api/capi
+        ./modify_nnstreamer_h_for_nontizen.sh
+        popd
+
         # Options:
         # a. TODO: A trigger option is to be used as PR number and PR time (a trick)
         #          to support Out-of-PR (OOP) killer.
