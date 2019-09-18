@@ -116,6 +116,7 @@ function pr-audit-build-android-run-queue(){
     check_cmd_dep curl
     check_cmd_dep ndk-build
     check_cmd_dep sed
+    check_cmd_dep patch
 
     echo "[DEBUG] starting TAOS/pr-audit-build-android facility"
 
@@ -140,10 +141,14 @@ function pr-audit-build-android-run-queue(){
         # www-data    ALL=(ALL) NOPASSWD:ALL
         echo -e "[DEBUG] current folder is $(pwd)."
 
-        # Apply the patch for Android build
-        pushd ./api/capi
-        ./modify_nnstreamer_h_for_nontizen.sh
-        popd
+        # NNStreamer root directory for build.
+        export NNSTREAMER_ROOT=$(pwd)
+
+        # First perform a dry run to verify that the patch can be applied (performing a reverse patch apply should fail)
+        if ! patch -R --dry-run -sfp1 -i $NNSTREAMER_ROOT/packaging/non_tizen_build.patch; then
+            # Apply the patch for Android build
+            patch -sfp1 -i $NNSTREAMER_ROOT/packaging/non_tizen_build.patch
+        fi
 
         # Options:
         # a. TODO: A trigger option is to be used as PR number and PR time (a trick)
@@ -194,9 +199,6 @@ function pr-audit-build-android-run-queue(){
         # Start to build NNStreamer API for Android.
         echo "[DEBUG] Starting gradle build for Android API."
 
-        # NNStreamer root directory for build.
-        export NNSTREAMER_ROOT=$(pwd)
-
         # Make directory to build NNStreamer library.
         mkdir -p build_android_lib
 
@@ -229,6 +231,9 @@ function pr-audit-build-android-run-queue(){
 
         # Remove build directory.
         rm -rf build_android_lib
+
+        # Undo the applied the patch for Android build
+        patch -R -sfp1 -i $NNSTREAMER_ROOT/packaging/non_tizen_build.patch
     fi
     echo "[DEBUG] The result value is '$result'."
 
