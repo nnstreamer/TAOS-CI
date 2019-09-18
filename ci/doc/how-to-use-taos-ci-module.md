@@ -26,7 +26,7 @@ echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugi
 source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh
 
 ```
-Then, if you have to install a debian package additioanlly for a new module, Please modify the `install-package-base.sh` file. In this case, we assume that you have to install the `shellcheck` debian package.
+Second, if you have to install a debian package additionally for a new module, please modify the `install-package-base.sh` file. In this case, we assume that you have to install the `shellcheck` debian package.
 ```bash
 $ cd TAOS-CI
 $ sudo ./ci/taos/webapp/install-packages-base.sh
@@ -34,6 +34,8 @@ $ sudo ./ci/taos/webapp/install-packages-base.sh
 echo -e "\n\n\n########## for CI-system: Installing packages for shellcheck package"
 sudo apt -y install shellcheck || func-pack-fail
 ```
+Finally, please describe the goal of the module at the below wiki page.
+* https://github.com/nnsuite/TAOS-CI/wiki/TAOS-CI-Plug-in-Modules
 
 ## Requirement before contributing a new module
 First of all, **Note** that you have to run the below statement in order to check the grammar error of a CI module that your write.
