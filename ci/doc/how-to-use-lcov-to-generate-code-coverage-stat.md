@@ -13,14 +13,28 @@ easy navigation within the file structure. LCOV supports statement, function and
   coverage data by providing three levels of detail: directory view,
   file view and source code view.
 
+# Getting started
 
-# Install required packages
+TAOS-CI provides the automated code coverage tool by default.
+You just have to append the below statement in `/etc/crontab` file as following:
+```bash
+$ sudo vi /etc/crontab
+#  30 * * * * www-data /var/www/html/{YOUR_REPO_NAME}/ci/gcov/coverage-generator.sh
+```
+In order to check the generated result, please run the below statement.
+```bash
+$ firefox /var/www/html/{YOUR_REPO_NAME}/ci/gcov_html/index.html
+```
+
+# Advanced
+
+## Install required packages
 ```bash
 $ apt install lcov
 ```
 
 
-# Write a cpp example code
+## Write a cpp example code
 ```bash
 $ vi menu.cpp
 
@@ -105,13 +119,13 @@ float divide(float a, float b)
 }
 ```
 
-# Generate .gcno using --coverage option
+## Generate .gcno using --coverage option
 The `–coverage` option here is used to compile and link code needed for coverage analysis.
 ```bash
 $g++ -o menu.out --coverage menu.cpp
 ```
 
-# Declare environment variable
+## Declare environment variable
 Let's change the path that .gcda files are created.
 Next we need to export two variables namely `GCOV_PREFIX` and `GCOV_PREFIX_STRIP`.
 Set `GCOV_PREFIX` to the folder you want the output files to be in.
@@ -120,7 +134,7 @@ The `GCOV_PREFIX_STRIP` is equal to the the number of forward slashes or “/”
 $export GCOV_PREFIX="/home/taos-ci/public_html/{your_repo_name}/data"
 $export GCOV_PREFIX_STRIP=5
 ```
-# Generate .gcda
+## Generate .gcda
 You can generate .gcda file by running the example program.
 ```bash
 $./menu.out
@@ -143,7 +157,7 @@ MENU
 Enter your choice :5
 ```
 
-# Getting HTML output
+## Getting HTML output
 Now, you can generate the report file with html format.
 
 * lcov options:
@@ -161,7 +175,7 @@ $lcov -t "Code Coverate Statistics Report" -o lcov_app.info -c -d .
 $genhtml -o html lcov_app.info
 ```
 
-# Run web-server with python module
+## Run web-server with python module
 Let's run a simple web-server with the "SimpleHTTPServer" module of Python.
 ```bash
 $cd html 
@@ -170,14 +184,14 @@ $firefox  http://localhost/index.html
 $firefox  ./html/index.html           // To open the index.html directly
 ```
 
-# How to read the code coverage stats
+## How to read the code coverage stats
 * http://ltp.sourceforge.net/coverage/lcov/output/index.html
 
 The `red` lines are the ones not executed or uncovered region.
 The `blue` lines are the ones covered. Also you can look at the Line data section
 for the number of times the lines have been executed. 
 
-# Reference
+## Reference
 * http://gcc.gnu.org/onlinedocs/gcc/Gcov.html
 * http://ltp.sourceforge.net/coverage/lcov.php
 
