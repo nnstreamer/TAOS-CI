@@ -211,7 +211,9 @@ function pr-audit-build-android-run-queue(){
 
         # Build Android API.
         pushd ./build_android_lib
-        sh ./gradlew api:assembleRelease 1>> ../../report/build_log_${input_pr}_android_api.txt
+        sh ./gradlew api:assembleRelease \
+        1>> ../../report/build_log_${input_pr}_android_api_output.txt \
+        2>> ../../report/build_log_${input_pr}_android_api_error.txt
         popd
 
         # Check if build procedure is done.
