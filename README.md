@@ -45,9 +45,9 @@ Please refer [Here](./ci/doc/maintenance.md).
 The diagram below shows an overall flow of our system. The TAOS-CI system performs (1) the format checker (before the build) and (2) the audit checker (after the build) by separating an inspection procedure with two steps whenever contributors submit a Pull Request (PR).
 
 ## Publications
-* Geunsik Lim, MyungJoo Ham, Jijoong Moon, Wook Song, Sangjung Woo, and Sewon Oh, "**<a href=https://www.researchgate.net/publication/329752376_TAOS-CI_Lightweight_Modular_Continuous_Integration_System_for_Edge_Computing>TAOS-CI: Lightweight & Modular Continuous Integration System for Edge Computing,</a>**" 37th IEEE International Conference on Consumer Electronics (ICCE), Las Vegas, USA, Jan. 2019.
+* Geunsik Lim, MyungJoo Ham, Jijoong Moon, Wook Song, Sangjung Woo, and Sewon Oh, "**<a href='https://www.researchgate.net/publication/329752376_TAOS-CI_Lightweight_Modular_Continuous_Integration_System_for_Edge_Computing'>TAOS-CI: Lightweight & Modular Continuous Integration System for Edge Computing,</a>**" 37th IEEE International Conference on Consumer Electronics (ICCE), Las Vegas, USA, Jan. 2019.
 
-* Geunsik Lim, MyungJoo Ham, and Jaeyun Jung, "**<a href=http://www.riss.kr/link?id=A106329692>VTB: Cloud-based Testbed for On-Device AI,</a>**" Proc. of KIISE Korea Computer Congress, Jeju, South Korea, Jun. 2019. (in Korean)
+* Geunsik Lim, MyungJoo Ham, and Jaeyun Jung, "**<a href='http://www.riss.kr/link?id=A106329692'>VTB: Cloud-based Testbed for On-Device AI,</a>**" Proc. of KIISE Korea Computer Congress, Jeju, South Korea, Jun. 2019. (in Korean)
 
 * Geunsik Lim, MyungJoo Ham, and Jaeyun Jung, "**VTS: Virtual Testbed System for Cloud-based On-Device AI Application,**" KIISE Transactions on Computing Practices : Computing Practices and Letter (CPL), 2019. (Invited paper, Submitted, in Korean)
 
