@@ -15,7 +15,25 @@ We recommend that you use two APIs such as `cibot_comment()` and `cibot_report()
 
 ## How to enable a new module
 First, open `./config/config-plugins-{format|audit}.sh`. Then, append a function name of a module that you want to attach newly. If you are poor at CI module, we recommend that you refer to the existing examples.
+```bash
+$ vi ./config/config-plugins-{format|audit}.sh
 
+format_plugins[++idx]="pr-format-{module_name}"
+echo "${format_plugins[idx]} is starting."
+echo "[MODULE] TAOS/${format_plugins[idx]}: Check a syntax error in a shell script file"
+echo "[DEBUG] The current path: $(pwd)."
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh"
+source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh
+
+```
+Then, if you have to install a debian package additioanlly for a new module, Please modify the `install-package-base.sh` file. In this case, we assume that you have to install the `shellcheck` debian package.
+```bash
+$ cd TAOS-CI
+$ sudo ./ci/taos/webapp/install-packages-base.sh
+
+echo -e "\n\n\n########## for CI-system: Installing packages for shellcheck package"
+sudo apt -y install shellcheck || func-pack-fail
+```
 
 ## Requirement before contributing a new module
 First of all, **Note** that you have to run the below statement in order to check the grammar error of a CI module that your write.
