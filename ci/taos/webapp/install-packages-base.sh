@@ -64,6 +64,12 @@ sudo apt -y install libreoffice evince || func-pack-fail
 echo -e "\n\n\n########## for CI-system: Installing packages for SLOCcount"
 sudo apt -y install sloccount || func-pack-fail
 
+echo -e "\n\n\n########## for CI-system: Installing packages for aspell"
+sudo apt -y install aspell || func-pack-fail
+
+echo -e "\n\n\n########## for CI-system: Installing packages for spellcheck"
+sudo apt -y install spellcheck || func-pack-fail
+
 echo -e "\n\n\n########## for CI-system: Setting-up a build environment of Tizen package (.rpm)"
 if [[ ! -f /etc/apt/sources.list.d/tizen.list ]]; then
     sudo echo "deb [trusted=yes] http://download.tizen.org/tools/latest-release/Ubuntu_16.04/ / " > /etc/apt/sources.list.d/tizen.list
