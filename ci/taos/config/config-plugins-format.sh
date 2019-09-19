@@ -147,6 +147,13 @@ echo "[DEBUG] The current path: $(pwd)."
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh"
 source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh
 
+format_plugins[++idx]="pr-format-flawfinder"
+echo "${format_plugins[idx]} is starting."
+echo "[MODULE] TAOS/${format_plugins[idx]}: Check security problems in the C/C++ source code with 'flawfinder' package"
+echo "[DEBUG] The current path: $(pwd)."
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh"
+source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh
+
 ##################################################################################################################
 echo "[MODULE] plugins-staging: Plugin group that does not have an evaluation and aging test enough"
 # Please append your plugin modules here.
