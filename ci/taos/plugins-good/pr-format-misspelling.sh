@@ -35,11 +35,11 @@ echo "##########################################################################
 echo "[MODULE] TAOS/pr-format-misspelling: Check a misspelled statement in a document file with GNU Aspell"
 
 # Check if required commands are installed by server administrator
-check_dependency cat
-check_dependency aspell
-check_dependency file
-check_dependency grep
-check_dependency wc
+check_cmd_dep cat
+check_cmd_dep aspell
+check_cmd_dep file
+check_cmd_dep grep
+check_cmd_dep wc
 
 # Read file names that a contributor modified(e.g., added, moved, deleted, and updated) from a last commit.
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`

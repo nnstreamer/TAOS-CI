@@ -132,7 +132,7 @@ function goto_repodir(){
 #  @brief check if a package is installed
 #  @param
 #   arg1: package name
-function check_dependency() {
+function check_cmd_dep() {
     echo "Checking for $1..."
     which "$1" 2>/dev/null || {
       echo "Please install $1."
@@ -144,6 +144,6 @@ function check_dependency() {
 }
 
 # check if dependent packages are installed to avoid an unexpected program error.
-check_dependency curl
-check_dependency cut
-check_dependency wc
+check_cmd_dep curl
+check_cmd_dep cut
+check_cmd_dep wc

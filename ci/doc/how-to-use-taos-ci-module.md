@@ -11,7 +11,7 @@ We recommend that you use two APIs such as `cibot_comment()` and `cibot_report()
 * cibot_comment(): This API write a requested message into a webpage of issue number or PR number.
 * cibot_report(): The API update the current status of the context of the module.
 * goto_repodir(): This API is to change a folder location from a current directory to a git repository directory.
-* check_dependency(): This API is to check if required commands are installed in the server.
+* check_cmd_dep(): This API is to check if required commands are installed in the server.
 
 ## How to enable a new module
 First, open `./config/config-plugins-{format|audit}.sh`. Then, append a function name of a module that you want to attach newly. If you are poor at CI module, we recommend that you refer to the existing examples.

@@ -31,13 +31,13 @@
 # @brief Run Out-of-PR(OOP) killer
 function run_oop_killer(){
     # Specify dependent commands for this function.
-    check_dependency ps
-    check_dependency awk
-    check_dependency grep
-    check_dependency bc
-    check_dependency kill
-    check_dependency sleep
-    check_dependency rm
+    check_cmd_dep ps
+    check_cmd_dep awk
+    check_cmd_dep grep
+    check_cmd_dep bc
+    check_cmd_dep kill
+    check_cmd_dep sleep
+    check_cmd_dep rm
 
     # Run the OOP killer
     # Kill PRs that were previously invoked by checker-pr-gateway.sh with the same PR number.

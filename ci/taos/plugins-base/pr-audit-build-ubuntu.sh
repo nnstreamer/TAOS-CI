@@ -59,11 +59,11 @@ function pr-audit-build-ubuntu-run-queue(){
     source /etc/environment
     # check if dependent packages are installed
     # the required packages are pbuilder(pdebuild), debootstrap(debootstrap), and devscripts(debuild)
-    check_dependency sudo
-    check_dependency curl
-    check_dependency pdebuild
-    check_dependency debootstrap
-    check_dependency debuild
+    check_cmd_dep sudo
+    check_cmd_dep curl
+    check_cmd_dep pdebuild
+    check_cmd_dep debootstrap
+    check_cmd_dep debuild
 
     echo -e "[DEBUG] starting TAOS/pr-audit-build-ubuntu facility"
 
