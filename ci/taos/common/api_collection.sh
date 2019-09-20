@@ -136,6 +136,9 @@ function check_dependency() {
     echo "Checking for $1..."
     which "$1" 2>/dev/null || {
       echo "Please install $1."
+      # Inform a CI administrator of a hint in more detail
+      message=":octocat: **cibot**: Oooops. The administrator of CI server must install a debian package to support '$1' command."
+      cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
       exit 1
     }
 }
