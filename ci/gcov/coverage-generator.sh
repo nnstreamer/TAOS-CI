@@ -39,9 +39,9 @@ echo -e "[DEBUG] git_dir is '$git_dir'"
 source $git_dir/ci/taos/common/api_collection.sh
 
 # Check dependency
-check_dependency gbs
-check_dependency rpm2cpio
-check_dependency cpio
+check_cmd_dep gbs
+check_cmd_dep rpm2cpio
+check_cmd_dep cpio
 
 pushd $git_dir
 # Generate a code coverage statistics with gcov/lcov.

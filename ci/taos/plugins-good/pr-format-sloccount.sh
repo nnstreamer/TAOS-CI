@@ -33,11 +33,11 @@ function pr-format-sloccount(){
     pwd
 
     # Check if server administrator install required commands
-    check_dependency sloccount
-    check_dependency git
-    check_dependency file
-    check_dependency mkdir
-    check_dependency grep
+    check_cmd_dep sloccount
+    check_cmd_dep git
+    check_cmd_dep file
+    check_cmd_dep mkdir
+    check_cmd_dep grep
 
     # Read file names that a contributor modified(e.g., added, moved, deleted, and updated) from a last commit.
     FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`

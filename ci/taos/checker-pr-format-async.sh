@@ -61,22 +61,22 @@ fi
 # git, which, grep, touch, find, wc, cat, basename, tail, clang-format-4.0, cppcheck, rpmlint, aha, stat, curl
 # check if dependent packages are installed
 source ./common/api_collection.sh
-check_dependency git
-check_dependency which
-check_dependency grep
-check_dependency touch
-check_dependency find
-check_dependency wc
-check_dependency cat
-check_dependency basename
-check_dependency tail
-check_dependency clang-format-4.0
-check_dependency cppcheck
-check_dependency rpmlint
-check_dependency aha
-check_dependency stat
-check_dependency curl
-check_dependency ctags
+check_cmd_dep git
+check_cmd_dep which
+check_cmd_dep grep
+check_cmd_dep touch
+check_cmd_dep find
+check_cmd_dep wc
+check_cmd_dep cat
+check_cmd_dep basename
+check_cmd_dep tail
+check_cmd_dep clang-format-4.0
+check_cmd_dep cppcheck
+check_cmd_dep rpmlint
+check_cmd_dep aha
+check_cmd_dep stat
+check_cmd_dep curl
+check_cmd_dep ctags
 echo -e "[DEBUG] Checked dependency packages.\n"
 
 # get user ID from the input_repo string

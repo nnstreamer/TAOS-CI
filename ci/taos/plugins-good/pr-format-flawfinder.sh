@@ -41,13 +41,13 @@ function pr-format-flawfinder(){
     pwd
 
     # Check if server administrator install required commands
-    check_dependency flawfinder
-    check_dependency file
-    check_dependency grep
-    check_dependency cat
-    check_dependency wc
-    check_dependency git
-    check_dependency awk
+    check_cmd_dep flawfinder
+    check_cmd_dep file
+    check_cmd_dep grep
+    check_cmd_dep cat
+    check_cmd_dep wc
+    check_cmd_dep git
+    check_cmd_dep awk
 
     check_result="skip"
 

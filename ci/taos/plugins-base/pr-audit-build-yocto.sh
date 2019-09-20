@@ -93,9 +93,9 @@ function pr-audit-build-yocto-run-queue(){
     # Check if dependent packages are installed
     # The required packages are sudo, curl, and eYOCTO(devtool)
     if [[ $YOCTO_ESDK_NAME != "" ]]; then
-        check_dependency sudo
-        check_dependency curl
-        check_dependency devtool
+        check_cmd_dep sudo
+        check_cmd_dep curl
+        check_cmd_dep devtool
     fi
 
     echo "[DEBUG] env information: start ---------------------------------------------"
@@ -147,7 +147,7 @@ function pr-audit-build-yocto-run-queue(){
             fi
         fi
         # create unique recipe folder to handle lots of PRs that can be submitted at the same time
-        check_dependency devtool
+        check_cmd_dep devtool
         id -a
 
         github_site="github.com"

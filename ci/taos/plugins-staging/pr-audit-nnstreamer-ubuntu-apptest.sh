@@ -117,21 +117,21 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     echo -e "#######################################################################"
     echo -e "[MODULE] TAOS/pr-audit-nnstreamer-apptest: Starting a sample app test"
     echo -e "[DEBUG] Checking dependencies of required command..."
-    check_dependency meson
-    check_dependency ninja
-    check_dependency wget
-    check_dependency python
-    check_dependency Xvnc
-    check_dependency git
-    check_dependency insmod
-    check_dependency cat
-    check_dependency grep
-    check_dependency usermod
-    check_dependency xauth
-    check_dependency touch
-    check_dependency awk
-    check_dependency grep
-    check_dependency ps
+    check_cmd_dep meson
+    check_cmd_dep ninja
+    check_cmd_dep wget
+    check_cmd_dep python
+    check_cmd_dep Xvnc
+    check_cmd_dep git
+    check_cmd_dep insmod
+    check_cmd_dep cat
+    check_cmd_dep grep
+    check_cmd_dep usermod
+    check_cmd_dep xauth
+    check_cmd_dep touch
+    check_cmd_dep awk
+    check_cmd_dep grep
+    check_cmd_dep ps
 
     ########## Step 1/6: Set-up environment variables.
     export NNST_ROOT="${dir_ci}/${dir_commit}/${PRJ_REPO_OWNER}"

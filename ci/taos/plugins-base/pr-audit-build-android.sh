@@ -112,10 +112,10 @@ function pr-audit-build-android-run-queue(){
     echo $GSTREAMER_ROOT_ANDROID
 
     # Check if dependent packages are installed. Please add required packages here.
-    check_dependency sudo
-    check_dependency curl
-    check_dependency ndk-build
-    check_dependency sed
+    check_cmd_dep sudo
+    check_cmd_dep curl
+    check_cmd_dep ndk-build
+    check_cmd_dep sed
 
     echo "[DEBUG] starting TAOS/pr-audit-build-android facility"
 

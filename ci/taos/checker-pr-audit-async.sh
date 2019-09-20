@@ -72,15 +72,15 @@ source ./common/global-variable.sh
 
 # Check if dependent packages are installed
 source ./common/api_collection.sh
-check_dependency gbs
-check_dependency tee
-check_dependency curl
-check_dependency grep
-check_dependency wc
-check_dependency cat
-check_dependency sed
-check_dependency awk
-check_dependency basename
+check_cmd_dep gbs
+check_cmd_dep tee
+check_cmd_dep curl
+check_cmd_dep grep
+check_cmd_dep wc
+check_cmd_dep cat
+check_cmd_dep sed
+check_cmd_dep awk
+check_cmd_dep basename
 echo "[DEBUG] Checked dependency packages.\n"
 
 # Include a PR scheduler module to handle a run-queue and wait-queue while running a build tasks

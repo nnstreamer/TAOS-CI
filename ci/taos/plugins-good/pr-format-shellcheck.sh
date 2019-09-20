@@ -34,11 +34,11 @@ echo "##########################################################################
 echo "[MODULE] TAOS/pr-format-shellcheck: Check syntax errors in a shell script file with GNU shellcheck"
 
 # Check if required commands are installed by server administrator
-check_dependency cat
-check_dependency shellcheck
-check_dependency file
-check_dependency grep
-check_dependency wc
+check_cmd_dep cat
+check_cmd_dep shellcheck
+check_cmd_dep file
+check_cmd_dep grep
+check_cmd_dep wc
 
 # Read file names that a contributor modified(e.g., added, moved, deleted, and updated) from a last commit.
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`

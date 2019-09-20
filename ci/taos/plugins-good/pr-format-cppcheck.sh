@@ -42,11 +42,11 @@ function pr-format-cppcheck(){
     pwd
 
     # Check if server administrator install required commands
-    check_dependency cppcheck
-    check_dependency file
-    check_dependency grep
-    check_dependency cat
-    check_dependency wc
+    check_cmd_dep cppcheck
+    check_cmd_dep file
+    check_cmd_dep grep
+    check_cmd_dep cat
+    check_cmd_dep wc
 
     check_result="skip"
 
