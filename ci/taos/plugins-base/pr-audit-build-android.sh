@@ -67,6 +67,21 @@
 #
 # Step 4/4: Modify the script for ndk-build
 # In ./gstreamer-1.0-android-universal-1.16.0/<target-arch>/share/gst-android/ndk-build/gstreamer-1.0.mk
+#
+# (A) Add directory separator.
+# Add separator '/' between $(GSTREAMER_NDK_BUILD_PATH) and $(plugin)
+#
+# GSTREAMER_PLUGINS_CLASSES    := $(strip \
+# 			$(subst $(GSTREAMER_NDK_BUILD_PATH),, \
+# 			$(foreach plugin,$(GSTREAMER_PLUGINS), \
+#			$(wildcard $(GSTREAMER_NDK_BUILD_PATH)/$(plugin)/*.java))))
+#
+# GSTREAMER_PLUGINS_WITH_CLASSES := $(strip \
+# 			$(subst $(GSTREAMER_NDK_BUILD_PATH),, \
+# 			$(foreach plugin, $(GSTREAMER_PLUGINS), \
+#			$(wildcard $(GSTREAMER_NDK_BUILD_PATH)/$(plugin)))))
+#
+# (B) Set SYSROOT_GST_INC and SYSROOT_GST_LINK.
 #     ifdef SYSROOT_INC
 #        SYSROOT_GST_INC := $(SYSROOT_INC)     # Add this line
 #        SYSROOT_GST_LINK := $(SYSROOT_INC)    # Add this line
