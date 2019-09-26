@@ -15,7 +15,7 @@
 #
 
 ##
-# @file    checker-pr-format-async.sh
+# @file    checker-pr-prebuild-async.sh
 # @brief   It checks format rules whenever a PR is submitted.
 # @see     https://github.com/nnsuite/TAOS-CI
 # @author  Geunsik Lim <geunsik.lim@samsung.com>
@@ -106,13 +106,13 @@ cd $dir_ci
 export dir_commit=${dir_worker}/${input_pr}-${input_date}-${input_commit}
 # --------------------------- CI Trigger (queued) --------------------------------------------------------------------
 message="Trigger: queued. The commit number is $input_commit."
-cibot_report $TOKEN "pending" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+cibot_report $TOKEN "pending" "(INFO)TAOS/pr-prebuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 
 
 # --------------------------- CI module: start -----------------------------------------------------
 pwd
-echo -e "[DEBUG] Starting a format checker..."
+echo -e "[DEBUG] Starting a module of prebuild group ..."
 echo -e "[DEBUG] dir_ci is '$dir_ci'" 
 echo -e "[DEBUG] dir_worker is '$dir_worker'" 
 echo -e "[DEBUG] dir_commit is '$dir_commit'" 
@@ -144,13 +144,13 @@ echo -e "[MODULE] plugins-good: Plugin group that follow Apache license with goo
 echo -e "[MODULE] plugins-staging: Plugin group that does not have evaluation and aging test enough"
 echo -e " "
 echo -e "Current path: $(pwd)."
-echo -e "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-format.sh"
+echo -e "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-prebuild.sh"
 
-# If there are incorrect statements in a configuration file of the format group, Let's report it.
-source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-format.sh 2>> ../pr-plugins-format_error.txt
+# If there are incorrect statements in a configuration file of the prebuild group, Let's report it.
+source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-prebuild.sh 2>> ../pr-plugins-prebuild_error.txt
 
 
-for plugin in ${format_plugins[*]}
+for plugin in ${prebuild_plugins[*]}
 do
     echo -e "[DEBUG] -----------------------------"
     echo -e "[DEBUG] run queue: Running the '${plugin}' module"
@@ -165,28 +165,28 @@ exit_code=0
 echo -e "[DEBUG] Varaible global_check_result is $global_check_result."
 if [[ $global_check_result == "success" ]]; then
     # in case of success
-    message="Successfully all format checkers are done."
-    cibot_report $TOKEN "success" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
-    echo -e "[DEBUG] cibot_report $TOKEN success (INFO)TAOS/pr-format-all $message ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/ ${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    message="Successfully all modules of the prebuild group are done."
+    cibot_report $TOKEN "success" "(INFO)TAOS/pr-prebuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    echo -e "[DEBUG] cibot_report $TOKEN success (INFO)TAOS/pr-prebuild-all $message ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/ ${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of success content to encourage review process
-    echo -e "[DEBUG] (INFO)TAOS/pr-format-all: All format modules are passed - it is ready to review!"
-    echo -e "[DEBUG] :shipit: Note that CI bot has two sub-bots such as TAOS/pr-audit-all and TAOS/pr-format-all."
+    echo -e "[DEBUG] (INFO)TAOS/pr-prebuild-all: All modules of the prebuld group are passed - it is ready to review!"
+    echo -e "[DEBUG] :shipit: Note that CI bot has two sub-bots such as TAOS/pr-postbuild-all and TAOS/pr-prebuild-all."
 
 elif [[ $global_check_result == "failure" ]]; then
     # in case of failure
-    message="Oooops. There is a failed format checker. Update your code correctly after reading error messages."
-    cibot_report $TOKEN "failure" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    message="Oooops. There is a failed module of the prebuild group. Update your code correctly after reading error messages."
+    cibot_report $TOKEN "failure" "(INFO)TAOS/pr-prebuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint to fix issues
-    message=":octocat: **cibot**: $user_id, One of the format checkers is failed. If you want to get a hint to fix this issue, please go to ${REPOSITORY_WEB}/wiki/."
+    message=":octocat: **cibot**: $user_id, One of the module of prebuild group is failed. If you want to get a hint to fix this issue, please go to ${REPOSITORY_WEB}/wiki/."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     exit_code=1
 
 else
     # in case that CI is broken
     message="Oooops. It seems that CI bot has bug(s). CI bot has to be fixed."
-    cibot_report $TOKEN "failure" "(INFO)TAOS/pr-format-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "(INFO)TAOS/pr-prebuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     exit_code=1
 
 fi

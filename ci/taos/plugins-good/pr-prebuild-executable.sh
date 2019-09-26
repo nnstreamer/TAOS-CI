@@ -15,17 +15,17 @@
 #
 
 ##
-# @file     pr-format-executable.sh
+# @file     pr-prebuild-executable.sh
 # @brief    Check executable bits for .cpp, .c, .hpp, .h, .prototxt, .caffemodel, .txt., .init
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
-# @brief [MODULE] TAOS/pr-format-executable
-function pr-format-executable(){
+# @brief [MODULE] TAOS/pr-prebuild-executable
+function pr-prebuild-executable(){
 
 echo "########################################################################################"
-    echo "[MODULE] TAOS/pr-format-executable: Check executable bits for .cpp, .c, .hpp, .h, .prototxt, .caffemodel, .txt., .init"
+    echo "[MODULE] TAOS/pr-prebuild-executable: Check executable bits for .cpp, .c, .hpp, .h, .prototxt, .caffemodel, .txt., .init"
     # Please add more types if you feel proper.
     FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
     for X in $FILELIST; do
@@ -45,11 +45,11 @@ echo "##########################################################################
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. A executable bits."
         message="Successfully, The commits are passed."
-        cibot_report $TOKEN "success" "TAOS/pr-format-executable" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-executable" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. A executable bits."
         message="Oooops. The commit has an invalid executable file ${X}. Please turn the executable bits off."
-        cibot_report $TOKEN "failure" "TAOS/pr-format-executable" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-prebuild-executable" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     
         message=":octocat: **cibot**: $user_id, Oooops. The commit has an invalid executable file. The file is **${X}**. Please turn the executable bits off. Run **chmod 644 file-name** command."
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"

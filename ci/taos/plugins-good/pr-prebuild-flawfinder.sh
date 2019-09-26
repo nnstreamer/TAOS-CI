@@ -15,7 +15,7 @@
 #
 
 ##
-# @file     pr-format-flawfinder.sh
+# @file     pr-prebuild-flawfinder.sh
 # @brief    This module examines C/C++ source code to find a possible security weaknesses.
 #
 #  Flawfinder searches through C/C++ source code looking for potential security flaws. It examines
@@ -34,10 +34,10 @@
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 
-# @brief [MODULE] TAOS/pr-format-flawfinder
-function pr-format-flawfinder(){
+# @brief [MODULE] TAOS/pr-prebuild-flawfinder
+function pr-prebuild-flawfinder(){
     echo "########################################################################################"
-    echo "[MODULE] TAOS/pr-format-flawfinder: Check security problems in C/C++ source codes with flawfinder"
+    echo "[MODULE] TAOS/pr-prebuild-flawfinder: Check security problems in C/C++ source codes with flawfinder"
     pwd
 
     # Check if server administrator install required commands
@@ -116,15 +116,15 @@ function pr-format-flawfinder(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. Static code analysis tool for security - flawfinder."
         message="Successfully source code(s) is written without securty flaws."
-        cibot_report $TOKEN "success" "TAOS/pr-format-flawfinder" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-flawfinder" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "skip" ]]; then
         echo "[DEBUG] Skipped. Static code analysis tool for security - flawfinder."
         message="Skipped. Your PR does not include c/c++ code(s)."
-        cibot_report $TOKEN "success" "TAOS/pr-format-flawfinder" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-flawfinder" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. Static code analysis tool for security - flawfinder."
         message="Oooops. flawfinder is failed. Please read $flawfinder_result for more details."
-        cibot_report $TOKEN "failure" "TAOS/pr-format-flawfinder" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-prebuild-flawfinder" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     
         # Inform PR submitter of a hint in more detail
         message=":octocat: **cibot**: $user_id, **${i}** includes bug(s). Please fix security flaws in your commit before entering a review process."

@@ -34,9 +34,9 @@ WEB_URL="http://nnsuite.mooo.com"
 
 # Add a context name of a plugin module that you want to mark a success symbol.
 declare -i idx=-1
-context_modules[++idx]="(INFO)TAOS/pr-format-all"
-context_modules[++idx]="(INFO)TAOS/pr-audit-all"
-context_modules[++idx]="TAOS/pr-audit-build-tizen-aarch64"
+context_modules[++idx]="(INFO)TAOS/pr-prebuild-all"
+context_modules[++idx]="(INFO)TAOS/pr-postbuild-all"
+context_modules[++idx]="TAOS/pr-postbuild-build-tizen-aarch64"
 
 #----------- Code area: Do not edit the below statements -----------------------
 # Type a commit number.

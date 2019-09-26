@@ -15,7 +15,7 @@
 #
 
 ##
-# @file    pr-audit-nnstreamer-ubuntu-apptest.sh
+# @file    pr-postbuild-nnstreamer-ubuntu-apptest.sh
 # @brief   Check if nnstreamer-based sample applications can be run.
 #
 # This module is to verify the run test if sample applications based on nnstreamer.
@@ -81,27 +81,27 @@ function save_consumer_msg() {
 }
 
 ##
-# @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-wait-queue
-function pr-audit-nnstreamer-ubuntu-apptest-wait-queue() {
+# @brief [MODULE] TAOS/pr-postbuild-nnstreamer-ubuntu-apptest-wait-queue
+function pr-postbuild-nnstreamer-ubuntu-apptest-wait-queue() {
     echo -e "[DEBUG] Waiting CI trigger to run nnstreamer sample app actually."
     message="Trigger: wait queue. There are other build jobs and we need to wait for some minutes. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "TAOS/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 ##
-# @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-ready-queue
-function pr-audit-nnstreamer-ubuntu-apptest-ready-queue() {
+# @brief [MODULE] TAOS/pr-postbuild-nnstreamer-ubuntu-apptest-ready-queue
+function pr-postbuild-nnstreamer-ubuntu-apptest-ready-queue() {
     echo -e "[DEBUG] Readying CI trigger to run nnstreamer sample app actually."
     message="Trigger: ready queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "TAOS/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 ##
-# @brief [MODULE] TAOS/pr-audit-nnstreamer-ubuntu-apptest-run-queue
-function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
+# @brief [MODULE] TAOS/pr-postbuild-nnstreamer-ubuntu-apptest-run-queue
+function pr-postbuild-nnstreamer-ubuntu-apptest-run-queue() {
     echo -e "[DEBUG] Starting CI trigger to run a sample app of nnstreamer actually."
     message="Trigger: run queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "TAOS/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     # The 'wget' command saves a log message with the "-o logfile" option while downloading files.
     # Run a locale setting which supports 'utf-8' to avoid an issue  that some file names
@@ -115,7 +115,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     echo "[DEBUG] locale information: end   ---------------------------------------------"
 
     echo -e "#######################################################################"
-    echo -e "[MODULE] TAOS/pr-audit-nnstreamer-apptest: Starting a sample app test"
+    echo -e "[MODULE] TAOS/pr-postbuild-nnstreamer-apptest: Starting a sample app test"
     echo -e "[DEBUG] Checking dependencies of required command..."
     check_cmd_dep meson
     check_cmd_dep ninja
@@ -195,7 +195,7 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
         global_check_result="failure"
 
         message="Oooops. apptest is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-        cibot_report $TOKEN "failure" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         # Comment a hint on failed PR to author.
         message=":octocat: **cibot**: $user_id, apptest could not be completed. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/pr-aduit-group.txt"
@@ -414,11 +414,11 @@ function pr-audit-nnstreamer-ubuntu-apptest-run-queue() {
     if [[ $check_result == "success" ]]; then
         # Report a success.
         message="Ubuntu.apptest Successful in $time_build_cost. Commit number is '$input_commit'."
-        cibot_report $TOKEN "success" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         # Report a failure.
         message="Oooops. apptest is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-        cibot_report $TOKEN "failure" "TAOS/pr-audit-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         # comment a hint why a submitted PR is failed.
         message=":octocat: **cibot**: $user_id, apptest could not be completed. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/pr-aduit-group.txt"

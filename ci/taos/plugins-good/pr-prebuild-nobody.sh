@@ -15,16 +15,16 @@
 #
 
 ##
-# @file     pr-format-nobody.sh
+# @file     pr-prebuild-nobody.sh
 # @brief    Check the commit message body
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
-# @brief [MODULE] TAOS/pr-format-nobody
-function pr-format-nobody(){
+# @brief [MODULE] TAOS/pr-prebuild-nobody
+function pr-prebuild-nobody(){
     echo "########################################################################################"
-    echo "[MODULE] TAOS/pr-format-nobody: Check the commit message body"
+    echo "[MODULE] TAOS/pr-prebuild-nobody: Check the commit message body"
     check_result="success"
     echo "             #### No body check result ####            " > ../report/nobody-result.txt
     for filename in ../report/000*.patch; do
@@ -71,11 +71,11 @@ function pr-format-nobody(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. There is no nobody issue."
         message="Successfully commit body includes +5 words."
-        cibot_report $TOKEN "success" "TAOS/pr-format-nobody" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-nobody" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. There is no the commit body in this commit."
         message="Oooops. Commit message body checker failed. You must write commit message (+5 words) as well as commit title."
-        cibot_report $TOKEN "failure" "TAOS/pr-format-nobody" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-prebuild-nobody" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     fi
 
 }

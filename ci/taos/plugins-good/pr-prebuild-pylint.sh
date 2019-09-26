@@ -15,17 +15,17 @@
 #
 
 ##
-# @file pr-format-pylint.sh
+# @file pr-prebuild-pylint.sh
 # @brief Check the code formatting style with GNU pylint
 # @see      https://www.pylint.org/
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
-# @brief [MODULE] TAOS/pr-format-pylint
-function pr-format-pylint(){
+# @brief [MODULE] TAOS/pr-prebuild-pylint
+function pr-prebuild-pylint(){
 echo "########################################################################################"
-echo "[MODULE] TAOS/pr-format-pylint: Check dangerous coding constructs in source codes (*.py) with pylint"
+echo "[MODULE] TAOS/pr-prebuild-pylint: Check dangerous coding constructs in source codes (*.py) with pylint"
 # investigate generated all *.patch files
 FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
 for i in ${FILELIST}; do
@@ -82,7 +82,7 @@ done
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. static code analysis tool - pylint."
     message="Successfully source code(s) is written without dangerous coding constructs."
-    cibot_report $TOKEN "success" "TAOS/pr-format-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "TAOS/pr-prebuild-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
     message="We generate a report if there are dangerous coding constructs in your code. Please read ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${py_check_result}."
@@ -91,12 +91,12 @@ if [[ $check_result == "success" ]]; then
 elif [[ $check_result == "skip" ]]; then
     echo "[DEBUG] Skipped. static code analysis tool - pylint."
     message="Skipped. Your PR does not include python code(s)."
-    cibot_report $TOKEN "success" "TAOS/pr-format-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "TAOS/pr-prebuild-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 else
     echo "[DEBUG] Failed. static code analysis tool - pylint."
     message="Oooops. cppcheck is failed. Please, read $py_check_result for more details."
-    cibot_report $TOKEN "failure" "TAOS/pr-format-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "TAOS/pr-prebuild-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
     message=":octocat: **cibot**: $user_id, It seems that **$i** includes bug(s). You must fix incorrect coding constructs in the source code before entering a review process."

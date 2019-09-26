@@ -14,11 +14,11 @@ We recommend that you use two APIs such as `cibot_comment()` and `cibot_report()
 * check_cmd_dep(): This API is to check if required commands are installed in the server.
 
 ## How to enable a new module
-First, open `./config/config-plugins-{format|audit}.sh`. Then, append a function name of a module that you want to attach newly. If you are poor at CI module, we recommend that you refer to the existing examples.
+First, open `./config/config-plugins-{prebuild|postbuild}.sh`. Then, append a function name of a module that you want to attach newly. If you are poor at CI module, we recommend that you refer to the existing examples.
 ```bash
-$ vi ./config/config-plugins-{format|audit}.sh
+$ vi ./config/config-plugins-{prebuild|postbuild}.sh
 
-format_plugins[++idx]="pr-format-{module_name}"
+format_plugins[++idx]="pr-prebuild-{module_name}"
 echo "${format_plugins[idx]} is starting."
 echo "[MODULE] TAOS/${format_plugins[idx]}: Check a syntax error in a shell script file"
 echo "[DEBUG] The current path: $(pwd)."

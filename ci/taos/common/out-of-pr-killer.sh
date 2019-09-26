@@ -47,12 +47,12 @@ function run_oop_killer(){
         victim_pr=`echo $line  | awk '{print $17}'`
         victim_date=`echo $line  | awk '{print $13}'`
         # Step 1: The victim pid1 is checker-pr-gateway.sh (It is a task distributor.)
-        # Step 2: The victim pid2 is checker-pr-audit-async.sh (It is a audit group.)
+        # Step 2: The victim pid2 is checker-pr-postbuild-async.sh (It is the postbuild group.)
         # Step 3:
         # a. The victim pid3_tizen:  "gbs build" command for a Tizen build
         # b. The victim pid3_ubuntu: "pdebuild" command for a Ubuntu build
         victim_pid1=`ps -ef | grep bash | grep checker-pr-gateway.sh       | grep $input_pr | grep $victim_date | awk '{print $2}'`
-        victim_pid2=`ps -ef | grep bash | grep checker-pr-audit-async.sh | grep $input_pr | grep $victim_date | awk '{print $2}'`
+        victim_pid2=`ps -ef | grep bash | grep checker-pr-postbuild-async.sh | grep $input_pr | grep $victim_date | awk '{print $2}'`
         victim_pid3_tizen=`ps -ef | grep python | grep gbs | grep "_pr_number $input_pr" | grep $victim_date | awk '{print $2}'`
         victim_pid3_ubuntu=`ps -ef | grep bash | grep pdebuild | grep "_pr_number $input_pr" | grep $victim_date | awk '{print $2}'`
         # Todo: NYI, Implement the OOP killer for Yocto build (devtool)
@@ -64,7 +64,7 @@ function run_oop_killer(){
             echo "[DEBUG] OOP Killer: Killing 'checker-pr-gateway.sh' process ($victim_pid1) ..."
             kill $victim_pid1
 
-            echo "[DEBUG] OOP Killer: Killing 'checker-pr-audit-async.sh' process ($victim_pid2) ..."
+            echo "[DEBUG] OOP Killer: Killing 'checker-pr-postbuild-async.sh' process ($victim_pid2) ..."
             kill $victim_pid2
 
             echo "[DEBUG] OOP Killer/Tizen: victim_pr=$victim_pr, input_pr=$input_pr, victim_date=$victim_date, input_date=$input_date "

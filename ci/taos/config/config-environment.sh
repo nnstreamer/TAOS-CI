@@ -23,10 +23,10 @@
 
 #### Repository setting
 
-# Token ID: Connecting to a repository using token id instead of id-name@github.io
-# in case of the two-authentification situation.
+# Add TOKEN ID to access your GitHub repository using WebHook APIs
 # Refer to https://github.com/settings/tokens
-TOKEN="xxxxxxxxxxxxc1546d78aa78686b9806b1acf8785d"
+# WARNING: Do NOT OPEN THE TOKEN ID TO AVOID A SECURITY FLAW.
+TOKEN="0000000000111111111122222222223333333333xx"
 
 # Write an account name (or organization name) of the '{master|upstream}' branch
 # e.g., https://github-website/{account_name}/{project_name}/
@@ -37,21 +37,20 @@ GITHUB_ACCOUNT="nnsuite"
 PRJ_REPO_UPSTREAM="TAOS-CI"
 
 # Specify the web address of the CI server. Should end with /
-CISERVER="http://<your-ci-dns>.mooo.com/"
+CISERVER="http://<YOUR_CI_DNS>.mooo.com/"
 
-# Format area (pr-format)
-# Add root path of source folders
-# Specify a path of source code
+# Prebuild group area (pr-prebuild) to inventigate source code
+# Add root path of source folders. For example, specify a path of source code:
 # 1) to check prohibited hardcoded paths (e.g., /home/* for now)
 # 2) to check code formatting sytele with clang-format
 SRC_PATH="./ci/"
 
-# Skip Paths: Format Area (pr-format)
+# Skip Paths: prebuild group (pr-prebuild)
 # declare a folder name to skip the file size and newline inspection.
 # (e.g., <github-repository-name>/temproal-bin/)
 SKIP_CI_PATHS_FORMAT="temporal-bin"
 
-# Skip Paths: Audit Area (pr-audit)
+# Skip Paths: postbuild group (pr-postbuild)
 # Skip build-checker / unit-test checker if all changes are limited to:
 # The path starts without / and it denotes the full paths in the git repo. (regex)
 SKIP_CI_PATHS_AUDIT="^ci/.*|^Documentation/.*|^\.github/.*|^obsolete/.*|^README\.md|^external/.*|^temporal-bin/.*"
@@ -87,17 +86,17 @@ pr_build_arch_type="x86_64"
 # Advanced = 1 (Basic + "@author, @bug and functions with ctags")
 pr_doxygen_check_level=0
 
-### Check level of CPPCheck:
+### Check level of CPPCheck for a static analysis of C/C++ source code:
 # CPPCheck Level 0: The check level is 'err'.
 # CPPCheck Level 1: 'err' + 'warning,performance,unusedFunction'
 pr_cppcheck_check_level=0
 
 
 #### File size limit
-# unit of the file size is MB.
+# Unit of the file size is MB.
 filesize_limit=5
 
-#### Dependency policy between PR groups
+#### Dependency policy between prebuild and postbuild group
 # No dependency = 0
 # Dependency = 1 (based on the order of definition)
 # If dependency, PR group running order follows FCFS ordering
@@ -128,24 +127,24 @@ BUILD_MODE_ANDROID=99
 # Pull Request Scheduler: The number of jobs on Run-Queue to process PRs
 RUN_QUEUE_PR_JOBS=8
 
-# Version format: Major.Minor
-VERSION="1.20190225"
+# Version format: Major.Minor.DATE
+VERSION="1.3.20190927"
 
-#### Location
-# We assume that the default folder of the 'www-data' is '/var/www/html/' folder. 
+#### Location of the GitHub repository
+# We assume that the default folder of the www-data (user-id of Apache webserver) is "/var/www/html/" folder. 
 
-# Reference repository to speed up "git clone" command
+# Reference repository to speed up the exectuion time of the "git clone" command
 REFERENCE_REPOSITORY="/var/www/html/$PRJ_REPO_UPSTREAM/"
 
-# RPM repo cache for GBS build
+# Specify RPM repo cache for accerating the GBS build speed of Tizen platform
 REPOCACHE="/var/www/html/$PRJ_REPO_UPSTREAM/repo_cache/"
 
-# Github repostiroy webaddress
+# GitHub repostiroy a web address
 REPOSITORY_WEB="https://github.com/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
 REPOSITORY_GIT="https://github.com/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM.git"
 
-# Github webhook API address
-# a. Community Edition - "https://github.{your_company_dns}/api/v3/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
+# Specify GitHub webhook API address
+# a. Community Edition - "https://github.{YOUR_COMPANY_DNS}/api/v3/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
 # b. Enterprise Edition- "https://api.github.com/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
 GITHUB_WEBHOOK_API="https://api.github.com/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
 

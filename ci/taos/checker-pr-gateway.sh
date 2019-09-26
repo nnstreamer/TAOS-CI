@@ -16,9 +16,9 @@
 
 ##
 # @file     checker-pr-gateway.sh
-# @brief    A PR gateway to control two PR checkers such as format and audit
+# @brief    A PR gateway to control two PR checkers such as prebuild and postbuild
 # First of all, it clones a github repository with "git clone" command
-# when a contributor submits a PR. Then, it run format and audit checker sequentially.
+# when a contributor submits a PR. Then, it run prebuild and postbuild module sequentially.
 #
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
@@ -139,7 +139,7 @@ pwd
 # @brief checker runner to run the checkers based on the dependency policy
 # Run the first group, then depending on the dependency policy, run the remaining groups
 # @param arguments received by the function
-#  arg1: list of checkers (like format, audit, etc)
+#  arg1: list of checkers (like prebuild, postbuild, etc)
 #  arg2: list of checker's name
 #  arg3: list of checker's log file
 #  arg@: all remaining arguments are to be passed to the checkers (common for all the checkers)
@@ -160,8 +160,9 @@ function run_all_checkers(){
     echo -e "[DEBUG] ${cmd_list[$i]} $checker_args "                     | tee -a $logfile
     echo -e "[DEBUG] Starting a ${name_list[$i]} checker... "            | tee -a $logfile
     # Run checker
-    # Currently, there are two checkers such as format and audit. The current format checker is not heavy.
-    # But, if the format checker needs more times to complete the modules, please consider introduce
+    # Currently, there are two checkers such as prebuild and postbuild.
+    # The current modules of the prebuild group is not heavy.
+    # But, if the prebuild module  needs more times to complete the modules, please consider introduce
     # to run the checkers asynchronously with the background command (e.g., command | tee -a $logfile &).
     # Note that you must modify the Out-of-PR (OOP) killer because OOP killer depends on synchronous method.
     pushd ./taos/
@@ -190,19 +191,19 @@ declare -a checker_cmd_list
 declare -a checker_name_list
 declare -a checker_logfile_list
 
-# Ready a checker: format
-checker_cmd_list+=("./checker-pr-format-async.sh")
-checker_name_list+=("format")
-checker_logfile_list+=("${dir_ci}/${dir_commit}/pr-format-group.txt")
-echo -e "[DEBUG] Added ${checker_name_list[-1]} checker"
+# Ready a module: the prebuild group
+checker_cmd_list+=("./checker-pr-prebuild-async.sh")
+checker_name_list+=("prebuild")
+checker_logfile_list+=("${dir_ci}/${dir_commit}/pr-prebuild-group.txt")
+echo -e "[DEBUG] Added ${checker_name_list[-1]} module."
 
-# Ready a checker: audit
-checker_cmd_list+=("./checker-pr-audit-async.sh")
-checker_name_list+=("audit")
-checker_logfile_list+=("${dir_ci}/${dir_commit}/pr-aduit-group.txt")
-echo -e "[DEBUG] Added ${checker_name_list[-1]} checker"
+# Ready a module: the postbuild group
+checker_cmd_list+=("./checker-pr-postbuild-async.sh")
+checker_name_list+=("postbuild")
+checker_logfile_list+=("${dir_ci}/${dir_commit}/pr-postbuild-group.txt")
+echo -e "[DEBUG] Added ${checker_name_list[-1]} module."
 
-# Run all the checkers
-echo -e "[DEBUG] Running all checkers"
+# Run all the modules
+echo -e "[DEBUG] Running all modules"
 run_all_checkers checker_cmd_list checker_name_list checker_logfile_list $1 $2 $3 $4 $5 $6
-echo -e "[DEBUG] Completed all checkers"
+echo -e "[DEBUG] Completed all modules"

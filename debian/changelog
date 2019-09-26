@@ -1,8 +1,19 @@
+taos-ci (1.3) unstable; urgency=medium
+
+  * Rename the existing group name from format/audit to prebuild/postbuild
+  * Published KCC paper (Domestic Conference)
+  * module: Added static analysis tools based on open source
+  * Improved readability of the functions for effective maintenance
+  * Added badge icon based on gcov/lcov
+  * Added syntax checker to examine grammar of a shell script (e.g., bash)
+
+ -- Geunsik Lim <geunsik.lim@samsung.com>  Thu, 07 Mar 2019 07:30:32 +0900
+
 taos-ci (1.2) unstable; urgency=medium
 
   * WEB: Added monitor to show running PRs to build Android binaries
   * Android/ARM64: interconnect android build module and apache web
-  * Audit group: Support a Android build module for C/C++
+  * Postbuild group: Support a Android build module for C/C++
   * Published ICCE paper
   * admin: update the webhoo api script for maintenance
   * module: doxygen-tag: Fix broken link to doxygen-documentation

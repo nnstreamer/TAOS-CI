@@ -15,20 +15,20 @@
 #
 
 ##
-# @file pr-format-exclusive-vio.sh
+# @file pr-prebuild-exclusive-vio.sh
 # @brief Check the issue #279 (VIO commits should be exclusive)
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Myungjoo Ham <myungjoo.ham@samsung.com>
 #
 
 ##
-# @brief [MODULE] TAOS/pr-format-exclusive-vio
+# @brief [MODULE] TAOS/pr-prebuild-exclusive-vio
 #
 # Check issue #279. VIO commits should not touch non VIO files.
 #
-function pr-format-exclusive-vio(){
+function pr-prebuild-exclusive-vio(){
     echo "##################################################################################################"
-    echo "[DEBUG] Starting pr-format-exclusive-vio function to investigate if a VIO commit is not exclusive."
+    echo "[DEBUG] Starting pr-prebuild-exclusive-vio function to investigate if a VIO commit is not exclusive."
     FILELIST=`git show --pretty="format:" --name-only`
     VIO_DIRECTORY="ROS/.*VIO/"
     CHECKVIO=0
@@ -44,10 +44,10 @@ function pr-format-exclusive-vio(){
         global_check_result="failure"
         echo "[DEBUG] Failed. A VIO commit is not exclusive."
         message="Oooops. This commit has VIO files and non-VIO files at the same time, violating issue #279."
-        cibot_report $TOKEN "failure" "TAOS/pr-format-exclusive-vio" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-prebuild-exclusive-vio" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         echo "[DEBUG] Passed. No violation of issue #279."
         message="Successfully, The commits are passed."
-        cibot_report $TOKEN "success" "TAOS/pr-format-exclusive-vio" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-exclusive-vio" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     fi
 }

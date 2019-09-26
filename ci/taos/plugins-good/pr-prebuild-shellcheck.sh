@@ -15,7 +15,7 @@
 #
 
 ##
-# @file     pr-format-shellcheck.sh
+# @file     pr-prebuild-shellcheck.sh
 # @brief    This module is a static analysis tool for shell scripts such as sh, bash.
 #
 #  It is mainly focused on handling typical beginner and intermediate level syntax errors
@@ -28,10 +28,10 @@
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
-# @brief [MODULE] TAOS/pr-format-shellcheck
-function pr-format-shellcheck(){
+# @brief [MODULE] TAOS/pr-prebuild-shellcheck
+function pr-prebuild-shellcheck(){
 echo "########################################################################################"
-echo "[MODULE] TAOS/pr-format-shellcheck: Check syntax errors in a shell script file with GNU shellcheck"
+echo "[MODULE] TAOS/pr-prebuild-shellcheck: Check syntax errors in a shell script file with GNU shellcheck"
 
 # Check if required commands are installed by server administrator
 check_cmd_dep cat
@@ -92,7 +92,7 @@ done
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A shell script syntax checker - shellcheck."
     message="Successfully source code(s) is written without a syntax error."
-    cibot_report $TOKEN "success" "TAOS/pr-format-shellcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "TAOS/pr-prebuild-shellcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
     message="**INFO:** You can read if there are syntax errors in the our shellcheck report. Please read ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${shell_syntax_check_result}."
@@ -101,12 +101,12 @@ if [[ $check_result == "success" ]]; then
 elif [[ $check_result == "skip" ]]; then
     echo "[DEBUG] Skipped. A shell script syntax checker - shellcheck."
     message="Skipped. Your PR does not include document file(s) such as .sh and .bash."
-    cibot_report $TOKEN "success" "TAOS/pr-format-shellcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "TAOS/pr-prebuild-shellcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 else
     echo "[DEBUG] Failed. A shell script syntax checker - shellcheck."
     message="Oooops. The shellcheck module is failed. Please, read $shell_syntax_check_result for more details."
-    cibot_report $TOKEN "failure" "TAOS/pr-format-shellcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "TAOS/pr-prebuild-shellcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
     message=":octocat: **cibot**: $user_id, It seems that **$i** includes syntax errors. https://github.com/koalaman/shellcheck/wiki/SC1118. Please modify a incorrect statement before starting a review process."

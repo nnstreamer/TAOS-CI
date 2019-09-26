@@ -15,7 +15,7 @@
 #
 
 ##
-# @file        checker-pr-audit-async.sh
+# @file        checker-pr-postbuild-async.sh
 # @brief       It executes a build test whenever a PR is submitted.
 # @see         https://github.com/nnsuite/TAOS-CI
 # @author      Geunsik Lim <geunsik.lim@samsung.com>
@@ -34,11 +34,11 @@
 #  $dir_commit   directory for commits
 #
 # @modules:
-# [MODULE] TAOS/pr-audit-build-tizen-x86_64     Check if 'gbs build -A x86_64' can be successfully passed.
-# [MODULE] TAOS/pr-audit-build-tizen-armv7l     Check if 'gbs build -A armv7l' can be successfully passed.
-# [MODULE] TAOS/pr-audit-build-ubuntu           Check if 'pdebuild' can be successfully passed.
-# [MODULE] TAOS/pr-audit-build-yocto            Check if 'devtool' can be successfully passed.
-# [MODULE] TAOS/pr-audit-build-android          Check if 'ndk-build' can be successfully passed.
+# [MODULE] TAOS/pr-postbuild-build-tizen-x86_64     Check if 'gbs build -A x86_64' can be successfully passed.
+# [MODULE] TAOS/pr-postbuild-build-tizen-armv7l     Check if 'gbs build -A armv7l' can be successfully passed.
+# [MODULE] TAOS/pr-postbuild-build-ubuntu           Check if 'pdebuild' can be successfully passed.
+# [MODULE] TAOS/pr-postbuild-build-yocto            Check if 'devtool' can be successfully passed.
+# [MODULE] TAOS/pr-postbuild-build-android          Check if 'ndk-build' can be successfully passed.
 # [MODULE] plugins-base                         Plugin group that consist of a well-maintained modules
 # [MODULE] plugins-good                         Plugin group that follow Apache license with good quality
 # [MODULE] plugins-staging                      Plugin group that does not have evaluation and aging test enough
@@ -136,17 +136,17 @@ echo "[MODULE] plugins-good: Plugin group that follow Apache license with good q
 echo "[MODULE] plugins-staging: Plugin group that does not has evaluation and aging test enough"
 
 echo "[DEBUG] The current directory: $(pwd)"
-source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-audit.sh 2>> ../audit_module_error.log
-echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-audit.sh"
+source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-postbuild.sh 2>> ../postbuild_module_error.log
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-postbuild.sh"
 
 # Create new context name to monitor progress status of a checker
 message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
-cibot_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+cibot_report $TOKEN "pending" "(INFO)TAOS/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-for plugin in ${audit_plugins[*]}
+for plugin in ${postbuild_plugins[*]}
 do
     echo -e "[DEBUG] -----------------------------"
-    if [[ ${plugin} == "pr-audit-build-tizen" ]]; then
+    if [[ ${plugin} == "pr-postbuild-build-tizen" ]]; then
         for arch in $pr_build_arch_type
         do
             echo "[DEBUG] wait queue: Job is queued to run 'gbs build -A $arch (for Tizen)' command."
@@ -159,10 +159,10 @@ do
 done
 
 
-# --------------------------- audit module: start -----------------------------------------------------
+# --------------------------- postbuild module: start -----------------------------------------------------
 
 echo "[DEBUG] The current directory: $(pwd)"
-echo -e "[DEBUG] Starting an audit checker...."
+echo -e "[DEBUG] Starting an postbuild module ...."
 echo -e "[DEBUG] dir_ci is '$dir_ci'" 
 echo -e "[DEBUG] dir_worker is '$dir_worker'" 
 echo -e "[DEBUG] dir_commit is '$dir_commit'"
@@ -223,12 +223,12 @@ popd
 # users of current status of a pull request.
 
 message="Trigger: wait queue. The commit number is $input_commit."
-cibot_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+cibot_report $TOKEN "pending" "(INFO)TAOS/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-for plugin in ${audit_plugins[*]}
+for plugin in ${postbuild_plugins[*]}
 do
     echo -e "[DEBUG] -----------------------------"
-    if [[ ${plugin} == "pr-audit-build-tizen" ]]; then
+    if [[ ${plugin} == "pr-postbuild-build-tizen" ]]; then
         for arch in $pr_build_arch_type
         do
             echo "[DEBUG] ready queue: Job is started to run 'gbs build -A $arch (for Tizen)' command."
@@ -243,13 +243,13 @@ done
 
 # --------------------------- CI Trigger (run queue) --------------------------------------------------------
 
-# Note that  major job is run qeue amon the queues while executing the audit checker. So we have to notify
+# Note that  major job is run qeue amon the queues while executing a module of the postbuild group. So we have to notify
 # if the current status of pull reqeust is building or not.
 
 message="Trigger: run queue. The commit number is $input_commit."
-cibot_report $TOKEN "pending" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+cibot_report $TOKEN "pending" "(INFO)TAOS/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-for plugin in ${audit_plugins[*]}
+for plugin in ${postbuild_plugins[*]}
 do
     # Run the pull request scheduler: manage queues to minimize overhead possibility of the server
     # due to (1) too many PRs and (2) the low-end server equipment.
@@ -257,7 +257,7 @@ do
     pr_sched_runqueue "The $plugin plugin module"
 
     echo -e "-----------------------------"
-    if [[ ${plugin} == "pr-audit-build-tizen" ]]; then
+    if [[ ${plugin} == "pr-postbuild-build-tizen" ]]; then
         for arch in $pr_build_arch_type
         do
             echo "[DEBUG] run queue: Compiling the source code to Tizen $arch RPM package."
@@ -324,21 +324,21 @@ exit_code=0
 
 if [[ $global_check_result == "success" ]]; then
     # The global check is succeeded.
-    message="Successfully all audit modules are passed. Commit number is $input_commit."
-    cibot_report $TOKEN "success" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    message="Successfully all postbuild modules are passed. Commit number is $input_commit."
+    cibot_report $TOKEN "success" "(INFO)TAOS/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     # If contributors want later, let's inform developers of CI test result to go to a review process as a final step before merging a PR
-    echo "[DEBUG] All audit modules are passed - it is ready to review! :shipit:. Note that CI bot has two sub-bots such as TAOS/pr-audit-all and TAOS/pr-format-all."
+    echo "[DEBUG] All postbuild modules are passed - it is ready to review! :shipit:. Note that CI bot has two sub-bots such as TAOS/pr-postbuild-all and TAOS/pr-prebuild-all."
 
 elif [[ $global_check_result == "failure" ]]; then
     # The global check is failed.
-    message="Oooops. One of the audits is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-    cibot_report $TOKEN "failure" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    message="Oooops. One of the postbuild modules is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
+    cibot_report $TOKEN "failure" "(INFO)TAOS/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     exit_code=1
 else
     # The global check is failed due to CI error.
     message="CI Error. There is a bug in CI script. Please contact the CI administrator."
-    cibot_report $TOKEN "error" "(INFO)TAOS/pr-audit-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "error" "(INFO)TAOS/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     echo -e "[DEBUG] It seems that this script has a bug. Please check value of \$global_check_result."
     exit_code=1
 fi
