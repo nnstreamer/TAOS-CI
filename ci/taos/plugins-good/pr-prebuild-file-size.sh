@@ -15,16 +15,16 @@
 #
 
 ##
-# @file pr-format-file-size.sh
+# @file pr-prebuild-file-size.sh
 # @brief    Check the file size to not include big binary files
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
-# @brief [MODULE] TAOS/pr-format-file-size
-function pr-format-file-size(){
+# @brief [MODULE] TAOS/pr-prebuild-file-size
+function pr-prebuild-file-size(){
     echo "########################################################################################"
-    echo "[MODULE] TAOS/pr-format-file-size: Check the file size to not include big binary files"
+    echo "[MODULE] TAOS/pr-prebuild-file-size: Check the file size to not include big binary files"
     
     # investigate generated all *.patch files
     FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
@@ -57,11 +57,11 @@ function pr-format-file-size(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. File size."
         message="Successfully all files are passed without any issue of file size."
-        cibot_report $TOKEN "success" "TAOS/pr-format-filesize" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-filesize" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. File size."
         message="Oooops. File size checker is failed at $i_filename."
-        cibot_report $TOKEN "failure" "TAOS/pr-format-filesize" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-prebuild-filesize" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     
         # inform PR submitter of a hint in more detail
         message=":octocat: **cibot**: '$user_id', Oooops. Note that you can not upload a big file that exceeds ${filesize_limit} Mbytes. The file name is ($current_file). The file size is \"$FILESIZE_NUM\". If you have to temporarily upload binary files unavoidably, please share this issue to all members after uploading the files in **/${SKIP_CI_PATHS_FORMAT}** folder."

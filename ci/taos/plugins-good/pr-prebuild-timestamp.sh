@@ -15,16 +15,16 @@
 #
 
 ##
-# @file     pr-format-timestamp.sh
+# @file     pr-prebuild-timestamp.sh
 # @brief    Check the timestamp of the commit
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
-# @brief [MODULE] TAOS/pr-format-timestamp
-function pr-format-timestamp(){
+# @brief [MODULE] TAOS/pr-prebuild-timestamp
+function pr-prebuild-timestamp(){
 echo "########################################################################################"
-echo "[MODULE] TAOS/pr-format-timestamp: Check the timestamp of the commit"
+echo "[MODULE] TAOS/pr-prebuild-timestamp: Check the timestamp of the commit"
 check_result="success"
 TIMESTAMP=`git show --pretty="%ct" --no-notes -s`
 TIMESTAMP_READ=`git show --pretty="%cD" --no-notes -s`
@@ -46,11 +46,11 @@ fi
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A timestamp."
     message="Successfully the commit has no timestamp error."
-    cibot_report $TOKEN "success" "TAOS/pr-format-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "TAOS/pr-prebuild-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. A timestamp."
     message="Timestamp error: files are from the future: ${TIMESTAMP_READ} > (now) ${NOW_READ}."
-    cibot_report $TOKEN "failure" "TAOS/pr-format-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "TAOS/pr-prebuild-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 fi
 
 

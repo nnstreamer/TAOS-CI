@@ -15,7 +15,7 @@
 #
 
 ##
-# @file     pr-format-sloccount.sh
+# @file     pr-prebuild-sloccount.sh
 # @brief    Count physical source lines of code (SLOC)
 #
 # It is a set of tools for counting physical Source Lines of Code (SLOC) in a large
@@ -26,10 +26,10 @@
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
-# @brief [MODULE] TAOS/pr-format-sloccount
-function pr-format-sloccount(){
+# @brief [MODULE] TAOS/pr-prebuild-sloccount
+function pr-prebuild-sloccount(){
     echo "########################################################################################"
-    echo "[MODULE] TAOS/pr-format-sloccount: Count physical source lines of code (SLOC)"
+    echo "[MODULE] TAOS/pr-prebuild-sloccount: Count physical source lines of code (SLOC)"
     pwd
 
     # Check if server administrator install required commands
@@ -93,17 +93,17 @@ function pr-format-sloccount(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. A sloc check tool - sloccount."
         message="Successfully source code(s) is analyzed by sloccount command."
-        cibot_report $TOKEN "success" "TAOS/pr-format-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     elif [[ $check_result == "skip" ]]; then
         echo "[DEBUG] Skipped. A sloc check tool - sloccount."
         message="Skipped. Your PR does not include source codes."
-        cibot_report $TOKEN "success" "TAOS/pr-format-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     else
         echo "[DEBUG] Failed. A sloc check tool - sloccount."
         message="Oooops. sloccount checker is failed because the check_result is not either 'success' or 'skip'."
-        cibot_report $TOKEN "failure" "TAOS/pr-format-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-prebuild-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     fi
 

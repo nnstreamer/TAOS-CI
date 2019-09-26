@@ -15,17 +15,17 @@
 #
 
 ##
-# @file     pr-format-hardcoded-path.sh
+# @file     pr-prebuild-hardcoded-path.sh
 # @brief    Check prohibited hardcoded paths (/home/* for now)
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
-# @brief [MODULE] TAOS/pr-format-hardcoded-path
-function pr-format-hardcoded-path(){
+# @brief [MODULE] TAOS/pr-prebuild-hardcoded-path
+function pr-prebuild-hardcoded-path(){
 
     echo "########################################################################################"
-    echo "[MODULE] TAOS/pr-format-hardcoded-path: Check prohibited hardcoded paths (/home/* for now)"
+    echo "[MODULE] TAOS/pr-prebuild-hardcoded-path: Check prohibited hardcoded paths (/home/* for now)"
     hardcoded_file="hardcoded-path.txt"
     if [[ -f ../report/${hardcoded_file}.tmp ]]; then
         rm -f ../report/${hardcoded_file}.tmp
@@ -49,11 +49,11 @@ function pr-format-hardcoded-path(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. A hardcoded paths."
         message="Successfully, The commits are passed."
-        cibot_report $TOKEN "success" "TAOS/pr-format-hardcoded-path" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-hardcoded-path" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. A hardcoded paths."
         message="Oooops. The component you are submitting has hardcoded paths that are not allowed in the source. Please do not hardcode paths."
-        cibot_report $TOKEN "failure" "TAOS/pr-format-hardcoded-path" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-prebuild-hardcoded-path" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     fi
 
     

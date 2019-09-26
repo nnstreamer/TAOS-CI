@@ -12,7 +12,7 @@
 ########### Caution: If you are not server administrator, do not modify this file #################
 
 # Note that administrator of a server has to specify the location of eSDK at first.
-# In order to know how to install eSDK, please read plugins-base/pr-audit-build-yocto.sh file.
+# In order to know how to install eSDK, please read plugins-base/pr-postbuild-build-yocto.sh file.
 # It is environment variables that are imported from eSDK to use devtool command.
 # - YOCTO_ESDK_DIR="/var/www"
 # - YOCTO_ESDK_NAME="kairos_sdk" or YOCTO_ESDK_NAME="poky_sdk"

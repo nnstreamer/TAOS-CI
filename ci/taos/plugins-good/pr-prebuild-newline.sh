@@ -15,16 +15,16 @@
 #
 
 ##
-# @file pr-format-newline.sh
+# @file pr-prebuild-newline.sh
 # @brief Check if there is a newline issue in a text file
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
-# @brief [MODULE] TAOS/pr-format-newline
-function pr-format-newline(){
+# @brief [MODULE] TAOS/pr-prebuild-newline
+function pr-prebuild-newline(){
     echo -e "########################################################################################"
-    echo -e "[MODULE] TAOS/pr-format-newline: Check the illegal newline handlings in text files"
+    echo -e "[MODULE] TAOS/pr-prebuild-newline: Check the illegal newline handlings in text files"
     # Investigate generated all *.patch files
     FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
     for current_file in ${FILELIST}; do
@@ -72,15 +72,15 @@ function pr-format-newline(){
     if [[ $check_result == "success" ]]; then
         echo -e "[DEBUG] Passed. No newline anomaly."
         message="Successfully all text files are passed without newline issue."
-        cibot_report $TOKEN "success" "TAOS/pr-format-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "skip" ]]; then
         echo -e "[DEBUG] Skipped. The file is not 'ASCII text' type."
         message="Skipped. The file is not 'ASCII text' type."
-        cibot_report $TOKEN "success" "TAOS/pr-format-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
         echo -e "[DEBUG] Failed. A newline anomaly happened."
         message="Oooops. New line checker is failed at $i_filename."
-        cibot_report $TOKEN "failure" "TAOS/pr-format-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-prebuild-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
         # inform PR submitter of a hint in more detail
         message=":octocat: **cibot**: $user_id, The last line of a text file must have a newline character. Please append a new line at the end of the line in $current_file."

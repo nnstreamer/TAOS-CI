@@ -15,16 +15,16 @@
 #
 
 ##
-# @file pr-format-clang.sh
+# @file pr-prebuild-clang.sh
 # @brief Check Check the code formatting style with clang-format
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 
 ##
-#  @brief [MODULE] TAOS/pr-format-clang
-function pr-format-clang(){
+#  @brief [MODULE] TAOS/pr-prebuild-clang
+function pr-prebuild-clang(){
     echo "########################################################################################"
-    echo "[MODULE] pr-format-clang: Check the code formatting style with clang-format"
+    echo "[MODULE] pr-prebuild-clang: Check the code formatting style with clang-format"
     # Note that you have to install up-to-date clang-format package from llvm project.
     # The clang-format-4.0 package includes git-clang-format as well as clang-format.
     # It has been included by http://archive.ubuntu.com/ubuntu/ by default since Oct-25-2017.
@@ -68,7 +68,7 @@ function pr-format-clang(){
     # check a clang format rule with file size of patch file
     PATCHFILE_SIZE=$(stat -c%s ../report/${clang_format_file})
     if [[ $PATCHFILE_SIZE -ne 0 ]]; then
-        echo "[DEBUG] Format checker is failed. Update your code to follow convention after reading ${clang_format_file}."
+        echo "[DEBUG] a module of the prebuild group is failed. Update your code to follow convention after reading ${clang_format_file}."
         check_result="failure"
         global_check_result="failure"
     else
@@ -79,11 +79,11 @@ function pr-format-clang(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. A clang-formatting style."
         message="Successfully, The commits are passed."
-        cibot_report $TOKEN "success" "TAOS/pr-format-clang" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-clang" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. A clang-formatting style."
         message="Oooops. The component you are submitting with incorrect clang-format style."
-        cibot_report $TOKEN "failure" "TAOS/pr-format-clang" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-prebuild-clang" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     fi
 
 }

@@ -15,7 +15,7 @@
 #
 
 ##
-# @file pr-audit-resource.sh
+# @file pr-postbuild-resource.sh
 # @brief Check not-installed resources exist
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Jiho Chu <jiho.chu@samsung.com>
@@ -28,8 +28,8 @@
 # Check if not-installed resources exist. It is integrated to the build checker,
 # so we distinguish the resource cheker was succeed in this phase.
 #
-function pr-audit-resource(){
-    echo "[DEBUG] Starting pr-audit-resource function to investigate if not-installed resources exist."
+function pr-postbuild-resource(){
+    echo "[DEBUG] Starting pr-postbuild-resource function to investigate if not-installed resources exist."
 
     # Resource checker area
     # Check if not-installed resources exist
@@ -71,10 +71,10 @@ function pr-audit-resource(){
     echo "report the execution result of resource checker. check_result is ${check_result}. "
     if [[ $check_result == "success" ]]; then
         message="Successfully Resource checker is passed. Commit number is '$input_commit'."
-        cibot_report $TOKEN "success" "TAOS/pr-audit-resource" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-postbuild-resource" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         message="Oooops. Resource checker is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-        cibot_report $TOKEN "failure" "TAOS/pr-audit-resource" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "TAOS/pr-postbuild-resource" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     
         # comment a hint on failed PR to author.
         message=":octocat: **cibot**: $user_id, Resource checker could not be completed because not-installed resources exist. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/resource_check_${input_pr}_error.txt."
