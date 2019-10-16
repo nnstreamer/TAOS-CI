@@ -205,8 +205,8 @@ sudo apt install libreoffice
 Then, generate a single PDF file by running the below script in **Documentation** folder.
 
 ```bash
-$ cd /var/www/html/{your_prj_name}/doc
-$ ./book-hard-copy-prj-generate.sh
+$ cd /var/www/html/{your_prj_name}/ci/doxybook/
+$ ./book-doxygen-publish.sh
 $ evince ./latex/book.pdf
 ```
 
@@ -216,9 +216,9 @@ Finally, let's generate automatically PDF book per 1 hour with cron table (e.g.,
 $ sudo vi /etc/crontab
 # Generate doxygen document
 20 * * * * www-data cd /var/www/html/{your_prj_name}/ ; git pull
-30 * * * * www-data /var/www/html/{your_prj_name}/doc/book-hard-copy-prj-generate.sh
+30 * * * * www-data /var/www/html/{your_prj_name}/ci/doxybook/book-doxygen-publish.sh
 ```
-* Note that you do not have to run `book-hard-copy-prj-generate.sh` file at the same time because the LibreOffice commands can not be executed simultaneously.
+* Note that you do not have to run `book-doxygen-publish.sh` file at the same time because the LibreOffice commands can not be executed simultaneously.
 
 ## How to inspect license issue with Scancode Toolkit
 
