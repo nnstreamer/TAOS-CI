@@ -16,7 +16,7 @@ You need an OBS account if you want to access OBS (update commit ID of a package
 Official Guides on Building Tizen Packages
 - [Official Guide on 'Building Packages Locally with GBS' (source.tizen.org)](https://source.tizen.org/documentation/developer-guide/getting-started-guide/building-packages-locally-gbs)
 
-## Sample gbs.conf for Auto-Driving Project
+## Sample gbs.conf for the Tizen-based package Project
 ```
 [general]
 profile = profile.tizen
@@ -26,7 +26,7 @@ packaging_branch = tizen
 workdir = .
 
 [profile.tizen]
-user = TIZENUSERID (optional)
+user = TIZEN_USER_ID (optional)
 passwd = TIZENPASSWD (optional)
 obs = obs.tizen
 
@@ -35,7 +35,7 @@ buildroot = ~/GBS-ROOT/
 
 [obs.tizen]
 url = https://api.tizen.org
-user = TIZENUSERID (optional)
+user = TIZEN_USER_ID (optional)
 passwd = TIZENPASSWD (optional)
 
 [repo.base]
