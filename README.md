@@ -39,11 +39,6 @@ The proposed system supports a light-weight code review automation approach to s
 ## Maintenance
 Please refer [Here](./ci/doc/maintenance.md).
 
-## Overall flow
-<img src=./image/architecture.png border=0 width=450 height=300></img>
-
-The diagram below shows an overall flow of the code review automation system. It consists of two groups; (1) the pre-build (before the build) and (2) the post-build (after the build) group. Our approach classify all modules with two groups for using system resources effectively whenever contributors submit a Pull Request (PR).
-
 ## Publications
 * Geunsik Lim, MyungJoo Ham, Jijoong Moon, Wook Song, Sangjung Woo, and Sewon Oh, "**<a href='https://www.researchgate.net/publication/329752376_TAOS-CI_Lightweight_Modular_Continuous_Integration_System_for_Edge_Computing'>TAOS-CI: Lightweight & Modular Continuous Integration System for Edge Computing,</a>**" 37th IEEE International Conference on Consumer Electronics (ICCE), Las Vegas, USA, Jan. 2019.
 
