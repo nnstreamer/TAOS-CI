@@ -154,6 +154,13 @@ echo "[DEBUG] The current path: $(pwd)."
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${prebuild_plugins[idx]}.sh"
 source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${prebuild_plugins[idx]}.sh
 
+prebuild_plugins[++idx]="pr-prebuild-coverity"
+echo "${prebuild_plugins[idx]} is starting."
+echo "[MODULE] TAOS/${prebuild_plugins[idx]}: Check defects in the C/C++ source code with 'coverity' package"
+echo "[DEBUG] The current path: $(pwd)."
+echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${prebuild_plugins[idx]}.sh"
+source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${prebuild_plugins[idx]}.sh
+
 ##################################################################################################################
 echo "[MODULE] plugins-staging: Plugin group that does not have an evaluation and aging test enough"
 # Please append your plugin modules here.

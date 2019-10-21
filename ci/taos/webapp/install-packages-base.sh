@@ -73,6 +73,10 @@ sudo apt -y install spellcheck || func-pack-fail
 echo -e "\n\n\n########## for CI-system: Installing packages for flawfinder"
 sudo apt -y install flawfinder || func-pack-fail
 
+echo -e "\n\n\n########## for CI-system: Installing packages for flawfinder"
+echo -e "\n Please install coverity package manually because they do not release .DEB package"
+echo -e "\n You can download the coverity files at https://scan.coverity.com/download?tab=cxx"
+
 echo -e "\n\n\n########## for CI-system: Setting-up a build environment of Tizen package (.rpm)"
 if [[ ! -f /etc/apt/sources.list.d/tizen.list ]]; then
     sudo echo "deb [trusted=yes] http://download.tizen.org/tools/latest-release/Ubuntu_16.04/ / " > /etc/apt/sources.list.d/tizen.list
