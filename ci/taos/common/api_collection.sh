@@ -38,8 +38,7 @@ function cibot_comment(){
     MESSAGE="$2"
     COMMIT_ADDRESS="$3"
 
-    echo -e "[DEBUG] Running the curl-based commenting procedure."
-    echo -e "[DEBUG] TOKEN: $TOKEN"
+    echo -e "[DEBUG] Running the curl-based $FUNCNAME API to comment a hint."
     echo -e "[DEBUG] MESSAGE: $MESSAGE"
     echo -e "[DEBUG] COMMIT_ADDRESS: $COMMIT_ADDRESS"
 
@@ -85,8 +84,9 @@ function cibot_report(){
     TARGET_URL="$5"
     COMMIT_ADDRESS="$6"
 
-    echo -e "[DEBUG] Running the curl-based PR status change procedure."
-
+    echo -e "[DEBUG] Running the curl-based $FUNCNAME API to change the PR status."
+    echo -e "[DEBUG] STATE: $STATE"
+    echo -e "[DEBUG] CONTEXT: $CONTEXT"
 
     # trim the message that exceeds 140 characters in case of PR status change.
     # In case that cibot create deployment statuses for a given PR:
@@ -110,10 +110,12 @@ function cibot_report(){
     --data "{\"state\":\"$STATE\",\"context\":\"$CONTEXT\",\"description\":\"$TRIM_DESCRIPTION\",\"target_url\":\"$TARGET_URL\"}" \
     $COMMIT_ADDRESS
 
+    echo -e "[DEBUG] -----------------------------------------------------------------------------"
     echo -e "[DEBUG] Return value of the curl webhook command is '$?'. If the value is 0, it means that webhook operation is normal."
     echo -e "[DEBUG] Note: If webhook server replies \"message\": \"Not Found\", add a privileged user id at 'Setting - Collaborators'."
     echo -e "[DEBUG] Note: The privileged user id has to be appended by \"Write\" permission."
     echo -e "[DEBUG] Note: If webhook server replies \"message\": \"Bad credentials\", try do it again with a correct token key."
+    echo -e "[DEBUG] -----------------------------------------------------------------------------"
 }
 
 ##
