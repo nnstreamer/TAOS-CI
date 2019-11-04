@@ -30,7 +30,7 @@
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @note Supported build type: meson
-# @note How to install the Coverity package
+# @note CI administrator must install the Coverity package in the CI server as following:
 #  $ firefox https://scan.coverity.com/download 
 #  $ cd /opt
 #  $ tar xvzf cov-analysis-linux64-2019.03.tar.gz
@@ -51,19 +51,40 @@ function coverity-crawl-defect {
     # Up to 21 builds per week, with a maximum of 3 builds per day, for projects with 100K to 500K lines of code
     # Up to 14 builds per week, with a maximum of 2 build per day, for projects with 500K to 1 million lines of code
     # Up to 7 builds per week, with a maximum of 1 build per day, for projects with more than 1 million lines of code
-    time_limit=23  # unit is hour
-    stat_last_build=$(cat ./cov-report-defect.html    | grep "Last build analyzed" -A 1 | tail -n 1 | cut -d'>' -f 2 | cut -d'<' -f 1)
-    echo -e "Last build analyzed: $stat_last_build"
+    time_limit_hour=23  # unit is hour
+    stat_last_build=$(cat ./cov-report-defect.html | grep "Last build analyzed" -A 1 | tail -n 1 | cut -d'>' -f 2 | cut -d'<' -f 1)
+    echo -e "[DEBUG] Last build analyzed: $stat_last_build"
 
-    stat_last_build_freq=$(echo $stat_last_build | grep "hour" | cut -d' ' -f 2)
     stat_last_build_quota_full=0
-    echo -e "[DEBUG] ($stat_last_build_freq) hour"
-    if [[ $stat_last_build_freq -gt 0 && $stat_last_build_freq -gt $time_limit ]]; then
-        echo -e "Okay. Continuing the task because the last build passed $time_limit hours."
-        stat_last_build_quota_full=0
-    else
-        echo -e "Ooops. Stopping the task because the last build is less than $time_limit hours."
-        stat_last_build_quota_full=1
+    time_build_status="hour"
+
+    # check the build frequency with a day unit (e.g., Last build analyzed	3 days ago).
+    if [[ $stat_last_build_quota_full -eq 0 ]]; then
+        stat_last_build_freq=$(echo $stat_last_build | grep "day" | cut -d' ' -f 1)
+        echo -e "[DEBUG] ($stat_last_build_freq) day"
+        stat_last_build_freq=$((stat_last_build_freq * 24))
+        echo -e "[DEBUG] ($stat_last_build_freq) hour"
+        if [[ $stat_last_build_freq -gt 0 && $stat_last_build_freq -gt $time_limit_hour ]]; then
+            echo -e "[DEBUG] date:Okay. Continuing the task because the last build passed $time_limit_hour hours."
+            stat_last_build_quota_full=0
+            time_build_status="day"
+        else
+            echo -e "[DEBUG] date:Ooops. Stopping the task because the last build is less than $time_limit_hour hours."
+            stat_last_build_quota_full=1
+        fi
+    fi
+
+    # check the build frequency with a hour unit (e.g., Last build analyzed	2 hours ago).
+    if [[ $time_build_status == "hour" ]]; then
+        stat_last_build_freq=$(echo $stat_last_build | grep "hour" | cut -d' ' -f 2)
+        echo -e "[DEBUG] ($stat_last_build_freq) hour"
+        if [[ $stat_last_build_freq -gt 0 && $stat_last_build_freq -gt $time_limit_hour ]]; then
+            echo -e "[DEBUG] hour:Okay. Continuing the task because the last build passed $time_limit_hour hours."
+            stat_last_build_quota_full=0
+        else
+            echo -e "[DEBUG] hour:Ooops. Stopping the task because the last build is less than $time_limit_hour hours."
+            stat_last_build_quota_full=1
+        fi
     fi
 
     # Fetch the defect, outstadning, dismissed, fixed from scan.coverity.com
@@ -79,12 +100,16 @@ function coverity-crawl-defect {
     stat_fixed=$(cat ./cov-report-defect.html         | grep "Fixed"         -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
     echo -e "-Fixed: $stat_fixed"
 
+    # Inform a PR submitter of current defects status of Coverity scan
+    message=":octocat: **cibot**: $user_id, **Coverity Report**, Total defects: $stat_total_defects (Outstanding: $stat_outstanding), For more details, please visit ${_cov_prj_website}."
+    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
+
     # TODO: we can get more additional information if we login at the 'build' webpage of scan.coverity.com.
     # https://scan.coverity.com/users/sign_in 
     if [[ $_login -eq 1 ]]; then
         wget -a cov-report-defect-build.txt -O cov-report-build.html  https://scan.coverity.com/projects/nnsuite-nnstreamer/builds/new?tab=upload
         stat_build_status=$(cat ./cov-report-build.html  | grep "Last Build Status:" )
-        echo -e "Build Status: $stat_build_status"
+        echo -e "[DEBUG] Build Status: $stat_build_status"
     fi
 }
 
@@ -93,6 +118,10 @@ function pr-prebuild-coverity(){
     echo "########################################################################################"
     echo "[MODULE] TAOS/pr-prebuild-coverity: Check defects and security issues in C/C++ source codes with coverity"
     pwd
+
+    # Environment setting for Coverity
+    # If you install the coverity package in the another folder without the below folder, you must modify the below statement.
+    export PATH=/opt/cov-analysis-linux64-2019.03/bin:$PATH
 
     # Check if server administrator install required commands
     check_cmd_dep file
@@ -134,7 +163,7 @@ function pr-prebuild-coverity(){
                 *.c|*.cc|*.cpp|*.c++)
                     # Check the defects of C/C++ file with coverity. The entire procedure is as following:
 
-                    echo "[DEBUG] (${i}) file is source code with the text format."
+                    echo -e "[DEBUG] (${i}) file is source code with the text format."
 
                     # Step 1/4: run coverity (cov-build) to execute a static analysis
                     # configure the compiler type and compiler command.
@@ -159,32 +188,35 @@ function pr-prebuild-coverity(){
                     if [[ $stat_last_build_quota_full -eq 1 ]]; then
                         echo -e "[DEBUG] Sorry. The build quota of the coverity scan is exceeded."
                         echo -e "[DEBUG] Stopping the coverity module."
+                        # if frequenced of cov-build exceeds quota, let's stop the next tasks.
                         break;
                     fi
 
-                    # run the static analysis with coverity
+                    # Run 'cov-build' command for the static analysis
+                    cov_build_result=0
                     if  [[ $_cov_build_type -eq "meson" ]]; then
                         build_cmd="ninja -C build-coverity"
                         rm -rf ./build-coverity/
-                        meson build -C build-coverity
-                        $analysis_sw $analysis_rules $build_cmd > ../report/${coverity_result}_${i}.txt
-                        exec_result=`cat ../report/${coverity_result}_${i}.txt | grep "The cov-build utility completed successfully" | wc -l`
+                        echo -e "[DEBUG] Generating config files with meson command."
+                        echo -e "[DEBUG] meson build-coverity "
+                        meson build-coverity
+                        echo -e "[DEBUG] Compiling the source files with '$build_cmd' command."
+                        echo -e "[DEBUG] $analysis_sw $analysis_rules $build_cmd > ../report/coverity_build_result.txt "
+                        $analysis_sw $analysis_rules $build_cmd > ../report/coverity_build_result.txt
+                        cov_build_result=`cat ../report/coverity_build_result.txt | grep "The cov-build utility completed successfully" | wc -l`
                     else
                         echo -e "[DEBUG] Sorry. We currently provide the meson build type."
                         echo -e "[DEBUG] If you want to add new build type, Please contribute the build type."
                         echo -e "[DEBUG] Stopping the coverity module."
-                        check_result="skip"
+                        # If cov-build is not executed normally, let's stop the next tasks.
                         break;
                     fi
                   
                     # Report the execution result.
-                    if  [[ $exec_result -eq 0 ]]; then
-                        echo "[DEBUG] $analysis_sw: failed. file name: ${i}, There execution result is $exec_result ."
-                        check_result="failure"
-                        global_check_result="failure"
+                    if  [[ $cov_build_result -eq 1 ]]; then
+                        echo "[DEBUG] $analysis_sw: PASSED. the current file name: '${i}', The result value is $cov_build_result ."
                     else
-                        echo "[DEBUG] $analysis_sw: passed. file name: ${i}, The execution result is $exec_result ."
-                        check_result="success"
+                        echo "[DEBUG] $analysis_sw: FAILED. the current file name: '${i}', The result value is $cov_build_result ."
 
                     # Step 2/4: commit the otuput to scan.coverity.com
                         # commit the execution result of the coverity
@@ -197,20 +229,22 @@ function pr-prebuild-coverity(){
                         tar cvzf $_cov_file cov-int
 
                         # Please make sure to include the '@' sign before the tarball file name.
+                        echo -e "[DEBUG] curl --form token=$_cov_token --form email=$_cov_email --form file=@$_cov_file --form version="$_cov_version" --form description="$_cov_description" $_cov_site -o ../report/coverity_curl_output.txt "
+
                         curl --form token=$_cov_token \
                           --form email=$_cov_email \
-                          --form file=@$_file \
+                          --form file=@$_cov_file \
                           --form version="$_cov_version" \
                           --form description="$_cov_description" \
                           $_cov_site \
-                          -o curl_output.txt
+                          -o ../report/coverity_curl_output.txt
                         result=$?
                        
                         # Note that curl gets value (0) even though you use a incorrect file name.
                         if [[ $result -eq 0 ]]; then
-                            echo -e "Please visit https://scan.coverity.com/projects/<your-github-repository>"
+                            echo -e "[DEBUG] Please visit https://scan.coverity.com/projects/<your-github-repository>"
                         else
-                            echo -e "Ooops... The return value is $result. The coverity task is failed."
+                            echo -e "[DEBUG] Ooops... The return value is $result. The coverity task is failed."
                         fi
 
                     fi
@@ -238,13 +272,13 @@ function pr-prebuild-coverity(){
     elif [[ $check_result == "skip" ]]; then
         echo "[DEBUG] Skipped. Static code analysis tool for security - coverity."
         message="Skipped. This module did not investigate your PR."
-        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_cov_prj_website" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. Static code analysis tool for security - coverity."
         message="Oooops. coverity is not completed. Please ask the CI administrator on this issue."
         cibot_report $TOKEN "failure" "TAOS/pr-prebuild-coverity" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     
-        # Inform PR submitter of a hint in more detail
+        # Inform a PR submitter of a hint in more detail
         message=":octocat: **cibot**: $user_id, **${i}** includes bug(s). Please fix security flaws in your commit before entering a review process."
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     fi
