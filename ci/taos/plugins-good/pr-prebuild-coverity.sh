@@ -212,13 +212,10 @@ function pr-prebuild-coverity(){
                         break;
                     fi
                   
+                    # Step 2/4: commit the otuput to scan.coverity.com
                     # Report the execution result.
                     if  [[ $cov_build_result -eq 1 ]]; then
-                        echo "[DEBUG] $analysis_sw: PASSED. the current file name: '${i}', The result value is $cov_build_result ."
-                    else
-                        echo "[DEBUG] $analysis_sw: FAILED. the current file name: '${i}', The result value is $cov_build_result ."
-
-                    # Step 2/4: commit the otuput to scan.coverity.com
+                        echo "[DEBUG] $analysis_sw: PASSED. current file: '${i}', result value: '$cov_build_result' ."
                         # commit the execution result of the coverity
                         _cov_version=$(date '+%Y%m%d-%H%M')
                         _cov_description="${date}-coverity"
@@ -246,6 +243,8 @@ function pr-prebuild-coverity(){
                         else
                             echo -e "[DEBUG] Ooops... The return value is $result. The coverity task is failed."
                         fi
+                    else
+                        echo "[DEBUG] $analysis_sw: FAILED. current file: '${i}', result value: '$cov_build_result' ."
 
                     fi
                     # Although source files are 1+, we just run once because coverity inspects all source files.
