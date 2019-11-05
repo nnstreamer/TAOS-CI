@@ -104,20 +104,18 @@ function coverity-crawl-defect {
     stat_outstanding=$(cat ./cov-report-defect.html   | grep "Outstanding"   -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
     echo -e "- Outstanding: $stat_outstanding"
 
-    stat_dismissed=$(cat ./cov-report-defect.html     | grep "Dismissed"     -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
-    echo -e "- Dismissed: $stat_dismissed"
 
     stat_fixed=$(cat ./cov-report-defect.html         | grep "Fixed"         -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
     echo -e "- Fixed: $stat_fixed"
 
-    echo -e "Defect changes: "
+    echo -e "Defect changes since previous build: "
     stat_newly=$(cat ./cov-report-defect.html         | grep "Newly detected"         -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
     echo -e "- Newly detected: $stat_newly"
     stat_eliminated=$(cat ./cov-report-defect.html         | grep "Eliminated"         -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
     echo -e "- Eliminated: $stat_eliminated"
 
     # Inform a PR submitter of current defects status of Coverity scan
-    message=":octocat: **cibot**: $user_id, **Coverity Report**, Total defects: $stat_total_defects (Outstanding: $stat_outstanding), For more details, please visit ${_cov_prj_website}."
+    message=":octocat: **cibot**: $user_id, **Coverity Report**, For more details, please visit ${_cov_prj_website}.\n\n- Last Analyzed: $stat_last_analyzed\n- Lines of Code Analyzed: $stat_loc\n- Defect Density $stat_density\n- Total defects: $stat_total_defects\n  - Outstanding: $stat_outstanding\n  - Newly detected: $stat_newly\n  - Eliminated: $stat_eliminated\n"
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 
     # TODO: we can get more additional information if we login at the 'build' webpage of scan.coverity.com.
