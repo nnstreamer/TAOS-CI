@@ -88,17 +88,33 @@ function coverity-crawl-defect {
     fi
 
     # Fetch the defect, outstadning, dismissed, fixed from scan.coverity.com
+    # e.g.,  Defect summary,  Defect status, and Defect changes
+
+    echo -e "Defect summary: $stat_total_defects"
+    stat_last_analyzed=$(cat ./cov-report-defect.html | grep "Last Analyzed" -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
+    echo -e "- Last Analyzed: $stat_last_analyzed"
+    stat_loc=$(cat ./cov-report-defect.html | grep "Lines of Code Analyzed" -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
+    echo -e "- Lines of Code Analyzed: $stat_loc"
+    stat_density=$(cat ./cov-report-defect.html | grep "Defect Density" -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
+    echo -e "- Defect Density $stat_density"
+
     stat_total_defects=$(cat ./cov-report-defect.html | grep "Total defects" -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
     echo -e "Total defects: $stat_total_defects"
 
     stat_outstanding=$(cat ./cov-report-defect.html   | grep "Outstanding"   -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
-    echo -e "-Outstanding: $stat_outstanding"
+    echo -e "- Outstanding: $stat_outstanding"
 
     stat_dismissed=$(cat ./cov-report-defect.html     | grep "Dismissed"     -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
-    echo -e "-Dismissed: $stat_dismissed"
+    echo -e "- Dismissed: $stat_dismissed"
 
     stat_fixed=$(cat ./cov-report-defect.html         | grep "Fixed"         -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
-    echo -e "-Fixed: $stat_fixed"
+    echo -e "- Fixed: $stat_fixed"
+
+    echo -e "Defect changes: "
+    stat_newly=$(cat ./cov-report-defect.html         | grep "Newly detected"         -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
+    echo -e "- Newly detected: $stat_newly"
+    stat_eliminated=$(cat ./cov-report-defect.html         | grep "Eliminated"         -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
+    echo -e "- Eliminated: $stat_eliminated"
 
     # Inform a PR submitter of current defects status of Coverity scan
     message=":octocat: **cibot**: $user_id, **Coverity Report**, Total defects: $stat_total_defects (Outstanding: $stat_outstanding), For more details, please visit ${_cov_prj_website}."

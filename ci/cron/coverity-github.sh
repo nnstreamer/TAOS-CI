@@ -14,8 +14,8 @@
 
 # configuration
 # https://scan.coverity.com/projects/<your-github-prj-name>?tab=project_settings
-_token="PxGfTFJGzXDh46FiTP6ZWQ"
-_email="taos-ci@gmail.com"
+_token="1234567890123456789012"
+_email="taos-ci@github.io"
 _coverity_site="https://scan.coverity.com/builds?project=nnsuite%2Fnnstreamer"
 
 # ------------------- Do not modify the below statements ---------------------------------
@@ -71,17 +71,33 @@ function coverity-crawl-defect {
 
 
     # Fetch the defect, outstadning, dismissed, fixed from scan.coverity.com
+    # e.g.,  Defect summary,  Defect status, and Defect changes
+
+    echo -e "Defect summary: $stat_total_defects"
+    stat_last_analyzed=$(cat ./cov-report-defect.html | grep "Last Analyzed" -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
+    echo -e "- Last Analyzed: $stat_last_analyzed"
+    stat_loc=$(cat ./cov-report-defect.html | grep "Lines of Code Analyzed" -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
+    echo -e "- Lines of Code Analyzed: $stat_loc"
+    stat_density=$(cat ./cov-report-defect.html | grep "Defect Density" -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
+    echo -e "- Defect Density $stat_density"
+
     stat_total_defects=$(cat ./cov-report-defect.html | grep "Total defects" -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
     echo -e "Total defects: $stat_total_defects"
 
     stat_outstanding=$(cat ./cov-report-defect.html   | grep "Outstanding"   -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
-    echo -e "-Outstanding: $stat_outstanding"
+    echo -e "- Outstanding: $stat_outstanding"
  
     stat_dismissed=$(cat ./cov-report-defect.html     | grep "Dismissed"     -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
-    echo -e "-Dismissed: $stat_dismissed"
+    echo -e "- Dismissed: $stat_dismissed"
 
     stat_fixed=$(cat ./cov-report-defect.html         | grep "Fixed"         -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
-    echo -e "-Fixed: $stat_fixed"
+    echo -e "- Fixed: $stat_fixed"
+
+    echo -e "Defect changes: "
+    stat_newly=$(cat ./cov-report-defect.html         | grep "Newly detected"         -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
+    echo -e "- Newly detected: $stat_newly"
+    stat_eliminated=$(cat ./cov-report-defect.html         | grep "Eliminated"         -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
+    echo -e "- Eliminated: $stat_eliminated"
 
     # TODO: we can get more additional information if we login at the 'build' webpage of scan.coverity.com .
     if [[ $_login -eq 1 ]]; then 
@@ -169,5 +185,5 @@ check_cmd_dep ninja
 check_cmd_dep ccache
 
 coverity-crawl-defect
-coverity-build
-coverity-commit
+#coverity-build
+#coverity-commit
