@@ -148,12 +148,12 @@ REPOSITORY_GIT="https://github.com/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM.git"
 # b. Enterprise Edition- "https://api.github.com/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
 GITHUB_WEBHOOK_API="https://api.github.com/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
 
-
-
 # Coverity, the configuration variables for the coverity module
 # https://scan.coverity.com/dashboard
+# If you want to skip the build procedure, please specify the "none" value in the _cov_build_type.
 _cov_build_type="meson"
 _cov_email="your-id@gmail.com"
 _cov_token="1234567890123456789012"
 _cov_site="https://scan.coverity.com/builds?project=nnsuite%2Fnnstreamer"
 _cov_prj_website="https://scan.coverity.com/projects/nnsuite-nnstreamer"
+_cov_warning_card=10
