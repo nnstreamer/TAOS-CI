@@ -7,7 +7,11 @@
 # @file gen_github_badge_svg.py
 # @brief A tool for generating a github badge image in svg format
 # @author Wook Song <wook16.song@samsung.com>
-
+# @note
+# usage :  ../badge/gen_badge.py {badge-name} {gcov-index-file} {output.svg}
+#    $ cd cd ci
+#    $ ../badge/gen_badge.py codecoverage ../gcov_html/index.html ../badge/codecoverage.svg
+#
 import sys
 import os
 # https://pypi.org/project/BeautifulSoup/
