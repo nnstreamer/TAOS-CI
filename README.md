@@ -1,4 +1,5 @@
-[![GitHub license](https://dmlc.github.io/img/apache2.svg)](./LICENSE)
+[![GitHub license](https://dmlc.github.io/img/apache2.svg)](./LICENSE) 
+![Gitter](https://img.shields.io/gitter/room/nnsuite/TAOS-CI) ![GitHub repo size](https://img.shields.io/github/repo-size/nnsuite/TAOS-CI) ![GitHub issues](https://img.shields.io/github/issues/nnsuite/TAOS-CI) ![GitHub pull requests](https://img.shields.io/github/issues-pr/nnsuite/TAOS-CI) ![GitHub contributors](https://img.shields.io/github/contributors/nnsuite/TAOS-CI)
 
 [Build Status](http://nnsuite.mooo.com/TAOS-CI/ci/taos/) |
 [Documentation](ci/doc/doxygen-documentation.md) |
