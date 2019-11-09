@@ -90,7 +90,7 @@ function coverity-crawl-defect {
     # Fetch the defect, outstadning, dismissed, fixed from scan.coverity.com
     # e.g.,  Defect summary,  Defect status, and Defect changes
 
-    echo -e "Defect summary: $stat_total_defects"
+    echo -e "Defect summary: "
     stat_last_analyzed=$(cat ./cov-report-defect.html | grep "Last Analyzed" -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
     echo -e "- Last Analyzed: $stat_last_analyzed"
     stat_loc=$(cat ./cov-report-defect.html | grep "Lines of Code Analyzed" -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
@@ -194,6 +194,18 @@ function pr-prebuild-coverity(){
                     # Activity2: Check the current build submission quota
                     # Activity3: Stop or run the coverity scan service with the build quota
                     coverity-crawl-defect
+    
+                    # Create a JSON file for display coverity badge that describes the number of the defects
+                    echo -e "[DEBUG] the folder of the coveirty badge file (json): "
+                    echo -e "[DEBUG] ls ../../../../badge/ "
+                    ls -al ../../../../badge/
+                    echo -e "{"                                 > ../../../../badge/badge_coverity.json
+                    echo -e "    \"schemaVersion\": 1,"        >> ../../../../badge/badge_coverity.json
+                    echo -e "    \"label\": \"coverity\","     >> ../../../../badge/badge_coverity.json
+                    echo -e "    \"message\": \""$stat_total_defects "defects\"," >> ../../../../badge/badge_coverity.json
+                    echo -e "    \"color\": \"brightgreen\","  >> ../../../../badge/badge_coverity.json
+                    echo -e "    \"style\": \"flat\""          >> ../../../../badge/badge_coverity.json
+                    echo -e "}"                                >> ../../../../badge/badge_coverity.json
         
                     if [[ $stat_last_build_quota_full -eq 1 ]]; then
                         echo -e "[DEBUG] Sorry. The build quota of the coverity scan is exceeded."
@@ -261,7 +273,7 @@ function pr-prebuild-coverity(){
                     break
                     ;;
                 * )
-                    echo "[DEBUG] The coverity (a static analysis tool to find defects) module does not scan (${i}) file."
+                    echo "[DEBUG] The coverity does not examine (${i}) file because it is not specified source codes."
                     ;;
             esac
         fi
@@ -274,7 +286,9 @@ function pr-prebuild-coverity(){
     # 3. How do we check changes of defects between pre-PR and post-PR? with a webcrawler
 
     echo -e "[DEBUG] if (stat_total_defects: $stat_total_defects -le _cov_warning_card: $_cov_warning_card)"
-    if [[ $stat_total_defects -eq 0 ]]; then
+    if [[ -z "$stat_total_defect" ]]; then
+        check_result="skip"
+    elif [[ $stat_total_defects -eq 0 ]]; then
         check_result="success"
     elif [[ $stat_total_defects -le $_cov_warning_card ]]; then
         check_result="yellowcard"
@@ -304,6 +318,7 @@ function pr-prebuild-coverity(){
             msg_bugs="$msg_bugs :rage: "
         fi
     done
+
  
     echo -e "[DEBUG] check_result is ( $check_result )."
     # Step 4/4: comment the summarized report on a PR if defects exist.
@@ -313,7 +328,7 @@ function pr-prebuild-coverity(){
         cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_cov_prj_website" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "skip" ]]; then
         echo "[DEBUG] Skipped. Static code analysis tool for security - coverity."
-        message="Skipped. This module did not investigate your PR."
+        message="Skipped. This module did not inspect your PR because it does not include source code files."
         cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_cov_prj_website" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "yellowcard" ]]; then
         echo "[DEBUG] Ooops. Yellow Card: The number of defects exceeds $_cov_warning_card - coverity."
