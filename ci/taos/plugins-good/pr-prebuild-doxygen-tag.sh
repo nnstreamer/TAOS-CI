@@ -131,7 +131,7 @@ function pr-prebuild-doxygen-tag(){
                             # Check a comment statement that begins with '/*'.
                             # Note that doxygen does not recognize a comment  statement that start with '/*'.
                             # Let's skip the doxygen tag inspection such as "/**" in case of a single line comment.
-                            if [[ $line =~ "/*" && $line != *"/**"*  && ( $line != *"*/"  || $line =~ "@" ) ]]; then
+                            if [[ $line =~ "/*" && $line != *"/**"*  && ( $line != *"*/"  || $line =~ "@" ) && ( $idx != 1 ) ]]; then
                                 echo "[ERROR] File name: $curr_file, $idx line, Doxygen or multi line comments should begin with /**"
                                 check_result="failure"
                                 global_check_result="failure"
