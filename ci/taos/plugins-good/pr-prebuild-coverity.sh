@@ -51,7 +51,7 @@ function coverity-crawl-defect {
     # Up to 21 builds per week, with a maximum of 3 builds per day, for projects with 100K to 500K lines of code
     # Up to 14 builds per week, with a maximum of 2 build per day, for projects with 500K to 1 million lines of code
     # Up to 7 builds per week, with a maximum of 1 build per day, for projects with more than 1 million lines of code
-    time_limit_hour=23  # unit is hour
+    time_limit_hour=12 # unit is hour
     stat_last_build=$(cat ./cov-report-defect.html | grep "Last build analyzed" -A 1 | tail -n 1 | cut -d'>' -f 2 | cut -d'<' -f 1)
     echo -e "[DEBUG] Last build analyzed: $stat_last_build"
 
