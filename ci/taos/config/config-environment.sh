@@ -25,8 +25,8 @@
 
 # Add TOKEN ID to access your GitHub repository using WebHook APIs
 # Refer to https://github.com/settings/tokens
-# WARNING: Do NOT OPEN THE TOKEN ID TO AVOID A SECURITY FLAW.
-TOKEN="0000000000111111111122222222223333333333xx"
+# WARNING: Do NOT OPEN THE TOKEN ID OF GITHUB TO AVOID A SECURITY FLAW.
+TOKEN="111111111122222222223333333333444444444455"
 
 # Write an account name (or organization name) of the '{master|upstream}' branch
 # e.g., https://github-website/{account_name}/{project_name}/
@@ -128,7 +128,7 @@ BUILD_MODE_ANDROID=99
 RUN_QUEUE_PR_JOBS=8
 
 # Version format: Major.Minor.DATE
-VERSION="1.3.20190927"
+VERSION="1.3.20191114"
 
 #### Location of the GitHub repository
 # We assume that the default folder of the www-data (user-id of Apache webserver) is "/var/www/html/" folder. 
@@ -148,12 +148,12 @@ REPOSITORY_GIT="https://github.com/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM.git"
 # b. Enterprise Edition- "https://api.github.com/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
 GITHUB_WEBHOOK_API="https://api.github.com/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
 
-# Coverity, the configuration variables for the coverity module
+# Coverity module, the configuration variables for the coverity module
 # https://scan.coverity.com/dashboard
-# If you want to skip the build procedure, please specify the "none" value in the _cov_build_type.
+# If you want to skip the build procedure, please specify a "none" value in the '_cov_build_type'.
+# WARNING: Do NOT OPEN THE TOKEN ID of COVERITY TO AVOID A SECURITY FLAW.
 _cov_build_type="meson"
 _cov_email="your-id@gmail.com"
 _cov_token="1234567890123456789012"
-_cov_site="https://scan.coverity.com/builds?project=nnsuite%2Fnnstreamer"
-_cov_prj_website="https://scan.coverity.com/projects/nnsuite-nnstreamer"
-_cov_warning_card=10
+_cov_yellow_card=10
+_cov_red_card=50
