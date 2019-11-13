@@ -296,14 +296,14 @@ function pr-prebuild-coverity(){
     # 2. How do we know the time that the coverity scan completes? with a webcrawler
     # 3. How do we check changes of defects between pre-PR and post-PR? with a webcrawler
 
-    echo -e "[DEBUG] if (stat_total_defects: $stat_total_defects -le _cov_warning_card: $_cov_warning_card)"
+    echo -e "[DEBUG] if statement (outstanding_defects: $stat_outstanding , _cov_yellow_card: $_cov_yellow_card)"
     if [[ -z "$stat_total_defects" ]]; then
         check_result="skip"
-    elif [[ $stat_total_defects -eq 0 ]]; then
+    elif [[ $stat_outstanding -eq 0 ]]; then
         check_result="success"
-    elif [[ $stat_total_defects -le $_cov_warning_card ]]; then
+    elif [[ $stat_outstanding -le $_cov_yellow_card ]]; then
         check_result="yellowcard"
-    elif [[ $stat_total_defects -gt $_cov_warning_card ]]; then
+    elif [[ $stat_outstanding -gt $_cov_red_card ]]; then
         check_result="redcard"
     else
         check_result="failure"
@@ -323,7 +323,7 @@ function pr-prebuild-coverity(){
     # Create defect icons with the number of the defects
     msg_bugs="$msg_bugs\n#### :orange_book: Defects:\n"
     for (( i=1;i<=$stat_total_defects;i++ )) ; do
-        if [[ $i -le $_cov_warning_card ]]; then
+        if [[ $i -le $_cov_yellow_card ]]; then
             msg_bugs="$msg_bugs :mask: "
         else
             msg_bugs="$msg_bugs :rage: "
@@ -342,18 +342,18 @@ function pr-prebuild-coverity(){
         message="Skipped. This module did not inspect your PR because it does not include source code files."
         cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_cov_prj_website" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "yellowcard" ]]; then
-        echo "[DEBUG] Ooops. Yellow Card: The number of defects exceeds $_cov_warning_card - coverity."
-        message="Ooops. Yellow Card: The number of defects ($stat_total_defects) exceeds $_cov_warning_card. Please fix defects less than $_cov_warning_card."
+        echo "[DEBUG] Ooops. Yellow Card: The number of outstanding defects exceeds $_cov_yellow_card - coverity."
+        message="Ooops. Yellow Card: The number of outstanding defects ($stat_total_defects) exceeds $_cov_yellow_card. Please fix outstanding defects less than $_cov_yellow_card."
         cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_cov_prj_website" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
         # Inform a PR submitter of current defects status of Coverity scan
-        message=":octocat: **cibot**: $user_id, **Coverity Report**, **[YELLOWCARD]**: Ooops. The number of defects exceeds $_cov_warning_card. Please fix defects until less than $_cov_warning_card. For more details, please visit ${_cov_prj_website}.\n\n$msg_defects\n\n$msg_bugs\n\n"
+        message=":octocat: **cibot**: $user_id, **Coverity Report**, **[YELLOWCARD]**: Ooops. The number of defects exceeds $_cov_yellow_card. Please fix defects until less than $_cov_yellow_card. For more details, please visit ${_cov_prj_website}.\n\n$msg_defects\n\n$msg_bugs\n\n"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     elif [[ $check_result == "redcard" ]]; then
-        echo "[DEBUG] Ooops. Red Card: The number of defects exceeds $_cov_warning_card - coverity."
-        message="Ooops. Red Card: The number of defects ($stat_total_defects) exceeds $_cov_warning_card. Please fix defects less than $_cov_warning_card."
-        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_cov_prj_website" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        echo "[DEBUG] Ooops. Red Card: The number of outstanding defects exceeds $_cov_red_card - coverity."
+        message="Ooops. Red Card: The number of outstanding defects ($stat_outstanding) exceeds $_cov_red_card. Please fix outstanding defects less than $_cov_red_card."
+        cibot_report $TOKEN "failure" "TAOS/pr-prebuild-coverity" "$message" "$_cov_prj_website" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
         # Inform a PR submitter of current defects status of Coverity scan
-        message=":octocat: **cibot**: $user_id, **Coverity Report**, **[REDCARD]**: Ooops.The number of defects exceeds $_cov_warning_card. Please fix defects until less than $_cov_warning_card. For more details, please visit ${_cov_prj_website}.\n\n$msg_defects\n\n$msg_bugs\n\n"
+        message=":octocat: **cibot**: $user_id, **Coverity Report**, **[REDCARD]**: Ooops.The number of outstanding defects exceeds $_cov_yed_card. Please fix outstanding defects until less than $_cov_red_card. For more details, please visit ${_cov_prj_website}.\n\n$msg_defects\n\n$msg_bugs\n\n"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     else
         echo "[DEBUG] Failed. Static code analysis tool for security - coverity."
