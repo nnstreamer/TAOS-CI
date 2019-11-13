@@ -79,15 +79,15 @@ function coverity-crawl-defect {
     # check the build frequency with a day unit (e.g., Last build analyzed	3 days ago).
     if [[ $stat_last_build_quota_full -eq 0 ]]; then
         stat_last_build_freq=$(echo $stat_last_build | grep "day" | cut -d' ' -f 1)
-        echo -e "[DEBUG] ($stat_last_build_freq) day"
+        echo -e "[DEBUG] day: ($stat_last_build_freq) day"
         stat_last_build_freq=$((stat_last_build_freq * 24))
-        echo -e "[DEBUG] ($stat_last_build_freq) hour"
+        echo -e "[DEBUG] day: ($stat_last_build_freq) hour"
         if [[ $stat_last_build_freq -gt 0 && $stat_last_build_freq -gt $time_limit_hour ]]; then
-            echo -e "[DEBUG] date:Okay. Continuing the task because the last build passed $time_limit_hour hours."
+            echo -e "[DEBUG] day: Okay. Continuing the task because the last build passed $time_limit_hour hours."
             stat_last_build_quota_full=0
             time_build_status="day"
         else
-            echo -e "[DEBUG] date:Ooops. Stopping the task because the last build is less than $time_limit_hour hours."
+            echo -e "[DEBUG] day: Ooops. Stopping the task because the last build is less than $time_limit_hour hours."
             stat_last_build_quota_full=1
         fi
     fi
@@ -95,12 +95,12 @@ function coverity-crawl-defect {
     # check the build frequency with a hour unit (e.g., Last build analyzed	2 hours ago).
     if [[ $time_build_status == "hour" ]]; then
         stat_last_build_freq=$(echo $stat_last_build | grep "hour" | cut -d' ' -f 2)
-        echo -e "[DEBUG] ($stat_last_build_freq) hour"
+        echo -e "[DEBUG] hour: ($stat_last_build_freq) hour"
         if [[ $stat_last_build_freq -gt 0 && $stat_last_build_freq -gt $time_limit_hour ]]; then
-            echo -e "[DEBUG] hour:Okay. Continuing the task because the last build passed $time_limit_hour hours."
+            echo -e "[DEBUG] hour: Okay. Continuing the task because the last build passed $time_limit_hour hours."
             stat_last_build_quota_full=0
         else
-            echo -e "[DEBUG] hour:Ooops. Stopping the task because the last build is less than $time_limit_hour hours."
+            echo -e "[DEBUG] hour: Ooops. Stopping the task because the last build is less than $time_limit_hour hours."
             stat_last_build_quota_full=1
         fi
     fi
@@ -141,7 +141,7 @@ function pr-prebuild-coverity(){
     pwd
 
     # Environment setting for Coverity
-    # If you install the coverity package in the another folder without the below folder, you must modify the below statement.
+    # If you install the coverity package at a different directory, you must modify the below statement.
     export PATH=/opt/cov-analysis-linux64-2019.03/bin:$PATH
 
     # Check if server administrator install required commands
@@ -227,7 +227,7 @@ function pr-prebuild-coverity(){
 
                     # Run 'cov-build' command for the static analysis
                     cov_build_result=0
-                    if  [[ $_cov_build_type -eq "meson" ]]; then
+                    if  [[ $_cov_build_type -eq "meson" && $stat_last_build_quota_full -eq 0 ]]; then
                         build_cmd="ninja -C build-coverity"
                         rm -rf ./build-coverity/
                         echo -e "[DEBUG] Generating config files with meson command."
@@ -240,14 +240,14 @@ function pr-prebuild-coverity(){
                     else
                         echo -e "[DEBUG] Sorry. We currently provide the meson build type."
                         echo -e "[DEBUG] If you want to add new build type, Please contribute the build type."
-                        echo -e "[DEBUG] Stopping the coverity module."
+                        echo -e "[DEBUG] Skipping the build step (cov-build) of the coverity module."
                         # If cov-build is not executed normally, let's stop the next tasks.
                         break;
                     fi
                   
                     # Step 2/4: commit the otuput to scan.coverity.com
                     # Report the execution result.
-                    if  [[ $cov_build_result -eq 1 ]]; then
+                    if  [[ $cov_build_result -eq 1 && $stat_last_build_quota_full -eq 0  ]]; then
                         echo "[DEBUG] $analysis_sw: PASSED. current file: '${i}', result value: '$cov_build_result' ."
                         # commit the execution result of the coverity
                         _cov_version=$(date '+%Y%m%d-%H%M')
@@ -277,9 +277,9 @@ function pr-prebuild-coverity(){
                             echo -e "[DEBUG] Ooops... The return value is $result. The coverity task is failed."
                         fi
                     else
-                        echo "[DEBUG] $analysis_sw: FAILED. current file: '${i}', result value: '$cov_build_result' ."
-
+                        echo -e "[DEBUG] Skipping the commit step (curl) of the coverity module."
                     fi
+                    echo "[DEBUG] $analysis_sw: FAILED. current file: '${i}', result value: '$cov_build_result' ."
                     # Although source files are 1+, we just run once because coverity inspects all source files.
                     break
                     ;;
