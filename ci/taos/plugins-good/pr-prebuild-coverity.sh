@@ -43,7 +43,24 @@
 
 ## @brief A coverity web-crawler to fetch defects from scan.coverity.com
 function coverity-crawl-defect {
-    wget -a cov-report-defect-debug.txt -O cov-report-defect.html  https://scan.coverity.com/projects/nnsuite-nnstreamer
+    # The account informaiton of GitHub repository
+    _user_name="$GITHUB_ACCOUNT"
+    _repo_name="$PRJ_REPO_UPSTREAM"
+
+    # Set websites
+    _coverity_repo_site_login="https://scan.coverity.com/projects/${_user_name}-{$_repo_name}/builds/new?tab=upload"
+    _coverity_repo_site_logout="https://scan.coverity.com/projects/${_user_name}-${_repo_name}"
+    _coverity_commit_site="https://scan.coverity.com/builds?project=${_user_name}%2F${_repo_name}"
+
+    # Set login status
+    _login=0
+
+    # TODO: Support "_login=1" option to get more useful data
+    if [[ $_login -eq 0 ]]; then
+        wget -a cov-report-defect-debug.txt -O cov-report-defect.html $_coverity_repo_site_logout
+    else
+        wget -a cov-report-defect-build.txt -O cov-report-defect.html $_coverity_repo_site_login
+    fi
 
     # Check the frequency for build submissions to coverity scan
     # https://scan.coverity.com/faq#frequency
@@ -52,6 +69,7 @@ function coverity-crawl-defect {
     # Up to 14 builds per week, with a maximum of 2 build per day, for projects with 500K to 1 million lines of code
     # Up to 7 builds per week, with a maximum of 1 build per day, for projects with more than 1 million lines of code
     time_limit_hour=12 # unit is hour
+
     stat_last_build=$(cat ./cov-report-defect.html | grep "Last build analyzed" -A 1 | tail -n 1 | cut -d'>' -f 2 | cut -d'<' -f 1)
     echo -e "[DEBUG] Last build analyzed: $stat_last_build"
 
@@ -114,13 +132,6 @@ function coverity-crawl-defect {
     stat_eliminated=$(cat ./cov-report-defect.html         | grep "Eliminated"         -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
     echo -e "- Eliminated: $stat_eliminated"
 
-    # TODO: we can get more additional information if we login at the 'build' webpage of scan.coverity.com.
-    # https://scan.coverity.com/users/sign_in 
-    if [[ $_login -eq 1 ]]; then
-        wget -a cov-report-defect-build.txt -O cov-report-build.html  https://scan.coverity.com/projects/nnsuite-nnstreamer/builds/new?tab=upload
-        stat_build_status=$(cat ./cov-report-build.html  | grep "Last Build Status:" )
-        echo -e "[DEBUG] Build Status: $stat_build_status"
-    fi
 }
 
 # @brief [MODULE] TAOS/pr-prebuild-coverity
@@ -248,14 +259,14 @@ function pr-prebuild-coverity(){
                         tar cvzf $_cov_file cov-int
 
                         # Please make sure to include the '@' sign before the tarball file name.
-                        echo -e "[DEBUG] curl --form token=****** --form email=$_cov_email --form file=@$_cov_file --form version="$_cov_version" --form description="$_cov_description" $_cov_site -o ../report/coverity_curl_output.txt "
+                        echo -e "[DEBUG] curl --form token=****** --form email=$_cov_email --form file=@$_cov_file --form version="$_cov_version" --form description="$_cov_description" $_coverity_commit_site -o ../report/coverity_curl_output.txt "
 
                         curl --form token=$_cov_token \
                           --form email=$_cov_email \
                           --form file=@$_cov_file \
                           --form version="$_cov_version" \
                           --form description="$_cov_description" \
-                          $_cov_site \
+                          $_coverity_commit_site \
                           -o ../report/coverity_curl_output.txt
                         result=$?
                        
