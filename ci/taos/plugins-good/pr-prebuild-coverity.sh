@@ -286,7 +286,7 @@ function pr-prebuild-coverity(){
     # 3. How do we check changes of defects between pre-PR and post-PR? with a webcrawler
 
     echo -e "[DEBUG] if (stat_total_defects: $stat_total_defects -le _cov_warning_card: $_cov_warning_card)"
-    if [[ -z "$stat_total_defect" ]]; then
+    if [[ -z "$stat_total_defects" ]]; then
         check_result="skip"
     elif [[ $stat_total_defects -eq 0 ]]; then
         check_result="success"
