@@ -295,12 +295,12 @@ function pr-prebuild-coverity(){
         check_result="skip"
     elif [[ $stat_outstanding -eq 0 ]]; then
         check_result="success"
-    elif [[ $stat_outstanding -le $_cov_yellow_card ]]; then
-        check_result="yellowcard"
     elif [[ $stat_outstanding -le $_cov_red_card ]]; then
         check_result="redcard"
+    elif [[ $stat_outstanding -gt $_cov_yellow_card ]]; then
+        check_result="yellowcard"
     else
-        check_result="failure"
+        check_result="greencard"
     fi
     # Create a summary report on defects
     msg_defects="${msg_defects}\n#### :orange_book: Coverity Scan Summary:\n"
@@ -338,6 +338,10 @@ function pr-prebuild-coverity(){
     elif [[ $check_result == "skip" ]]; then
         echo "[DEBUG] Skipped. Static code analysis tool for security - coverity."
         message="Skipped. This module did not inspect your PR because it does not include source code files."
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_cov_prj_website" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    elif [[ $check_result == "greencard" ]]; then
+        echo "[DEBUG] Green Card: The number of outstanding defects is low, but not zero - coverity."
+        message="Keep It Up! Green Card: The number of outstanding defects ($stat_total_defects) is low, but not zero, yet."
         cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "yellowcard" ]]; then
         message="Warning [YELLOWCARD]: The number of outstanding defects is $stat_outstanding."
