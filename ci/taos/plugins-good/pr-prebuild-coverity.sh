@@ -115,14 +115,8 @@ function coverity-crawl-defect {
     echo -e "- Lines of Code Analyzed: $stat_loc"
     stat_density=$(cat ./cov-report-defect.html | grep "Defect Density" -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
     echo -e "- Defect Density $stat_density"
-
-    stat_total_defects=$(cat ./cov-report-defect.html | grep "Total defects" -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
-    echo -e "Total defects: $stat_total_defects"
-
     stat_outstanding=$(cat ./cov-report-defect.html   | grep "Outstanding"   -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
     echo -e "- Outstanding: $stat_outstanding"
-
-
     stat_fixed=$(cat ./cov-report-defect.html         | grep "Fixed"         -B 1 | head -n 1 | cut -d'<' -f3 | cut -d'>' -f2 | tr -d '\n')
     echo -e "- Fixed: $stat_fixed"
 
@@ -166,25 +160,25 @@ function pr-prebuild-coverity(){
     # Read file names that a contributor modified (e.g., added, moved, deleted, and updated) from a last commit.
     # Then, inspect C/C++ source code files from *.patch files of the last commit.
     FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
-    for i in ${FILELIST}; do
+    for file in ${FILELIST}; do
         # Skip the obsolete folder
-        if [[ ${i} =~ ^obsolete/.* ]]; then
+        if [[ ${file} =~ ^obsolete/.* ]]; then
             continue
         fi
         # Skip the external folder
-        if [[ ${i} =~ ^external/.* ]]; then
+        if [[ ${file} =~ ^external/.* ]]; then
             continue
         fi
         # Handle only text files in case that there are lots of files in one commit.
-        echo "[DEBUG] file name is (${i})."
-        if [[ `file ${i} | grep "ASCII text" | wc -l` -gt 0 ]]; then
+        echo "[DEBUG] file name is (${file})."
+        if [[ `file ${file} | grep "ASCII text" | wc -l` -gt 0 ]]; then
             # in case of C/C++ source code
-            case ${i} in
+            case ${file} in
                 # in case of C/C++ code
                 *.c|*.cc|*.cpp|*.c++)
                     # Check the defects of C/C++ file with coverity. The entire procedure is as following:
 
-                    echo -e "[DEBUG] (${i}) file is source code with the text format."
+                    echo -e "[DEBUG] (${file}) file is source code with the text format."
 
                     # Step 1/4: run coverity (cov-build) to execute a static analysis
                     # configure the compiler type and compiler command.
@@ -213,7 +207,7 @@ function pr-prebuild-coverity(){
                     echo -e "{"                                 > ../../../../badge/badge_coverity.json
                     echo -e "    \"schemaVersion\": 1,"        >> ../../../../badge/badge_coverity.json
                     echo -e "    \"label\": \"coverity\","     >> ../../../../badge/badge_coverity.json
-                    echo -e "    \"message\": \""$stat_total_defects "defects\"," >> ../../../../badge/badge_coverity.json
+                    echo -e "    \"message\": \""$stat_outstanding "defects\"," >> ../../../../badge/badge_coverity.json
                     echo -e "    \"color\": \"brightgreen\","  >> ../../../../badge/badge_coverity.json
                     echo -e "    \"style\": \"flat\""          >> ../../../../badge/badge_coverity.json
                     echo -e "}"                                >> ../../../../badge/badge_coverity.json
@@ -248,7 +242,7 @@ function pr-prebuild-coverity(){
                     # Step 2/4: commit the otuput to scan.coverity.com
                     # Report the execution result.
                     if  [[ $cov_build_result -eq 1 && $stat_last_build_quota_full -eq 0  ]]; then
-                        echo "[DEBUG] $analysis_sw: PASSED. current file: '${i}', result value: '$cov_build_result' ."
+                        echo "[DEBUG] $analysis_sw: PASSED. current file: '${file}', result value: '$cov_build_result' ."
                         # commit the execution result of the coverity
                         _cov_version=$(date '+%Y%m%d-%H%M')
                         _cov_description="${date}-coverity"
@@ -279,12 +273,12 @@ function pr-prebuild-coverity(){
                     else
                         echo -e "[DEBUG] Skipping the commit step (curl) of the coverity module."
                     fi
-                    echo "[DEBUG] $analysis_sw: FAILED. current file: '${i}', result value: '$cov_build_result' ."
+                    echo "[DEBUG] $analysis_sw: FAILED. current file: '${file}', result value: '$cov_build_result' ."
                     # Although source files are 1+, we just run once because coverity inspects all source files.
                     break
                     ;;
                 * )
-                    echo "[DEBUG] The coverity does not examine (${i}) file because it is not specified source codes."
+                    echo "[DEBUG] The coverity does not examine (${file}) file because it is not specified source codes."
                     ;;
             esac
         fi
@@ -296,39 +290,43 @@ function pr-prebuild-coverity(){
     # 2. How do we know the time that the coverity scan completes? with a webcrawler
     # 3. How do we check changes of defects between pre-PR and post-PR? with a webcrawler
 
-    echo -e "[DEBUG] if statement (outstanding_defects: $stat_outstanding , _cov_yellow_card: $_cov_yellow_card)"
-    if [[ -z "$stat_total_defects" ]]; then
+    echo -e "[DEBUG] Status (outstanding_defects: $stat_outstanding, _cov_yellow_card: $_cov_yellow_card, _cov_red_card: $_cov_red_card)"
+    if [[ -z "$stat_outstanding" ]]; then
         check_result="skip"
     elif [[ $stat_outstanding -eq 0 ]]; then
         check_result="success"
     elif [[ $stat_outstanding -le $_cov_yellow_card ]]; then
         check_result="yellowcard"
-    elif [[ $stat_outstanding -gt $_cov_red_card ]]; then
+    elif [[ $stat_outstanding -le $_cov_red_card ]]; then
         check_result="redcard"
     else
         check_result="failure"
     fi
     # Create a summary report on defects
     msg_defects="${msg_defects}\n#### :orange_book: Coverity Scan Summary:\n"
+    msg_defects="${msg_defects}\n"
     msg_defects="${msg_defects}|Content |Description |\n"
     msg_defects="${msg_defects}|-------------------|-------------------|\n"
     msg_defects="${msg_defects}|Last Analyzed |$stat_last_analyzed|\n"
     msg_defects="${msg_defects}|Lines of Code Analyzed |$stat_loc|\n"
     msg_defects="${msg_defects}|Defect Density |$stat_density|\n"
-    msg_defects="${msg_defects}|Total defects |$stat_total_defects|\n"
-    msg_defects="${msg_defects}| - Outstanding |$stat_outstanding|\n"
-    msg_defects="${msg_defects}| - Newly detected |$stat_newly|\n"
-    msg_defects="${msg_defects}| - Eliminated |$stat_eliminated|\n"
+    msg_defects="${msg_defects}|Outstanding Defects|$stat_outstanding|\n"
+    msg_defects="${msg_defects}|Newly Detected Defects|$stat_newly|\n"
+    msg_defects="${msg_defects}|Eliminated Defects|$stat_eliminated|\n"
 
     # Create defect icons with the number of the defects
-    msg_bugs="$msg_bugs\n#### :orange_book: Defects:\n"
-    for (( i=1;i<=$stat_total_defects;i++ )) ; do
-        if [[ $i -le $_cov_yellow_card ]]; then
+    msg_bugs="$msg_bugs\n#### :orange_book: Outstanding Defects: $stat_outstanding \n"
+    for (( count=1;count<=$stat_outstanding;count++ )) ; do
+        if [[ $count -le $_cov_yellow_card ]]; then
             msg_bugs="$msg_bugs :mask: "
         else
             msg_bugs="$msg_bugs :rage: "
         fi
     done
+    msg_bugs="${msg_bugs}\n\n"
+    msg_bugs="${msg_bugs}* :mask: : # of the yellow cards is ${_cov_yellow_card}. \n"
+    msg_bugs="${msg_bugs}* :rage: : # of the red cards is ${_cov_red_card}. \n"
+    msg_bugs="${msg_bugs}* Note that # of the red cards includes # of the yellow cards. \n"
 
  
     echo -e "[DEBUG] check_result is ( $check_result )."
@@ -336,32 +334,29 @@ function pr-prebuild-coverity(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. Static code analysis tool for security - coverity."
         message="Successfully coverity has done the static analysis."
-        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_cov_prj_website" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "skip" ]]; then
         echo "[DEBUG] Skipped. Static code analysis tool for security - coverity."
         message="Skipped. This module did not inspect your PR because it does not include source code files."
-        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_cov_prj_website" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "yellowcard" ]]; then
-        echo "[DEBUG] Ooops. Yellow Card: The number of outstanding defects exceeds $_cov_yellow_card - coverity."
-        message="Ooops. Yellow Card: The number of outstanding defects ($stat_total_defects) exceeds $_cov_yellow_card. Please fix outstanding defects less than $_cov_yellow_card."
-        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_cov_prj_website" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        message="Warning [YELLOWCARD]: The number of outstanding defects is $stat_outstanding."
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
         # Inform a PR submitter of current defects status of Coverity scan
-        message=":octocat: **cibot**: $user_id, **Coverity Report**, **[YELLOWCARD]**: Ooops. The number of defects exceeds $_cov_yellow_card. Please fix defects until less than $_cov_yellow_card. For more details, please visit ${_cov_prj_website}.\n\n$msg_defects\n\n$msg_bugs\n\n"
+        message=":octocat: **cibot**: $user_id, **Coverity Report**, **[YELLOWCARD]**: Ooops. The number of outstanding defects is $stat_outstanding. For more details, please visit ${_coverity_repo_site_logout}.\n\n$msg_defects\n\n$msg_bugs\n\n"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     elif [[ $check_result == "redcard" ]]; then
-        echo "[DEBUG] Ooops. Red Card: The number of outstanding defects exceeds $_cov_red_card - coverity."
-        message="Ooops. Red Card: The number of outstanding defects ($stat_outstanding) exceeds $_cov_red_card. Please fix outstanding defects less than $_cov_red_card."
-        cibot_report $TOKEN "failure" "TAOS/pr-prebuild-coverity" "$message" "$_cov_prj_website" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        message="Warning [REDCARD]: The number of outstanding defects is $stat_outstanding."
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
         # Inform a PR submitter of current defects status of Coverity scan
-        message=":octocat: **cibot**: $user_id, **Coverity Report**, **[REDCARD]**: Ooops.The number of outstanding defects exceeds $_cov_yed_card. Please fix outstanding defects until less than $_cov_red_card. For more details, please visit ${_cov_prj_website}.\n\n$msg_defects\n\n$msg_bugs\n\n"
+        message=":octocat: **cibot**: $user_id, **Coverity Report**, **[REDCARD]**: Ooops. The number of outstanding defects is $stat_outstanding. For more details, please visit ${_coverity_repo_site_logout}.\n\n$msg_defects\n\n$msg_bugs\n\n"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     else
         echo "[DEBUG] Failed. Static code analysis tool for security - coverity."
-        message="Oooops. coverity is not completed. Please ask the CI administrator on this issue."
+        message="Ooops. The number of outstanding defects ($stat_outstanding) exceeds $_cov_red_card. Please fix outstanding defects less than $_cov_red_card."
         cibot_report $TOKEN "failure" "TAOS/pr-prebuild-coverity" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
-    
-        # Inform a PR submitter of a hint in more detail
-        message=":octocat: **cibot**: $user_id, **${i}** is not inspected successfully by the coverity module."
+        # Inform a PR submitter of current defects status of Coverity scan
+        message=":octocat: **cibot**: $user_id, **Coverity Report**, **[CRITICAL]**: Ooops. The number of outstanding defects exceeds $_cov_yed_card. Please fix outstanding defects until less than $_cov_red_card. For more details, please visit ${_coverity_repo_site_logout}.\n\n$msg_defects\n\n$msg_bugs\n\n"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     fi
     
