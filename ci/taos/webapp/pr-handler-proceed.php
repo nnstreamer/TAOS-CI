@@ -124,6 +124,7 @@ if ( $id == $ba_id && $password == $ba_password) {
         catch(Exception $e){
             echo "Caught exception: ",$e->getMessage(),"\nUnable to change the status of the PR....\n";
         }
+        //DEBUG
         //foreach ($output as $line) {
         //    print "[DEBUG] $line<br>";
         //}
@@ -144,9 +145,10 @@ if ( $id == $ba_id && $password == $ba_password) {
         catch(Exception $e){
             echo "Caught exception: ",$e->getMessage(),"\nUnable to change the status of the PR....\n";
         }
-        foreach ($output as $line) {
-            print "[DEBUG] $line<br>";
-        }
+        //DEBUG
+        //foreach ($output as $line) {
+        //    print "[DEBUG] $line<br>";
+        //}
     }
     else {
     echo ("Oooops. Your input data do not satisfied with the requirement of the handlders.<br>");
@@ -154,7 +156,7 @@ if ( $id == $ba_id && $password == $ba_password) {
     }
   
     echo ("<br>
-        It's okay, The PR handler completed your request.<br>
+        <b>It's okay, The PR handler completed your request.</b><br>
         <br>
         <button onclick=\"goBack()\">Go Back</button>
         <script>
@@ -171,4 +173,3 @@ else {
 
 
 ?>
-
