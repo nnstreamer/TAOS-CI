@@ -40,17 +40,17 @@
 #  $ cov-build --dir cov-int <build_command>
 #
 
+# The account informaiton of GitHub repository
+_user_name="$GITHUB_ACCOUNT"
+_repo_name="$PRJ_REPO_UPSTREAM"
+
+# Set websites
+_coverity_repo_site_login="https://scan.coverity.com/projects/${_user_name}-{$_repo_name}/builds/new?tab=upload"
+_coverity_repo_site_logout="https://scan.coverity.com/projects/${_user_name}-${_repo_name}"
+_coverity_commit_site="https://scan.coverity.com/builds?project=${_user_name}%2F${_repo_name}"
 
 ## @brief A coverity web-crawler to fetch defects from scan.coverity.com
 function coverity-crawl-defect {
-    # The account informaiton of GitHub repository
-    _user_name="$GITHUB_ACCOUNT"
-    _repo_name="$PRJ_REPO_UPSTREAM"
-
-    # Set websites
-    _coverity_repo_site_login="https://scan.coverity.com/projects/${_user_name}-{$_repo_name}/builds/new?tab=upload"
-    _coverity_repo_site_logout="https://scan.coverity.com/projects/${_user_name}-${_repo_name}"
-    _coverity_commit_site="https://scan.coverity.com/builds?project=${_user_name}%2F${_repo_name}"
 
     # Set login status
     _login=0
@@ -338,7 +338,7 @@ function pr-prebuild-coverity(){
     elif [[ $check_result == "skip" ]]; then
         echo "[DEBUG] Skipped. Static code analysis tool for security - coverity."
         message="Skipped. This module did not inspect your PR because it does not include source code files."
-        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_cov_prj_website" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "greencard" ]]; then
         echo "[DEBUG] Green Card: The number of outstanding defects is low, but not zero - coverity."
         message="Keep It Up! Green Card: The number of outstanding defects ($stat_total_defects) is low, but not zero, yet."
