@@ -78,7 +78,7 @@ $ sudo vi /etc/crontab
 ```
 **(Optional)**: How to suppress a storage usage of /var/cache/pbuilder folder
 If /var/cache/pbuilder increases a storage usage, we recommend that you try to use a symbolic link.
-For example, ```$ sudo ln -s /var/www/pbuilder /var/cache/pbuilder.```
+For example, ```$ sudo ln -s /=/pbuilder /var/cache/pbuilder.```
 
 **(Optional)**: How to use a tmpfs filesystem to spee-up an execution time of pbuilder
 If you have lots of RAM (more than 4 GB) putting the pbuilder 'build' chroot on tmpfs will speed it up immensely.
@@ -277,12 +277,12 @@ An .htaccess file allows us to modify rewrite rules without accessing server con
 For this reason, .htaccess is critical to the security of your web application. 
 
 ```bash
-$ cd   /var/www/html/TAOS-CI/ci/taos/config/
+$ cd   /var/www/html/{your_prj_name}/TAOS-CI/ci/taos/config/
 $ cat ./.htaccess
 ------------- .htaccess: start ----------------------------
 AuthName "Restricted area"
 AuthType Basic
-AuthUserFile /var/www/html/TAOS-CI/ci/taos/config/.htpasswd
+AuthUserFile /var/www/html/{your_prj_name}/TAOS-CI/ci/taos/config/.htpasswd
 <Limit GET POST>
 require valid-user
 </Limit>
