@@ -49,7 +49,10 @@ www-data    ALL=(ALL) NOPASSWD: /usr/bin/git , NOPASSWD: /usr/bin/mount
 
 If you want to push your commits without a password input procedure, please create `~/.netrc` file as follows.
 ```bash
-$ vi ~/.netrc
+$ su - www-data
+$ pwd
+/var/www/html
+$ vi /var/www/html/.netrc
 machine github.com
         login {your_gihub_id}
         password {your_token_key_bdff5c7120a4544}
