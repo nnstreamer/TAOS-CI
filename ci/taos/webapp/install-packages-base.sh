@@ -67,9 +67,6 @@ sudo apt -y install sloccount || func-pack-fail
 echo -e "\n\n\n########## for CI-system: Installing packages for aspell"
 sudo apt -y install aspell || func-pack-fail
 
-echo -e "\n\n\n########## for CI-system: Installing packages for spellcheck"
-sudo apt -y install spellcheck || func-pack-fail
-
 echo -e "\n\n\n########## for CI-system: Installing packages for flawfinder"
 sudo apt -y install flawfinder || func-pack-fail
 
