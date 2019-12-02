@@ -6,12 +6,13 @@ Please replace "/bin/no-login" with "/bin/bash".
 Note that you must restore "/bin/no-login" to avoid an unexpected security issue after doing all setup procedures.
 
 ```bash
-$ sudo vi /etc/passwd
-www-data:x:33:33:www-data:/var/www:/bin/bash
-# cd /var/www/
-# chown -R www-data:www-data /var/www/
-# cp /root/.bashrc /var/www/
-# chown -R www-data:www-data  /var/www/.bashrc
+$ sudo su 
+# vi /etc/passwd
+www-data:x:33:33:www-data:/var/www/html:/bin/bash
+# cd /var/www/html
+# chown -R www-data:www-data /var/www/html
+# cp /root/.bashrc /var/www/html
+# chown -R www-data:www-data  /var/www/html.bashrc
 # exit
 $
 ```
