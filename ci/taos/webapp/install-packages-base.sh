@@ -64,8 +64,10 @@ sudo apt -y install libreoffice evince || func-pack-fail
 echo -e "\n\n\n########## for CI-system: Installing packages for SLOCcount"
 sudo apt -y install sloccount || func-pack-fail
 
-echo -e "\n\n\n########## for CI-system: Installing packages for aspell"
+echo -e "\n\n\n########## for CI-system: Installing packages for spelling checks"
 sudo apt -y install aspell || func-pack-fail
+sudo apt -y install spellcheck || func-pack-fail
+
 
 echo -e "\n\n\n########## for CI-system: Installing packages for rpmlint"
 sudo apt -y install rpmlint || func-pack-fail
