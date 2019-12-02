@@ -66,6 +66,11 @@ function pr-postbuild-build-tizen-run-queue(){
     # Build a package with gbs command.
     # TODO: Simplify the existing if...else statement for readability and maintenance
     echo -e "[DEBUG] gbs build start at : $(date -R)."
+    if [[ "$TIZEN_GBS_PROFILE" != "" ]]; then
+        _TIZEN_GBS_PROFILE="-P ${TIZEN_GBS_PROFILE}"
+    else
+        _TIZEN_GBS_PROFILE=""
+    fi
     if [[ $BUILD_MODE == 99 ]]; then
         echo -e "BUILD_MODE = 99"
         echo -e "Skipping 'gbs build -A $1' procedure temporarily."
@@ -73,6 +78,7 @@ function pr-postbuild-build-tizen-run-queue(){
         echo -e "BUILD_MODE = 1"
         sudo -Hu www-data gbs build \
         -A $1 \
+        ${_TIZEN_GBS_PROFILE} \
         --clean \
         --define "_smp_mflags -j${CPU_NUM}" \
         --define "_pr_context pr-postbuild" \
@@ -87,6 +93,7 @@ function pr-postbuild-build-tizen-run-queue(){
         if [[ $1 == "x86_64" || $1 == "i586" ]]; then
             sudo -Hu www-data gbs build \
             -A $1 \
+            ${_TIZEN_GBS_PROFILE} \
             --clean \
             --define "_smp_mflags -j${CPU_NUM}" \
             --define "_pr_context pr-postbuild" \
@@ -100,6 +107,7 @@ function pr-postbuild-build-tizen-run-queue(){
         else
             sudo -Hu www-data gbs build \
             -A $1 \
+            ${_TIZEN_GBS_PROFILE} \
             --clean \
             --define "_smp_mflags -j${CPU_NUM}" \
             --define "_pr_context pr-postbuild" \

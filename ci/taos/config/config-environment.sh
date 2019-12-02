@@ -124,6 +124,11 @@ BUILD_MODE_UBUNTU=99
 BUILD_MODE_YOCTO=99
 BUILD_MODE_ANDROID=99
 
+# Tizen: If each git repository must be defined by a different profile (e.g., ~/.gbs.conf),
+# The name of TIZEN_GBS_PROFILE can be given without the "profile." prefix as follows.
+# For example, [profile.tizen40_mobile] has to be declared with TIZEN_GBS_PROFILE="tizen40_mobile".
+TIZEN_GBS_PROFILE=""
+
 # Pull Request Scheduler: The number of jobs on Run-Queue to process PRs
 RUN_QUEUE_PR_JOBS=8
 
