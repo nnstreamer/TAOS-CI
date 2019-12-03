@@ -253,8 +253,8 @@ function github_event_handling(){
                 printf ("[DEBUG] arg4) Branch: $branch \n");
                 printf ("[DEBUG] arg5) PR no : $pr_no \n");
                 printf ("[DEBUG] arg6) X-GitHub-Delivery: $delivery_id \n");
-                printf ("[DEBUG] arg7) # of commits     : $pr_commits \n"); //TODO: to control "1PR/Many-commits" case of cppcheck module
-                printf ("[DEBUG] arg8) PR action        : $pr_action \n");  //TODO: to control repeated comments in case of the same PR number
+                printf ("[DEBUG] arg7) # of commits     : $pr_commits \n"); //TODO: to control "1PR/Many-commits" (e.g., cppcheck module)
+                printf ("[DEBUG] arg8) PR action        : $pr_action \n");  //TODO: to control repeated comments (e.g., same PR number)
 
                 // Run a shell script asynchronously to avoid service timeout generated
                 // due to a long execution time.
