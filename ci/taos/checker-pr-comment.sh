@@ -40,7 +40,7 @@ input_pr=$1
 
 if [[ $pr_comment_notice == 1 ]]; then
     # inform PR submitter of a rule to pass the CI process
-    message=":memo: Version: ${VERSION}. Thank you for submitting PR #${input_pr}. Your PR must pass all verificiation processes of cibot before starting a review process from reviewers. If you are new member to join this project, please read manuals in documentation folder and wiki page. In order to monitor a progress status of your PR in more detail, visit ${CISERVER}."
+    message=":memo: TAOS-CI Version: ${VERSION}. Thank you for submitting PR #${input_pr}. Your PR must pass all verificiation processes of cibot before starting a review process from reviewers. If you are new member to join this project, please read manuals in documentation folder and wiki page. In order to monitor a progress status of your PR in more detail, visit ${CISERVER}."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 
