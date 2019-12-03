@@ -20,7 +20,7 @@ $ vi ./config/config-plugins-{prebuild|postbuild}.sh
 
 format_plugins[++idx]="pr-prebuild-{module_name}"
 echo "${format_plugins[idx]} is starting."
-echo "[MODULE] TAOS/${format_plugins[idx]}: Check a syntax error in a shell script file"
+echo "[MODULE] ${BOT_NAME/}/${format_plugins[idx]}: Check a syntax error in a shell script file"
 echo "[DEBUG] The current path: $(pwd)."
 echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh"
 source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${format_plugins[idx]}.sh

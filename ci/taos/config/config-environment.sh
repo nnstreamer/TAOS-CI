@@ -45,6 +45,10 @@ CISERVER="http://<YOUR_CI_DNS>.mooo.com/"
 # 2) to check code formatting sytele with clang-format
 SRC_PATH="./ci/"
 
+# If you want to use another name instead of the default TAOS name, Write the name that you
+# want to use for your GitHub repository. For example, "CHATBOT", "REVIEWBOT".
+BOT_NAME/="TAOS"
+
 # Skip Paths: prebuild group (pr-prebuild)
 # declare a folder name to skip the file size and newline inspection.
 # (e.g., <github-repository-name>/temproal-bin/)

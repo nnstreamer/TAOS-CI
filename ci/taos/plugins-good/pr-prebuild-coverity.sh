@@ -128,10 +128,10 @@ function coverity-crawl-defect {
 
 }
 
-# @brief [MODULE] TAOS/pr-prebuild-coverity
+# @brief [MODULE] ${BOT_NAME/}/pr-prebuild-coverity
 function pr-prebuild-coverity(){
     echo "########################################################################################"
-    echo "[MODULE] TAOS/pr-prebuild-coverity: Check defects and security issues in C/C++ source codes with coverity"
+    echo "[MODULE] ${BOT_NAME/}/pr-prebuild-coverity: Check defects and security issues in C/C++ source codes with coverity"
     pwd
 
     # Environment setting for Coverity
@@ -334,31 +334,31 @@ function pr-prebuild-coverity(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. Static code analysis tool for security - coverity."
         message="Successfully coverity has done the static analysis."
-        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME/}/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "skip" ]]; then
         echo "[DEBUG] Skipped. Static code analysis tool for security - coverity."
         message="Skipped. This module did not inspect your PR because it does not include source code files."
-        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME/}/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "greencard" ]]; then
         echo "[DEBUG] Green Card: The number of outstanding defects is low, but not zero - coverity."
         message="Keep It Up! Green Card: The number of outstanding defects ($stat_total_defects) is low, but not zero, yet."
-        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME/}/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "yellowcard" ]]; then
         message="Warning [YELLOWCARD]: The number of outstanding defects is $stat_outstanding."
-        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME/}/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
         # Inform a PR submitter of current defects status of Coverity scan
         message=":octocat: **cibot**: $user_id, **Coverity Report**, **[YELLOWCARD]**: Ooops. The number of outstanding defects is $stat_outstanding. For more details, please visit ${_coverity_repo_site_logout}.\n\n$msg_defects\n\n$msg_bugs\n\n"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     elif [[ $check_result == "redcard" ]]; then
         message="Warning [REDCARD]: The number of outstanding defects is $stat_outstanding."
-        cibot_report $TOKEN "success" "TAOS/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME/}/pr-prebuild-coverity" "$message" "$_coverity_repo_site_logout" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
         # Inform a PR submitter of current defects status of Coverity scan
         message=":octocat: **cibot**: $user_id, **Coverity Report**, **[REDCARD]**: Ooops. The number of outstanding defects is $stat_outstanding. For more details, please visit ${_coverity_repo_site_logout}.\n\n$msg_defects\n\n$msg_bugs\n\n"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     else
         echo "[DEBUG] Failed. Static code analysis tool for security - coverity."
         message="Ooops. The number of outstanding defects ($stat_outstanding) exceeds $_cov_red_card. Please fix outstanding defects less than $_cov_red_card."
-        cibot_report $TOKEN "failure" "TAOS/pr-prebuild-coverity" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "${BOT_NAME/}/pr-prebuild-coverity" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
         # Inform a PR submitter of current defects status of Coverity scan
         message=":octocat: **cibot**: $user_id, **Coverity Report**, **[CRITICAL]**: Ooops. The number of outstanding defects exceeds $_cov_yed_card. Please fix outstanding defects until less than $_cov_red_card. For more details, please visit ${_coverity_repo_site_logout}.\n\n$msg_defects\n\n$msg_bugs\n\n"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"

@@ -40,7 +40,7 @@
 <td><img src=./circle.png with=20 height=20>Password</td><td><input type="password" name="pass"><br></td>
 </tr>
 <tr>
-<td><img src=./circle.png width=20 height=20>CI module name</td><td><input type="text" size=40 name="cimodule" value="TAOS/pr-postbuild-build-tizen-aarch64"><br></td>
+<td><img src=./circle.png width=20 height=20>CI module name</td><td><input type="text" size=40 name="cimodule" value="${BOT_NAME/}/pr-postbuild-build-tizen-aarch64"><br></td>
 </tr>
 <tr>
 <td><img src=./circle.png width=20 height=20>commit number</td><td><input type="text" size=40 name="commit" value="1f6ec74036ea816cc15659a311ac82532b0dcdd3"><br></td>

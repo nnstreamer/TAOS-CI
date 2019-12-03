@@ -88,25 +88,25 @@
 #        #$(call assert-defined, SYSROOT_LINK) # Block this line
 #
 
-# @brief [MODULE] TAOS/pr-postbuild-build-android-wait-queue
+# @brief [MODULE] ${BOT_NAME/}/pr-postbuild-build-android-wait-queue
 function pr-postbuild-build-android-wait-queue(){
     message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "TAOS/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME/}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
-# @brief [MODULE] TAOS/pr-postbuild-build-android-ready-queue
+# @brief [MODULE] ${BOT_NAME/}/pr-postbuild-build-android-ready-queue
 function pr-postbuild-build-android-ready-queue(){
     message="Trigger: ready queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "TAOS/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME/}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
-# @brief [MODULE] TAOS/pr-postbuild-build-android-run-queue
+# @brief [MODULE] ${BOT_NAME/}/pr-postbuild-build-android-run-queue
 function pr-postbuild-build-android-run-queue(){
     message="Trigger: run queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "TAOS/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME/}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     echo "########################################################################################"
-    echo "[MODULE] TAOS/pr-postbuild-build-android: check a build process for Android platform"
+    echo "[MODULE] ${BOT_NAME/}/pr-postbuild-build-android: check a build process for Android platform"
 
     echo "Running 'source /etc/environment'"
     source /etc/environment
@@ -132,7 +132,7 @@ function pr-postbuild-build-android-run-queue(){
     check_cmd_dep ndk-build
     check_cmd_dep sed
 
-    echo "[DEBUG] starting TAOS/pr-postbuild-build-android facility"
+    echo "[DEBUG] starting ${BOT_NAME/}/pr-postbuild-build-android facility"
 
     # BUILD_MODE=0 : run "ndk-build" command without generating debugging information.
     # BUILD_MODE=1 : run "ndk-build" command with a debug file.
@@ -256,12 +256,12 @@ function pr-postbuild-build-android-run-queue(){
         echo -e "[DEBUG] So, we stop remained all tasks at this time."
 
         message="Skipped the ndk-build procedure. No buildable files found. Commit number is $input_commit."
-        cibot_report $TOKEN "success" "TAOS/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME/}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         message="Skipped the ndk-build procedure. Successfully all postbuild modules are passed. Commit number is $input_commit."
-        cibot_report $TOKEN "success" "(INFO)TAOS/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "(INFO)${BOT_NAME/}/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-        echo -e "[DEBUG] The ndk-build procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as TAOS/pr-postbuild-all and TAOS/pr-prebuild-all."
+        echo -e "[DEBUG] The ndk-build procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as ${BOT_NAME/}/pr-postbuild-all and ${BOT_NAME/}/pr-prebuild-all."
     else
         echo -e "BUILD_MODE != 99"
         echo -e "[DEBUG] The return value of ndk-build command is $result."
@@ -278,10 +278,10 @@ function pr-postbuild-build-android-run-queue(){
         # Let's report build result of source code
         if [[ $check_result == "success" ]]; then
             message="Android.build Successful in $time_build_cost. Commit number is '$input_commit'."
-            cibot_report $TOKEN "success" "TAOS/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+            cibot_report $TOKEN "success" "${BOT_NAME/}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
         else
             message="Android.build Failure after $time_build_cost. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-            cibot_report $TOKEN "failure" "TAOS/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+            cibot_report $TOKEN "failure" "${BOT_NAME/}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
             export BUILD_TEST_FAIL=1
         fi
