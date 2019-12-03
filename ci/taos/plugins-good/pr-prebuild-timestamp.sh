@@ -21,10 +21,10 @@
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
-# @brief [MODULE] ${BOT_NAME/}/pr-prebuild-timestamp
+# @brief [MODULE] ${BOT_NAME}/pr-prebuild-timestamp
 function pr-prebuild-timestamp(){
 echo "########################################################################################"
-echo "[MODULE] ${BOT_NAME/}/pr-prebuild-timestamp: Check the timestamp of the commit"
+echo "[MODULE] ${BOT_NAME}/pr-prebuild-timestamp: Check the timestamp of the commit"
 check_result="success"
 TIMESTAMP=`git show --pretty="%ct" --no-notes -s`
 TIMESTAMP_READ=`git show --pretty="%cD" --no-notes -s`
@@ -46,11 +46,11 @@ fi
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A timestamp."
     message="Successfully the commit has no timestamp error."
-    cibot_report $TOKEN "success" "${BOT_NAME/}/pr-prebuild-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. A timestamp."
     message="Timestamp error: files are from the future: ${TIMESTAMP_READ} > (now) ${NOW_READ}."
-    cibot_report $TOKEN "failure" "${BOT_NAME/}/pr-prebuild-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 fi
 
 

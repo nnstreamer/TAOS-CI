@@ -35,25 +35,25 @@
 # $ sudo pbuilder create
 # $ ls -al /var/cache/pbuilder/base.tgz
 
-# @brief [MODULE] ${BOT_NAME/}/pr-postbuild-build-ubuntu-wait-queue
+# @brief [MODULE] ${BOT_NAME}/pr-postbuild-build-ubuntu-wait-queue
 function pr-postbuild-build-ubuntu-wait-queue(){
     message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "${BOT_NAME/}/pr-postbuild-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
-# @brief [MODULE] ${BOT_NAME/}/pr-postbuild-build-ubuntu-ready-queue
+# @brief [MODULE] ${BOT_NAME}/pr-postbuild-build-ubuntu-ready-queue
 function pr-postbuild-build-ubuntu-ready-queue(){
     message="Trigger: ready queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "${BOT_NAME/}/pr-postbuild-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
-# @brief [MODULE] ${BOT_NAME/}/pr-postbuild-build-ubuntu-run-queue
+# @brief [MODULE] ${BOT_NAME}/pr-postbuild-build-ubuntu-run-queue
 function pr-postbuild-build-ubuntu-run-queue(){
     message="Trigger: run queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "${BOT_NAME/}/pr-postbuild-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     echo -e "########################################################################################"
-    echo -e "[MODULE] ${BOT_NAME/}/pr-postbuild-build-ubuntu: check build process for Ubuntu distribution"
+    echo -e "[MODULE] ${BOT_NAME}/pr-postbuild-build-ubuntu: check build process for Ubuntu distribution"
 
     echo -e "source /etc/environment"
     source /etc/environment
@@ -65,7 +65,7 @@ function pr-postbuild-build-ubuntu-run-queue(){
     check_cmd_dep debootstrap
     check_cmd_dep debuild
 
-    echo -e "[DEBUG] starting ${BOT_NAME/}/pr-postbuild-build-ubuntu facility"
+    echo -e "[DEBUG] starting ${BOT_NAME}/pr-postbuild-build-ubuntu facility"
 
     # BUILD_MODE=0 : run "pdebuild" command without generating debugging information.
     # BUILD_MODE=1 : run "pdebuild" command with a debug file.
@@ -136,12 +136,12 @@ function pr-postbuild-build-ubuntu-run-queue(){
         echo -e "[DEBUG] So, we stop remained all tasks at this time."
 
         message="Skipped pdebuild procedure. No buildable files found. Commit number is $input_commit."
-        cibot_report $TOKEN "success" "${BOT_NAME/}/pr-postbuild-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         message="Skipped pdebuild procedure. Successfully all postbuild modules are passed. Commit number is $input_commit."
-        cibot_report $TOKEN "success" "(INFO)${BOT_NAME/}/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-        echo -e "[DEBUG] pdebuild procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as ${BOT_NAME/}/pr-postbuild-all and ${BOT_NAME/}/pr-prebuild-all."
+        echo -e "[DEBUG] pdebuild procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-all and ${BOT_NAME}/pr-prebuild-all."
     else
         echo -e "BUILD_MODE != 99"
         echo -e "[DEBUG] The return value of pdebuild command is $result."
@@ -158,10 +158,10 @@ function pr-postbuild-build-ubuntu-run-queue(){
         # Let's report build result of source code
         if [[ $check_result == "success" ]]; then
             message="Ubuntu.build Successful in $time_build_cost. Commit number is '$input_commit'."
-            cibot_report $TOKEN "success" "${BOT_NAME/}/pr-postbuild-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+            cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
         else
             message="Ubuntu.build Failure after $time_build_cost. Commit number is $input_commit."
-            cibot_report $TOKEN "failure" "${BOT_NAME/}/pr-postbuild-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+            cibot_report $TOKEN "failure" "${BOT_NAME}/pr-postbuild-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
             export BUILD_TEST_FAIL=1
         fi
