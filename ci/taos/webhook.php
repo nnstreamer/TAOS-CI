@@ -178,9 +178,10 @@ function check_open_sesame(){
     global $open_sesame;
       echo ("[DEBUG] #### checker: starting '@open sesame' check routine \n");
        $pr_title=$payload->{"pull_request"}->{"title"};
-       $pattern="/@open sesame[^.]+\/+[^.]+\:+[^.]/i";
+       $pattern="/@open sesame[^.]+\/+[^.]+\:+[^.]+$/i";
        if (preg_match($pattern, $pr_title, $matches)) {
         echo "[DEBUG] '@open sesame' is enabled. a matched data is '".$matches[0]."'. \n";
+        echo "[DEBUG] PR title is '".$pr_title."'. \n";
            $open_sesame="true";
        }
        else {
