@@ -295,12 +295,12 @@ function pr-prebuild-coverity(){
         check_result="skip"
     elif [[ $stat_outstanding -eq 0 ]]; then
         check_result="success"
+    elif [[ $stat_outstanding -le $_cov_yellow_card ]]; then
+        check_result="greencard"
     elif [[ $stat_outstanding -le $_cov_red_card ]]; then
-        check_result="redcard"
-    elif [[ $stat_outstanding -gt $_cov_yellow_card ]]; then
         check_result="yellowcard"
     else
-        check_result="greencard"
+        check_result="redcard"
     fi
     # Create a summary report on defects
     msg_defects="${msg_defects}\n#### :orange_book: Coverity Scan Summary:\n"
