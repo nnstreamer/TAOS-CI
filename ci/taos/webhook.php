@@ -243,13 +243,18 @@ function github_event_handling(){
                 $branch = $payload->pull_request->head->ref;
                 $pr_no=$payload->pull_request->number;
                 $delivery_id = $_SERVER['HTTP_X_GITHUB_DELIVERY'];
+                $pr_commits=$payload->pull_request->commits;
+                $pr_action=$payload->action;
+
                 printf ("[DEBUG] current PR number: $pr_no \n");
-                printf ("[DEBUG] arg1) date: $date \n");
-                printf ("[DEBUG] arg2) commit: $commit \n");
-                printf ("[DEBUG] arg3) repo: $repo \n");
-                printf ("[DEBUG] arg4) branch: $branch \n");
-                printf ("[DEBUG] arg5) pr no: $pr_no \n");
+                printf ("[DEBUG] arg1) Date  : $date \n");
+                printf ("[DEBUG] arg2) Commit: $commit \n");
+                printf ("[DEBUG] arg3) Repo  : $repo \n");
+                printf ("[DEBUG] arg4) Branch: $branch \n");
+                printf ("[DEBUG] arg5) PR no : $pr_no \n");
                 printf ("[DEBUG] arg6) X-GitHub-Delivery: $delivery_id \n");
+                printf ("[DEBUG] arg7) # of commits     : $pr_commits \n"); //TODO: to control "1PR/Many-commits" case of cppcheck module
+                printf ("[DEBUG] arg8) PR action        : $pr_action \n");  //TODO: to control repeated comments in case of the same PR number
 
                 // Run a shell script asynchronously to avoid service timeout generated
                 // due to a long execution time.
