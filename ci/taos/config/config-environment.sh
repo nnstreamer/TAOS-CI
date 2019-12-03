@@ -133,7 +133,7 @@ TIZEN_GBS_PROFILE=""
 RUN_QUEUE_PR_JOBS=8
 
 # Version format: Major.Minor.DATE
-VERSION="1.3.20191114"
+VERSION="1.4.20191203"
 
 #### Location of the GitHub repository
 # We assume that the default folder of the www-data (user-id of Apache webserver) is "/var/www/html/" folder. 
