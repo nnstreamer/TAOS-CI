@@ -26,10 +26,10 @@
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
-# @brief [MODULE] TAOS/pr-prebuild-sloccount
+# @brief [MODULE] ${BOT_NAME/}/pr-prebuild-sloccount
 function pr-prebuild-sloccount(){
     echo "########################################################################################"
-    echo "[MODULE] TAOS/pr-prebuild-sloccount: Count physical source lines of code (SLOC)"
+    echo "[MODULE] ${BOT_NAME/}/pr-prebuild-sloccount: Count physical source lines of code (SLOC)"
     pwd
 
     # Check if server administrator install required commands
@@ -93,17 +93,17 @@ function pr-prebuild-sloccount(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. A sloc check tool - sloccount."
         message="Successfully source code(s) is analyzed by sloccount command."
-        cibot_report $TOKEN "success" "TAOS/pr-prebuild-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME/}/pr-prebuild-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     elif [[ $check_result == "skip" ]]; then
         echo "[DEBUG] Skipped. A sloc check tool - sloccount."
         message="Skipped. Your PR does not include source codes."
-        cibot_report $TOKEN "success" "TAOS/pr-prebuild-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME/}/pr-prebuild-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     else
         echo "[DEBUG] Failed. A sloc check tool - sloccount."
         message="Oooops. sloccount checker is failed because the check_result is not either 'success' or 'skip'."
-        cibot_report $TOKEN "failure" "TAOS/pr-prebuild-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "${BOT_NAME/}/pr-prebuild-sloccount" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     fi
 

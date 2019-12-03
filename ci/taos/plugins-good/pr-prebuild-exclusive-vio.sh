@@ -22,7 +22,7 @@
 #
 
 ##
-# @brief [MODULE] TAOS/pr-prebuild-exclusive-vio
+# @brief [MODULE] ${BOT_NAME/}/pr-prebuild-exclusive-vio
 #
 # Check issue #279. VIO commits should not touch non VIO files.
 #
@@ -44,10 +44,10 @@ function pr-prebuild-exclusive-vio(){
         global_check_result="failure"
         echo "[DEBUG] Failed. A VIO commit is not exclusive."
         message="Oooops. This commit has VIO files and non-VIO files at the same time, violating issue #279."
-        cibot_report $TOKEN "failure" "TAOS/pr-prebuild-exclusive-vio" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "${BOT_NAME/}/pr-prebuild-exclusive-vio" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         echo "[DEBUG] Passed. No violation of issue #279."
         message="Successfully, The commits are passed."
-        cibot_report $TOKEN "success" "TAOS/pr-prebuild-exclusive-vio" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME/}/pr-prebuild-exclusive-vio" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     fi
 }
