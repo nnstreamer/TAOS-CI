@@ -52,24 +52,20 @@ echo "[MODULE] plugins-good: Plugin group that follow Apache license with good q
 
 
 
-
-
-
 ###### plugins-staging ################################################################################################
 echo "[MODULE] plugins-staging: Plugin group that does not have evaluation and aging test enough"
 # Please append your plugin modules here.
 
-# module_name="pr-postbuild-resource"
-# echo "[DEBUG] $module_name is started."
-# echo "[DEBUG] ${BOT_NAME}/$module_name: Check if there are not-installed resource files."
+# postbuild_plugins[++idx]="pr-postbuild-resource"
+# echo "[DEBUG] ${postbuild_plugins[idx]} is started."
+# echo "[DEBUG] ${BOT_NAME}/${postbuild_plugins[idx]}: Check if there are not-installed resource files."
 # echo "[DEBUG] Current path: $(pwd)."
-# source ${REFERENCE_REPOSITORY}/ci/taos/plugins-staging/$module_name.sh
-# $module_name
-# echo "[DEBUG] $module_name is done."
+# source ${REFERENCE_REPOSITORY}/ci/taos/plugins-staging/${postbuild_plugins[idx]}.sh
+
 
 # postbuild_plugins[++idx]="pr-postbuild-nnstreamer-ubuntu-apptest"
-# echo "[DEBUG] ${BOT_NAME}/${postbuild_plugins[idx]}: Check nnstreamer sample app"
 # echo "[DEBUG] ${postbuild_plugins[idx]} is started."
+# echo "[DEBUG] ${BOT_NAME}/${postbuild_plugins[idx]}: Check nnstreamer sample app"
 # echo "[DEBUG] Current path: $(pwd)."
 # source ${REFERENCE_REPOSITORY}/ci/taos/plugins-staging/${postbuild_plugins[idx]}.sh
 
