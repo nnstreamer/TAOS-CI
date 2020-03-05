@@ -45,7 +45,7 @@ Please refer [Here](./ci/doc/maintenance.md).
 
 * Geunsik Lim, MyungJoo Ham, and Jaeyun Jung, "**<a href='http://www.riss.kr/link?id=A106329692'>VTB: Cloud-based Testbed for On-Device AI,</a>**" Proc. of KIISE Korea Computer Congress, Jeju, Korea, Jun. 2019. Best Presentation Paper. (in Korean)
 
-* Geunsik Lim, MyungJoo Ham, and Jaeyun Jung, "**VTS: Virtual Testbed System for Cloud-based On-Device AI Application,**" KIISE Transactions on Computing Practices : Computing Practices and Letter (CPL), Jan. 2020. Invited paper. (in Korean)
+* Geunsik Lim, MyungJoo Ham, and Jaeyun Jung, "**<a href='https://doi.org/10.5626/KTCP.2020.26.1.12'>VTS: Virtual Testbed System for Cloud-based On-Device AI Application,<a/>**" KIISE Transactions on Computing Practices : Computing Practices and Letter (CPL), Jan. 2020. Invited paper. (in Korean)
 
 # How to install
 Please refer to [How to install TAOS-CI](ci/doc/how-to-install-taos-ci.md).
