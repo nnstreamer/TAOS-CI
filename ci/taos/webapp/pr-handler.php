@@ -21,14 +21,53 @@
 # @param  None
 #
 
+$bot_name_cmd="cat ../config/config-environment.sh  | grep BOT_NAME | cut -d  '=' -f 2 | grep -o '[^\".]*'";
+
 ?>
  
 <html>
 <head>
 <title>PR Handler:Report and Comment</title>
+<style> 
+input[type=text] {
+  width: 100%;
+  padding: 10px 18px;
+  margin: 1px 0;
+  box-sizing: border-box;
+  border: 1px solid #555;
+  outline: none;
+}
+input[type=password] {
+  width: 100%;
+  padding: 10px 18px;
+  margin: 1px 0;
+  box-sizing: border-box;
+  border: 1px solid #555;
+  outline: none;
+}
+
+textarea {
+ width: 500px;
+ height: 120px;
+ background-color: yellow;
+ font-size: 1em;
+ font-weight: bold;
+ font-family: Verdana, Arial, Helvetica, sans-serif;
+ border: 1px solid black;
+}
+
+input[type=text]:focus {
+  background-color: lightblue;
+}
+
+input[type=password]:focus {
+  background-color: lightblue;
+}
+</style>
+
 </head>
 <body>
-<font size=6>PR Report Handler: </font> <br>
+<font size=5>PR Status Handler: </font> <br>
 <br>
 
 <form action="pr-handler-proceed.php" method="post">
@@ -40,13 +79,14 @@
 <td><img src=./circle.png with=20 height=20>Password</td><td><input type="password" name="pass"><br></td>
 </tr>
 <tr>
-<td><img src=./circle.png width=20 height=20>CI module name</td><td><input type="text" size=40 name="cimodule" value="${BOT_NAME}/pr-postbuild-build-tizen-aarch64"><br></td>
+<td><img src=./circle.png width=20 height=20>CI module name</td>
+<td><input type="text" size=40 name="cimodule" value="<?php echo shell_exec($bot_name_cmd);?>/pr-postbuild-build-tizen-aarch64"><br></td>
 </tr>
 <tr>
-<td><img src=./circle.png width=20 height=20>commit number</td><td><input type="text" size=40 name="commit" value="1f6ec74036ea816cc15659a311ac82532b0dcdd3"><br></td>
+<td><img src=./circle.png width=20 height=20>Commit number</td><td><input type="text" size=40 name="commit" value="1234567890123456789012345678901234567890"><br></td>
 </tr>
 <tr>
-<td><img src=./circle.png width=20 height=20>Comment</td><td><textarea rows=6 cols=60  name="message" value="">[TEST] The current status is chaged by a web-based PR handler.</textarea><br></td>
+<td><img src=./circle.png width=20 height=20>Comment</td><td><textarea rows=6 cols=60  name="message" value="">[Admin] The status is changed by a web-based PR handler.</textarea><br></td>
 </tr>
 <tr>
 <td><img src=./circle.png width=20 height=20>Status</td><td>
@@ -67,7 +107,7 @@
 <br>
 <br>
 <hr>
-<font size=6>PR Comment Handler: </font> <br>
+<font size=5>PR Comment Handler: </font> <br>
 <br>
 
 <form action="pr-handler-proceed.php" method="post">
