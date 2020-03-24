@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
  *
@@ -89,7 +88,8 @@ if ( $ba_ipaddress != "" && $ba_ipaddress != $ipaddress ) {
 // Check if id and password are correctly typed.
 if ($id == "" || $password == "") {
     echo ("<br>
-        Sorry, We can not do your request.<br>Please type a ID and Password. <br>
+        Sorry, We can not do your request because ID or Password is empty.
+        <br>Please type a ID and Password. <br>
         <br>
         <button onclick=\"goBack()\">Go Back</button>
         <script>
@@ -101,11 +101,11 @@ if ($id == "" || $password == "") {
 }
 
 if ( $id == $ba_id && $password == $ba_password) {
-    echo ("ID and Pasword is correct.<br>");
+    echo ("Oooops. ID and Pasword is correct.<br>");
     ?>
         <script>
           var ba_message="[NOTICE] The CI system changes the status of the specified CI module on the PR.";
-          ba_message+="the comment will be displayed on the PR.";
+          ba_message+="The comment will be displayed on the PR.";
           window.alert(ba_message);
         </script>
     <?php
@@ -117,17 +117,11 @@ if ( $id == $ba_id && $password == $ba_password) {
         try{
             flush();
             echo ("Updating the PR status.<br>");
-            echo ("shell_exec(\"$cmd\")<br>");
             exec($cmd, $output);
-            //system($cmd, $output);
         }
         catch(Exception $e){
             echo "Caught exception: ",$e->getMessage(),"\nUnable to change the status of the PR....\n";
         }
-        //DEBUG
-        //foreach ($output as $line) {
-        //    print "[DEBUG] $line<br>";
-        //}
      }
 
     // Run the the PR report handler. The number of arguments is 4.
@@ -140,15 +134,10 @@ if ( $id == $ba_id && $password == $ba_password) {
             echo ("Updating the PR status.<br>");
             echo ("shell_exec(\"$cmd\")<br>");
             exec($cmd, $output);
-            //system($cmd, $output);
         }
         catch(Exception $e){
             echo "Caught exception: ",$e->getMessage(),"\nUnable to change the status of the PR....\n";
         }
-        //DEBUG
-        //foreach ($output as $line) {
-        //    print "[DEBUG] $line<br>";
-        //}
     }
     else {
     echo ("Oooops. Your input data do not satisfied with the requirement of the handlders.<br>");
