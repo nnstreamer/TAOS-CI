@@ -26,7 +26,7 @@
 # Add TOKEN ID to access your GitHub repository using WebHook APIs
 # Refer to https://github.com/settings/tokens
 # WARNING: Do NOT OPEN THE TOKEN ID OF GITHUB TO AVOID A SECURITY FLAW.
-TOKEN="111111111122222222223333333333444444444455"
+TOKEN="888888888888888888888888888888
 
 # Write an account name (or organization name) of the '{master|upstream}' branch
 # e.g., https://github-website/{account_name}/{project_name}/
@@ -34,16 +34,16 @@ GITHUB_ACCOUNT="nnsuite"
 
 # Write a project name of a github website of the '{master|upstream}' branch
 # e.g., https://github-website/{account_name}/{project_name}/
-PRJ_REPO_UPSTREAM="TAOS-CI"
+PRJ_REPO_UPSTREAM="nnstreamer"
 
 # Specify the web address of the CI server. Should end with /
-CISERVER="http://<YOUR_CI_DNS>.mooo.com/"
+CISERVER="http://nnsuite.mooo.com/"
 
 # Prebuild group area (pr-prebuild) to inventigate source code
 # Add root path of source folders. For example, specify a path of source code:
 # 1) to check prohibited hardcoded paths (e.g., /home/* for now)
 # 2) to check code formatting sytele with clang-format
-SRC_PATH="./ci/"
+SRC_PATH="./gst/"
 
 # If you want to use another name instead of the default TAOS name, Write the name that you
 # want to use for your GitHub repository. For example, "CHATBOT", "REVIEWBOT".
@@ -62,7 +62,7 @@ SKIP_CI_PATHS_AUDIT="^ci/.*|^Documentation/.*|^\.github/.*|^obsolete/.*|^README\
 # Define the number of CPUs to build source codes in parallel
 # We recommend that you define appropriate # of CPUs that does not result in
 # Out-Of-Memory and Too mnay task migration among the CPUs.
-CPU_NUM=3
+CPU_NUM=6
 
 #### Automatic PR commenter: enabling(1), disabling(0)
 
@@ -83,12 +83,12 @@ pr_comment_pr_monitor=0
 
 #### Build test: Write a build type to test ex) "x86_64 i586 armv7l aarch64" 
 # Currently, this variable is declared to hande the "gbs build" command on Tizen.
-pr_build_arch_type="x86_64"
+pr_build_arch_type="x86_64 i586 armv7l aarch64"
 
 ### Check level of doxygen tag:
 # Basic = 0 (@file + @brief)
 # Advanced = 1 (Basic + "@author, @bug and functions with ctags")
-pr_doxygen_check_level=0
+pr_doxygen_check_level=1
 
 ### Check level of CPPCheck for a static analysis of C/C++ source code:
 # CPPCheck Level 0: The check level is 'err'.
@@ -123,10 +123,10 @@ dep_policy_between_groups=0
 #    you may change builde mode among 0, 1, and 99.
 # 4) Android (jni/Android.mk)  : If a maintainer done the 'ndk-build' based build process,
 #    you may change builde mode among 0, 1, and 99.
-BUILD_MODE_TIZEN=99
-BUILD_MODE_UBUNTU=99
+BUILD_MODE_TIZEN=0
+BUILD_MODE_UBUNTU=0
 BUILD_MODE_YOCTO=99
-BUILD_MODE_ANDROID=99
+BUILD_MODE_ANDROID=0
 
 # Tizen: If each git repository must be defined by a different profile (e.g., ~/.gbs.conf),
 # The name of TIZEN_GBS_PROFILE can be given without the "profile." prefix as follows.
@@ -136,8 +136,8 @@ TIZEN_GBS_PROFILE=""
 # Pull Request Scheduler: The number of jobs on Run-Queue to process PRs
 RUN_QUEUE_PR_JOBS=8
 
-# Version format: Major.Minor.DATE
-VERSION="1.4.20191203"
+# Version format: Major.Minor.Date
+VERSION="1.5.20200324"
 
 #### Location of the GitHub repository
 # We assume that the default folder of the www-data (user-id of Apache webserver) is "/var/www/html/" folder. 
@@ -162,7 +162,7 @@ GITHUB_WEBHOOK_API="https://api.github.com/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTR
 # If you want to skip the build procedure, please specify a "none" value in the '_cov_build_type'.
 # WARNING: Do NOT OPEN THE TOKEN ID of COVERITY TO AVOID A SECURITY FLAW.
 _cov_build_type="meson"
-_cov_email="your-id@gmail.com"
-_cov_token="1234567890123456789012"
+_cov_email="taos-ci@github.io"
+_cov_token="PxGfTFJGzXDh46FiTP6ZWQ"
 _cov_yellow_card=10
 _cov_red_card=50
