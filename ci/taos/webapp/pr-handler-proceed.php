@@ -101,7 +101,7 @@ if ($id == "" || $password == "") {
 }
 
 if ( $id == $ba_id && $password == $ba_password) {
-    echo ("Oooops. ID and Pasword is correct.<br>");
+    echo ("Success. ID and Pasword is correct.<br>");
     ?>
         <script>
           var ba_message="[NOTICE] The CI system changes the status of the specified CI module on the PR.";
@@ -132,7 +132,6 @@ if ( $id == $ba_id && $password == $ba_password) {
         try{
             flush();
             echo ("Updating the PR status.<br>");
-            echo ("shell_exec(\"$cmd\")<br>");
             exec($cmd, $output);
         }
         catch(Exception $e){
