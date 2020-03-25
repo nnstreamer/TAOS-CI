@@ -17,7 +17,7 @@ www-data:x:33:33:www-data:/var/www/html:/bin/bash
 $
 ```
 
-## Prerequisites
+## Pre-requisites
 * For a physical machine, http://mirror.kakao.com/ubuntu-releases/xenial/
 * For a virtual machine, https://www.osboxes.org/ubuntu/
 * For a docker image, https://hub.docker.com/_/ubuntu/
@@ -35,8 +35,7 @@ $ sudo ./ci/taos/webapp/install-packages-base.sh
 
 ## Allowing www-data to do a sudo privilege
 
-You have to update `/etc/sudoers` to give `www-data` user sudo access with **NOPASSWD**  in order to run "git clone" command normally
-in Apache/PHP environment as following:
+You have to update `/etc/sudoers` to give `www-data` user sudo access with **NOPASSWD**  in order to run "git clone" command normally in Apache/PHP environment as following:
 
 ```bash
 $ sudo visudo
@@ -45,17 +44,6 @@ www-data    ALL=(ALL) NOPASSWD:ALL
 or
 # User privilege specification for robust security
 www-data    ALL=(ALL) NOPASSWD: /usr/bin/git , NOPASSWD: /usr/bin/mount
-```
-
-If you want to push your commits without a password input procedure, please create `~/.netrc` file as follows.
-```bash
-$ su - www-data
-$ pwd
-/var/www/html
-$ vi /var/www/html/.netrc
-machine github.com
-        login {your_gihub_id}
-        password {your_token_key_bdff5c7120a4544}
 ```
 
 ## Ubuntu/pdebuild: Set-up configuration file
@@ -77,16 +65,15 @@ $
 $ chown -R www-data:www-data /var/cache/pbuilder
 $
 $ sudo vi /etc/crontab
-## Update a base Ubuntu image (e.g., /var/cache/pbuilder/base.tgz) of pdebuild/pbuilder to keep latest apt repositories.
+## Update a base Ubuntu image (e.g., /var/cache/pbuilder/base.tgz) of pdebuild/pbuilder to keep latest apt repositories as soon as possible.
 30 7 * * * root pbuilder update --override-config
 ```
 **(Optional)**: How to suppress a storage usage of /var/cache/pbuilder folder
-If /var/cache/pbuilder increases a storage usage, we recommend that you try to use a symbolic link.
-For example, ```$ sudo ln -s /=/pbuilder /var/cache/pbuilder.```
+If the /var/cache/pbuilder folder continually increases a storage usage, we recommend that you try to use a symbolic link after attaching an storage additionally.
+For example, ```$ sudo ln -s /{external_storage}/pbuilder /var/cache/pbuilder.```
 
-**(Optional)**: How to use a tmpfs filesystem to spee-up an execution time of pbuilder
-If you have lots of RAM (more than 4 GB) putting the pbuilder 'build' chroot on tmpfs will speed it up immensely.
-So, add the below statement to `/etc/fstab`. It should be all on one line starting with 'tmpfs' and ending with the second zero.
+**(Optional)**: How to use a `tmpfs` filesystem to speed-up an execution time of pbuilder
+If you have lots of RAM more than 16 GB, the `tmpfs` based pbuilder operation can be accelerated. Please, add the below statement into the `/etc/fstab` file as folows.
 ```bash
 $ sudo vi /etc/fstab
 tmpfs   /var/cache/pbuilder/build       tmpfs   defaults,size=2400M 0 0
@@ -95,8 +82,7 @@ $ sudo mount /var/cache/pbuilder/build
 
 ## Tizen/gbs: Set-up configuration file
 
-You have to write `~/.gbs.conf` in order that `www-data` id build a package with `gbs build` command.
-We assume that you are using your id as a default id of a repository webserver.
+You have to write `~/.gbs.conf` in order that the `www-data` ID of Apache webserver generates a RPM package with `gbs build` command. We assume that you are using the `www-data` as a default ID of a GitHub repository.
 
 ```bash
 [general]
@@ -120,12 +106,6 @@ buildroot = ~/GBS-ROOT-SNAPSHOT/
 [obs.tizen]
 #OBS API URL pointing to a remote OBS.
 url = https://api.tizen.org
-
-# in case that one of the Tizen rpm repositories is broken, specify stable version as follows instead of "latest".
-# https://github.com/01org/gbs/blob/master/docs/GBS.rst#34-shell-style-variable-references
-# ver_base=tizen-base_20180427.1
-# ver_unified=tizen-unified_20180504.2
-# ver_extra=tizen-5.0-taos_20180504.2
 
 
 [repo.base]
@@ -194,7 +174,7 @@ $ sudo swapon ./swapfile-50gb
 $ free
 ```
 
-## How to generate HTML/PDF with doxygen
+## How to generate HTML/PDF with Doxygen
 
 First of all, you have to install latex packages to generate PDF file from latex as follows.
 
@@ -202,7 +182,7 @@ First of all, you have to install latex packages to generate PDF file from latex
 sudo apt install doxygen
 sudo apt install texlive-latex-base texlive-latex-extra
 sudo apt install latex-xcolor
-sudo apt install unoconv pdfunite  pdftk
+sudo apt install unoconv pdfunite pdftk
 sudo apt install libreoffice
 ```
 
@@ -239,12 +219,11 @@ mkdir  /var/www/html/{your_prj_name}/scancode/
 ```
 
 ## How to set-up a domain name address
-If you want to use your own domain name address instead of IP address for effective maintenance, we recommend that you try to get a host name free of charge at https://freedns.afraid.org.
+If you want to use your own domain name address instead of IP address for effective maintenance, we recommend that you try to get a host name until 5 free of charge at https://freedns.afraid.org. You can get host name such as {your_host}.mooo.com free of charge at http://freedns.afraid.org.
 
 ```bash
 $ sudo vi /etc/apache2/sites-enabled/000-default.conf 
 <VirtualHost *:80>
-        # You can get five host names such as {your_host}.mooo.com free of charge at http://freedns.afraid.org.
         ServerName {your_host}.mooo.com
         ServerAdmin webmaster@localhost
         DocumentRoot /home/taos-ci/public_html
@@ -256,9 +235,8 @@ $ sudo systemctl restart apache2
 ```
 
 
-
 ## How to enable .htaccess to protect password files from web access
-Open the default Apache configuration file to enable .htaccess file to protect configuration files that include passwords. Then, restart Apache webserver to put these changes into effect.
+Open the default Apache configuration file to enable `.htaccess` file to protect configuration files that include passwords. Then, restart Apache webserver to put these changes into effect.
 
 ```bash
 $ sudo vim /etc/apache2/apache2.conf
