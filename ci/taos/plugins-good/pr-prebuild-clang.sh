@@ -44,7 +44,7 @@ function pr-prebuild-clang(){
     pwd
 
     # define file type of source code
-    FILES_IN_COMPILER=`find $SRC_PATH/ -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*.hpp'`
+    FILES_IN_COMPILER=`find $(pwd) -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*.hpp'`
     if [[ $? != 0 ]] ; then
         echo "[DEBUG] Oooops. Please check $SRC_PATH in configuraton file is vaild or not."
     fi
@@ -56,10 +56,14 @@ function pr-prebuild-clang(){
     echo "[DEBUG] Files to be tested: $FILES_TO_BE_TESTED"
 
     # import clang configuration file
-    ln -sf ci/doc/.clang-format .clang-format
+    if [ ! -f ".clang-format" ]; then
+	ln -sf ci/doc/.clang-format .clang-format
+    fi
 
     # run clang format checker
-    ${CLANG_COMMAND} -i $FILES_TO_BE_TESTED
+    for i in ${FILES_TO_BE_TESTED}; do
+	${CLANG_COMMAND} -i $i
+    done
 
     # save the result
     clang_format_file="clang-format.patch"
