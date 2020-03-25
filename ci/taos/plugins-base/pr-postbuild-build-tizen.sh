@@ -154,7 +154,7 @@ function pr-postbuild-build-tizen-run-queue(){
         cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-tizen-$1" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         message="Skipped gbs build -A $1 procedure. Successfully all postbuild modules are passed. Commit number is $input_commit."
-        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         echo -e "[DEBUG] All postbuild modules are passed (gbs build -A $1 procedure is skipped) - it is ready to review!"
     else

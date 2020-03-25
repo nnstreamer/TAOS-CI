@@ -139,9 +139,9 @@ function pr-postbuild-build-ubuntu-run-queue(){
         cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         message="Skipped pdebuild procedure. Successfully all postbuild modules are passed. Commit number is $input_commit."
-        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-        echo -e "[DEBUG] pdebuild procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-all and ${BOT_NAME}/pr-prebuild-all."
+        echo -e "[DEBUG] pdebuild procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-group and ${BOT_NAME}/pr-prebuild-group."
     else
         echo -e "BUILD_MODE != 99"
         echo -e "[DEBUG] The return value of pdebuild command is $result."
