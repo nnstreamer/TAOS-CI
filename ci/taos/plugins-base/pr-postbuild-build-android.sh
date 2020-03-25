@@ -259,9 +259,9 @@ function pr-postbuild-build-android-run-queue(){
         cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         message="Skipped the ndk-build procedure. Successfully all postbuild modules are passed. Commit number is $input_commit."
-        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-        echo -e "[DEBUG] The ndk-build procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-all and ${BOT_NAME}/pr-prebuild-all."
+        echo -e "[DEBUG] The ndk-build procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-group and ${BOT_NAME}/pr-prebuild-group."
     else
         echo -e "BUILD_MODE != 99"
         echo -e "[DEBUG] The return value of ndk-build command is $result."

@@ -183,9 +183,9 @@ function pr-postbuild-build-yocto-run-queue(){
         cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         message="Skipped devtool procedure. Successfully all postbuild modules are passed. Commit number is $input_commit."
-        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-        echo -e "[DEBUG] devtool procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-all and ${BOT_NAME}/pr-prebuild-all."
+        echo -e "[DEBUG] devtool procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-group and ${BOT_NAME}/pr-prebuild-group."
     elif [[ $YOCTO_ESDK_NAME == "" ]]; then
         # Do not run "devtool" command in order to skip unnecessary examination if there eSDK is not installed by administrator.
         echo -e "YOCTO_ESDK_NAME == ''"
@@ -196,9 +196,9 @@ function pr-postbuild-build-yocto-run-queue(){
         cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         message="Skipped devtool procedure. Successfully all postbuild modules are passed. Commit number is $input_commit."
-        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-        echo -e "[DEBUG] devtool procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-all and ${BOT_NAME}/pr-prebuild-all."
+        echo -e "[DEBUG] devtool procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-group and ${BOT_NAME}/pr-prebuild-group."
     else
         echo -e "BUILD_MODE != 99"
         echo -e "[DEBUG] The return value of devtool command is $build_result."

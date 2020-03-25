@@ -141,7 +141,7 @@ echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-postb
 
 # Create new context name to monitor progress status of a checker
 message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
-cibot_report $TOKEN "pending" "(INFO)${BOT_NAME}/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+cibot_report $TOKEN "pending" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
 for plugin in ${postbuild_plugins[*]}
 do
@@ -223,7 +223,7 @@ popd
 # users of current status of a pull request.
 
 message="Trigger: wait queue. The commit number is $input_commit."
-cibot_report $TOKEN "pending" "(INFO)${BOT_NAME}/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+cibot_report $TOKEN "pending" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
 for plugin in ${postbuild_plugins[*]}
 do
@@ -247,7 +247,7 @@ done
 # if the current status of pull reqeust is building or not.
 
 message="Trigger: run queue. The commit number is $input_commit."
-cibot_report $TOKEN "pending" "(INFO)${BOT_NAME}/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+cibot_report $TOKEN "pending" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
 for plugin in ${postbuild_plugins[*]}
 do
@@ -325,20 +325,20 @@ exit_code=0
 if [[ $global_check_result == "success" ]]; then
     # The global check is succeeded.
     message="Successfully all postbuild modules are passed. Commit number is $input_commit."
-    cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     # If contributors want later, let's inform developers of CI test result to go to a review process as a final step before merging a PR
-    echo "[DEBUG] All postbuild modules are passed - it is ready to review! :shipit:. Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-all and ${BOT_NAME}/pr-prebuild-all."
+    echo "[DEBUG] All postbuild modules are passed - it is ready to review! :shipit:. Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-group and ${BOT_NAME}/pr-prebuild-group."
 
 elif [[ $global_check_result == "failure" ]]; then
     # The global check is failed.
     message="Oooops. One of the postbuild modules is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-    cibot_report $TOKEN "failure" "(INFO)${BOT_NAME}/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     exit_code=1
 else
     # The global check is failed due to CI error.
     message="CI Error. There is a bug in CI script. Please contact the CI administrator."
-    cibot_report $TOKEN "error" "(INFO)${BOT_NAME}/pr-postbuild-all" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "error" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     echo -e "[DEBUG] It seems that this script has a bug. Please check value of \$global_check_result."
     exit_code=1
 fi
