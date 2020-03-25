@@ -58,7 +58,8 @@ function json_config(){
     echo ("<img src=./image/webhook-flow.png border=0></img><br>\n");
     echo ("<style> table { border: 1px solid #444444; } </style>\n");
     echo ("<table bgcolor=gray><tr><td width=800></td></tr></table>\n");
-    echo ("[DEBUG] PRINT: <font color=blue><b>A webhook engine is started.....</b></font> <br>\n");
+    echo ("<br>\n");
+    echo ("[DEBUG] <font color=blue><b>A webhook engine is started.....</b></font> <br>\n");
     // read JSON file
     $string = file_get_contents("./config/config-webhook.json");
     $json_config = json_decode($string);
@@ -96,13 +97,16 @@ function get_payload_contents(){
     // user-defined exception handling function
     set_exception_handler(function($e) {
         header('HTTP/1.1 500 Internal Server Error');
-        echo "[DEBUG] ERROR: <font color=red>Ooops. This webpage is a security zone. Do not try to do an illegal access.</font><br>\n";
-        echo "[DEBUG] ERROR: This error is generated on <b>line {$e->getLine()}</b> of the <b>".basename($_SERVER['PHP_SELF'])."</b> file by exception handling facility.<br>\n";
-        echo "[DEBUG] ERROR: ".htmlSpecialChars($e->getMessage())."<br>\n";
+        echo "[DEBUG] This webhook handler is to receive GitHub Webhook events only.<br>\n";
+        echo "[DEBUG] Do not try to do an illegal access.<br>\n";
+        echo "[DEBUG] Note that GitHub does not set \"HTTP_X_HUB_SIGNATURE\" if you try to do a callback from GitHub.<br>\n";
+        echo "[DEBUG] This below warning message is generated at <b>line {$e->getLine()}</b> of the <b>".basename($_SERVER['PHP_SELF'])."</b> file.<br>\n";
+        echo "[DEBUG] <font color=green>".htmlSpecialChars($e->getMessage())."</font><br>\n";
         die();
     });
 
     // check the secret value between cibot and github setting (e.g., Secret).
+    // https://developer.github.com/webhooks/securing/
     $rawPost = NULL;
     if ($hookSecret !== NULL) {
         if (!isset($_SERVER['HTTP_X_HUB_SIGNATURE'])) {
