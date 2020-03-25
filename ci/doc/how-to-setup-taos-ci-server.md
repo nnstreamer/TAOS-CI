@@ -1,9 +1,12 @@
-# Administrator guide for TAOS-CI server
+This section describes an administrator guide for TAOS-CI server.
 
 We assume that you already installed Ubuntu 16.04 x86_64 distribution in your own computer.
-First of all, let's enable www-data as a system account for debugging and setting-up the TAOS-CI solution.
-Please replace "/bin/no-login" with "/bin/bash".
-Note that you must restore "/bin/no-login" to avoid an unexpected security issue after doing all setup procedures.
+
+# Manadatory tasks
+It means that you have to execute the mandatory tasks by default. 
+
+## Enabling the www-data account for the Apache webserver
+First of all, let's enable www-data as a system account for debugging and setting-up the TAOS-CI solution. Please replace "/bin/no-login" with "/bin/bash". Note that you must restore "/bin/no-login" to avoid an unexpected security issue after doing all setup procedures.
 
 ```bash
 $ sudo su 
@@ -33,17 +36,79 @@ $ cd TAOS-CI
 $ sudo ./ci/taos/webapp/install-packages-base.sh
 ```
 
-## Allowing www-data to do a sudo privilege
+## Set-up www-data of the Apache webserver for a sudo privilege
 
 You have to update `/etc/sudoers` to give `www-data` user sudo access with **NOPASSWD**  in order to run "git clone" command normally in Apache/PHP environment as following:
 
 ```bash
 $ sudo visudo
-# User privilege specification for development step
+# Add user privilege of www-data for development step
 www-data    ALL=(ALL) NOPASSWD:ALL
 or
-# User privilege specification for robust security
-www-data    ALL=(ALL) NOPASSWD: /usr/bin/git , NOPASSWD: /usr/bin/mount
+# Advanced: Add user privilege of www-data for robust security
+www-data    ALL=(ALL) NOPASSWD: /usr/bin/git , NOPASSWD: /usr/bin/mount , ... Append additional commands ...
+```
+
+## How to enable .htaccess to protect password files from web access
+Note that you must protect configuration files that include passwords.
+Open the Apache configuration file as follows to enable `.htaccess` file for security.
+Then, restart the Apache webserver in order to put these changes into effect.
+
+```bash
+$ sudo vim /etc/apache2/apache2.conf
+------------- apache2.conf: start ----------------------------
+# First,
+AccessFileName .htaccess # <--- Remove comment.
+
+# Second,
+<Directory /var/www/>
+     Options Indexes FollowSymLinks
+     AllowOverride None # <--- Replace "None" with "All".
+     Require all granted
+</Directory>
+------------- apache2.conf: end   ----------------------------
+$ sudo a2enmod rewrite
+$ sudo /etc/init.d/apache2 restart
+```
+
+The .htaccess file allows us to modify the rewrite rules without accessing server configuration files. 
+For this reason, the .htaccess file is critical to ensure the security of your web application. 
+
+```bash
+$ cd   /var/www/html/{your_prj_name}/TAOS-CI/ci/taos/config/
+$ cat ./.htaccess
+------------- .htaccess: start ----------------------------
+AuthName "Restricted area"
+AuthType Basic
+AuthUserFile /var/www/html/{your_prj_name}/TAOS-CI/ci/taos/config/.htpasswd
+<Limit GET POST>
+require valid-user
+</Limit>
+------------- .htaccess: end   ----------------------------
+$ touch .htpasswd
+$ htpasswd -n {user_id} > .htpasswd
+New password: *****
+Re-type new password: *****
+$ cat .htpasswd
+```
+
+# Optional tasks
+It means that you may decide the optional tasks optionally. In this case you must the enable or disable the CI modules in the configuration files to avoid unexpected errors.
+
+## How to set-up a domain name address
+We recommend that you use your own domain name address instead of IP address for convenience and maintenance. In this case, you can receive a host name free of charge at https://freedns.afraid.org in order to use a host name such as {your_host}.mooo.com.
+
+```bash
+$ sudo vi /etc/apache2/sites-enabled/000-default.conf 
+<VirtualHost *:80>
+        ServerName {your_host}.mooo.com
+        ServerAdmin webmaster@localhost
+        DocumentRoot /home/taos-ci/public_html
+        # Alias /nnstreamer-link /home/taos-ci/public_html/{your_github_repo_name}/ci/taos
+        ErrorLog ${APACHE_LOG_DIR}/error.{your_github_repo_name}.log
+        CustomLog ${APACHE_LOG_DIR}/access.{your_github_repo_name}.log combined
+</VirtualHost>
+$ sudo systemctl restart apache2
 ```
 
 ## Ubuntu/pdebuild: Set-up configuration file
@@ -218,63 +283,6 @@ mkdir  /var/www/html/{your_prj_name}/scancode/
 /opt/scancode-toolkit/scancode  --license /var/www/html/{your_prj_name}/{src_folder}  --html-app /var/www/html/{your_prj_name}/scancode/index.html
 ```
 
-## How to set-up a domain name address
-If you want to use your own domain name address instead of IP address for effective maintenance, we recommend that you try to get a host name until 5 free of charge at https://freedns.afraid.org. You can get host name such as {your_host}.mooo.com free of charge at http://freedns.afraid.org.
-
-```bash
-$ sudo vi /etc/apache2/sites-enabled/000-default.conf 
-<VirtualHost *:80>
-        ServerName {your_host}.mooo.com
-        ServerAdmin webmaster@localhost
-        DocumentRoot /home/taos-ci/public_html
-        # Alias /nnstreamer-link /home/taos-ci/public_html/{your_github_repo_name}/ci/taos
-        ErrorLog ${APACHE_LOG_DIR}/error.{your_github_repo_name}.log
-        CustomLog ${APACHE_LOG_DIR}/access.{your_github_repo_name}.log combined
-</VirtualHost>
-$ sudo systemctl restart apache2
-```
-
-
-## How to enable .htaccess to protect password files from web access
-Open the default Apache configuration file to enable `.htaccess` file to protect configuration files that include passwords. Then, restart Apache webserver to put these changes into effect.
-
-```bash
-$ sudo vim /etc/apache2/apache2.conf
-------------- apache2.conf: start ----------------------------
-# First,
-AccessFileName .htaccess # <--- Remove comment.
-
-# Second,
-<Directory /var/www/>
-     Options Indexes FollowSymLinks
-     AllowOverride None # <--- Replace "None" with "All".
-     Require all granted
-</Directory>
-------------- apache2.conf: end   ----------------------------
-$ sudo a2enmod rewrite
-$ sudo /etc/init.d/apache2 restart
-```
-
-An .htaccess file allows us to modify rewrite rules without accessing server configuration files. 
-For this reason, .htaccess is critical to the security of your web application. 
-
-```bash
-$ cd   /var/www/html/{your_prj_name}/TAOS-CI/ci/taos/config/
-$ cat ./.htaccess
-------------- .htaccess: start ----------------------------
-AuthName "Restricted area"
-AuthType Basic
-AuthUserFile /var/www/html/{your_prj_name}/TAOS-CI/ci/taos/config/.htpasswd
-<Limit GET POST>
-require valid-user
-</Limit>
-------------- .htaccess: end   ----------------------------
-$ touch .htpasswd
-$ htpasswd -n {user_id} > .htpasswd
-New password: *****
-Re-type new password: *****
-$ cat .htpasswd
-```
 
 
 
