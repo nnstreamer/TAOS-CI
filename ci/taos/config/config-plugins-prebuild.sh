@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Do not append a license statement in the configuration file for a differnet license-based repository.
+# Do not append a license statement in the configuration file for a different license-based repository.
 
 ##
 # @file     config-plugins-prebuild.sh
@@ -117,7 +117,7 @@ source ${REFERENCE_REPOSITORY}/ci/taos/plugins-good/${prebuild_plugins[idx]}.sh
 
 prebuild_plugins[++idx]="pr-prebuild-doxygen-build"
 echo "${prebuild_plugins[idx]} is starting."
-echo "[MODULE] ${BOT_NAME}/${prebuild_plugins[idx]}: Check a doxygen grammar if a doxygen can normally generates source code"
+echo "[MODULE] ${BOT_NAME}/${prebuild_plugins[idx]}: Check a doxygen grammar if a doxygen can normally generate source code"
 
 prebuild_plugins[++idx]="pr-prebuild-sloccount"
 echo "${prebuild_plugins[idx]} is starting."
