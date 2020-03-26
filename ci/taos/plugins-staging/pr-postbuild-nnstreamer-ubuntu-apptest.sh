@@ -162,7 +162,7 @@ function pr-postbuild-nnstreamer-ubuntu-apptest-run-queue() {
     fi
 
     # Build a source code of the nnstreamer repository
-    meson --prefix=${NNST_ROOT} --sysconfdir=${NNST_ROOT} --libdir=lib --bindir=bin --includedir=include build
+    meson --prefix=${NNST_ROOT} --sysconfdir=${NNST_ROOT} --libdir=lib --bindir=bin --includedir=include -Denable-tensorflow-lite=true -Denable-tensorflow=true build
 
     # Install a nnstreamer library
     ninja -C build install
