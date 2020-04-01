@@ -207,38 +207,28 @@ function pr-postbuild-build-android-run-queue(){
         # Start to build NNStreamer API for Android.
         echo "[DEBUG] Starting gradle build for Android API."
 
-        # Make directory to build NNStreamer library.
-        mkdir -p build_android_lib
+        # Directory for build result
+        android_result_dir=${dir_ci}/${dir_commit}/${PACK_BIN_FOLDER}/ANDROID
+        mkdir -p $android_result_dir
 
-        # Copy the files (native and java to build Android library) to build directory.
-        cp -r ./api/android/* ./build_android_lib
+        # Android SDK
+        android_sdk=/var/www/ubuntu/Android/Sdk
+        android_ndk=$android_sdk/ndk-bundle
 
-        # Get the prebuilt libraries and build-script.
-        cp -r $ROOT_ANDROID_CI/nnstreamer-android-api/* ./build_android_lib
+        # GStreamer binaries
+        gst_android_dir=$ROOT_ANDROID_CI/gstreamer-1.0-android-universal-1.16.2
 
-        # Set NNStreamer root in gradle properties.
-        sed -i "s|nnstreamerRoot=nnstreamer-path|nnstreamerRoot=$NNSTREAMER_ROOT|" build_android_lib/gradle.properties
+        # Set build option
+        common_option="--gstreamer_dir=$gst_android_dir --nnstreamer_dir=$NNSTREAMER_ROOT --android_sdk_dir=$android_sdk --android_ndk_dir=$android_ndk --enable_tflite=yes --enable_snap=no --enable_nnfw=no --result_dir=$android_result_dir"
 
-        # Build Android API.
-        pushd ./build_android_lib
-        sh ./gradlew api:assembleRelease \
-        1>> ../../report/build_log_${input_pr}_android_api_output.txt \
-        2>> ../../report/build_log_${input_pr}_android_api_error.txt
-        popd
+        api_build_log=../report/build_log_${input_pr}_android_api_output.txt
 
-        # Check if build procedure is done.
-        nnstreamer_android_api_lib=./build_android_lib/api/build/outputs/aar/api-release.aar
-        if [[ -e $nnstreamer_android_api_lib ]]; then
-            echo "[DEBUG][PASSED] Build procedure is done, copy Android library."
-            mkdir -p ../$PACK_BIN_FOLDER/ANDROID
-            cp $nnstreamer_android_api_lib ../$PACK_BIN_FOLDER/ANDROID/nnstreamer-api.aar
-        else
-            echo "[DEBUG][FAILED] Oooops!!!!! Failed to build Android library."
-            result=$(($result+2))
-        fi
+        # Build Android library
+        bash ./api/android/build-android-lib.sh $common_option --build_type=all >> $api_build_log
+        result=$(($result+$?))
 
-        # Remove build directory.
-        rm -rf build_android_lib
+        bash ./api/android/build-android-lib.sh $common_option --build_type=single >> $api_build_log
+        result=$(($result+$?))
     fi
     echo "[DEBUG] The result value is '$result'."
 
