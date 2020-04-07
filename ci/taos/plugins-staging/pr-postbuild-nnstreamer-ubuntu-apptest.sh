@@ -168,7 +168,7 @@ function pr-postbuild-nnstreamer-ubuntu-apptest-run-queue() {
     ninja -C build install
 
     # Clone the nnstreamer-example repository
-    git clone https://github.com/nnsuite/nnstreamer-example.git example-tmp
+    git clone https://github.com/nnstreamer/nnstreamer-example.git example-tmp
 
     # Build and install nnstreamer examples
     cd example-tmp
