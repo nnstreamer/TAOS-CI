@@ -53,9 +53,9 @@ Please refer to [How to install TAOS-CI](ci/doc/how-to-install-taos-ci.md).
 # How to use new CI module
 Please refer to [How to use new CI module](ci/doc/how-to-use-taos-ci-module.md).
 
-Currently available facilities are as following:
-   - **Prebuild Group** (before a build): File size, New line, No body, Signed-off, Clang-format, Doxygen, Timestamp, Hardcoded-path, Executable, RPM-spec, CPPcheck, Pylint, Indent, Resource checker, and so on.
-   - **Postbuild Group** (after a build): Ubuntu builder, Tizen builder, Yocto builder, and Android (Coming Soon).
+Now, available facilities are as following:
+   - **Pre-build Group** (before a build): File size, New line, No body, Signed-off, Clang-format, Doxygen, Timestamp, Hardcoded-path, Executable, RPM-spec, CPPcheck, Pylint, Indent, Resource checker, and so on.
+   - **Post-build Group** (after a build): Ubuntu builder, Tizen builder, Yocto builder, and Android (Coming Soon).
 
 # Self assessment
 Note that you have to execute a self assessment before submitting your PR.
