@@ -19,6 +19,11 @@
 # @brief Check Check the code formatting style with clang-format
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
+# @detail   Users may provide arguments with "clang_option" variable,
+#           where multiple options may be given with a space, " ", as a
+#           separator.
+#           Available options are:
+#             cxx-only : Audit C++ files only (*.cc, *.hh, *.H, *.cpp)
 
 ##
 #  @brief [MODULE] ${BOT_NAME}/pr-prebuild-clang
@@ -67,7 +72,13 @@ function pr-prebuild-clang(){
 
     # save the result
     clang_format_file="clang-format.patch"
-    git diff > ../report/${clang_format_file}
+    search_target=""
+    for option in ${clang_option}; do
+        if [ "${option}" == "cxx-only" ]; then
+            search_target="-- *.cc *.hh *.H *.cpp"
+        fi
+    done
+    git diff ${search_target} > ../report/${clang_format_file}
 
     # check a clang format rule with file size of patch file
     PATCHFILE_SIZE=$(stat -c%s ../report/${clang_format_file})
