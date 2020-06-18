@@ -135,7 +135,8 @@ function pr-postbuild-nnstreamer-ubuntu-apptest-run-queue() {
 
     ########## Step 1/6: Set-up environment variables.
     export NNST_ROOT="${dir_ci}/${dir_commit}/${PRJ_REPO_OWNER}"
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NNST_ROOT/lib
+    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$NNST_ROOT/lib/pkgconfig
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NNST_ROOT/lib:$NNST_ROOT/lib/gstreamer-1.0
     export GST_PLUGIN_PATH=$GST_PLUGIN_PATH:$NNST_ROOT/lib/gstreamer-1.0
     echo -e "[DEBUG] NNST_ROOT is '$NNST_ROOT'"
     echo -e "[DEBUG] LD_LIBRARY_PATH is '$LD_LIBRARY_PATH'"
