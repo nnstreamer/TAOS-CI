@@ -213,7 +213,7 @@ function pr-postbuild-build-android-run-queue(){
 
         # Android SDK
         android_sdk=/var/www/ubuntu/Android/Sdk
-        android_ndk=$android_sdk/ndk-bundle
+        android_ndk=$ROOT_ANDROID_CI/android-ndk-r20b
 
         # GStreamer binaries
         gst_android_dir=$ROOT_ANDROID_CI/gstreamer-1.0-android-universal-1.16.2
