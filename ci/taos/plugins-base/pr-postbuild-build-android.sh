@@ -219,7 +219,7 @@ function pr-postbuild-build-android-run-queue(){
         gst_android_dir=$ROOT_ANDROID_CI/gstreamer-1.0-android-universal-1.16.2
 
         # Set build option
-        common_option="--gstreamer_dir=$gst_android_dir --nnstreamer_dir=$NNSTREAMER_ROOT --android_sdk_dir=$android_sdk --android_ndk_dir=$android_ndk --enable_tflite=yes --enable_snap=no --enable_nnfw=no --result_dir=$android_result_dir"
+        common_option="--gstreamer_dir=$gst_android_dir --nnstreamer_dir=$NNSTREAMER_ROOT --android_sdk_dir=$android_sdk --android_ndk_dir=$android_ndk --result_dir=$android_result_dir"
 
         api_build_log=../report/build_log_${input_pr}_android_api_output.txt
 
