@@ -2,7 +2,7 @@
 
 ##
 # Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -49,7 +49,7 @@ function pr-prebuild-clang(){
     pwd
 
     # define file type of source code
-    FILES_IN_COMPILER=`find $(pwd) -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*.hpp'`
+    FILES_IN_COMPILER=`find $(pwd) -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*.hpp' -o -iname '*.cc' -o -iname '*.hh'`
     if [[ $? != 0 ]] ; then
         echo "[DEBUG] Oooops. Please check $SRC_PATH in configuraton file is vaild or not."
     fi
@@ -75,7 +75,7 @@ function pr-prebuild-clang(){
     search_target=""
     for option in ${clang_option}; do
         if [ "${option}" == "cxx-only" ]; then
-            search_target="-- *.cc *.hh *.H *.cpp"
+            search_target="-- *.cc *.hh *.hpp *.cpp"
         fi
     done
     git diff ${search_target} > ../report/${clang_format_file}
