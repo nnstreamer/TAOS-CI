@@ -44,6 +44,7 @@ input_repo=$3
 input_branch=$4
 input_pr=$5
 input_delivery_id=$6
+input_pr_contents=$7
 
 
 # Note the "source ./config/config-environment.sh" file can be called in another script
@@ -52,7 +53,7 @@ source ./config/config-environment.sh
 pwd
 
 # check if input argument is correct.
-if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; then
+if [[ "$1" == "" || "$2" == "" || "$3" == "" || "$4" == "" || "$5" == "" || "$6" == "" || "$7" == "" ]]; then
     echo -e "[ERROR] Oooops. We can not run $0 due to incorrect arguments."
     echo -e "[ERROR] Unexpectedly $0 Stopped."
     exit 1
@@ -205,5 +206,5 @@ echo -e "[DEBUG] Added ${checker_name_list[-1]} module."
 
 # Run all the modules
 echo -e "[DEBUG] Running all modules"
-run_all_checkers checker_cmd_list checker_name_list checker_logfile_list $1 $2 $3 $4 $5 $6
+run_all_checkers checker_cmd_list checker_name_list checker_logfile_list $1 $2 $3 $4 $5 $6 $7
 echo -e "[DEBUG] Completed all modules"

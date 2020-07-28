@@ -46,13 +46,14 @@ input_repo=$3
 input_branch=$4
 input_pr=$5
 input_delivery_id=$6
+input_pr_contents=$7
 
 # Note the "source ./config/config-environment.sh" file can be called in another script
 # instead of in this file in order to support asynchronous operation from CI manager
 source ./config/config-environment.sh
 
 # check if input argument is correct.
-if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; then
+if [[ "$1" == "" || "$2" == "" || "$3" == "" || "$4" == "" || "$5" == "" || "$6" == "" || "$7" == "" ]]; then
     printf "[DEBUG] ERROR: Please, input correct arguments.\n"
     exit 1
 fi

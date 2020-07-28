@@ -249,6 +249,7 @@ function github_event_handling(){
                 $delivery_id = $_SERVER['HTTP_X_GITHUB_DELIVERY'];
                 $pr_commits=$payload->pull_request->commits;
                 $pr_action=$payload->action;
+                $pr_contents=$payload->pull_request->diff_url;
 
                 printf ("[DEBUG] current PR number: $pr_no \n");
                 printf ("[DEBUG] arg1) Date  : $date \n");
@@ -265,11 +266,11 @@ function github_event_handling(){
                 // https://stackoverflow.com/questions/222414/asynchronous-shell-exec-in-php
                 // https://stackoverflow.com/questions/2368137/asynchronous-shell-commands
                 $result=0;
-                $cmd="./checker-pr-gateway.sh $date $commit $repo $branch $pr_no $delivery_id > /dev/null 2>/dev/null &";
+                $cmd="./checker-pr-gateway.sh $date $commit $repo $branch $pr_no $delivery_id $pr_contents > /dev/null 2>/dev/null &";
                 $result=shell_exec($cmd);
                 printf ("[DEBUG] checker: checker-pr-gateway.sh is done asynchronously. \n");
                 printf ("[DEBUG] It means that checker-pr-gateway.sh is still running now.\n");
-                printf ("[DEBUG] ./checker-pr-gateway.sh $date $commit $repo $branch $pr_no $delivery_id \n");
+                printf ("[DEBUG] ./checker-pr-gateway.sh $date $commit $repo $branch $pr_no $delivery_id $pr_contents\n");
 
             }
 
