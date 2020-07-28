@@ -80,6 +80,9 @@ function pr-prebuild-clang(){
     done
     git diff ${search_target} > ../report/${clang_format_file}
 
+    # Revert what clang-format did to the source tree
+    git reset --hard
+
     # check a clang format rule with file size of patch file
     PATCHFILE_SIZE=$(stat -c%s ../report/${clang_format_file})
     if [[ $PATCHFILE_SIZE -ne 0 ]]; then
