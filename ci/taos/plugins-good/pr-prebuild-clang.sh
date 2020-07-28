@@ -48,17 +48,23 @@ function pr-prebuild-clang(){
     echo "[DEBUG] Path of a working directory: "
     pwd
 
-    # define file type of source code
-    FILES_IN_COMPILER=`find $(pwd) -iname '*.h' -o -iname '*.cpp' -o -iname '*.c' -o -iname '*.hpp' -o -iname '*.cc' -o -iname '*.hh'`
-    if [[ $? != 0 ]] ; then
-        echo "[DEBUG] Oooops. Please check $SRC_PATH in configuraton file is vaild or not."
-    fi
+    # investigate files that are affected by the incoming patch
+    # TODO: get all diff since master?
+    FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
+    AUDITLIST=""
 
-    echo "[DEBUG] Files of source code: $FILES_IN_COMPILER "
-
-    # define file format to be tested by clang command.
-    FILES_TO_BE_TESTED=$(git ls-files $FILES_IN_COMPILER)
-    echo "[DEBUG] Files to be tested: $FILES_TO_BE_TESTED"
+    for i in ${FILELIST}; do
+            AUDITLIST+=`echo $i | grep "\.h"`
+            AUDITLIST+=`echo $i | grep "\.hpp"`
+            AUDITLIST+=`echo $i | grep "\.hh"`
+            AUDITLIST+=`echo $i | grep "\.H"`
+            AUDITLIST+=`echo $i | grep "\.c"`
+            AUDITLIST+=`echo $i | grep "\.cpp"`
+            AUDITLIST+=`echo $i | grep "\.cc"`
+            AUDITLIST+=`echo $i | grep "\.C"`
+        AUDITLIST+=' '
+    done
+    echo "[DEBUG] Files of source code: $AUDITLIST"
 
     # import clang configuration file
     if [ ! -f ".clang-format" ]; then
@@ -66,7 +72,7 @@ function pr-prebuild-clang(){
     fi
 
     # run clang format checker
-    for i in ${FILES_TO_BE_TESTED}; do
+    for i in ${AUDITLIST}; do
 	${CLANG_COMMAND} -i $i
     done
 
