@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Geunsik Lim <geunsik.lim@samsung.com>
 Build-Depends: cmake, debhelper (>=9)
 Standards-Version: 3.9.6
-Homepage: https://github.com/nnsuite/TAOS-CI
+Homepage: https://github.com/nnstreamer/TAOS-CI
 
 Package: taos-ci
 Architecture: all
