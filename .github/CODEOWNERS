@@ -9,7 +9,7 @@
 *                @leemgs @myungjoo
 
 # For /ci/, reviewers are limited to those who understand continuous integration (CI)
-/ci/             @myungjoo @jijoongmoon @leemgs @again4you @wooksong @jaeyun-jung @helloahn @kparichay @dongju-chae
+/ci/             @myungjoo @jijoongmoon @leemgs @again4you @wooksong @jaeyun-jung @helloahn @kparichay @dongju-chae @gichan-jang @anyj0527 @zhoonit
 
 # For /packaging/, reviewers are limited to those who have some RPM packaging experiences
 /packaging/      @myungjoo @leemgs @again4you @wooksong
