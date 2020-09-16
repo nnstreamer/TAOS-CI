@@ -63,7 +63,7 @@ for i in ${FILELIST}; do
     if [[ `file $i | grep "ASCII text" | wc -l` -gt 0 ]]; then
         case $i in
             # In case of source code
-            *.c | *.cpp | *.h | *.hpp | *.py | *.sh | *.php | *.java)
+            *.c | *.cpp | *.cc | *.hh | *.h | *.hpp | *.py | *.sh | *.php | *.java)
                 echo -e "[DEBUG] ( $i ) file is a source code with a ASCII text format."
                 doxygen_analysis_sw="doxygen"
                 doxygen_analysis_rules=" - "
@@ -74,7 +74,7 @@ for i in ${FILELIST}; do
                 # Doxygen Usage: ( cat ../Doxyfile.ci ; echo "INPUT=./webhook.php" ) | doxygen -
                 ( cat $doxygen_analysis_config ; echo "INPUT=$i" ) | $doxygen_analysis_sw $doxygen_analysis_rules
                 result=$?
-                
+
                 if  [[ $result != 0 ]]; then
                     echo -e "[DEBUG] $doxygen_analysis_sw: failed. file name: $i, There are incorrect doxygen tag(s)."
                     check_result="failure"

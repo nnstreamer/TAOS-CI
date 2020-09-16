@@ -40,14 +40,14 @@ function pr-prebuild-doxygen-tag(){
             echo "[DEBUG] Doxygen checker skips the doxygen inspection because $curr_file is located in the \"$SKIP_CI_PATHS_FORMAT\"."
             continue
         fi
-    
+
         echo "[DEBUG] The current file name is (${curr_file}). "
         # Handle only text files in case that there are lots of files in one commit.
         if [[ `file $curr_file | grep "ASCII text" | wc -l` -gt 0 ]]; then
             # In case of source code files: *.c|*.h|*.cpp|*.py|*.sh|*.php )
             case $curr_file in
                 # In case of C/C++ code
-                *.c|*.h|*.cpp|*.hpp )
+                *.c|*.h|*.cc|*.hh|*.cpp|*.hpp )
                     echo "[DEBUG] ( $curr_file ) file is source code with the text format."
                     doxygen_lang="doxygen-cncpp"
                     # Append a doxgen rule step by step
