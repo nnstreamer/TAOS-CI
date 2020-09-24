@@ -20,6 +20,12 @@
 # @see      https://github.com/nnsuite/TAOS-CI
 # @see      https://source.tizen.org/documentation/reference/git-build-system
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
+# @note
+# If the "gbs build" command based on the QEMU/ARM facility is broken, please run "reboot" command,
+# Or run the below statements to avoid the "reboot" procedure. 
+# https://wiki.tizen.org/OSDev/qemu-accel
+# $ echo -1 | sudo tee /proc/sys/fs/binfmt_misc/qemu-arm
+
 
 # @brief [MODULE] ${BOT_NAME}/pr-postbuild-build-tizen-wait-queue
 function pr-postbuild-build-tizen-wait-queue(){
