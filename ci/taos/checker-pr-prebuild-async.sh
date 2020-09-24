@@ -58,8 +58,7 @@ if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; t
 fi
 
 # @dependency
-# git, which, grep, touch, find, wc, cat, basename, tail, clang-format-4.0, cppcheck, rpmlint, aha, stat, curl
-# check if dependent packages are installed
+# Check if dependent packages are installed
 source ./common/api_collection.sh
 check_cmd_dep git
 check_cmd_dep which
@@ -79,7 +78,7 @@ check_cmd_dep curl
 check_cmd_dep ctags
 echo -e "[DEBUG] Checked dependency packages.\n"
 
-# get user ID from the input_repo string
+# Get user ID from the input_repo string
 set -- "${input_repo}"
 IFS="\/"; declare -a Array=($*); unset IFS;
 user_id="@${Array[3]}"
@@ -123,16 +122,16 @@ cd $dir_commit
 cd ./${PRJ_REPO_OWNER}
 echo -e "Current path: $(pwd)."
 
-# archive a patch file of latest commit with 'format-patch' option
+# Archive a patch file of latest commit with 'format-patch' option
 # This *.patch file is used for nobody check.
 run_git_format_patch="git format-patch -1 $input_commit --output-directory ../report/"
 echo -e "[DEBUG] $run_git_format_patch"
 $run_git_format_patch
 ls ../report -al
 
-# declare default variables
-# check_result variable can get three values such as success, skip, and failure.
-# global_check_result variable can get two values such as success and failure.
+# Declare default variables
+# The check_result variable can get three values such as success, skip, and failure.
+# The global_check_result variable can get two values such as success and failure.
 check_result="success"
 global_check_result="success"
 
@@ -160,32 +159,31 @@ done
 ##################################################################################################################
 
 exit_code=0
-# --------------------- Report module: submit webhook API for global check result to github website --------------
-# report if all modules are successfully completed or not.
+# --------------------- Report module: submit webhook API for global check result to GitHub website --------------
+# Report if all modules are successfully completed or not.
 echo -e "[DEBUG] Varaible global_check_result is $global_check_result."
 if [[ $global_check_result == "success" ]]; then
-    # in case of success
+    # In case of success
     message="Successfully all modules of the prebuild group are done."
     cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-prebuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     echo -e "[DEBUG] cibot_report $TOKEN success (INFO)${BOT_NAME}/pr-prebuild-group $message ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/ ${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
-    # inform PR submitter of success content to encourage review process
+    # Inform PR submitter of success content to encourage review process
     echo -e "[DEBUG] (INFO)${BOT_NAME}/pr-prebuild-group: All modules of the prebuld group are passed - it is ready to review!"
     echo -e "[DEBUG] :shipit: Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-group and ${BOT_NAME}/pr-prebuild-group."
 
 elif [[ $global_check_result == "failure" ]]; then
-    # in case of failure
+    # In case of failure
     message="Oooops. There is a failed module of the prebuild group. Update your code correctly after reading error messages."
     cibot_report $TOKEN "failure" "(INFO)${BOT_NAME}/pr-prebuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
-    # inform PR submitter of a hint to fix issues
-    message=":octocat: **cibot**: $user_id, One of the module of prebuild group is failed. If you want to get a hint to fix this issue, please go to ${REPOSITORY_WEB}/wiki/."
-    cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
+    # Inform PR submitter of a hint to fix issues
+    echo -e "[DEBUG] $user_id, One of the modules (prebuild group) is failed. If you need a hint to fix this issue, please go to ${REPOSITORY_WEB}/wiki/."
     exit_code=1
 
 else
-    # in case that CI is broken
-    message="Oooops. It seems that CI bot has bug(s). CI bot has to be fixed."
+    # In case that CI is broken
+    message="Oooops. It seems that CI bot has bug(s). CI bot has to be fixed. Please contact administrator."
     cibot_report $TOKEN "failure" "(INFO)${BOT_NAME}/pr-prebuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     exit_code=1
 
