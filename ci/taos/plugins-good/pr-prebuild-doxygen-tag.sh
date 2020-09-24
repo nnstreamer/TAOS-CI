@@ -16,11 +16,11 @@
 
 ##
 # @file pr-prebuild-doxygen-tag.sh
-# @brief Check if source code includes required doxygen tags
+# @brief Check if source code includes required Doxygen tags
 #
-# This module is to check if a source code appropriately consists of required doxygen tags.
+# This module is to check if a source code appropriately consists of required Doxygen tags.
 # The execution result is reported with "${BOT_NAME}/pr-prebuild-doxygen-tag" context into status section
-# of a github PR webpage.
+# of a GitHub PR webpage.
 #
 # @see      https://github.com/nnsuite/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
@@ -30,14 +30,14 @@
 # @brief [MODULE] ${BOT_NAME}/pr-prebuild-doxygen-tag
 function pr-prebuild-doxygen-tag(){
     echo "########################################################################################"
-    echo "[MODULE] ${BOT_NAME}/pr-prebuild-doxygen-tag: Check if source code includes required doxygen tags for doxygen documentation."
+    echo "[MODULE] ${BOT_NAME}/pr-prebuild-doxygen-tag: Check if source code includes required Doxygen tags for Doxygen documentation."
     # Inspect all *.patch files that are fetched from a commit file
     FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
     check_result="skip"
     for curr_file in ${FILELIST}; do
         # if a current file is located in $SKIP_CI_PATHS_FORMAT folder, let's skip the inspection process
         if [[ "$curr_file" =~ ($SKIP_CI_PATHS_FORMAT)$ ]]; then
-            echo "[DEBUG] Doxygen checker skips the doxygen inspection because $curr_file is located in the \"$SKIP_CI_PATHS_FORMAT\"."
+            echo "[DEBUG] Doxygen checker skips the Doxygen inspection because $curr_file is located in the \"$SKIP_CI_PATHS_FORMAT\"."
             continue
         fi
 
@@ -71,8 +71,8 @@ function pr-prebuild-doxygen-tag(){
                         doxygen_rule_compare_count=`cat ${curr_file} | grep "$word" | wc -l`
                         doxygen_rule_expect_count=1
     
-                        # Doxygen_rule_compare_count: real number of doxygen tag in file
-                        # Doxygen_rule_expect_count: required number of doxygen tag
+                        # Doxygen_rule_compare_count: real number of Doxygen tags in a file
+                        # Doxygen_rule_expect_count: required number of Doxygen tags
                         if [[ $doxygen_rule_compare_count -lt $doxygen_rule_expect_count ]]; then
                             echo "[ERROR] $doxygen_lang: failed. file name: $curr_file, $word tag is required at the top of file"
                             check_result="failure"
@@ -98,7 +98,7 @@ function pr-prebuild-doxygen-tag(){
                             structure_positions="$structure_positions $temp "
                         done < <(ctags -x --c-kinds=sc $curr_file) # "--c-kinds=sc" mean find 's'truct and 'c'lass
     
-                        # Checking commited file line by line for detailed hints when missing doxygen tags.
+                        # Checking committed file line by line for detailed hints when missing Doxygen tags.
                         while IFS='' read -r line || [[ -n "$line" ]]; do
                             idx+=1
     
@@ -151,7 +151,7 @@ function pr-prebuild-doxygen-tag(){
                 *.py )
                     echo "[DEBUG] ( $curr_file ) file is source code with the text format."
                     doxygen_lang="doxygen-python"
-                    # Append a doxgen rule step by step
+                    # Append a Doxgen rule step by step
                     doxygen_rules="@package @brief"
                     doxygen_rule_num=0
                     doxygen_rule_all=0
@@ -186,25 +186,24 @@ function pr-prebuild-doxygen-tag(){
     done
     
     if [[ $check_result == "success" ]]; then
-        echo "[DEBUG] Passed. doxygen documentation."
-        message="Successfully source code(s) includes doxygen document correctly."
+        echo "[DEBUG] Passed. Doxygen documentation."
+        message="Successfully the Doxygen checker is passed."
         cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "skip" ]]; then
-        echo "[DEBUG] Skipped. doxygen documentation"
+        echo "[DEBUG] Skipped. Doxygen documentation"
         message="Skipped. Your PR does not include source code(s)."
         cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
-        echo "[ERROR] Failed. doxygen documentation."
-        message="Oooops. The doxygen checker is failed. Please, write doxygen document in your code."
+        echo "[ERROR] Failed. Doxygen documentation."
+        message="Oooops. The Doxygen checker is failed. Please write a Doxygen document in your code."
         cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     
-        # inform PR submitter of a hint in more detail
-        message=":octocat: **cibot**: $user_id, **$i** does not include doxygen tags such as $doxygen_basic_rules. You must include the doxygen tags in the source code at least."
-        cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
-    
-        message=":octocat: **cibot**: $user_id, You wrote code with incorrect doxygen statements. Please check a doxygen rule at"
+        # inform a PR submitter of a hint message in more detail
+        message=":octocat: **cibot**: $user_id, **$curr_file** does not include Doxygen tags such as **$doxygen_basic_rules**. You must include the Doxygen tags in the source code."
+        message="$message Please refer to a Doxygen manual at"
         message="$message http://github.com/nnsuite/TAOS-CI/blob/master/ci/doc/doxygen-documentation.md"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
+    
     fi
 }
 
