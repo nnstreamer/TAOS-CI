@@ -9,6 +9,8 @@ The auto-unittet.sch is written by the Tizen gbs and Google Gtest.
 * https://source.tizen.org/documentation/reference/git-build-system/usage/gbs-build
 * https://github.com/google/googletest
 
+
+test 
 ## Example
 $ sudo vi /etc/crontab
 30 7 * * * www-data /var/www/html/nnstreamer/ci/taos/auto-unittest.sh
