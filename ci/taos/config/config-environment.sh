@@ -166,3 +166,13 @@ _cov_email="your-id@gmail.com"
 _cov_token="1234567890123456789012"
 _cov_yellow_card=10
 _cov_red_card=50
+
+# Activate a selective PR audit to handle multiple projecst in the one GitHub repository
+# a. for enterprise edition - "patch-diff.githubusercontent.com"
+# b. for community  edition - "github.{YOUR_COMPANY_DNS}"
+# If you want to examine all PRs, declare "SELECTIVE_PR_AUDIT=0".
+# For example, if you want to activate a "doc" directory, write a "doc/" format (without "/doc/" format).
+SELECTIVE_PR_AUDIT=0
+PR_ACTIVATE_DIR="doc/"
+pr_patch_addr="patch-diff.githubusercontent.com"
+

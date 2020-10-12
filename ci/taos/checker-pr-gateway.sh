@@ -35,7 +35,7 @@
 #  $dir_worker   directory is PR worker folder
 #  $dir_commit   directory is commit folder
 
-# ---------------------------------------------------------------
+# ------------ Initialize execution environment -------------------------------------
 
 # Arguments
 input_date=$1
@@ -66,6 +66,8 @@ echo -e "[DEBUG] Checking dependent commands...\n"
 check_cmd_dep tee
 check_cmd_dep rm
 
+# ----------- Calculate dir_cir, dir_worker, and dir_commit ------------------------------
+
 # Set folder name uniquely to run CI in different folder per a PR.
 cd ..
 export dir_ci=`pwd`
@@ -87,10 +89,86 @@ fi
 # Create a commit folder
 cd $dir_ci
 mkdir -p $dir_commit
-echo "[DEBUG] $dir_commit folder is created."
+echo -e "[DEBUG] $dir_commit folder is created."
+
+# Specify a log file name of gateway facility
+logfile_gateway="${dir_ci}/${dir_commit}/pr-gateway.txt"
+echo -e "[DEBUG] Starting PR gateway facility ..." | tee -a $logfile_gateway
+
+# ------------ (De)Activate SELECTIVE_PR_AUDIT to handle PRs selectively ----------------
+
+if [[ $SELECTIVE_PR_AUDIT -eq 1 ]]; then
+    # Ideally, one GitHub repository must include one project.
+    # IF the one has to include other repositoris, git package recommends
+    # that they use "git submodule" commmand. Nevertheless, if they maintain
+    # lots of project with just folder structure in one GitHub repository,
+    # We handle a repository that consits of many projects in one repository
+    # with PR_ACTIVATE_DIR in the configuration file.
+    echo -e "[DEBUG] The selective PR Audit is activated as this PR modifies the $PR_ACTIVATE_DIR folder." | tee -a $logfile_gateway
+
+    # Check if dependent packages are installed
+    check_cmd_dep rm
+    check_cmd_dep touch
+    check_cmd_dep curl
+    check_cmd_dep grep
+    check_cmd_dep cat
+
+    # Initialize a default value of variables
+    line_start=0
+    line_end=0
+    file_num_all=0
+    file_num_matched=0
+
+    # clean files
+    rm -f ./${input_pr}.patch
+    rm -f ./${input_pr}-all-files.txt
+    rm -f ./${input_pr}-matched-files.txt
+    touch ./${input_pr}-all-files.txt
+    touch ./${input_pr}-matched-files.txt
+
+    # Download a patch file of specified PR.
+    curl -O https://${pr_patch_addr}/raw/${GITHUB_ACCOUNT}/${PRJ_REPO_UPSTREAM}/pull/${input_pr}.patch
+
+    # echo "" > ./${input_pr}-all-files.txt
+
+    # While loop to read line by line from a .patch file.
+    while IFS= read -r line; do
+        [[ $line == ---* ]] && line_start=1
+        [[ $line == diff* ]] && line_end=1
+        # filter file list ony from the .path file.
+        if [[ $line_start == 1 && $line_end != 1 && $line == *\|* ]]; then
+            echo $line >> ./${input_pr}-all-files.txt
+        fi
+    done < "${input_pr}.patch"
+
+    file_num_all=$(cat ./${input_pr}-all-files.txt | wc -l)
+    echo -e "[DEBUG] #### The modified all files (add/delete/modify): $file_num_all ####" | tee -a $logfile_gateway
+    echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
+    cat ./${input_pr}-all-files.txt | tee -a $logfile_gateway
+    echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
+
+    cat ./${input_pr}-all-files.txt | grep "${PR_ACTIVATE_DIR}" > ./${input_pr}-matched-files.txt
+    file_num_matched=$(cat ./${input_pr}-matched-files.txt | wc -l)
+    echo -e "[DEBUG] #### Only matched files (add/delete/modify): $file_num_matched ####" | tee -a $logfile_gateway
+    echo -e "[DEBUG] * PR_ACTIVATE_DIR='${PR_ACTIVATE_DIR}' " | tee -a $logfile_gateway
+    if [[ $file_num_matched == 0 ]]; then
+        echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
+        echo -e "[DEBUG] There are no matched files." | tee -a $logfile_gateway
+        echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
+    else
+        echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
+        cat ./${input_pr}-matched-files.txt | tee -a $logfile_gateway
+        echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
+    fi
+
+    # Decide CI activation finally. Continue a PR examination when there are matched files only.
+    [[ $file_num_matched -lt 1 ]] && exit 99
+else
+    echo -e "[DEBUG] The selective PR Audit is deactivated since the SELECTIVE_PR_AUDIT is not '1'." | tee -a $logfile_gateway
+fi
 
 # --------------------------- git-clone module: clone a git repository ----------------------
-echo "[DEBUG] Starting 'git clone' command to get a git repository...."
+echo -e "[DEBUG] Starting 'git clone' command to get a git repository...." | tee -a $logfile_gateway
 
 # Set project repo name of contributor
 PRJ_REPO_OWNER=`echo $(basename "${input_repo%.*}")`
@@ -98,15 +176,15 @@ PRJ_REPO_OWNER=`echo $(basename "${input_repo%.*}")`
 # Check if a git repository already exists
 cd $dir_commit
 if [[ -d ${PRJ_REPO_OWNER} ]]; then
-    echo -e "[DEBUG] ${PRJ_REPO_OWNER} already exists and is not an empty directory."
-    echo -e "[DEBUG] Removing the existing directory..."
+    echo -e "[DEBUG] ${PRJ_REPO_OWNER} already exists and is not an empty directory." | tee -a $logfile_gateway
+    echo -e "[DEBUG] Removing the existing directory..." | tee -a $logfile_gateway
     rm -rf ./${PRJ_REPO_OWNER}
 fi
 
 # create 'report' folder to archive log files.
 pwd
 mkdir ./report
-echo -e "[DEBUG] The 'report' folder is created."
+echo -e "[DEBUG] The 'report' folder is created." | tee -a $logfile_gateway
 
 # run "git clone" command to download git source
 # options of 'sudo' command:
@@ -118,19 +196,20 @@ run_git_clone="sudo -Hu www-data git clone --reference ${REFERENCE_REPOSITORY} $
 echo -e "[DEBUG] $run_git_clone"
 $run_git_clone
 if [[ $? != 0 ]]; then
-    echo "[DEBUG] ERROR: 'git clone' command is failed because of incorrect setting of CI server."
-    echo "[DEBUG] Please check /var/www/ permission, /var/www/html/.netrc, and /var/www/html/.gbs.conf."
-    echo "[DEBUG] current id: $(id)"
-    echo "[DEBUG] current path: $(pwd)"
-    echo "[DEBUG] $run_git_clone"
+    echo "[DEBUG] ERROR: 'git clone' command is failed because of incorrect setting of CI server." | tee -a $logfile_gateway
+    echo "[DEBUG] Please check /var/www/ permission, /var/www/html/.netrc, and /var/www/html/.gbs.conf." | tee -a $logfile_gateway
+    echo "[DEBUG] current id: $(id)" | tee -a $logfile_gateway
+    echo "[DEBUG] current path: $(pwd)" | tee -a $logfile_gateway
+    echo "[DEBUG] $run_git_clone" | tee -a $logfile_gateway
+
     exit 1
 fi
 
 # run "git branch" to use commits from PR branch
-echo -e "[DEBUG] PRJ_REPO_OWNER is ./${PRJ_REPO_OWNER}"
+echo -e "[DEBUG] PRJ_REPO_OWNER is ./${PRJ_REPO_OWNER}" | tee -a $logfile_gateway
 cd ./${PRJ_REPO_OWNER}
 checkout_branch="git checkout -b $input_branch origin/$input_branch"
-echo -e "[DEBUG] $checkout_branch"
+echo -e "[DEBUG] $checkout_branch" | tee -a $logfile_gateway
 $checkout_branch
 git branch
 pwd
@@ -195,15 +274,16 @@ declare -a checker_logfile_list
 checker_cmd_list+=("./checker-pr-prebuild-async.sh")
 checker_name_list+=("prebuild")
 checker_logfile_list+=("${dir_ci}/${dir_commit}/pr-prebuild-group.txt")
-echo -e "[DEBUG] Added ${checker_name_list[-1]} module."
+echo -e "[DEBUG] Added ${checker_name_list[-1]} module." | tee -a $logfile_gateway
 
 # Ready a module: the postbuild group
 checker_cmd_list+=("./checker-pr-postbuild-async.sh")
 checker_name_list+=("postbuild")
 checker_logfile_list+=("${dir_ci}/${dir_commit}/pr-postbuild-group.txt")
-echo -e "[DEBUG] Added ${checker_name_list[-1]} module."
+echo -e "[DEBUG] Added ${checker_name_list[-1]} module." | tee -a $logfile_gateway
 
-# Run all the modules
-echo -e "[DEBUG] Running all modules"
+# Run all the modules (both the pre-build and post group) sequentially
+echo -e "[DEBUG] Running all modules" | tee -a $logfile_gateway
 run_all_checkers checker_cmd_list checker_name_list checker_logfile_list $1 $2 $3 $4 $5 $6
-echo -e "[DEBUG] Completed all modules"
+echo -e "[DEBUG] Completed all modules" | tee -a $logfile_gateway
+
