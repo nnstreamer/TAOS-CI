@@ -107,62 +107,26 @@ if [[ $SELECTIVE_PR_AUDIT -eq 1 ]]; then
     echo -e "[DEBUG] The selective PR Audit is activated as this PR modifies the $PR_ACTIVATE_DIR folder." | tee -a $logfile_gateway
 
     # Check if dependent packages are installed
-    check_cmd_dep rm
-    check_cmd_dep touch
     check_cmd_dep curl
     check_cmd_dep grep
-    check_cmd_dep cat
+    check_cmd_dep echo
+    check_cmd_dep awk
 
-    # Initialize a default value of variables
-    line_start=0
-    line_end=0
-    file_num_all=0
-    file_num_matched=0
+    pr_files=$(curl -H "Authorization: token ${TOKEN}" ${GITHUB_WEBHOOK_API}/pulls/${input_pr}/files | grep "filename" | awk '{print $2}')
+    detected=$(echo ${pr_files} | grep ${PR_ACTIVATE_DIR})
 
-    # clean files
-    rm -f ./${input_pr}.patch
-    rm -f ./${input_pr}-all-files.txt
-    rm -f ./${input_pr}-matched-files.txt
-    touch ./${input_pr}-all-files.txt
-    touch ./${input_pr}-matched-files.txt
-
-    # Download a patch file of specified PR.
-    curl -O https://${pr_patch_addr}/raw/${GITHUB_ACCOUNT}/${PRJ_REPO_UPSTREAM}/pull/${input_pr}.patch
-
-    # echo "" > ./${input_pr}-all-files.txt
-
-    # While loop to read line by line from a .patch file.
-    while IFS= read -r line; do
-        [[ $line == ---* ]] && line_start=1
-        [[ $line == diff* ]] && line_end=1
-        # filter file list ony from the .path file.
-        if [[ $line_start == 1 && $line_end != 1 && $line == *\|* ]]; then
-            echo $line >> ./${input_pr}-all-files.txt
-        fi
-    done < "${input_pr}.patch"
-
-    file_num_all=$(cat ./${input_pr}-all-files.txt | wc -l)
-    echo -e "[DEBUG] #### The modified all files (add/delete/modify): $file_num_all ####" | tee -a $logfile_gateway
-    echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
-    cat ./${input_pr}-all-files.txt | tee -a $logfile_gateway
-    echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
-
-    cat ./${input_pr}-all-files.txt | grep "${PR_ACTIVATE_DIR}" > ./${input_pr}-matched-files.txt
-    file_num_matched=$(cat ./${input_pr}-matched-files.txt | wc -l)
-    echo -e "[DEBUG] #### Only matched files (add/delete/modify): $file_num_matched ####" | tee -a $logfile_gateway
-    echo -e "[DEBUG] * PR_ACTIVATE_DIR='${PR_ACTIVATE_DIR}' " | tee -a $logfile_gateway
-    if [[ $file_num_matched == 0 ]]; then
+    # Decide CI activation finally. Continue a PR examination when there are matched files only.
+    if [[ -z $detected ]]; then
         echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
         echo -e "[DEBUG] There are no matched files." | tee -a $logfile_gateway
         echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
+
+        exit 99
     else
         echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
-        cat ./${input_pr}-matched-files.txt | tee -a $logfile_gateway
+        echo -e "${pr_files}" | tee -a $logfile_gateway
         echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
     fi
-
-    # Decide CI activation finally. Continue a PR examination when there are matched files only.
-    [[ $file_num_matched -lt 1 ]] && exit 99
 else
     echo -e "[DEBUG] The selective PR Audit is deactivated since the SELECTIVE_PR_AUDIT is not '1'." | tee -a $logfile_gateway
 fi
