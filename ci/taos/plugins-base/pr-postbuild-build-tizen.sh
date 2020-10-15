@@ -52,7 +52,6 @@ function pr-postbuild-build-tizen-run-queue(){
     check_cmd_dep sudo
     check_cmd_dep curl
     check_cmd_dep gbs
-    check_cmd_dep tee
 
     # BUILD_MODE=0 : run "gbs build" command without generating debugging information.
     # BUILD_MODE=1 : run "gbs build" command with a debug file.
@@ -92,7 +91,7 @@ function pr-postbuild-build-tizen-run-queue(){
         --define "__ros_verify_enable 1" \
         --define "_pr_start_time ${input_date}" \
         --define "_skip_debug_rpm 1" \
-        --buildroot ./GBS-ROOT/  | tee ../report/build_log_${input_pr}_tizen_$1_output.txt
+        --buildroot ./GBS-ROOT/ 2> ../report/build_log_${input_pr}_tizen_$1_error.txt 1> ../report/build_log_${input_pr}_tizen_$1_output.txt
     else
         echo -e "BUILD_MODE = 0"
         # In case of x86_64 or i586
