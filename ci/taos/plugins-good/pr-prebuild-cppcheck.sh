@@ -35,6 +35,10 @@
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
+function version(){
+    echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }';
+}
+
 # @brief [MODULE] ${BOT_NAME}/pr-prebuild-cppcheck
 function pr-prebuild-cppcheck(){
     echo "########################################################################################"
@@ -47,12 +51,20 @@ function pr-prebuild-cppcheck(){
     check_cmd_dep grep
     check_cmd_dep cat
     check_cmd_dep wc
+    check_cmd_dep awk
 
     check_result="skip"
 
     # Display the cppcheck version that is installed in the CI server.
     # Note that the out-of-date version can generate an incorrect result.
-    cppcheck --version
+    cppcheck_ver=$(cppcheck --version | awk {'print $2'})
+    echo $cppcheck_ver
+
+    default_cmd="--std=posix"
+    # --std=posix is deprecated and removed in 2.0.5
+    if [[ $(version $cppcheck_ver) -ge $(version "2.0.5") ]]; then
+        default_cmd="--library=posix"
+    fi
 
     # investigate generated all *.patch files
     FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
@@ -76,15 +88,15 @@ function pr-prebuild-cppcheck(){
                     static_analysis_sw="cppcheck"
                     if [[ $pr_cppcheck_check_level -eq 0 ]]; then
                         echo "[DEBUG] cppcheck: It's okay. The value of the cppcheck level is $pr_cppcheck_check_level."
-                        static_analysis_rules="--std=posix"
+                        static_analysis_rules="$default_cmd"
                     elif [[ $pr_cppcheck_check_level -eq 1 ]]; then
                         echo "[DEBUG] cppcheck: It's okay. The value of the cppcheck level is $pr_cppcheck_check_level."
-                        static_analysis_rules="--enable=warning,performance --std=posix"
+                        static_analysis_rules="--enable=warning,performance $default_cmd"
                     else
                         echo "[DEBUG] cppcheck: Oooops. The value of the cppcheck level is $pr_cppcheck_check_level."
                         echo "[DEBUG] cppcheck: Note that you have to declare one between 0 and 1."
                         echo "[DEBUG] cppcheck: The module executes an inspection proceudre with level 0."
-                        static_analysis_rules="--std=posix"
+                        static_analysis_rules="$default_cmd"
                     fi
 
                     cppcheck_result="cppcheck_result.txt"
