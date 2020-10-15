@@ -9,7 +9,7 @@
 # @author Wook Song <wook16.song@samsung.com>
 # @note
 # usage :  ../badge/gen_badge.py {badge-name} {gcov-index-file} {output.svg}
-#    $ cd cd ci
+#    $ cd ci
 #    $ ../badge/gen_badge.py codecoverage ../gcov_html/index.html ../badge/codecoverage.svg
 #
 import sys
