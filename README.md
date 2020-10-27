@@ -72,9 +72,9 @@ Please refer to [How to build a package](ci/doc/self-assessment-before-submittin
 * [Apache License 2.0](LICENSE)
 
 # Reference
-* https://developer.github.com/WebHooks/
-* https://gogs.io/
-* https://curl.haxx.se/docs/ 
+* WebHook API of GitHub - https://developer.github.com/WebHooks/
+* A painless self-hosted Git service, Gogs - https://gogs.io/
+* Free file transfer software, Curl - https://curl.haxx.se/docs/ 
 * Papers
    * [ICSE2018, "Modern code review: a case study at google"](https://dl.acm.org/citation.cfm?id=3183525)
    * [ICSE2015, "Do Not Find Bugs: how the Current Code Review Best Practice Slows Us Down"](https://dl.acm.org/citation.cfm?id=2819015)
