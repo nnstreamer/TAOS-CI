@@ -14,7 +14,7 @@ export https_proxy=https://10.112.1.184:8080
 export ftp_proxy=ftp://10.112.1.184:8080
 $
 $ sudo vi /etc/apt/sources.list.d/tizen.list
-deb [trusted=yes] http://download.tizen.org/tools/latest-release/Ubuntu_16.04/ / # upgraded to xenial
+deb [trusted=yes] http://download.tizen.org/tools/latest-release/Ubuntu_18.04/ / # upgraded to xenial
 $ sudo apt update
 $ sudo apt install gbs lthor mic
 ```
