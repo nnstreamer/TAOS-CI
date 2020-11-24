@@ -41,7 +41,12 @@ function generate_cover(){
     mv $REFERENCE_REPOSITORY/ci/doxybook/book-cover-design.pdf ./
     string_time="\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                         $(date)"
     echo -e  "$string_time" > book-cover-date.txt
-    libreoffice --convert-to "pdf" book-cover-date.txt 
+    libreoffice --convert-to "pdf" book-cover-date.txt
+    if [[ ! -f "book-cover-date.pdf" ]]; then
+      echo -e  "[DEBUG] Oooops. generate_cover function."
+      echo -e  "[DEBUG] Please replace 'libreoffice' with 'sudo libreoffice' to fix this issue."
+      exit 99
+    fi
     pdftk book-cover-design.pdf stamp book-cover-date.pdf output book-cover-stamped.pdf
 }
 
