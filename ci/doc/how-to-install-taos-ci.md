@@ -15,7 +15,7 @@ Then, please press 'Watch', 'Star', and 'Fork' on the top right to monitor lates
 $ cd /var/www/html/
 $ git clone https://github.com/{your_github_account}/{your_prj_name}.git
 $ cd {your_prj_name}
-$ git submodule add https://github.com/nnsuite/TAOS-CI.git
+$ git submodule add https://github.com/nnstreamer/TAOS-CI.git
 $ ln -s ./TAOS-CI/ci ./ci
 $ vi ./ci/taos/config/config-server-administrator.sh
 $ vi ./ci/taos/config/config-webhook.json
