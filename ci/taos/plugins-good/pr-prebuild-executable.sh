@@ -26,6 +26,9 @@ function pr-prebuild-executable(){
 
 echo "########################################################################################"
     echo "[MODULE] ${BOT_NAME}/pr-prebuild-executable: Check executable bits for .cpp, .c, .hpp, .h, .prototxt, .caffemodel, .txt., .init"
+
+    check_result="success"
+
     # Please add more types if you feel proper.
     FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
     for X in $FILELIST; do
@@ -36,8 +39,6 @@ echo "##########################################################################
                 check_result="failure"
                 global_check_result="failure"
                 break
-            else
-                check_result="success"
             fi
         fi
     done
