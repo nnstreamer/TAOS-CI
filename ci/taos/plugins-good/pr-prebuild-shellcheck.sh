@@ -89,6 +89,12 @@ for i in ${FILELIST}; do
     fi
 done
 
+# handle a no code file (e.g., merge branch commit)
+if [[ $i = "" ]]; then
+    i="no-code"
+    check_result="skip"
+fi
+
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A shell script syntax checker - shellcheck."
     message="Successfully source code(s) is written without a syntax error."
