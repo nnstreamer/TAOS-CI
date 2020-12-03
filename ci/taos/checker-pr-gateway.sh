@@ -120,12 +120,13 @@ if [[ $SELECTIVE_PR_AUDIT -eq 1 ]]; then
         echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
         echo -e "[DEBUG] There are no matched files." | tee -a $logfile_gateway
         echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
-
+        export PR_ACTIVATE_DIR_DETECTED=0
         exit 99
     else
         echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
         echo -e "${pr_files}" | tee -a $logfile_gateway
         echo -e "[DEBUG] -------------------------------------------" | tee -a $logfile_gateway
+        export PR_ACTIVATE_DIR_DETECTED=1
     fi
 else
     echo -e "[DEBUG] The selective PR Audit is deactivated since the SELECTIVE_PR_AUDIT is not '1'." | tee -a $logfile_gateway
