@@ -127,21 +127,30 @@ function pr-postbuild-bazel-ubuntu-run-queue() {
 
     # TODO: Fix to me. Describe a statement that you want to evaluate
     eval_data="음성파일입니다"
-    
+
     # The number of test for repeated tests. To skip a run-test, specify "loop_num=0".
     loop_num=1
     
     if [[ $loop_num -ge 1 && $result -eq 0 ]]; then
         # Run an aging test to verify if the output result is correct or not.
         for (( count=1; count<=$loop_num; count++ )) ; do
-            echo -e "---- Trying to do a run-test [$count/$loop_num] ... ----"
+            echo -e "------ Trying to do a run-test [$count/$loop_num] ------"
             pwd
             # Do a run-test
+            time ls -al
             echo -e "statement (run): $START_RUNTEST"
             echo -e "## Expected result: '$eval_data'"
             echo -e "## Actual   result:"
+            exec_start=$(date +"%s")
+            date
             eval $START_RUNTEST
             result+=$?
+            date
+            exec_end=$(date +"%s")
+            exec_diff=$(($exec_end-$exec_start))
+            exec_cost="$(($exec_diff / 60))m $(($exec_diff % 60))s"
+
+            echo -e "[DEBUG] Execution time: $exec_cost secs"
             echo -e "[DEBUG] The result value of the run-test is $result"
     
             if [[ "$(tail -n1 ./result.txt)" =~ "$eval_data" ]]; then
