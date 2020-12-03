@@ -38,10 +38,20 @@ input_pr=$1
  # --------------------------- Report module: submit check result to github-website --------------
 # execute automatic comment to handle new PR that include commits more than 2.
 
-# inform PR submitter of a rule to pass the CI process
-message=":memo: TAOS-CI Version: ${VERSION}. Thank you for submitting PR #${input_pr}. Please a submit 1commit/1PR (one commit per one PR) policy to get comments quickly from reviewers. Your PR must pass all verificiation processes of cibot before starting a review process from reviewers. If you are new member to join this project, please read manuals in documentation folder and wiki page. In order to monitor a progress status of your PR in more detail, visit ${CISERVER}."
 
+# Check if a PR include a specified folder.
+pr_files=$(curl -H "Authorization: token ${TOKEN}" ${GITHUB_WEBHOOK_API}/pulls/${input_pr}/files | grep "filename" | awk '{print $2}')
+detected=$(echo ${pr_files} | grep ${PR_ACTIVATE_DIR})
+
+if [[ -z $detected ]]; then
+    export PR_ACTIVATE_DIR_DETECTED=0
+else
+    export PR_ACTIVATE_DIR_DETECTED=1
+fi
+
+# inform PR submitter of a rule to pass the CI process
 if [[ ( $pr_comment_notice == 1 && $SELECTIVE_PR_AUDIT == 0 ) || ( $pr_comment_notice == 1 && $PR_ACTIVATE_DIR_DETECTED == 1 ) ]]; then
+    message=":memo: TAOS-CI Version: ${VERSION}. Thank you for submitting PR #${input_pr}. Please a submit 1commit/1PR (one commit per one PR) policy to get comments quickly from reviewers. Your PR must pass all verificiation processes of cibot before starting a review process from reviewers. If you are new member to join this project, please read manuals in documentation folder and wiki page. In order to monitor a progress status of your PR in more detail, visit ${CISERVER}."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 elif [[ $pr_comment_notice == 1 && $PR_ACTIVATE_DIR_DETECTED == 0 ]]; then
     message=":memo: TAOS-CI Version: ${VERSION}. Since we inspect the **$PR_ACTIVATE_DIR** folder only, all CI facilities for this PR are disabled."
