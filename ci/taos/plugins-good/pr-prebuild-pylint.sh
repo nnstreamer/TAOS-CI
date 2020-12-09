@@ -82,21 +82,21 @@ done
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. static code analysis tool - pylint."
     message="Successfully source code(s) is written without dangerous coding constructs."
-    cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
-    message="We generate a report if there are dangerous coding constructs in your code. Please read ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${py_check_result}."
+    message="We generate a report if there are dangerous coding constructs in your code. Please read ${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/report/${py_check_result}."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 
 elif [[ $check_result == "skip" ]]; then
     echo "[DEBUG] Skipped. static code analysis tool - pylint."
     message="Skipped. Your PR does not include python code(s)."
-    cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 else
     echo "[DEBUG] Failed. static code analysis tool - pylint."
     message="Oooops. cppcheck is failed. Please, read $py_check_result for more details."
-    cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-pylint" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
     message=":octocat: **cibot**: $user_id, It seems that **$i** includes bug(s). You must fix incorrect coding constructs in the source code before entering a review process."

@@ -105,7 +105,7 @@ cd $dir_ci
 export dir_commit=${dir_worker}/${input_pr}-${input_date}-${input_commit}
 # --------------------------- CI Trigger (queued) --------------------------------------------------------------------
 message="Trigger: queued. The commit number is $input_commit."
-cibot_report $TOKEN "pending" "(INFO)${BOT_NAME}/pr-prebuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+cibot_report $TOKEN "pending" "(INFO)${BOT_NAME}/pr-prebuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 
 
@@ -165,8 +165,8 @@ echo -e "[DEBUG] Varaible global_check_result is $global_check_result."
 if [[ $global_check_result == "success" ]]; then
     # In case of success
     message="Successfully all modules of the prebuild group are done."
-    cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-prebuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
-    echo -e "[DEBUG] cibot_report $TOKEN success (INFO)${BOT_NAME}/pr-prebuild-group $message ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/ ${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-prebuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    echo -e "[DEBUG] cibot_report $TOKEN success (INFO)${BOT_NAME}/pr-prebuild-group $message ${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/ ${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # Inform PR submitter of success content to encourage review process
     echo -e "[DEBUG] (INFO)${BOT_NAME}/pr-prebuild-group: All modules of the prebuld group are passed - it is ready to review!"
@@ -175,7 +175,7 @@ if [[ $global_check_result == "success" ]]; then
 elif [[ $global_check_result == "failure" ]]; then
     # In case of failure
     message="Oooops. There is a failed module of the prebuild group. Update your code correctly after reading error messages."
-    cibot_report $TOKEN "failure" "(INFO)${BOT_NAME}/pr-prebuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "(INFO)${BOT_NAME}/pr-prebuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # Inform PR submitter of a hint to fix issues
     echo -e "[DEBUG] $user_id, One of the modules (prebuild group) is failed. If you need a hint to fix this issue, please go to ${REPOSITORY_WEB}/wiki/."
@@ -184,7 +184,7 @@ elif [[ $global_check_result == "failure" ]]; then
 else
     # In case that CI is broken
     message="Oooops. It seems that CI bot has bug(s). CI bot has to be fixed. Please contact administrator."
-    cibot_report $TOKEN "failure" "(INFO)${BOT_NAME}/pr-prebuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "(INFO)${BOT_NAME}/pr-prebuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     exit_code=1
 
 fi

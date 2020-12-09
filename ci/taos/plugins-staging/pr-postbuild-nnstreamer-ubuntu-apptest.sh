@@ -85,7 +85,7 @@ function save_consumer_msg() {
 function pr-postbuild-nnstreamer-ubuntu-apptest-wait-queue() {
     echo -e "[DEBUG] Waiting CI trigger to run nnstreamer sample app actually."
     message="Trigger: wait queue. There are other build jobs and we need to wait for some minutes. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 ##
@@ -93,7 +93,7 @@ function pr-postbuild-nnstreamer-ubuntu-apptest-wait-queue() {
 function pr-postbuild-nnstreamer-ubuntu-apptest-ready-queue() {
     echo -e "[DEBUG] Readying CI trigger to run nnstreamer sample app actually."
     message="Trigger: ready queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 ##
@@ -101,7 +101,7 @@ function pr-postbuild-nnstreamer-ubuntu-apptest-ready-queue() {
 function pr-postbuild-nnstreamer-ubuntu-apptest-run-queue() {
     echo -e "[DEBUG] Starting CI trigger to run a sample app of nnstreamer actually."
     message="Trigger: run queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     # The 'wget' command saves a log message with the "-o logfile" option while downloading files.
     # Run a locale setting which supports 'utf-8' to avoid an issue  that some file names
@@ -196,10 +196,10 @@ function pr-postbuild-nnstreamer-ubuntu-apptest-run-queue() {
         global_check_result="failure"
 
         message="Oooops. apptest is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         # Comment a hint on failed PR to author.
-        message=":octocat: **cibot**: $user_id, apptest could not be completed. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}"
+        message=":octocat: **cibot**: $user_id, apptest could not be completed. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 
         return ${result}
@@ -415,14 +415,14 @@ function pr-postbuild-nnstreamer-ubuntu-apptest-run-queue() {
     if [[ $check_result == "success" ]]; then
         # Report a success.
         message="Ubuntu.apptest Successful in $time_build_cost. Commit number is '$input_commit'."
-        cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         # Report a failure.
         message="Oooops. apptest is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-postbuild-nnstreamer-apptest" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         # comment a hint why a submitted PR is failed.
-        message=":octocat: **cibot**: $user_id, apptest could not be completed. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}"
+        message=":octocat: **cibot**: $user_id, apptest could not be completed. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     fi
 }

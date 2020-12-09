@@ -30,7 +30,7 @@
 function pr-postbuild-bazel-ubuntu-wait-queue() {
     echo -e "[DEBUG] Waiting CI trigger to run a bazel-based app actually."
     message="Trigger: wait queue. There are other build jobs and we need to wait for some minutes. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-bazel-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-bazel-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 ##
@@ -38,7 +38,7 @@ function pr-postbuild-bazel-ubuntu-wait-queue() {
 function pr-postbuild-bazel-ubuntu-ready-queue() {
     echo -e "[DEBUG] Readying CI trigger to run a bazel-based app actually."
     message="Trigger: ready queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-bazel-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-bazel-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 ##
@@ -46,7 +46,7 @@ function pr-postbuild-bazel-ubuntu-ready-queue() {
 function pr-postbuild-bazel-ubuntu-run-queue() {
     echo -e "[DEBUG] Starting CI trigger to run a bazel-based app actually."
     message="Trigger: run queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-bazel-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-bazel-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     export LC_ALL=en_US.UTF-8
     export LANG=en_US.UTF-8
@@ -195,14 +195,14 @@ function pr-postbuild-bazel-ubuntu-run-queue() {
     if [[ $check_result == "success" ]]; then
         # Report a success.
         message="Okay. Bazel(Ubuntu, X86_64) Successful in $time_build_cost. Commit number is '$input_commit'."
-        cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-bazel-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-bazel-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         # Report a failure.
         message="Oooops. Bazel(Ubuntu, X86_64) is failed. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-postbuild-bazel-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-postbuild-bazel-ubuntu" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         # comment a hint why a submitted PR is failed.
-        message=":octocat: **cibot**: $user_id, Bazel(Ubuntu, X86_64) could not be completed. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}"
+        message=":octocat: **cibot**: $user_id, Bazel(Ubuntu, X86_64) could not be completed. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     fi
 }

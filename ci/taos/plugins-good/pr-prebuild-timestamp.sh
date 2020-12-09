@@ -46,11 +46,11 @@ fi
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A timestamp."
     message="Successfully the commit has no timestamp error."
-    cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. A timestamp."
     message="Timestamp error: files are from the future: ${TIMESTAMP_READ} > (now) ${NOW_READ}."
-    cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-timestamp" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 fi
 
 

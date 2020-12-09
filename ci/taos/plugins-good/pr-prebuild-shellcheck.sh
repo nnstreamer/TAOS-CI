@@ -98,18 +98,18 @@ fi
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A shell script syntax checker - shellcheck."
     message="Successfully source code(s) is written without a syntax error."
-    cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-shellcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-shellcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 elif [[ $check_result == "skip" ]]; then
     echo "[DEBUG] Skipped. A shell script syntax checker - shellcheck."
     message="Skipped. Your PR does not include document file(s) such as .sh and .bash."
-    cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-shellcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-shellcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 else
     echo "[DEBUG] Failed. A shell script syntax checker - shellcheck."
     message="Oooops. The shellcheck module is failed. Please, read $shell_syntax_check_result for more details."
-    cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-shellcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-shellcheck" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
-    message=":octocat: **cibot**: $user_id, It seems that **$i** includes syntax errors. https://github.com/koalaman/shellcheck/wiki/SC1118. Please read ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${shell_syntax_check_result}, and modify a incorrect statement before starting a review process."
+    message=":octocat: **cibot**: $user_id, It seems that **$i** includes syntax errors. https://github.com/koalaman/shellcheck/wiki/SC1118. Please read ${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/report/${shell_syntax_check_result}, and modify a incorrect statement before starting a review process."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 fi
 

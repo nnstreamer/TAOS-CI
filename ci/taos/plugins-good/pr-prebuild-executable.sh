@@ -46,11 +46,11 @@ echo "##########################################################################
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. A executable bits."
         message="Successfully, The commits are passed."
-        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-executable" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-executable" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. A executable bits."
         message="Oooops. The commit has an invalid executable file ${X}. Please turn the executable bits off."
-        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-executable" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-executable" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     
         message=":octocat: **cibot**: $user_id, Oooops. The commit has an invalid executable file. The file is **${X}**. Please turn the executable bits off. Run **chmod 644 file-name** command."
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"

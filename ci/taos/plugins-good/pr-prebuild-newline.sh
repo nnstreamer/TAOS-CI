@@ -72,15 +72,15 @@ function pr-prebuild-newline(){
     if [[ $check_result == "success" ]]; then
         echo -e "[DEBUG] Passed. No newline anomaly."
         message="Successfully all text files are passed without newline issue."
-        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "skip" ]]; then
         echo -e "[DEBUG] Skipped. The file is not 'ASCII text' type."
         message="Skipped. The file is not 'ASCII text' type."
-        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
         echo -e "[DEBUG] Failed. A newline anomaly happened."
         message="Oooops. New line checker is failed at $i_filename."
-        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-newline" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
         # inform PR submitter of a hint in more detail
         message=":octocat: **cibot**: $user_id, The last line of a text file must have a newline character. Please append a new line at the end of the line in $current_file."
