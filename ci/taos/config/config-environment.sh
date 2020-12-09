@@ -177,5 +177,4 @@ _cov_red_card=50
 # For example, if you want to activate a "doc" directory, write a "doc/" format (without "/doc/" format).
 SELECTIVE_PR_AUDIT=0
 PR_ACTIVATE_DIR="doc/"
-pr_patch_addr="patch-diff.githubusercontent.com"
 
