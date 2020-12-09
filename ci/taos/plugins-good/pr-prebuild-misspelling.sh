@@ -94,21 +94,21 @@ done
 if [[ $check_result == "success" ]]; then
     echo "[DEBUG] Passed. A spell check tool - aspell."
     message="Successfully source code(s) is written without a misspelled statement."
-    cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-misspelling" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-misspelling" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
-    message="**INFO:** You can read if there are misspelled characters at our misspelling check report. Please read ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${typo_check_result}."
+    message="**INFO:** You can read if there are misspelled characters at our misspelling check report. Please read ${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/report/${typo_check_result}."
     cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 
 elif [[ $check_result == "skip" ]]; then
     echo "[DEBUG] Skipped. A spell check tool - aspell."
     message="Skipped. Your PR does not include document file(s) such as .txt and .md."
-    cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-misspelling" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-misspelling" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
 else
     echo "[DEBUG] Failed. A spell check tool - aspell."
     message="Oooops. spelling checker is failed. Please, read $typo_check_result for more details."
-    cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-misspelling" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+    cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-misspelling" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
     # inform PR submitter of a hint in more detail
     message=":octocat: **cibot**: $user_id, It seems that **$i** includes typo(s). Please modify a misspelled statement before starting a review process."

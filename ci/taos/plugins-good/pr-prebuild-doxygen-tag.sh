@@ -195,15 +195,15 @@ function pr-prebuild-doxygen-tag(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. Doxygen documentation."
         message="Successfully the Doxygen checker is passed."
-        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "skip" ]]; then
         echo "[DEBUG] Skipped. Doxygen documentation"
         message="Skipped. Your PR does not include source code(s)."
-        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
         echo "[ERROR] Failed. Doxygen documentation."
         message="Oooops. The Doxygen checker is failed. Please write a Doxygen document in your code."
-        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
         # inform a PR submitter of a hint message in more detail
         message=":octocat: **cibot**: $user_id, **$latest_failed_file** does not include Doxygen tags such as **$doxygen_basic_rules**. You must include the Doxygen tags in the source code."

@@ -65,22 +65,22 @@ function pr-prebuild-rpm-spec(){
     
         # Inform PR submitter of a hint in more detail to fix incorrect *.spec file.
         # TODO: Improve the existing handling method in case that developers incorrectly write *.spec file.
-        message=":octocat: **cibot**: [FYI] We inform $user_id of a check result of spec file with rpmlint. If there are some warning(s) or error(s) in your spec file, modify ${i} correctly after reading the report at ${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/${RPM_SPEC_REPORT_FILE}."
+        message=":octocat: **cibot**: [FYI] We inform $user_id of a check result of spec file with rpmlint. If there are some warning(s) or error(s) in your spec file, modify ${i} correctly after reading the report at ${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/report/${RPM_SPEC_REPORT_FILE}."
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     
         if [[ $check_result == "success" ]]; then
             echo "[DEBUG] Passed. the rpm spec checker."
             message="Successfully rpm spec checker is done."
-            cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+            cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
         else
             echo "[DEBUG] Failed. the rpm spec checker."
             message="Oooops. The rpm spec checker is failed."
-            cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+            cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
         fi
     else
         echo "[DEBUG] Skipped. the rpm spec checker."
         message="Skipped. rpm spec checker is jumped because you did not modify a spec file."
-        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-rpm-spec" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     
     fi
 }

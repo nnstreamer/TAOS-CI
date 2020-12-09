@@ -42,7 +42,7 @@
 
 # The account informaiton of GitHub repository
 _user_name="$GITHUB_ACCOUNT"
-_repo_name="$PRJ_REPO_UPSTREAM"
+_repo_name="$PRJ_REPO_UPSTREAM_LOCAL"
 
 # Set websites
 _coverity_repo_site_login="https://scan.coverity.com/projects/${_user_name}-{$_repo_name}/builds/new?tab=upload"
@@ -358,7 +358,7 @@ function pr-prebuild-coverity(){
     else
         echo "[DEBUG] Failed. Static code analysis tool for security - coverity."
         message="Ooops. The number of outstanding defects ($stat_outstanding) exceeds $_cov_red_card. Please fix outstanding defects less than $_cov_red_card."
-        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-coverity" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-coverity" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
         # Inform a PR submitter of current defects status of Coverity scan
         message=":octocat: **cibot**: $user_id, **Coverity Report**, **[CRITICAL]**: Ooops. The number of outstanding defects exceeds $_cov_yed_card. Please fix outstanding defects until less than $_cov_red_card. For more details, please visit ${_coverity_repo_site_logout}.\n\n$msg_defects\n\n$msg_bugs\n\n"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"

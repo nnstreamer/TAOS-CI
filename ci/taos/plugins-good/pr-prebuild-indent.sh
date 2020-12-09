@@ -76,11 +76,11 @@ function pr-prebuild-indent(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. A indent formatting style."
         message="Successfully, The commits are passed."
-        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-indent" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-indent" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. A indent formatting style."
         message="Oooops. The component you are submitting with incorrect indent-format style."
-        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-indent" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-indent" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     fi
 
 }

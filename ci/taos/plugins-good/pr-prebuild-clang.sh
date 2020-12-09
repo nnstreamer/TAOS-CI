@@ -103,11 +103,11 @@ function pr-prebuild-clang(){
     if [[ $check_result == "success" ]]; then
         echo "[DEBUG] Passed. A clang-formatting style."
         message="Successfully, The commits are passed."
-        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-clang" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-clang" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     else
         echo "[DEBUG] Failed. A clang-formatting style."
         message="Oooops. The component you are submitting with incorrect clang-format style."
-        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-clang" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-clang" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     fi
 
 }

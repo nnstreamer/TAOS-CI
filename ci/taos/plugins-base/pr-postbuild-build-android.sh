@@ -91,19 +91,19 @@
 # @brief [MODULE] ${BOT_NAME}/pr-postbuild-build-android-wait-queue
 function pr-postbuild-build-android-wait-queue(){
     message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 # @brief [MODULE] ${BOT_NAME}/pr-postbuild-build-android-ready-queue
 function pr-postbuild-build-android-ready-queue(){
     message="Trigger: ready queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 # @brief [MODULE] ${BOT_NAME}/pr-postbuild-build-android-run-queue
 function pr-postbuild-build-android-run-queue(){
     message="Trigger: run queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     echo "########################################################################################"
     echo "[MODULE] ${BOT_NAME}/pr-postbuild-build-android: check a build process for Android platform"
@@ -246,10 +246,10 @@ function pr-postbuild-build-android-run-queue(){
         echo -e "[DEBUG] So, we stop remained all tasks at this time."
 
         message="Skipped the ndk-build procedure. No buildable files found. Commit number is $input_commit."
-        cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         message="Skipped the ndk-build procedure. Successfully all postbuild modules are passed. Commit number is $input_commit."
-        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         echo -e "[DEBUG] The ndk-build procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-group and ${BOT_NAME}/pr-prebuild-group."
     else
@@ -268,10 +268,10 @@ function pr-postbuild-build-android-run-queue(){
         # Let's report build result of source code
         if [[ $check_result == "success" ]]; then
             message="Android.build Successful in $time_build_cost. Commit number is '$input_commit'."
-            cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+            cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
         else
             message="Android.build Failure after $time_build_cost. Resubmit the PR after fixing correctly. Commit number is $input_commit."
-            cibot_report $TOKEN "failure" "${BOT_NAME}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+            cibot_report $TOKEN "failure" "${BOT_NAME}/pr-postbuild-build-android" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
             export BUILD_TEST_FAIL=1
         fi

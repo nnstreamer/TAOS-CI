@@ -32,9 +32,12 @@ TOKEN="111111111122222222223333333333444444444455"
 # e.g., https://github-website/{account_name}/{project_name}/
 GITHUB_ACCOUNT="nnsuite"
 
-# Write a project name of a github website of the '{master|upstream}' branch
-# e.g., https://github-website/{account_name}/{project_name}/
-PRJ_REPO_UPSTREAM="TAOS-CI"
+# Write a project name (or repository name)
+# e.g., https://github-website/{account_name}/{project_repo_name}/
+# A repo name in github server (.._SERVER)
+# A repo name in CI server (.._LOCAL)
+PRJ_REPO_UPSTREAM_SERVER="TAOS-CI"
+PRJ_REPO_UPSTREAM_LOCAL="TAOS-CI"
 
 # Specify the web address of the CI server. Should end with /
 CISERVER="http://<YOUR_CI_DNS>.mooo.com/"
@@ -43,7 +46,7 @@ CISERVER="http://<YOUR_CI_DNS>.mooo.com/"
 # Add root path of source folders. For example, specify a path of source code:
 # 1) to check prohibited hardcoded paths (e.g., /home/* for now)
 # 2) to check code formatting sytele with clang-format
-SRC_PATH="./ci/"
+SRC_PATH="./ci/taos/"
 
 # If you want to use another name instead of the default TAOS name, Write the name that you
 # want to use for your GitHub repository. For example, "CHATBOT", "REVIEWBOT".
@@ -143,19 +146,19 @@ VERSION="1.5.20200925"
 # We assume that the default folder of the www-data (user-id of Apache webserver) is "/var/www/html/" folder. 
 
 # Reference repository to speed up the exectuion time of the "git clone" command
-REFERENCE_REPOSITORY="/var/www/html/$PRJ_REPO_UPSTREAM/"
+REFERENCE_REPOSITORY="/var/www/html/$PRJ_REPO_UPSTREAM_LOCAL/"
 
 # Specify RPM repo cache for accerating the GBS build speed of Tizen platform
-REPOCACHE="/var/www/html/$PRJ_REPO_UPSTREAM/repo_cache/"
+REPOCACHE="/var/www/html/$PRJ_REPO_UPSTREAM_LOCAL/repo_cache/"
 
 # GitHub repostiroy a web address
-REPOSITORY_WEB="https://github.com/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
-REPOSITORY_GIT="https://github.com/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM.git"
+REPOSITORY_WEB="https://github.com/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM_SERVER"
+REPOSITORY_GIT="https://github.com/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM_SERVER.git"
 
 # Specify GitHub webhook API address
-# a. Enterprise Edition - "https://github.{YOUR_COMPANY_DNS}/api/v3/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
-# b. Community  Edition- "https://api.github.com/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
-GITHUB_WEBHOOK_API="https://api.github.com/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM"
+# a. Enterprise Edition - "https://github.{YOUR_COMPANY_DNS}/api/v3/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM_SERVER"
+# b. Community  Edition- "https://api.github.com/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM_SERVER"
+GITHUB_WEBHOOK_API="https://api.github.com/repos/$GITHUB_ACCOUNT/$PRJ_REPO_UPSTREAM_SERVER"
 
 # Coverity module, the configuration variables for the coverity module
 # https://scan.coverity.com/dashboard

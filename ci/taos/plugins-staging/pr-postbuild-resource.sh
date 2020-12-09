@@ -77,7 +77,7 @@ function pr-postbuild-resource(){
         cibot_report $TOKEN "failure" "${BOT_NAME}/pr-postbuild-resource" "$message" "$REPOSITORY_WEB/pull/$input_pr/commits/$input_commit" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     
         # comment a hint on failed PR to author.
-        message=":octocat: **cibot**: $user_id, Resource checker could not be completed because not-installed resources exist. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/report/resource_check_${input_pr}_error.txt."
+        message=":octocat: **cibot**: $user_id, Resource checker could not be completed because not-installed resources exist. To find out the reasons, please go to ${CISERVER}/${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/report/resource_check_${input_pr}_error.txt."
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     fi
 }

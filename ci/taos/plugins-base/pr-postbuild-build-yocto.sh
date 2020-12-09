@@ -49,19 +49,19 @@
 # @brief [MODULE] ${BOT_NAME}/pr-postbuild-build-yocto-wait-queue
 function pr-postbuild-build-yocto-wait-queue(){
     message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 # @brief [MODULE] ${BOT_NAME}/pr-postbuild-build-yocto-ready-queue
 function pr-postbuild-build-yocto-ready-queue(){
     message="Trigger: ready queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 }
 
 # @brief [MODULE] ${BOT_NAME}/pr-postbuild-build-yocto-run-queue
 function pr-postbuild-build-yocto-run-queue(){
     message="Trigger: run queue. The commit number is $input_commit."
-    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+    cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     echo "########################################################################################"
     echo "[MODULE] ${BOT_NAME}/pr-postbuild-build-yocto: check build process for YOCTO distribution"
@@ -130,15 +130,15 @@ function pr-postbuild-build-yocto-run-queue(){
         # www-data    ALL=(ALL) NOPASSWD:ALL
         echo -e "[DEBUG] The current folder is $(pwd)."
 
-        echo "[DEBUG] Checking $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/recipes/${PRJ_REPO_UPSTREAM}-${input_commit}"
-        if [[ -d $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/recipes/${PRJ_REPO_UPSTREAM}-${input_commit} ]]; then
-            echo "[DEBUG] devtool reset ${PRJ_REPO_UPSTREAM}-${input_commit}"
-            devtool reset ${PRJ_REPO_UPSTREAM}-${input_commit} \
+        echo "[DEBUG] Checking $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/recipes/${PRJ_REPO_UPSTREAM_LOCAL}-${input_commit}"
+        if [[ -d $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/recipes/${PRJ_REPO_UPSTREAM_LOCAL}-${input_commit} ]]; then
+            echo "[DEBUG] devtool reset ${PRJ_REPO_UPSTREAM_LOCAL}-${input_commit}"
+            devtool reset ${PRJ_REPO_UPSTREAM_LOCAL}-${input_commit} \
             2> ../report/build_log_${input_pr}_devtool_reset_yocto_error.txt 1> ../report/build_log_${input_pr}_devtool_reset_yocto_output.txt
-            if [[ -d $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit} ]]; then
-                echo -e "[DEBUG] Removing $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit} folder"
-                echo -e "[DEBUG] rm -rf $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit}"
-                rm -rf $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/sources/${PRJ_REPO_UPSTREAM}-${input_commit}
+            if [[ -d $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/sources/${PRJ_REPO_UPSTREAM_LOCAL}-${input_commit} ]]; then
+                echo -e "[DEBUG] Removing $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/sources/${PRJ_REPO_UPSTREAM_LOCAL}-${input_commit} folder"
+                echo -e "[DEBUG] rm -rf $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/sources/${PRJ_REPO_UPSTREAM_LOCAL}-${input_commit}"
+                rm -rf $YOCTO_ESDK_DIR/${YOCTO_ESDK_NAME}/workspace/sources/${PRJ_REPO_UPSTREAM_LOCAL}-${input_commit}
                 if [[ $? -ne 0 ]]; then
                     echo -e "[DEBUG][FAILED] Oooops!!!!!! the source folder is still not removed."
                 else
@@ -151,15 +151,15 @@ function pr-postbuild-build-yocto-run-queue(){
         id -a
 
         github_site="github.com"
-        echo "[DEBUG] devtool add ${PRJ_REPO_UPSTREAM}-${input_commit} git@${github_site}:${GITHUB_ACCOUNT}/${PRJ_REPO_UPSTREAM}.git"
-        devtool add ${PRJ_REPO_UPSTREAM}-${input_commit} git@${github_site}:${GITHUB_ACCOUNT}/${PRJ_REPO_UPSTREAM}.git \
+        echo "[DEBUG] devtool add ${PRJ_REPO_UPSTREAM_LOCAL}-${input_commit} git@${github_site}:${GITHUB_ACCOUNT}/${PRJ_REPO_UPSTREAM_LOCAL}.git"
+        devtool add ${PRJ_REPO_UPSTREAM_LOCAL}-${input_commit} git@${github_site}:${GITHUB_ACCOUNT}/${PRJ_REPO_UPSTREAM_LOCAL}.git \
         2> ../report/build_log_${input_pr}_devtool_add_yocto_error.txt 1> ../report/build_log_${input_pr}_devtool_add_yocto_output.txt
         echo "[DEBUG] The return value of 'devtool add' command is $?."
 
         echo -e "[DEBUG] starting 'devtool build' command."
         # @todo: Note that all recipes install dependant packages from the same local cache folder. It means that build process is not completely consistent.
-        echo "[DEBUG] devtool build ${PRJ_REPO_UPSTREAM}-${input_commit} "
-        devtool build ${PRJ_REPO_UPSTREAM}-${input_commit} \
+        echo "[DEBUG] devtool build ${PRJ_REPO_UPSTREAM_LOCAL}-${input_commit} "
+        devtool build ${PRJ_REPO_UPSTREAM_LOCAL}-${input_commit} \
         2> ../report/build_log_${input_pr}_devtool_build_yocto_error.txt 1> ../report/build_log_${input_pr}_devtool_build_yocto_output.txt
         build_result=$?
     fi
@@ -180,10 +180,10 @@ function pr-postbuild-build-yocto-run-queue(){
         echo -e "[DEBUG] So, we stop remained all tasks at this time."
 
         message="Skipped devtool procedure. No buildable files found. Commit number is $input_commit."
-        cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         message="Skipped devtool procedure. Successfully all postbuild modules are passed. Commit number is $input_commit."
-        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         echo -e "[DEBUG] devtool procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-group and ${BOT_NAME}/pr-prebuild-group."
     elif [[ $YOCTO_ESDK_NAME == "" ]]; then
@@ -193,10 +193,10 @@ function pr-postbuild-build-yocto-run-queue(){
         echo -e "[DEBUG] So, we stop remained all tasks at this time."
 
         message="Skipped devtool procedure. eSDK is not installed. Commit number is $input_commit."
-        cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         message="Skipped devtool procedure. Successfully all postbuild modules are passed. Commit number is $input_commit."
-        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+        cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
         echo -e "[DEBUG] devtool procedure is skipped - it is ready to review! :shipit: Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-group and ${BOT_NAME}/pr-prebuild-group."
     else
@@ -215,10 +215,10 @@ function pr-postbuild-build-yocto-run-queue(){
         # Let's report build result of source code
         if [[ $check_result == "success" ]]; then
             message="Yocto.build Successful in $time_build_cost. Commit number is '$input_commit'."
-            cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+            cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
         else
             message="Yocto.build Failure after $time_build_cost. Commit number is $input_commit."
-            cibot_report $TOKEN "failure" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
+            cibot_report $TOKEN "failure" "${BOT_NAME}/pr-postbuild-build-yocto" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
             export BUILD_TEST_FAIL=1
         fi
