@@ -159,7 +159,8 @@ run_git_clone="sudo -Hu www-data git clone --reference ${REFERENCE_REPOSITORY} $
 echo -e "[DEBUG] $run_git_clone"
 $run_git_clone
 if [[ $? != 0 ]]; then
-    echo "[DEBUG] ERROR: 'git clone' command is failed because of incorrect setting of CI server." | tee -a $logfile_gateway
+    echo "[DEBUG] ERROR: 'git clone' is failed due to incorrect setting of CI server." | tee -a $logfile_gateway
+    echo "[DEBUG] ERROR: git clone --reference ${REFERENCE_REPOSITORY} $input_repo" | tee -a $logfile_gateway
     echo "[DEBUG] Please check /var/www/ permission, /var/www/html/.netrc, and /var/www/html/.gbs.conf." | tee -a $logfile_gateway
     echo "[DEBUG] current id: $(id)" | tee -a $logfile_gateway
     echo "[DEBUG] current path: $(pwd)" | tee -a $logfile_gateway
