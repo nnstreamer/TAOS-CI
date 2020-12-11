@@ -73,6 +73,7 @@ function pr-postbuild-bazel-ubuntu-run-queue() {
     START_DOWNLOAD="git clone https://github.com/{your_account}/{download_repo}.git temp_repo"
     START_BUILDTEST="bazel build --cxxopt='-std=c++11' //src/main:your_test"
     START_RUNTEST="time ./bazel-bin/src/main/your_test | tee result.txt"
+    START_CODEGRAPH="deps(//src/main:your_test)"
     TARGET_FOLDER="subdir/module/core"
 
     # setup Bazel build environment
@@ -168,7 +169,7 @@ function pr-postbuild-bazel-ubuntu-run-queue() {
 
     # Generate code flow graph
     (bazel query --notool_deps \
-    --noimplicit_deps "deps(//src/main:your_test)" \
+    --noimplicit_deps "$START_CODEGRAPH" \
     --output graph) > result.dot
     result+=$?
     [[ $result -eq 0 ]] || echo -e "[DEBUG] 'bazel query' cmd to create result.dot is failed."
