@@ -64,6 +64,7 @@ function pr-postbuild-bazel-ubuntu-run-queue() {
     check_cmd_dep grep
     check_cmd_dep ps
     check_cmd_dep tail
+    check_cmd_dep dot
 
     ########## Step 1/4: Set-up environment variables.
     declare -i result=0
@@ -165,9 +166,22 @@ function pr-postbuild-bazel-ubuntu-run-queue() {
         echo -e "###### Skipping a run-test [$count/$loop_num] ... ######"
     fi
 
-    # archive a result file
-    echo -e "The repository address for this PR: ${dir_ci}/${dir_commit}/"
-    cp ./result.txt ${dir_ci}/${dir_commit}/report/bazel-android-result.txt
+    # Generate code flow graph
+    (bazel query --notool_deps \
+    --noimplicit_deps "deps(//src/main:your_test)" \
+    --output graph) > result.dot
+    result+=$?
+    [[ $result -eq 0 ]] || echo -e "[DEBUG] 'bazel query' cmd to create result.dot is failed."
+
+    dot -Tpng ./result.dot -o result.png
+    result+=$?
+    [[ $result -eq 0 ]] || echo -e "[DEBUG] 'dot' cmd to create result.png, is failed."
+
+    # Archive a result file
+    echo -e "[DEBUG] The repository location for this PR: ${dir_ci}/${dir_commit}/"
+    cp ./result.txt ${dir_ci}/${dir_commit}/report/bazel-ubuntu-result.txt
+    cp ./result.dot ${dir_ci}/${dir_commit}/report/bazel-ubuntu-result.dot
+    cp ./result.png ${dir_ci}/${dir_commit}/report/bazel-ubuntu-result.png
 
     popd
 
