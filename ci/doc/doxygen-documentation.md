@@ -303,5 +303,5 @@ EXTENSION_MAPPING = sh=C
 ```
 
 # References
-  * Getting started: http://www.stack.nl/~dimitri/doxygen/manual/starting.html
+  * Getting started: https://www.doxygen.nl/manual/starting.html
   * Case study (Linux kernel): https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/sched/core.c?h=v4.13-rc1#n4454
