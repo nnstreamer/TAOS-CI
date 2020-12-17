@@ -328,11 +328,15 @@ if [[ $global_check_result == "success" ]]; then
     cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
     # Let's approve it as a reviewer if this PR passes all CI modules.
-    message=" $user_id, :100 All CI checkers are successfully verified. Thanks."
-    cibot_review $TOKEN "APPROVE" "$message" "$input_commit" "$GITHUB_WEBHOOK_API/pulls/$input_pr/reviews
+    if [[ $pr_comment_review_activity == 1 ]]; then
+        message=" $user_id, :100 All CI checkers are successfully verified. Thanks."
+        cibot_review $TOKEN "APPROVE" "$message" "$input_commit" "$GITHUB_WEBHOOK_API/pulls/$input_pr/reviews
+    fi
 
     # If contributors want later, let's inform developers of CI test result to go to a review process as a final step before merging a PR
-    echo "[DEBUG] All postbuild modules are passed - it is ready to review! :shipit:. Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-group and ${BOT_NAME}/pr-prebuild-group."
+    echo "[DEBUG] All postbuild modules are passed."
+    echo "[DEBUG] It is ready to review! :shipit:."
+    echo "[DEBUG] Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-group and ${BOT_NAME}/pr-prebuild-group."
 
 elif [[ $global_check_result == "failure" ]]; then
     # The global check is failed.
@@ -341,7 +345,7 @@ elif [[ $global_check_result == "failure" ]]; then
     exit_code=1
 else
     # The global check is failed due to CI error.
-    message="CI Error. There is a bug in CI script. Please contact the CI administrator."
+    message="CI Error. It seems that there is a bug in a CI script file. Please contact the CI administrator."
     cibot_report $TOKEN "error" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
     echo -e "[DEBUG] It seems that this script has a bug. Please check value of \$global_check_result."
     exit_code=1

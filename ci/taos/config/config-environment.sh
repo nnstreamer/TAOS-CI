@@ -84,6 +84,9 @@ pr_comment_many_commit=0
 # Inform a PR submitter of the webpage address in order that they can monitor the current status of their PR.
 pr_comment_pr_monitor=0
 
+# Empower CI bot to do the 'Review changes' activity (e.g., Comment, Approve, Request changes) as a reviwer
+pr_comment_review_activity=1
+
 #### Build test: Write a build type to test ex) "x86_64 i586 armv7l aarch64" 
 # Currently, this variable is declared to hande the "gbs build" command on Tizen.
 pr_build_arch_type="x86_64"
