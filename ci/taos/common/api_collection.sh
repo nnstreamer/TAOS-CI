@@ -16,9 +16,15 @@
 
 
 ##
-# @file  api_collection.sh
-# @brief API collection to send webhook messages to a github server and to manage comment functions
-
+# @file   api_collection.sh
+# @author Geunsik Lim <geunsik.lim@samsung.com>
+# @brief  API collection to send webhook messages to a github server and to manage comment functions
+# @note   API list is as follows.
+#           cibot_comment()
+#           cibot_report()
+#           cibot_review()
+#           goto_repodir()
+#           check_dep_cmd()
 
 ##
 # @brief API to write comment to new pull request with curl
@@ -48,8 +54,8 @@ function cibot_comment(){
     # @see https://developer.github.com/v3/repos/deployments/
     TRIM_MESSAGE="$MESSAGE"
 
-    # let's do PR report
-    /usr/bin/curl -H "Content-Type: application/json" \
+    # let's do a comment to a PR
+     /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
      --data "{\"body\":\"$TRIM_MESSAGE\"}" \
     $COMMIT_ADDRESS
@@ -104,7 +110,7 @@ function cibot_report(){
     fi
     echo -e "[DEBUG] The edited TRIM_DESCRIPTION is \"$TRIM_DESCRIPTION\"."
 
-    # let's send PR report to change PR status
+    # let's send examination results to change PR status
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
     --data "{\"state\":\"$STATE\",\"context\":\"$CONTEXT\",\"description\":\"$TRIM_DESCRIPTION\",\"target_url\":\"$TARGET_URL\"}" \
@@ -115,6 +121,64 @@ function cibot_report(){
     echo -e "[DEBUG] Note: If webhook server replies \"message\": \"Not Found\", add a privileged user id at 'Setting - Collaborators'."
     echo -e "[DEBUG] Note: The privileged user id has to be appended by \"Write\" permission."
     echo -e "[DEBUG] Note: If webhook server replies \"message\": \"Bad credentials\", try do it again with a correct token key."
+    echo -e "[DEBUG] -----------------------------------------------------------------------------"
+}
+
+##
+# @brief API to do a review result on a pull request with curl
+# @param
+# arg1: token number
+# arg2: event (e.g., APPROVE, REQUEST_CHANGES, or COMMENT)
+# arg3: description
+# arg4: commit ID
+# arg5: API address
+# @note The below statement shows how to use this API.
+#  message="All CI checkers are successfully passed. LGTM."
+#
+#  cibot_review $TOKEN "APPROVE" "$message" "$input_commit" 
+#  "$GITHUB_WEBHOOK_API/$GITHUB_ACCOUNT/${PRJ_REPO_UPSTREAM_SERVER}/pulls/$input_pr/reviews" 
+#
+function cibot_review(){
+    # check if input argument is correct.
+    if [[ $1 == "" || $2 == ""  || $3 == ""  || $4 == ""  || $5 == "" ]]; then
+        printf "[DEBUG] ERROR: Please, input correct arguments to run cibot_report function.\n"
+        exit 1
+    fi
+    # argeuments
+    TOKEN="$1"
+    EVENT="$2"
+    DESCRIPTION="$3"
+    COMMIT_ID="$4"
+    API_ADDRESS="$5"
+
+    echo -e "[DEBUG] Running the curl-based $FUNCNAME API to change the PR status."
+    echo -e "[DEBUG] EVENT: $EVENT"
+
+    # trim the message that exceeds 140 characters in case of PR status change.
+    # In case that cibot create deployment statuses for a given PR:
+    # A short description of the status. Maximum length of 140 characters. Default: ""
+    # @see https://developer.github.com/v3/repos/deployments/
+    TRIM_DESCRIPTION=""
+    msg_max=120
+    num_chars=`echo $DESCRIPTION | wc -c`
+    echo -e "[DEBUG] The length of a webhook message is \"$num_chars\"."
+    echo -e "[DEBUG] The original DESCRIPTION is \"$DESCRIPTION\"."
+    if [[ $num_chars -gt $msg_max ]]; then
+        TRIM_DESCRIPTION="`echo $DESCRIPTION | cut -c 1-${msg_max}` ..."
+    else
+        TRIM_DESCRIPTION="$DESCRIPTION"
+    fi
+    echo -e "[DEBUG] The edited TRIM_DESCRIPTION is \"$TRIM_DESCRIPTION\"."
+
+    # let's send a review result on a PR
+    # https://docs.github.com/en/free-pro-team@latest/rest/reference/pulls#create-a-review-for-a-pull-request
+    /usr/bin/curl -X POST -H "Accept: application/vnd.github.v3+json" \
+    -H "Authorization: token "$TOKEN"  " \
+    --data "{\"commitid\":\"$COMMIT_ID\",\"event\":\"$EVENT\",\"body\":\"$TRIM_DESCRIPTION\"}" \
+    $API_ADDRESS
+
+    echo -e "[DEBUG] -----------------------------------------------------------------------------"
+    echo -e "[DEBUG] $TRIM_DESCRIPTION"
     echo -e "[DEBUG] -----------------------------------------------------------------------------"
 }
 
