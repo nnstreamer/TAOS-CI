@@ -327,6 +327,10 @@ if [[ $global_check_result == "success" ]]; then
     message="Successfully all postbuild modules are passed. Commit number is $input_commit."
     cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
+    # Let's approve it as a reviewer if this PR passes all CI modules.
+    message=" $user_id, :100 All CI checkers are successfully verified. Thanks."
+    cibot_review $TOKEN "APPROVE" "$message" "$input_commit" "$GITHUB_WEBHOOK_API/pulls/$input_pr/reviews
+
     # If contributors want later, let's inform developers of CI test result to go to a review process as a final step before merging a PR
     echo "[DEBUG] All postbuild modules are passed - it is ready to review! :shipit:. Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-group and ${BOT_NAME}/pr-prebuild-group."
 
