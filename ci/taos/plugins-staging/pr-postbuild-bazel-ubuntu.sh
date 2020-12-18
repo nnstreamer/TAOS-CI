@@ -70,8 +70,9 @@ function pr-postbuild-bazel-ubuntu-run-queue() {
     declare -i result=0
 
     # [User Area] Define an each statement to download, build, and run source files.
+    # Note that Bazel uses a standard error (2) by default for I/O streams.
     START_DOWNLOAD="git clone https://github.com/{your_account}/{download_repo}.git temp_repo"
-    START_BUILDTEST="bazel build --cxxopt='-std=c++11' //src/main:your_test"
+    START_BUILDTEST="bazel build --cxxopt='-std=c++11' //src/main:your_test --sandbox_debug 2>&1 "
     START_RUNTEST="time ./bazel-bin/src/main/your_test | tee result.txt"
     START_CODEGRAPH="deps(//src/main:your_test)"
     TARGET_FOLDER="subdir/module/core"
