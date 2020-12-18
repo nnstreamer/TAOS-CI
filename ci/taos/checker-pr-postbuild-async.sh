@@ -329,7 +329,7 @@ if [[ $global_check_result == "success" ]]; then
 
     # Let's approve it as a reviewer if this PR passes all CI modules.
     if [[ $pr_comment_review_activity == 1 ]]; then
-        message=" $user_id, :100 All CI checkers are successfully verified. Thanks."
+        message=" $user_id, :100: All CI checkers are successfully verified. Thanks."
         cibot_review $TOKEN "APPROVE" "$message" "$input_commit" "$GITHUB_WEBHOOK_API/pulls/$input_pr/reviews"
     fi
 
