@@ -55,6 +55,7 @@ function cibot_comment(){
     TRIM_MESSAGE="$MESSAGE"
 
     # let's do a comment to a PR
+    # https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#create-a-commit-comment
      /usr/bin/curl -H "Content-Type: application/json" \
      -H "Authorization: token "$TOKEN"  " \
      --data "{\"body\":\"$TRIM_MESSAGE\"}" \
@@ -111,6 +112,7 @@ function cibot_report(){
     echo -e "[DEBUG] The edited TRIM_DESCRIPTION is \"$TRIM_DESCRIPTION\"."
 
     # let's send examination results to change PR status
+    # https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#list-pull-requests-associated-with-a-commit
     /usr/bin/curl -H "Content-Type: application/json" \
     -H "Authorization: token "$TOKEN"  " \
     --data "{\"state\":\"$STATE\",\"context\":\"$CONTEXT\",\"description\":\"$TRIM_DESCRIPTION\",\"target_url\":\"$TARGET_URL\"}" \
