@@ -52,12 +52,12 @@ input_pr=$5
 input_delivery_id=$6
 
 # Note that the server administrator must declare variables after installing required packages.
-echo "[DEBUG] Importing the config-server-admistrator.sh file.\n"
+echo -e "[DEBUG] Importing the config-server-admistrator.sh file.\n"
 source ./config/config-server-administrator.sh
 
 # Note the "source ./config/config-environment.sh" file can be called in another script
 # instead of in this file. It is to support asynchronous operation from cibot.php
-echo "[DEBUG] Importing the config-environment.sh file.\n"
+echo -e "[DEBUG] Importing the config-environment.sh file.\n"
 source ./config/config-environment.sh
 
 # Check if input arguments are correct.
@@ -67,7 +67,7 @@ if [[ $1 == "" || $2 == "" || $3 == "" || $4 == "" || $5 == "" || $6 == "" ]]; t
 fi
 
 # Import global variables
-echo "[DEBUG] Importing a global variable module.\n"
+echo -e "[DEBUG] Importing a global variable module.\n"
 source ./common/global-variable.sh
 
 # Check if dependent packages are installed
@@ -81,14 +81,14 @@ check_cmd_dep cat
 check_cmd_dep sed
 check_cmd_dep awk
 check_cmd_dep basename
-echo "[DEBUG] Checked dependency packages.\n"
+echo -e "[DEBUG] Checked dependency packages.\n"
 
 # Include a PR scheduler module to handle a run-queue and wait-queue while running a build tasks
-echo "[DEBUG] Importing the PR scheduler.\n"
+echo -e "[DEBUG] Importing the PR scheduler.\n"
 source ./common/pr-scheduler.sh
 
 # Include a Out-of-PR(OOP) killer to handle lots of duplicated same PRs with LRU approach
-echo "[DEBUG] Importing the OOP Killer.\n"
+echo -e "[DEBUG] Importing the OOP Killer.\n"
 source ./common/out-of-pr-killer.sh
 
 # Get user ID from the input_repo string
@@ -131,13 +131,13 @@ if [[ $pr_comment_pr_updated == 1 ]]; then
 fi
 
 # Load the configuraiton file that user defined to build selectively.
-echo "[MODULE] plugins-base: Plugin group that does have well-maintained features as a base module."
-echo "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
-echo "[MODULE] plugins-staging: Plugin group that does not has evaluation and aging test enough"
+echo -e "[MODULE] plugins-base: Plugin group that does have well-maintained features as a base module."
+echo -e "[MODULE] plugins-good: Plugin group that follow Apache license with good quality"
+echo -e "[MODULE] plugins-staging: Plugin group that does not has evaluation and aging test enough"
 
-echo "[DEBUG] The current directory: $(pwd)"
+echo -e "[DEBUG] The current directory: $(pwd)"
 source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-postbuild.sh 2>> ../postbuild_module_error.log
-echo "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-postbuild.sh"
+echo -e "[DEBUG] source ${REFERENCE_REPOSITORY}/ci/taos/config/config-plugins-postbuild.sh"
 
 # Create new context name to monitor progress status of a checker
 message="Trigger: wait queue. There are other build jobs and we need to wait.. The commit number is $input_commit."
@@ -149,11 +149,11 @@ do
     if [[ ${plugin} == "pr-postbuild-build-tizen" ]]; then
         for arch in $pr_build_arch_type
         do
-            echo "[DEBUG] wait queue: Job is queued to run 'gbs build -A $arch (for Tizen)' command."
+            echo -e "[DEBUG] wait queue: Job is queued to run 'gbs build -A $arch (for Tizen)' command."
             ${plugin}-wait-queue $arch
         done
     else
-        echo "[DEBUG] wait queue: Job is queue to run $plugin"
+        echo -e "[DEBUG] wait queue: Job is queue to run $plugin"
         ${plugin}-wait-queue
     fi
 done
@@ -161,7 +161,7 @@ done
 
 # --------------------------- postbuild module: start -----------------------------------------------------
 
-echo "[DEBUG] The current directory: $(pwd)"
+echo -e "[DEBUG] The current directory: $(pwd)"
 echo -e "[DEBUG] Starting an postbuild module ...."
 echo -e "[DEBUG] dir_ci is '$dir_ci'" 
 echo -e "[DEBUG] dir_worker is '$dir_worker'" 
@@ -171,7 +171,7 @@ echo -e "[DEBUG] Let's move to a git repository folder."
 cd $dir_ci
 cd $dir_commit
 cd ./${PRJ_REPO_OWNER}
-echo "[DEBUG] The current directory: $(pwd)"
+echo -e "[DEBUG] The current directory: $(pwd)"
 
 echo -e "[MODULE] Exception Handling: Let's skip CI-Build/UnitTest in case of no buildable files. "
 
@@ -187,9 +187,9 @@ BUILD_MODE=99
 for file in $FILELIST
 do
     if [[ "$file" =~ ($SKIP_CI_PATHS_AUDIT)$ ]]; then
-        echo "[DEBUG] $file may be skipped."
+        echo -e "[DEBUG] $file may be skipped."
     else
-        echo "[DEBUG] $file cannot be skipped."
+        echo -e "[DEBUG] $file cannot be skipped."
         BUILD_MODE=0
         break
     fi
@@ -201,15 +201,15 @@ check_result="success"
 global_check_result="success"
 
 if [[ -d $REPOCACHE ]]; then
-    echo "[DEBUG] repocache, $REPOCACHE already exists. Good"
+    echo -e "[DEBUG] repocache, $REPOCACHE already exists. Good"
     # TODO: periodically delete the contents of REPOCACHE. (e.g., every Sunday?)
 else
-    echo "[DEBUG] repocache, $REPOCACHE does not exists. Create one"
+    echo -e "[DEBUG] repocache, $REPOCACHE does not exists. Create one"
     # Delete if it's a file.
     rm -f $REPOCACHE
     mkdir -p $REPOCACHE
 fi
-echo "[DEBUG] Link to the RPM repo cache to accelerate GBS start up"
+echo -e "[DEBUG] Link to the RPM repo cache to accelerate GBS start up"
 mkdir -p ./GBS-ROOT/local/
 pushd ./GBS-ROOT/local
 ln -s $REPOCACHE cache
@@ -231,11 +231,11 @@ do
     if [[ ${plugin} == "pr-postbuild-build-tizen" ]]; then
         for arch in $pr_build_arch_type
         do
-            echo "[DEBUG] ready queue: Job is started to run 'gbs build -A $arch (for Tizen)' command."
+            echo -e "[DEBUG] ready queue: Job is started to run 'gbs build -A $arch (for Tizen)' command."
             ${plugin}-ready-queue $arch
         done
     else
-        echo "[DEBUG] ready queue: Job is started to run $plugin"
+        echo -e "[DEBUG] ready queue: Job is started to run $plugin"
         ${plugin}-ready-queue
     fi
 done
@@ -260,11 +260,11 @@ do
     if [[ ${plugin} == "pr-postbuild-build-tizen" ]]; then
         for arch in $pr_build_arch_type
         do
-            echo "[DEBUG] run queue: Compiling the source code to Tizen $arch RPM package."
+            echo -e "[DEBUG] run queue: Compiling the source code to Tizen $arch RPM package."
             ${plugin}-run-queue $arch
         done
     else
-        echo "[DEBUG] run queue: Running the '$plugin' module"
+        echo -e "[DEBUG] run queue: Running the '$plugin' module"
         ${plugin}-run-queue
     fi
 done
@@ -278,13 +278,13 @@ fi
 # --------------------------- Report module: generate a log file and check other conditions --------------------------
 
 # Save webhook information for debugging
-echo ""
-echo "[DEBUG] Start time       : ${input_date}"        >> ../report/build_log_${input_pr}_output.txt
-echo "[DEBUG] Commit number    : ${input_commit}"      >> ../report/build_log_${input_pr}_output.txt
-echo "[DEBUG] Repository       : ${input_repo}"        >> ../report/build_log_${input_pr}_output.txt
-echo "[DEBUG] Branch name      : ${input_branch}"      >> ../report/build_log_${input_pr}_output.txt
-echo "[DEBUG] PR number        : ${input_pr}"          >> ../report/build_log_${input_pr}_output.txt
-echo "[DEBUG] X-GitHub-Delivery: ${input_delivery_id}" >> ../report/build_log_${input_pr}_output.txt
+echo -e ""
+echo -e "[DEBUG] Start time       : ${input_date}"        >> ../report/build_log_${input_pr}_output.txt
+echo -e "[DEBUG] Commit number    : ${input_commit}"      >> ../report/build_log_${input_pr}_output.txt
+echo -e "[DEBUG] Repository       : ${input_repo}"        >> ../report/build_log_${input_pr}_output.txt
+echo -e "[DEBUG] Branch name      : ${input_branch}"      >> ../report/build_log_${input_pr}_output.txt
+echo -e "[DEBUG] PR number        : ${input_pr}"          >> ../report/build_log_${input_pr}_output.txt
+echo -e "[DEBUG] X-GitHub-Delivery: ${input_delivery_id}" >> ../report/build_log_${input_pr}_output.txt
 
 # Optimize size of log file (e.g., from 20MB to 1MB)
 # remove unnecessary contents that are created by resource checker
@@ -295,14 +295,14 @@ mv ../report/build_log_${input_pr}_output_tmp.txt ../report/build_log_${input_pr
 ls -al
 
 # Inform developers of the warning message in case that the log file exceeds 10MB.
-echo "[DEBUG] Check if the log file size exceeds 10MB."
+echo -e "[DEBUG] Check if the log file size exceeds 10MB."
 
 FILESIZE=$(stat -c%s "../report/build_log_${input_pr}_output.txt")
 if  [[ $FILESIZE -le 10*1024*1024 ]]; then
-    echo "[DEBUG] Passed. The file size of build_log_${input_pr}_output.txt is $FILESIZE bytes."
+    echo -e "[DEBUG] Passed. The file size of build_log_${input_pr}_output.txt is $FILESIZE bytes."
     check_result="success"
 else
-    echo "[DEBUG] Failed. The file size of build_log_${input_pr}_output.txt is $FILESIZE bytes."
+    echo -e "[DEBUG] Failed. The file size of build_log_${input_pr}_output.txt is $FILESIZE bytes."
     check_result="failure"
     break
 fi
@@ -310,7 +310,7 @@ fi
 # Add thousands separator in a number
 FILESIZE_NUM=`echo $FILESIZE | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta'`
 if [[ $check_result == "success" ]]; then
-    echo "[DEBUG] Good job. the log file does not exceed 10MB. The file size of build_log_${input_pr}_output.txt is $FILESIZE_NUM bytes."
+    echo -e "[DEBUG] Good job. the log file does not exceed 10MB. The file size of build_log_${input_pr}_output.txt is $FILESIZE_NUM bytes."
 else
     # inform PR submitter of a hint in more detail
     message=":fire: **cibot**: $user_id, Oooops. The log file exceeds 10MB due to incorrect commit(s). The file size of build_log_${input_pr}_output.txt is **$FILESIZE_NUM** bytes    . Please resubmit after updating your PR to reduce the file size of build_log_${input_pr}_output.txt."
@@ -319,7 +319,7 @@ fi
 
 # --------------------------- Report module: submit  global check result -----------------------------------------------
 # Report if all modules are successfully completed or not.
-echo "[DEBUG] Send a total report with global_check_result variable. global_check_result is ${global_check_result}. "
+echo -e "[DEBUG] Send a total report with global_check_result variable. global_check_result is ${global_check_result}. "
 exit_code=0
 
 if [[ $global_check_result == "success" ]]; then
@@ -330,13 +330,13 @@ if [[ $global_check_result == "success" ]]; then
     # Let's approve it as a reviewer if this PR passes all CI modules.
     if [[ $pr_comment_review_activity == 1 ]]; then
         message=" $user_id, :100 All CI checkers are successfully verified. Thanks."
-        cibot_review $TOKEN "APPROVE" "$message" "$input_commit" "$GITHUB_WEBHOOK_API/pulls/$input_pr/reviews
+        cibot_review $TOKEN "APPROVE" "$message" "$input_commit" "$GITHUB_WEBHOOK_API/pulls/$input_pr/reviews"
     fi
 
     # If contributors want later, let's inform developers of CI test result to go to a review process as a final step before merging a PR
-    echo "[DEBUG] All postbuild modules are passed."
-    echo "[DEBUG] It is ready to review! :shipit:."
-    echo "[DEBUG] Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-group and ${BOT_NAME}/pr-prebuild-group."
+    echo -e "[DEBUG] All postbuild modules are passed."
+    echo -e "[DEBUG] It is ready to review! :shipit:."
+    echo -e "[DEBUG] Note that CI bot has two sub-bots such as ${BOT_NAME}/pr-postbuild-group and ${BOT_NAME}/pr-prebuild-group."
 
 elif [[ $global_check_result == "failure" ]]; then
     # The global check is failed.
@@ -354,7 +354,7 @@ fi
 # --------------------------- Cleaner:  Remove unnecessary directories --------------------
 # If you have to remove unnecessary directory or files as a final step
 # Please append a command below. 
-echo "[DEBUG] The current directory: $(pwd)."
+echo -e "[DEBUG] The current directory: $(pwd)."
 
 # Return with exit code
 exit $exit_code
