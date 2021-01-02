@@ -8,6 +8,9 @@
 [Release Notes](https://github.com/nnsuite/TAOS-CI/wiki/Release-Plan)
 
 
+<a font color=red>[Notice] On Jan-01-2021, The default branch of TAOS-CI is changed from **master** to **main**. For more details, please refer to https://github.com/nnstreamer/TAOS-CI/issues/663</a>
+
+
 # Introduction
 
 TAOS-CI is an automated project coordinator to achieve "**Review less, merge faster**" with a tool-based review system. It accelerates a software development based on the GitHub WebHook API. We aim to prevent a regression, find bugs, and reduce a nonproductive review process due to incorrect PRs in https://GitHub.com. Actually, submitting incorrect PRs is a PITA in case of continuous integration. Basically, PRs causing regressions will not be automatically merged. As a result, it drastically reduces the existing burdens of reviewers.
