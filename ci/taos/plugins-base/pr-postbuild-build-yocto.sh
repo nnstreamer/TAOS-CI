@@ -104,9 +104,9 @@ function pr-postbuild-build-yocto-run-queue(){
 
     echo "[DEBUG] starting ${BOT_NAME}/pr-postbuild-build-yocto facility"
 
-    # BUILD_MODE=0 : run "gbs build" command without generating debugging information.
-    # BUILD_MODE=1 : run "gbs build" command with a debug file.
-    # BUILD_MODE=99: skip "gbs build" procedures
+    # BUILD_MODE=0 : run the devtool command without generating debugging information.
+    # BUILD_MODE=1 : run the devtool command with a debug file.
+    # BUILD_MODE=99: skip the devtool procedures
     BUILD_MODE=$BUILD_MODE_YOCTO
 
     # Put a timer in front of the build job to check a start time.

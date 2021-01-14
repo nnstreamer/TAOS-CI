@@ -35,7 +35,7 @@ declare -g current_jobs_all=0
 # @brief Calculate the number of running jobs currently
 # @param None
 function check_running_jobs(){
-    current_jobs_tizen_cmd="ps aux | grep \"sudo.*gbs build\" | wc -l"
+    current_jobs_tizen_cmd="ps aux | grep \"sudo.*gbs.*build\" | wc -l"
     current_jobs_ubuntu_cmd="ps aux | grep \"sudo.*pbuilder\" | wc -l"
     current_jobs_yocto_cmd="" # NYI
 

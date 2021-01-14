@@ -49,7 +49,7 @@ function run_oop_killer(){
         # Step 1: The victim pid1 is checker-pr-gateway.sh (It is a task distributor.)
         # Step 2: The victim pid2 is checker-pr-postbuild-async.sh (It is the postbuild group.)
         # Step 3:
-        # a. The victim pid3_tizen:  "gbs build" command for a Tizen build
+        # a. The victim pid3_tizen:  "gbs" command for a Tizen build
         # b. The victim pid3_ubuntu: "pdebuild" command for a Ubuntu build
         victim_pid1=`ps -ef | grep bash | grep checker-pr-gateway.sh       | grep $input_pr | grep $victim_date | awk '{print $2}'`
         victim_pid2=`ps -ef | grep bash | grep checker-pr-postbuild-async.sh | grep $input_pr | grep $victim_date | awk '{print $2}'`
