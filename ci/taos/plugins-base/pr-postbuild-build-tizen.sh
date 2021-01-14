@@ -77,7 +77,11 @@ function pr-postbuild-build-tizen-run-queue(){
         _TIZEN_GBS_PROFILE=""
     fi
 
+    # TODO: If you want to support this option in the configuration file for flexibility and maintenance,
+    # you may submit a PR in order to put the environment variable (e.g., CUSTOM_GBS_CONF)
+    # into the ./config/config-environment.sh.
     CUSTOM_GBS_CONF="./packaging/.gbs.conf"
+
     echo -e "[DEBUG] Checking if the $CUSTOM_GBS_CONF file exists or not."
     if [[ -f $CUSTOM_GBS_CONF ]]; then
         echo -e "[DEBUG] The $CUSTOM_GBS_CONF file exists"
