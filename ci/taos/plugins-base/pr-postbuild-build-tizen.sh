@@ -21,7 +21,7 @@
 # @see      https://source.tizen.org/documentation/reference/git-build-system
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @note
-# If the "gbs build" command based on the QEMU/ARM facility is broken, please run "reboot" command,
+# If the gbs command based on the QEMU/ARM facility is broken, please run "reboot" command,
 # Or run the below statements to avoid the "reboot" procedure. 
 # https://wiki.tizen.org/OSDev/qemu-accel
 # $ echo -1 | sudo tee /proc/sys/fs/binfmt_misc/qemu-arm
@@ -44,7 +44,7 @@ function pr-postbuild-build-tizen-run-queue(){
     message="Trigger: run queue. The commit number is $input_commit."
     cibot_report $TOKEN "pending" "${BOT_NAME}/pr-postbuild-build-tizen-$1" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-    echo -e "[MODULE] ${BOT_NAME}/pr-postbuild-build-tizen-$1: Check if 'gbs build -A $1' can be successfully passed."
+    echo -e "[MODULE] ${BOT_NAME}/pr-postbuild-build-tizen-$1: Check if the gbs command with '-A $1' can be successfully passed."
     pwd
 
     # check if dependent packages are installed
@@ -53,9 +53,9 @@ function pr-postbuild-build-tizen-run-queue(){
     check_cmd_dep curl
     check_cmd_dep gbs
 
-    # BUILD_MODE=0 : run "gbs build" command without generating debugging information.
-    # BUILD_MODE=1 : run "gbs build" command with a debug file.
-    # BUILD_MODE=99: skip "gbs build" procedures
+    # BUILD_MODE=0 : run the build task with gbs command without generating debugging information.
+    # BUILD_MODE=1 : run the build task with gbs ommand with a debug file.
+    # BUILD_MODE=99: skip the build task of the gbs command
     BUILD_MODE=$BUILD_MODE_TIZEN
 
     # TODO: We need to decide a prefix policy consistently for maintenance and
@@ -70,18 +70,31 @@ function pr-postbuild-build-tizen-run-queue(){
 
     # Build a package with gbs command.
     # TODO: Simplify the existing if...else statement for readability and maintenance
-    echo -e "[DEBUG] gbs build start at : $(date -R)."
+    echo -e "[DEBUG] the build task of gbs starts at : $(date -R)."
     if [[ "$TIZEN_GBS_PROFILE" != "" ]]; then
         _TIZEN_GBS_PROFILE="-P ${TIZEN_GBS_PROFILE}"
     else
         _TIZEN_GBS_PROFILE=""
     fi
+
+    CUSTOM_GBS_CONF="./packaging/.gbs.conf"
+    echo -e "[DEBUG] Checking if the $CUSTOM_GBS_CONF file exists or not."
+    if [[ -f $CUSTOM_GBS_CONF ]]; then
+        echo -e "[DEBUG] The $CUSTOM_GBS_CONF file exists"
+        echo -e "[DEBUG] Building the package with the $CUSTOM_GBS_CONF file"
+        gbs_build="sudo -Hu www-data gbs -c $CUSTOM_GBS_CONF build"
+    else
+        echo -e "[DEBUG] The $CUSTOM_GBS_CONF file exists"
+        echo -e "[DEBUG] Building the package with the ~/.gbs.conf file of the 'www-data' account."
+        gbs_build="sudo -Hu www-data gbs build"
+    fi
+
     if [[ $BUILD_MODE == 99 ]]; then
         echo -e "BUILD_MODE = 99"
-        echo -e "Skipping 'gbs build -A $1' procedure temporarily."
+        echo -e "Skipping 'the build task of gbs including the -A $1' procedure temporarily."
     elif [[ $BUILD_MODE == 1 ]]; then
         echo -e "BUILD_MODE = 1"
-        sudo -Hu www-data gbs build \
+        $gbs_build \
         -A $1 \
         ${_TIZEN_GBS_PROFILE} \
         --clean \
@@ -96,7 +109,7 @@ function pr-postbuild-build-tizen-run-queue(){
         echo -e "BUILD_MODE = 0"
         # In case of x86_64 or i586
         if [[ $1 == "x86_64" || $1 == "i586" ]]; then
-            sudo -Hu www-data gbs build \
+            $gbs_build \
             -A $1 \
             ${_TIZEN_GBS_PROFILE} \
             --clean \
@@ -110,7 +123,7 @@ function pr-postbuild-build-tizen-run-queue(){
             --buildroot ./GBS-ROOT/ 2> ../report/build_log_${input_pr}_tizen_$1_error.txt 1> ../report/build_log_${input_pr}_tizen_$1_output.txt
         # In case of armv7l or aarch64
         else
-            sudo -Hu www-data gbs build \
+            $gbs_build \
             -A $1 \
             ${_TIZEN_GBS_PROFILE} \
             --clean \
@@ -124,7 +137,7 @@ function pr-postbuild-build-tizen-run-queue(){
         fi
     fi
     result=$?
-    echo -e "[DEBUG] gbs build finished at : $(date -R)."
+    echo -e "[DEBUG] The build task of gbs finished at : $(date -R)."
     echo -e "[DEBUG] The variable result value is $result."
 
     # Put a timer behind the build job to check an end time.
@@ -150,21 +163,21 @@ function pr-postbuild-build-tizen-run-queue(){
     echo "[DEBUG] The current directory: $(pwd)"
 
     if [[ $BUILD_MODE == 99 ]]; then
-        # Do not run "gbs build" command in order to skip unnecessary examination if there are no buildable files.
+        # Do not run the build task of gbs command in order to skip unnecessary examination if there are no buildable files.
         echo -e "BUILD_MODE == 99"
-        echo -e "[DEBUG] Let's skip the 'gbs build -A $1' procedure because there is not source code. All files may be skipped."
+        echo -e "[DEBUG] Let's skip the build task of gbs with '-A $1' procedure because there is not source code. All files may be skipped."
         echo -e "[DEBUG] So, we stop remained all tasks at this time."
 
-        message="Skipped gbs build -A $1 procedure. No buildable files found. Commit number is $input_commit."
+        message="Skipped the build task of gbs with -A $1 procedure. No buildable files found. Commit number is $input_commit."
         cibot_report $TOKEN "success" "${BOT_NAME}/pr-postbuild-build-tizen-$1" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-        message="Skipped gbs build -A $1 procedure. Successfully all postbuild modules are passed. Commit number is $input_commit."
+        message="Skipped the build task of gbs with -A $1 procedure. Successfully all postbuild modules are passed. Commit number is $input_commit."
         cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-        echo -e "[DEBUG] All postbuild modules are passed (gbs build -A $1 procedure is skipped) - it is ready to review!"
+        echo -e "[DEBUG] All postbuild modules are passed (the build task of gbs with -A $1 procedure is skipped) - it is ready to review!"
     else
         echo -e "BUILD_MODE != 99"
-        echo -e "[DEBUG] The return value of gbs build -A $1 command is $result."
+        echo -e "[DEBUG] The return value of the build task of gbs with -A $1 command is $result."
         # Let's check if build procedure is normally done.
         if [[ $result -eq 0 ]]; then
             echo -e "[DEBUG][PASSED] Successfully build checker is passed. Return value is ($result)."

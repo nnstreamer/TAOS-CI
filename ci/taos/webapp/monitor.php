@@ -26,7 +26,7 @@
 #-------------------- Configuration --------------------------------------------------------
 $TITLE="State Transition Monitor for PR";
 $PATTERN_REQ        ="[^]] bash ./checker-pr-gateway.sh";
-$PATTERN_RUN_TIZEN  ="[^]]/usr/bin/python /usr/bin/gbs build";
+$PATTERN_RUN_TIZEN  ="[^]]/usr/bin/python /usr/bin/gbs.*build";
 $PATTERN_RUN_UBUNTU ="[^]]sudo.*pbuilder";
 $PATTERN_RUN_YOCTO  ="[^]]sudo.*devtool";
 $PATTERN_RUN_ANDROID="[^]]sudo.*ndk-build";
@@ -83,7 +83,7 @@ function generate_requested_pr(){
     echo "<br>\n";
 }
 
-## @brief display only running PR numbers for Tizen/gbs build
+## @brief display only running PR numbers for monitoring the build task of Tizen/gbs
 #
 #        Display all pdebuild commands to monitor running PRs for building Tizen binaries
 #        including PR number, PR time, and commit number.
