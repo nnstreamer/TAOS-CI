@@ -2,7 +2,7 @@
 
 ##
 # Copyright (c) 2019 Samsung Electronics Co., Ltd. All Rights Reserved.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -19,10 +19,10 @@
 # @brief    This module examines C/C++ source code to find defects and security vulnerabilities
 #
 #  Coverity is a static code analysis tool from Synopsys. This product enables engineers and security teams
-#  to quickly find and fix defects and security vulnerabilities in custom source code written in C, C++, 
+#  to quickly find and fix defects and security vulnerabilities in custom source code written in C, C++,
 #  Java, C#, JavaScript and more.
-#	
-#  Coverity Scan is a free static-analysis cloud-based service for the open source community. 
+#
+#  Coverity Scan is a free static-analysis cloud-based service for the open source community.
 #  The tool analyzes over 3900 open-source projects and is integrated with GitHub and Travis CI.
 #
 # @see      https://scan.coverity.com/github
@@ -31,7 +31,7 @@
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @note Supported build type: meson
 # @note CI administrator must install the Coverity package in the CI server as following:
-#  $ firefox https://scan.coverity.com/download 
+#  $ firefox https://scan.coverity.com/download
 #  $ cd /opt
 #  $ tar xvzf cov-analysis-linux64-2019.03.tar.gz
 #  $ vi ~/.bashrc
@@ -47,7 +47,7 @@ _repo_name="$PRJ_REPO_UPSTREAM_LOCAL"
 # Set websites
 _coverity_repo_site_login="https://scan.coverity.com/projects/${_user_name}-{$_repo_name}/builds/new?tab=upload"
 _coverity_repo_site_logout="https://scan.coverity.com/projects/${_user_name}-${_repo_name}"
-_coverity_commit_site="https://scan.coverity.com/builds?project=${_user_name}%2F${_repo_name}"
+_coverity_commit_site="https://scan.coverity.com/builds?project=${_user_name}%2D${_repo_name}"
 
 ## @brief A coverity web-crawler to fetch defects from scan.coverity.com
 function coverity-crawl-defect {
@@ -199,7 +199,7 @@ function pr-prebuild-coverity(){
                     # Activity2: Check the current build submission quota
                     # Activity3: Stop or run the coverity scan service with the build quota
                     coverity-crawl-defect
-    
+
                     # Create a JSON file for display coverity badge that describes the number of the defects
                     echo -e "[DEBUG] the folder of the coveirty badge file (json): "
                     echo -e "[DEBUG] ls ../../../../badge/ "
@@ -211,7 +211,7 @@ function pr-prebuild-coverity(){
                     echo -e "    \"color\": \"brightgreen\","  >> ../../../../badge/badge_coverity.json
                     echo -e "    \"style\": \"flat\""          >> ../../../../badge/badge_coverity.json
                     echo -e "}"                                >> ../../../../badge/badge_coverity.json
-        
+
                     if [[ $stat_last_build_quota_full -eq 1 ]]; then
                         echo -e "[DEBUG] Sorry. The build quota of the coverity scan is exceeded."
                         echo -e "[DEBUG] Stopping the coverity module."
@@ -238,7 +238,7 @@ function pr-prebuild-coverity(){
                         # If cov-build is not executed normally, let's stop the next tasks.
                         break;
                     fi
-                  
+
                     # Step 2/4: commit the otuput to scan.coverity.com
                     # Report the execution result.
                     if  [[ $cov_build_result -eq 1 && $stat_last_build_quota_full -eq 0  ]]; then
@@ -263,7 +263,7 @@ function pr-prebuild-coverity(){
                           $_coverity_commit_site \
                           -o ../report/coverity_curl_output.txt
                         result=$?
-                       
+
                         # Note that curl gets value (0) even though you use a incorrect file name.
                         if [[ $result -eq 0 ]]; then
                             echo -e "[DEBUG] Please visit https://scan.coverity.com/projects/<your-github-repository>"
@@ -273,7 +273,7 @@ function pr-prebuild-coverity(){
                     else
                         echo -e "[DEBUG] Skipping the commit step (curl) of the coverity module."
                     fi
-                    echo "[DEBUG] $analysis_sw: FAILED. current file: '${file}', result value: '$cov_build_result' ."
+                    echo "[DEBUG] $analysis_sw: current file: '${file}', result value: '$cov_build_result' ."
                     # Although source files are 1+, we just run once because coverity inspects all source files.
                     break
                     ;;
@@ -283,7 +283,7 @@ function pr-prebuild-coverity(){
             esac
         fi
     done
-   
+
     # Step 3/4: change the execution result of the coverity module according to the execution result 
     # TODO: Get additional information from https://scan.coverity.com with a webcrawler
     # 1. How can we know if coverity can be normally executed or not? with the curl_output.txt file
@@ -328,7 +328,6 @@ function pr-prebuild-coverity(){
     msg_bugs="${msg_bugs}* :rage: : # of the red cards is ${_cov_red_card}. \n"
     msg_bugs="${msg_bugs}* Note that # of the red cards includes # of the yellow cards. \n"
 
- 
     echo -e "[DEBUG] check_result is ( $check_result )."
     # Step 4/4: comment the summarized report on a PR if defects exist.
     if [[ $check_result == "success" ]]; then
@@ -363,7 +362,5 @@ function pr-prebuild-coverity(){
         message=":octocat: **cibot**: $user_id, **Coverity Report**, **[CRITICAL]**: Ooops. The number of outstanding defects exceeds $_cov_yed_card. Please fix outstanding defects until less than $_cov_red_card. For more details, please visit ${_coverity_repo_site_logout}.\n\n$msg_defects\n\n$msg_bugs\n\n"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     fi
-    
-
 }
 
