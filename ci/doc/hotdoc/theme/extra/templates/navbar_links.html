@@ -1,0 +1,19 @@
+@require(page)
+
+<li class="dropdown">
+    <a class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        API References<span class="caret"></span>
+    </a>
+	<ul class="dropdown-menu" id="modules-menu">
+		@for tup in (("ci/doc/hotdoc/index.html","TAOS-CI doc"),):
+			<li>
+				<a href="@tup[0]">@tup[1]</a>
+			</li>
+		@end
+</li>
+
+<li>
+	<a href="ci/doc/hotdoc/index.html">Documents</a>
+</li>
+
+

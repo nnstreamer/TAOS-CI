@@ -1,7 +1,10 @@
+---
+title: How to install taos-ci
+...
 
 # Step 1: Set-up the CI server
 We explain how to set-up your own CI server on Ubuntu 16.04 x86_64 (Recommended) even though TAOS-CI is completely compatible with most of the Linux distributions. Please refer to a set-up guide of a CI server to install required packages.
-* [Setting up a CI server](./how-to-setup-taos-ci-server.md) 
+* [Setting up a CI server](ci/doc/how-to-setup-taos-ci-server.md) 
 
 
 # Step 2: How to install TAOS-CI system

@@ -1,0 +1,17 @@
+index.md
+	README.md
+		ci/doc/how-to-setup-taos-ci-server.md
+		ci/doc/how-to-install-taos-ci.md
+		ci/doc/how-to-unit-testing.md
+		ci/doc/how-to-use-lcov-to-generate-code-coverage-stat.md
+		ci/doc/how-to-use-taos-ci-module.md
+		ci/doc/self-assessment-before-submitting-pr.md
+		ci/doc/how-to-good-commit-message.md
+		ci/doc/how-to-build-gbs-pdebuild.md
+		ci/doc/how-to-archive-large-data.md
+		ci/doc/doxygen-documentation.md
+		ci/doc/contributing.md
+		ci/doc/coding-convention.md
+		ci/doc/maintenance.md
+		CODE_OF_CONDUCT.md
+	LICENSE
