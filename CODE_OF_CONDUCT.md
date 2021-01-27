@@ -1,3 +1,7 @@
+---
+title: Code of conduce
+...
+
 # Contributor Covenant Code of Conduct
 
 ## Our Pledge

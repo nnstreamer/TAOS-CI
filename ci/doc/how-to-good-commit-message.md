@@ -1,3 +1,7 @@
+---
+title: Good commit message
+...
+
 ## Commit Message Guidelines
 ```
 Short (50 chars or less) summary

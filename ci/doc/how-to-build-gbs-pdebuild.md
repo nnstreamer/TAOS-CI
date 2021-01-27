@@ -1,3 +1,7 @@
+---
+title: How to build gbs and pdebuild
+...
+
 # How to Build for Tizen Target
 
 - [Build with Tizen-GBS. Full, Standard](#build)

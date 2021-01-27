@@ -1,3 +1,7 @@
+---
+title: How to setup taos ci server
+...
+
 This section describes an administrator guide for TAOS-CI server.
 
 We assume that you already installed Ubuntu 16.04 x86_64 distribution in your own computer.
@@ -30,7 +34,7 @@ $ cat /etc/os-release |grep VERSION_ID
 VERSION_ID="16.04.3"
 ```
 In order to run all modules of TAOS-CI normally, you have to install required packages as a first step.
-Please run **install-packages-base.sh** that is located in the [ci/taos/webapp](../taos/webapp/) folder.
+Please run **install-packages-base.sh** that is located in the [ci/taos/webapp](https://github.com/nnstreamer/TAOS-CI/tree/main/ci/taos/webapp) folder.
 ```bash
 $ cd TAOS-CI
 $ sudo ./ci/taos/webapp/install-packages-base.sh

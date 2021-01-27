@@ -1,3 +1,6 @@
+---
+title: How to use lcov
+...
 
 # Using gcov/lcov to generate code coverage statistics 
 

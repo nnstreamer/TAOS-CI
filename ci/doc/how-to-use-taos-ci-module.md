@@ -1,3 +1,6 @@
+---
+title: How to use taos-ci module
+...
 
 ## How to develop a new module
 Please implement a module in `./plugins-{base|good|staging}` folder if you need to develop new CI module for your own project.

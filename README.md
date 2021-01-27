@@ -1,4 +1,4 @@
-[![GitHub license](https://dmlc.github.io/img/apache2.svg)](./LICENSE) 
+[![GitHub license](https://dmlc.github.io/img/apache2.svg)](LICENSE) 
 ![Gitter](https://img.shields.io/gitter/room/nnsuite/TAOS-CI) ![GitHub repo size](https://img.shields.io/github/repo-size/nnsuite/TAOS-CI) ![GitHub issues](https://img.shields.io/github/issues/nnsuite/TAOS-CI) ![GitHub pull requests](https://img.shields.io/github/issues-pr/nnsuite/TAOS-CI) ![GitHub contributors](https://img.shields.io/github/contributors/nnsuite/TAOS-CI)
 
 [Build Status](http://nnsuite.mooo.com/TAOS-CI/ci/taos/) |
@@ -41,7 +41,7 @@ The proposed system supports a light-weight code review automation approach to s
 * Finding potential bugs at a proper time
 
 ## Maintenance
-Please refer [Here](./ci/doc/maintenance.md).
+Please refer [Here](ci/doc/maintenance.md).
 
 ## Publications
 * Geunsik Lim, MyungJoo Ham, Jijoong Moon, Wook Song, Sangjung Woo, and Sewon Oh, "**<a href='https://ieeexplore.ieee.org/document/8662017'>TAOS-CI: Lightweight & Modular Continuous Integration System for Edge Computing,</a>**" 37th IEEE International Conference on Consumer Electronics (ICCE), Las Vegas, USA, Jan. 2019.

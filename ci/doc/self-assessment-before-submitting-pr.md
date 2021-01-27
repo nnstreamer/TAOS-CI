@@ -1,3 +1,6 @@
+---
+title: Self assessment
+...
 
 In this page, we describe how to verify if your commit(s) is valid. To do source code verification,
 we strongly recommend that you execute a clean build with a latest version of a software platform.
