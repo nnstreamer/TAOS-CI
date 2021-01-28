@@ -5,10 +5,10 @@
 [Documentation](ci/doc/doxygen-documentation.md) |
 [Contributing](ci/doc/contributing.md) |
 [Chat Room](https://gitter.im/login) |
-[Release Notes](https://github.com/nnsuite/TAOS-CI/wiki/Release-Plan)
+[Release Notes](https://github.com/nnstreamer/TAOS-CI/releases)
 
 
-<a font color=red>[Notice] On Jan-01-2021, The default branch of TAOS-CI is changed from **master** to **main**. For more details, please refer to https://github.com/nnstreamer/TAOS-CI/issues/663</a>
+<a font color=red><strong>[Notice]</strong> On Jan-01-2021, The default branch of TAOS-CI is changed from **master** to **main**. For more details, please refer to https://github.com/nnstreamer/TAOS-CI/issues/663</a>
 
 
 # Introduction
