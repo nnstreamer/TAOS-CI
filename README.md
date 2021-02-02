@@ -48,11 +48,11 @@ Please refer [Here](ci/doc/maintenance.md).
 ## Publications
 * Geunsik Lim, MyungJoo Ham, Jijoong Moon, Wook Song, Sangjung Woo, and Sewon Oh, "**<a href='https://ieeexplore.ieee.org/document/8662017'>TAOS-CI: Lightweight & Modular Continuous Integration System for Edge Computing,</a>**" 37th IEEE International Conference on Consumer Electronics (ICCE), Las Vegas, USA, Jan. 2019.
 
-* Geunsik Lim, MyungJoo Ham, and Jaeyun Jung, "**<a href='http://www.riss.kr/link?id=A106329692'>VTB: Cloud-based Testbed for On-Device AI,</a>**" Proc. of KIISE Korea Computer Congress, Jeju, Korea, Jun. 2019. Best Presentation Paper. (in Korean)
+* Geunsik Lim, MyungJoo Ham, and Jaeyun Jung, "**<a href='http://www.riss.kr/link?id=A106329692'>VTB: Cloud-based Testbed for On-Device AI,</a>**" Proc. of KIISE Korea Computer Congress, Jeju, Korea, Jun. 2019. Best Presentation Paper. (**MAJOR** domestic conference in Korea)
 
-* Geunsik Lim, MyungJoo Ham, and Jaeyun Jung, "**<a href='https://doi.org/10.5626/KTCP.2020.26.1.12'>VTS: Virtual Testbed System for Cloud-based On-Device AI Application,<a/>**" KIISE Transactions on Computing Practices : Computing Practices and Letter (CPL), Jan. 2020. Invited paper. (in Korean)
+* Geunsik Lim, MyungJoo Ham, and Jaeyun Jung, "**<a href='https://doi.org/10.5626/KTCP.2020.26.1.12'>VTS: Virtual Testbed System for Cloud-based On-Device AI Application,<a/>**" KIISE Transactions on Computing Practices : Computing Practices and Letter (CPL), Jan. 2020. Invited paper. (**MAJOR** domestic journal in Korea)
   
-* Geunsik Lim, MyungJoo Ham, Jijoong Moon, and Wook Song, "**<a href=https://conf.researchr.org/home/icse-2021>LightSys: Lightweight and Efficient CI System for Improving Integration Speed of Software,<a/>**" 43rd ACM/IEEE International Conference on Software Engineering (ICSE)-SEIP, Madrid, Spain (Virtual Conference due to COVID-19), May. 2021. (**Accepted**)</li>
+* Geunsik Lim, MyungJoo Ham, Jijoong Moon, and Wook Song, "**<a href=https://conf.researchr.org/home/icse-2021>LightSys: Lightweight and Efficient CI System for Improving Integration Speed of Software,<a/>**" 43rd ACM/IEEE International Conference on Software Engineering (ICSE)-SEIP, Madrid, Spain (Virtual Conference due to COVID-19), May. 2021. (**Top-tier**)</li>
 <br>
 
 # How to install
