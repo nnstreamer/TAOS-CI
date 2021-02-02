@@ -1,0 +1,13 @@
+header:
+  version: 2
+
+local_conf_header:
+  download_dir: |
+    DL_DIR = "YOUR_PATH_TO_DL_DIR"
+
+  sstate_dir: |
+    SSTATE_DIR = "YOUR_PATH_TO_SSTATE_CACHE_DIR"
+
+  threads: |
+    BB_NUMBER_THREADS = "1"
+    PARALLEL_MAKE = "-j 1"

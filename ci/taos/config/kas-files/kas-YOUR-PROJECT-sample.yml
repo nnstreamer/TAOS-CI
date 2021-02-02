@@ -1,0 +1,20 @@
+#
+# This is an example of kas yaml config
+# User should set proper yaml config file
+# NOTE that the value of url should be "PATH_WILL_BE_REPLACED_BY_CI".
+# The TAOS-CI replace this string with proper path for submitted PR
+#
+# References 
+# - https://github.com/siemens/kas (Setup tool for bitbake based projects)
+# - https://kas.readthedocs.io/en/latest/userguide.html#project-configuration (Details on project configuration)
+
+header:
+  version: 2
+
+repos:
+  YOUR_PROJECT_NAME:
+    url: PATH_WILL_BE_REPLACED_BY_CI
+
+local_conf_header:
+  image_install: |
+    IMAGE_INSTALL_append += " PACKAGE_FROM_YOUR_PROJECT"
