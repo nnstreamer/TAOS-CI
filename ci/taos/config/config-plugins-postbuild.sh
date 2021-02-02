@@ -76,3 +76,9 @@ echo "[MODULE] plugins-staging: Plugin group that does not have evaluation and a
 # echo "[DEBUG] Current path: $(pwd)."
 # source ${REFERENCE_REPOSITORY}/ci/taos/plugins-staging/${postbuild_plugins[idx]}.sh
 
+
+# postbuild_plugins[++idx]="pr-postbuild-build-yocto-kas"
+# echo "[DEBUG] ${postbuild_plugins[idx]} is started."
+# echo "[DEBUG] ${BOT_NAME}/${postbuild_plugins[idx]}: Check if yocto image is successfully generated."
+# echo "[DEBUG] Current path: $(pwd)."
+# source ${REFERENCE_REPOSITORY}/ci/taos/plugins-staging/${postbuild_plugins[idx]}.sh
