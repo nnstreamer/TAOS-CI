@@ -78,19 +78,31 @@ function pr-postbuild-build-tizen-run-queue(){
     fi
 
     # TODO: If you want to support this option in the configuration file for flexibility and maintenance,
-    # you may submit a PR in order to put the environment variable (e.g., CUSTOM_GBS_CONF)
+    # you may submit a PR in order to put the environment variable (e.g., CUSTOM_GBS_CONF{01|02|03})
     # into the ./config/config-environment.sh.
-    CUSTOM_GBS_CONF="./packaging/.gbs.conf"
+    CUSTOM_GBS_CONF01="./.TAOS-CI/.gbs.conf"
+    CUSTOM_GBS_CONF02="./packaging/.gbs.conf"
+    CUSTOM_GBS_CONF03="~/.gbs.conf"
 
-    echo -e "[DEBUG] Checking if the $CUSTOM_GBS_CONF file exists or not."
-    if [[ -f $CUSTOM_GBS_CONF ]]; then
-        echo -e "[DEBUG] The $CUSTOM_GBS_CONF file exists"
-        echo -e "[DEBUG] Building the package with the $CUSTOM_GBS_CONF file"
-        gbs_build="sudo -Hu www-data gbs -c $CUSTOM_GBS_CONF build"
-    else
-        echo -e "[DEBUG] The $CUSTOM_GBS_CONF file exists"
-        echo -e "[DEBUG] Building the package with the ~/.gbs.conf file of the 'www-data' account."
+    echo -e "[DEBUG] Checking if the $CUSTOM_GBS_CONF01 file exists or not."
+    if [[ -f $CUSTOM_GBS_CONF01 ]]; then
+        echo -e "[DEBUG] The $CUSTOM_GBS_CONF01 file exists."
+        echo -e "[DEBUG] Building the package with the $CUSTOM_GBS_CONF01 file"
+        gbs_build="sudo -Hu www-data gbs -c $CUSTOM_GBS_CONF01 build"
+    elif [[ -f $CUSTOM_GBS_CONF02 ]]; then
+        echo -e "[DEBUG] The $CUSTOM_GBS_CONF02 file exists."
+        echo -e "[DEBUG] Building the package with the $CUSTOM_GBS_CONF02 file"
+        gbs_build="sudo -Hu www-data gbs -c $CUSTOM_GBS_CONF02 build"
+    elif [[ -f $CUSTOM_GBS_CONF03 ]]; then
+        echo -e "[DEBUG] The $CUSTOM_GBS_CONF03 file exists."
+        echo -e "[DEBUG] Building the package with the $CUSTOM_GBS_CONF03 file of the 'www-data' account."
         gbs_build="sudo -Hu www-data gbs build"
+    else
+        echo -e "[DEBUG] Oooops. We could not find anyone among the below three gbs configuration files."
+        echo -e "[DEBUG] $CUSTOM_GBS_CONF01"
+        echo -e "[DEBUG] $CUSTOM_GBS_CONF02"
+        echo -e "[DEBUG] $CUSTOM_GBS_CONF03"
+        exit 1
     fi
 
     if [[ $BUILD_MODE == 99 ]]; then
