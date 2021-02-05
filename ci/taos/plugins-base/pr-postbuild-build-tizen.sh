@@ -52,6 +52,8 @@ function pr-postbuild-build-tizen-run-queue(){
     check_cmd_dep sudo
     check_cmd_dep curl
     check_cmd_dep gbs
+    check_cmd_dep getent
+    check_cmd_dep cut
 
     # BUILD_MODE=0 : run the build task with gbs command without generating debugging information.
     # BUILD_MODE=1 : run the build task with gbs ommand with a debug file.
@@ -80,27 +82,33 @@ function pr-postbuild-build-tizen-run-queue(){
     # TODO: If you want to support this option in the configuration file for flexibility and maintenance,
     # you may submit a PR in order to put the environment variable (e.g., CUSTOM_GBS_CONF{01|02|03})
     # into the ./config/config-environment.sh.
+    WEB_USER_ID="www-data"
+    HOME_DIR=$( getent passwd "$WEB_USER_ID" | cut -d: -f6 )
     CUSTOM_GBS_CONF01="./.TAOS-CI/.gbs.conf"
     CUSTOM_GBS_CONF02="./packaging/.gbs.conf"
-    CUSTOM_GBS_CONF03="$HOME/.gbs.conf"
+    CUSTOM_GBS_CONF03="$HOME_DIR/.gbs.conf"
 
-    echo -e "[DEBUG] Checking if the $CUSTOM_GBS_CONF01 file exists or not."
+    echo -e "[DEBUG] Checking if the custom gbs files exist or not."
+    echo -e "[DEBUG] gbs conf 01: '$CUSTOM_GBS_CONF01' "
+    echo -e "[DEBUG] gbs conf 02: '$CUSTOM_GBS_CONF02' "
+    echo -e "[DEBUG] gbs conf 03: '$CUSTOM_GBS_CONF03' "
     if [[ -f $CUSTOM_GBS_CONF01 ]]; then
         echo -e "[DEBUG] The $CUSTOM_GBS_CONF01 file exists."
         echo -e "[DEBUG] Building the package with the $CUSTOM_GBS_CONF01 file"
-        gbs_build="sudo -Hu www-data gbs -c $CUSTOM_GBS_CONF01 build"
+        gbs_build="sudo -Hu $WEB_USER_ID gbs -c $CUSTOM_GBS_CONF01 build"
     elif [[ -f $CUSTOM_GBS_CONF02 ]]; then
         echo -e "[DEBUG] The $CUSTOM_GBS_CONF02 file exists."
         echo -e "[DEBUG] Building the package with the $CUSTOM_GBS_CONF02 file"
-        gbs_build="sudo -Hu www-data gbs -c $CUSTOM_GBS_CONF02 build"
+        gbs_build="sudo -Hu $WEB_USER_ID gbs -c $CUSTOM_GBS_CONF02 build"
     else
         echo -e "[DEBUG] Oooops. We could not find custom gbs configuration files."
         echo -e "[DEBUG] missing files: $CUSTOM_GBS_CONF01 and $CUSTOM_GBS_CONF02"
-        echo -e "[DEBUG] Building the package with the default gbs config file of the 'www-data' account."
-        echo -e "[DEBUG] Please check \"~/.gbs.conf\""
-        gbs_build="sudo -Hu www-data gbs build"
+        echo -e "[DEBUG] Building the package with the default gbs config file of the '$WEB_USER_ID' account."
+        echo -e "[DEBUG] Please check \"$CUSTOM_GBS_CONF03\""
+        gbs_build="sudo -Hu $WEB_USER_ID gbs build"
     fi
 
+    echo -e "[DEBUG] Starting \"$gbs_build\""
     if [[ $BUILD_MODE == 99 ]]; then
         echo -e "BUILD_MODE = 99"
         echo -e "Skipping 'the build task of gbs including the -A $1' procedure temporarily."
