@@ -8,8 +8,6 @@
 [Release Notes](https://github.com/nnstreamer/TAOS-CI/releases)
 
 
-<a font color=red><strong>[Notice]</strong> On Jan-01-2021, The default branch of TAOS-CI is changed from **master** to **main**. For more details, please refer to https://github.com/nnstreamer/TAOS-CI/issues/663</a>
-
 
 # Introduction
 
