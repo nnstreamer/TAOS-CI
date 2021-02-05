@@ -93,17 +93,12 @@ function pr-postbuild-build-tizen-run-queue(){
         echo -e "[DEBUG] The $CUSTOM_GBS_CONF02 file exists."
         echo -e "[DEBUG] Building the package with the $CUSTOM_GBS_CONF02 file"
         gbs_build="sudo -Hu www-data gbs -c $CUSTOM_GBS_CONF02 build"
-    elif [[ -f $CUSTOM_GBS_CONF03 ]]; then
-        echo -e "[DEBUG] The $CUSTOM_GBS_CONF03 file exists."
-        echo -e "[DEBUG] Building the package with the $CUSTOM_GBS_CONF03 file of the 'www-data' account."
-        gbs_build="sudo -Hu www-data gbs build"
     else
-        echo -e "[DEBUG] Oooops. We could not find anyone among the below three gbs configuration files."
-        echo -e "[DEBUG] Please ask an administrator of CI server on this issue."
-        echo -e "[DEBUG] $CUSTOM_GBS_CONF01"
-        echo -e "[DEBUG] $CUSTOM_GBS_CONF02"
-        echo -e "[DEBUG] $CUSTOM_GBS_CONF03"
-        exit 1
+        echo -e "[DEBUG] Oooops. We could not find custom gbs configuration files."
+        echo -e "[DEBUG] missing files: $CUSTOM_GBS_CONF01 and $CUSTOM_GBS_CONF02"
+        echo -e "[DEBUG] Building the package with the default gbs config file of the 'www-data' account."
+        echo -e "[DEBUG] Please check \"~/.gbs.conf\""
+        gbs_build="sudo -Hu www-data gbs build"
     fi
 
     if [[ $BUILD_MODE == 99 ]]; then
