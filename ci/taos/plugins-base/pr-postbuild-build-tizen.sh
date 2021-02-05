@@ -82,7 +82,7 @@ function pr-postbuild-build-tizen-run-queue(){
     # into the ./config/config-environment.sh.
     CUSTOM_GBS_CONF01="./.TAOS-CI/.gbs.conf"
     CUSTOM_GBS_CONF02="./packaging/.gbs.conf"
-    CUSTOM_GBS_CONF03="~/.gbs.conf"
+    CUSTOM_GBS_CONF03="$HOME/.gbs.conf"
 
     echo -e "[DEBUG] Checking if the $CUSTOM_GBS_CONF01 file exists or not."
     if [[ -f $CUSTOM_GBS_CONF01 ]]; then
@@ -99,6 +99,7 @@ function pr-postbuild-build-tizen-run-queue(){
         gbs_build="sudo -Hu www-data gbs build"
     else
         echo -e "[DEBUG] Oooops. We could not find anyone among the below three gbs configuration files."
+        echo -e "[DEBUG] Please ask an administrator of CI server on this issue."
         echo -e "[DEBUG] $CUSTOM_GBS_CONF01"
         echo -e "[DEBUG] $CUSTOM_GBS_CONF02"
         echo -e "[DEBUG] $CUSTOM_GBS_CONF03"
