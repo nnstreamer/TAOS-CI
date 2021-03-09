@@ -17,7 +17,7 @@
 # @file       install-packages-base.sh
 # @brief      This script is to install packages that are required to run all modules.
 # @dependency apt
-# @see        https://github.com/nnsuite/TAOS-CI
+# @see        https://github.com/nnstreamer/TAOS-CI
 
 ##
 # @brief Check if packages are installed normally.

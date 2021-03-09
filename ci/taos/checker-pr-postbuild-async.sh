@@ -17,7 +17,7 @@
 ##
 # @file        checker-pr-postbuild-async.sh
 # @brief       It executes a build test whenever a PR is submitted.
-# @see         https://github.com/nnsuite/TAOS-CI
+# @see         https://github.com/nnstreamer/TAOS-CI
 # @author      Geunsik Lim <geunsik.lim@samsung.com>
 # @dependency: gbs, tee, curl, grep, wc, cat, sed, awk, basename
 # @param arguments are received by ci bot

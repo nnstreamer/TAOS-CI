@@ -22,7 +22,7 @@
 # number of languages of a potentially large set of programs.
 #
 # @see      https://packages.ubuntu.com/search?keywords=sloccount
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 

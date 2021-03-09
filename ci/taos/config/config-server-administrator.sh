@@ -5,7 +5,7 @@
 ##
 # @file config-server-administrator.sh
 # @brief configuration file to declare contents that a server administrator installed.
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 

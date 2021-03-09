@@ -23,7 +23,7 @@
 #  How to append this script to /etc/crontab
 #  $ sudo vi /etc/crontab
 #  30 * * * * www-data /var/www/html/nnstreamer/ci/gcov/coverage-generator.sh
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @param    None
 
 # Calculate the gcov and git directory from this file that include a absolute path

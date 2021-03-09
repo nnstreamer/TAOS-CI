@@ -17,7 +17,7 @@
 ##
 # @file     pr-postbuild-build-tizen.sh
 # @brief    Build package with gbs command  to verify build validation on Tizen software platform
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @see      https://source.tizen.org/documentation/reference/git-build-system
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @note

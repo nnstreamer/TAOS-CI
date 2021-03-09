@@ -6,7 +6,7 @@
 ##
 # @file     config-environment.sh
 # @brief    The configuration file to maintain all scripts
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 # This script is to maintain consistently all scripts files.

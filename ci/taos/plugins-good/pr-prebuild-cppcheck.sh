@@ -30,7 +30,7 @@
 #    because it does not work well on libraries.
 # 8. all: enable all messages. It should also only be used when the whole program is scanned.
 #
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @see      https://github.com/danmar/cppcheck
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #

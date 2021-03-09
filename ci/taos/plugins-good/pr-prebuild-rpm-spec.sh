@@ -17,7 +17,7 @@
 ##
 # @file     pr-prebuild-rpm-spec.sh
 # @brief    Check the spec file (packaging/*.spec) with rpmlint command
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 

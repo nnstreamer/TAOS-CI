@@ -17,7 +17,7 @@
 ##
 # @file   checker-issue-comment.sh
 # @brief  An issue facility to comment automatically whenever issue happens .
-# @see    https://github.com/nnsuite/TAOS-CI
+# @see    https://github.com/nnstreamer/TAOS-CI
 # @author Geunsik Lim <geunsik.lim@samsung.com>
 # @param
 #  arg1: issue number

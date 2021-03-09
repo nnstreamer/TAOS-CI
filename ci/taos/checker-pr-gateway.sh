@@ -20,7 +20,7 @@
 # First of all, it clones a github repository with "git clone" command
 # when a contributor submits a PR. Then, it run prebuild and postbuild module sequentially.
 #
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @param arguments are received from CI manager
 #  arg1: date(Ymdhms)

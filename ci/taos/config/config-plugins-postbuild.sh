@@ -5,7 +5,7 @@
 ##
 # @file     config-plugins-postbuild.sh
 # @brief    Configuraiton file to maintain postbuild modules (after completing a build procedure)
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 
 ##### Set environment for plug-in check modules of the postbuild group

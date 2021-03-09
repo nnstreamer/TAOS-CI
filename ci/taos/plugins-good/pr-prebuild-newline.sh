@@ -17,7 +17,7 @@
 ##
 # @file pr-prebuild-newline.sh
 # @brief Check if there is a newline issue in a text file
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 

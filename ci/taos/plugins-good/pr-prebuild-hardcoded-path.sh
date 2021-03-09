@@ -17,7 +17,7 @@
 ##
 # @file     pr-prebuild-hardcoded-path.sh
 # @brief    Check prohibited hardcoded paths (/home/* for now)
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 

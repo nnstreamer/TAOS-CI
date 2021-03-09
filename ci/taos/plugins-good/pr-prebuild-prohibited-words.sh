@@ -20,7 +20,7 @@
 #
 # It to check a prohibited word if there are unnecessary words in the source codes.
 #
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 
