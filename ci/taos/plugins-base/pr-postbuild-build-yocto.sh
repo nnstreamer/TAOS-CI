@@ -18,7 +18,7 @@
 # @file pr-postbuild-build-yocto.sh
 # @brief Build package with OpenEmbedded/devtool to verify a build validation on YOCTO platform
 # @see      https://wiki.yoctoproject.org/wiki/Application_Development_with_Extensible_SDK
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @note
 # $ sudo apt-get -y install gawk wget git-core diffstat unzip texinfo gcc-multilib

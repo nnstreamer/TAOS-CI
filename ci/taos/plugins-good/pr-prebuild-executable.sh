@@ -17,7 +17,7 @@
 ##
 # @file     pr-prebuild-executable.sh
 # @brief    Check executable bits for .cpp, .c, .hpp, .h, .prototxt, .caffemodel, .txt., .init
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 

@@ -22,7 +22,7 @@
 # in order to inspect a compiliation of C/C++ source code on Android platform
 #
 # @see      https://developer.android.com/ndk
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @note
 # Note that the ndk-build command is located in the Android NDK toolkit.

@@ -17,7 +17,7 @@
 ##
 # @file     pr-prebuild-timestamp.sh
 # @brief    Check the timestamp of the commit
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 

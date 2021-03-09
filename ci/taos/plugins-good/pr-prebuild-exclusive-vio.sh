@@ -17,7 +17,7 @@
 ##
 # @file pr-prebuild-exclusive-vio.sh
 # @brief Check the issue #279 (VIO commits should be exclusive)
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Myungjoo Ham <myungjoo.ham@samsung.com>
 #
 

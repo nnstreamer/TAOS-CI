@@ -19,7 +19,7 @@
 # @brief   Check if Bazel executes a build-test and a run-test on Ubuntu
 #          distribution (x86_64)
 #
-# @see     https://github.com/nnsuite/TAOS-CI
+# @see     https://github.com/nnstreamer/TAOS-CI
 # @author  Geunsik Lim <geunsik.lim@samsung.com>
 #
 #

@@ -25,7 +25,7 @@
 # Aspell can also easily check documents in UTF-8 without having to use a special dictionary.
 #
 # @see      http://aspell.net/
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 

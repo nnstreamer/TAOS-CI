@@ -22,7 +22,7 @@
 # The execution result is reported with "${BOT_NAME}/pr-prebuild-doxygen-tag" context into status section
 # of a GitHub PR webpage.
 #
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @author   Sewon Oh <sewon.oh@samsung.com>
 
@@ -208,7 +208,7 @@ function pr-prebuild-doxygen-tag(){
         # inform a PR submitter of a hint message in more detail
         message=":octocat: **cibot**: $user_id, **$latest_failed_file** does not include Doxygen tags such as **$doxygen_basic_rules**. You must include the Doxygen tags in the source code."
         message="$message Please refer to a Doxygen manual at"
-        message="$message http://github.com/nnsuite/TAOS-CI/blob/master/ci/doc/doxygen-documentation.md"
+        message="$message http://github.com/nnstreamer/TAOS-CI/blob/main/ci/doc/doxygen-documentation.md"
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
 
     fi

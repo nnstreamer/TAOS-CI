@@ -27,7 +27,7 @@
 #
 # @see      https://scan.coverity.com/github
 # @see      https://scan.coverity.com/download?tab=cxx
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @note Supported build type: meson
 # @note CI administrator must install the Coverity package in the CI server as following:

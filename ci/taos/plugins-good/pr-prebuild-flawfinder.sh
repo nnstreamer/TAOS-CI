@@ -31,7 +31,7 @@
 #
 # @see      https://dwheeler.com/flawfinder/
 # @see      https://sourceforge.net/projects/flawfinder/
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 
 # @brief [MODULE] ${BOT_NAME}/pr-prebuild-flawfinder

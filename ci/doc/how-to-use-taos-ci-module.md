@@ -38,7 +38,7 @@ echo -e "\n\n\n########## for CI-system: Installing packages for shellcheck pack
 sudo apt -y install shellcheck || func-pack-fail
 ```
 Finally, please describe the goal of the module at the below wiki page.
-* https://github.com/nnsuite/TAOS-CI/wiki/TAOS-CI-Plug-in-Modules
+* https://github.com/nnstreamer/TAOS-CI/wiki/TAOS-CI-Plug-in-Modules
 
 ## Requirement before contributing a new module
 First of all, **Note** that you have to run the below statement in order to check the grammar error of a CI module that your write.

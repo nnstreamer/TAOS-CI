@@ -25,14 +25,14 @@
 # applications. This module only supports Ubuntu distribution. It means that
 # the CI server has to be equipped with Ubuntu 16.04+ x86_64.
 #
-# @see     https://github.com/nnsuite/TAOS-CI
+# @see     https://github.com/nnstreamer/TAOS-CI
 # @author  Geunsik Lim <geunsik.lim@samsung.com>
 # @author  Sewon Oh <sewon.oh@samsung.com>
 # @author  Jaeyun Jung <jy1210.jung@samsung.com>
 #
 # @note:
 #  1. If you must modify this script, Do not forget that you must update the below wiki page.
-#     https://github.com/nnsuite/nnstreamer/wiki/usage-examples-screenshots
+#     https://github.com/nnstreamer/nnstreamer/wiki/usage-examples-screenshots
 #
 #  2. A server administrator must update the existing 'video' group as a follow to run this module.
 #     'www-data' (an user ID of Apache webserver) has to belong to the video group (/etc/group).
@@ -106,7 +106,7 @@ function pr-postbuild-nnstreamer-ubuntu-apptest-run-queue() {
     # The 'wget' command saves a log message with the "-o logfile" option while downloading files.
     # Run a locale setting which supports 'utf-8' to avoid an issue  that some file names
     # in the log file are broken.
-    # https://github.com/nnsuite/nnstreamer/issues/1280
+    # https://github.com/nnstreamer/nnstreamer/issues/1280
     export LC_ALL=en_US.UTF-8
     export LANG=en_US.UTF-8
     export LANGUAGE=en_US:en

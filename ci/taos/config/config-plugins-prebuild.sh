@@ -5,7 +5,7 @@
 ##
 # @file     config-plugins-prebuild.sh
 # @brief    Configuration file to maintain modules of prebuild group (before doing a build procedure)
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 
 

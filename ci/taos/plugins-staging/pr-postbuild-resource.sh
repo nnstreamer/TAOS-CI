@@ -17,7 +17,7 @@
 ##
 # @file pr-postbuild-resource.sh
 # @brief Check not-installed resources exist
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Jiho Chu <jiho.chu@samsung.com>
 #
 

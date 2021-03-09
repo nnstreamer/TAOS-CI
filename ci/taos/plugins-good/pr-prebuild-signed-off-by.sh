@@ -17,7 +17,7 @@
 ##
 # @file     pr-prebuild-signed-off-by.sh
 # @brief    Check if contributor write Sigend-off-by message
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Sewon oh <sewon.oh@samsung.com>
 #
 

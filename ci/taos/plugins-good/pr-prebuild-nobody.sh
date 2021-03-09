@@ -17,7 +17,7 @@
 ##
 # @file     pr-prebuild-nobody.sh
 # @brief    Check the commit message body
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 

@@ -17,7 +17,7 @@
 ##
 # @file pr-prebuild-clang.sh
 # @brief Check Check the code formatting style with clang-format
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @detail   Users may provide arguments with "clang_option" variable,
 #           where multiple options may be given with a space, " ", as a

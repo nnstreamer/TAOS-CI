@@ -17,7 +17,7 @@
 ##
 # @file pr-prebuild-file-size.sh
 # @brief    Check the file size to not include big binary files
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 

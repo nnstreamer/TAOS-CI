@@ -18,7 +18,7 @@
 # @file pr-prebuild-indent.sh
 # @brief Check the code formatting style with GNU indent
 # @see      https://www.gnu.org/software/indent/
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 #
 

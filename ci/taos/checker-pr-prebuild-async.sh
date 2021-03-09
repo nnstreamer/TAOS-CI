@@ -17,7 +17,7 @@
 ##
 # @file    checker-pr-prebuild-async.sh
 # @brief   It checks format rules whenever a PR is submitted.
-# @see     https://github.com/nnsuite/TAOS-CI
+# @see     https://github.com/nnstreamer/TAOS-CI
 # @author  Geunsik Lim <geunsik.lim@samsung.com>
 # @param   arguments are received from CI manager
 #  arg1:   date(Ymdhms)

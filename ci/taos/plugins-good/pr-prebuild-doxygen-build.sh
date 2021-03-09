@@ -24,7 +24,7 @@
 # Tcl, and to some extent D.
 #
 # @see      http://www.doxygen.nl/
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @note
 #  Note that module developer has to execute a self evaluaton if the plug-in module includes incorrect grammar(s).

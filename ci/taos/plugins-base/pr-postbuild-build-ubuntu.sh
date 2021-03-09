@@ -19,7 +19,7 @@
 # @brief    Build package with pbuilder/pdebuild to verify build validation on Ubuntu distribution
 # @see      https://wiki.ubuntu.com/PbuilderHowto
 # @see      https://pbuilder-docs.readthedocs.io/en/latest/usage.html#configuration-files
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @requirement
 # First install the required packages.

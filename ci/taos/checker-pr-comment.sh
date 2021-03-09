@@ -17,7 +17,7 @@
 ##
 # @file  checker-pr-comment.sh
 # @brief Automatic PR commenter to announce information automatically whenever contributor submits a PR
-# @see      https://github.com/nnsuite/TAOS-CI
+# @see      https://github.com/nnstreamer/TAOS-CI
 # @author   Geunsik Lim <geunsik.lim@samsung.com>
 # @param
 #  arg1: PR number
