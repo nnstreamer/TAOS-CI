@@ -203,32 +203,6 @@ function pr-postbuild-build-android-run-queue(){
         fi
         popd
         echo -e "[DEBUG] The current directory: $(pwd)."
-
-        # Start to build NNStreamer API for Android.
-        echo "[DEBUG] Starting gradle build for Android API."
-
-        # Directory for build result
-        android_result_dir=${dir_ci}/${dir_commit}/${PACK_BIN_FOLDER}/ANDROID
-        mkdir -p $android_result_dir
-
-        # Android SDK
-        android_sdk=/var/www/ubuntu/Android/Sdk
-        android_ndk=$ROOT_ANDROID_CI/android-ndk-r20b
-
-        # GStreamer binaries
-        gst_android_dir=$ROOT_ANDROID_CI/gstreamer-1.0-android-universal-1.16.2
-
-        # Set build option
-        common_option="--gstreamer_dir=$gst_android_dir --nnstreamer_dir=$NNSTREAMER_ROOT --android_sdk_dir=$android_sdk --android_ndk_dir=$android_ndk --result_dir=$android_result_dir"
-
-        api_build_log=../report/build_log_${input_pr}_android_api_output.txt
-
-        # Build Android library
-        bash ./api/android/build-android-lib.sh $common_option --build_type=all >> $api_build_log
-        result=$(($result+$?))
-
-        bash ./api/android/build-android-lib.sh $common_option --build_type=single >> $api_build_log
-        result=$(($result+$?))
     fi
     echo "[DEBUG] The result value is '$result'."
 
