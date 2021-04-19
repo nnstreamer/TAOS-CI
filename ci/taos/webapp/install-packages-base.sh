@@ -48,11 +48,11 @@ echo -e "\n\n\n########## for CI-system: Installing packages for gcov/lcov"
 sudo apt -y install lcov || func-pack-fail
 
 echo -e "\n\n\n########## for CI-system: Installing clang-format"
-echo -e "[DEBUG] You have to install clang-format-4.0 (official version) to check C++ formatting."
+echo -e "[DEBUG] You have to install clang-format-6.0 (official version) to check C++ formatting."
 if [[ -f /etc/apt/sources.list.d/clang.list ]]; then
     sudo echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main" > /etc/apt/sources.list.d/clang.list
     sudo apt -y update
-    sudo apt -y install clang-format-4.0 || func-pack-fail
+    sudo apt -y install clang-format-6.0 || func-pack-fail
 fi
 
 echo -e "\n\n\n########## for CI-system: Installing packages for doxygen book"

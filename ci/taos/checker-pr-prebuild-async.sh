@@ -69,7 +69,7 @@ check_cmd_dep wc
 check_cmd_dep cat
 check_cmd_dep basename
 check_cmd_dep tail
-check_cmd_dep clang-format-4.0
+check_cmd_dep clang-format-6.0
 check_cmd_dep cppcheck
 check_cmd_dep rpmlint
 check_cmd_dep aha
