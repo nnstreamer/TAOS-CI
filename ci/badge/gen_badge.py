@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 ##
 # Copyright (C) 2019 Samsung Electronics
@@ -45,7 +45,7 @@ def get_code_g_y_r(val, scale):
         green = 255 * val / scale
         red = 255 - (val - 50) * (255 / (float(scale) / 2))
 
-    rgb = (red, green, 0)
+    rgb = (int(red), int(green), int(0))
 
     return '#%02x%02x%02x' % rgb
 
