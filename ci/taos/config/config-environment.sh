@@ -87,7 +87,7 @@ pr_comment_pr_monitor=0
 # Empower CI bot to do the 'Review changes' activity (e.g., Comment, Approve, Request changes) as a reviwer
 pr_comment_review_activity=1
 
-#### Build test: Write a build type to test ex) "x86_64 i586 armv7l aarch64" 
+#### Build test: Write a build type to test ex) "x86_64 i586 armv7l aarch64"
 # Currently, this variable is declared to hande the "gbs build" command on Tizen.
 pr_build_arch_type="x86_64"
 
@@ -95,6 +95,12 @@ pr_build_arch_type="x86_64"
 # Basic = 0 (@file + @brief)
 # Advanced = 1 (Basic + "@author, @bug and functions with ctags")
 pr_doxygen_check_level=0
+
+### Check doxygen check for the definition (for non-header file)
+# Skip function defintion = 1
+# Don't skip function definition = 0
+# Note that in *.h file, function definitions are still checked
+pr_doxygen_check_skip_function_definition=0
 
 ### Check level of CPPCheck for a static analysis of C/C++ source code:
 # CPPCheck Level 0: The check level is 'err'.
@@ -146,7 +152,7 @@ RUN_QUEUE_PR_JOBS=8
 VERSION="1.5.20200925"
 
 #### Location of the GitHub repository
-# We assume that the default folder of the www-data (user-id of Apache webserver) is "/var/www/html/" folder. 
+# We assume that the default folder of the www-data (user-id of Apache webserver) is "/var/www/html/" folder.
 
 # Reference repository to speed up the exectuion time of the "git clone" command
 REFERENCE_REPOSITORY="/var/www/html/$PRJ_REPO_UPSTREAM_LOCAL/"

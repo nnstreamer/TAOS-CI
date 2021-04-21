@@ -88,11 +88,17 @@ function pr-prebuild-doxygen-tag(){
                         function_positions="" # Line number of functions.
                         structure_positions="" # Line number of structure.
 
+                        local function_check_flag="f+p" # check document for function and prototype of the function
+
+                        if [[ $pr_doxygen_check_skip_function_definition == 1 && $curr_file != *.h ]]; then
+                            function_check_flag="p" # check document for only prototypes of the function for non-header file
+                        fi
+
                         # Find line number of functions using ctags, and append them.
                         while IFS='' read -r line || [[ -n "$line" ]]; do
                             temp=`echo $line | cut -d ' ' -f3` # line number of function place 3rd field when divided into ' '
                             function_positions="$function_positions $temp "
-                        done < <(ctags -x --c-kinds=f $curr_file) # "--c-kinds=f" mean find function
+                        done < <(ctags -x --c-kinds=$function_check_flag $curr_file) # "--c-kinds=f" mean find function
 
                         # Find line number of structure using ctags, and append them.
                         while IFS='' read -r line || [[ -n "$line" ]]; do
