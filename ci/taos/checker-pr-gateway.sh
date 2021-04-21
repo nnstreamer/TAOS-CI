@@ -191,7 +191,7 @@ function run_all_checkers(){
   local -n name_list=$2
   local -n logfile_list=$3
   local checker_args=${@:4}
-
+  declare -i status=0
   local num_checkers=${#cmd_list[@]}
   for (( i=0; i<$num_checkers; i++ )); do
     local logfile=${logfile_list[$i]}
@@ -210,18 +210,42 @@ function run_all_checkers(){
     # Note that you must modify the Out-of-PR (OOP) killer because OOP killer depends on synchronous method.
     pushd ./taos/
     ${cmd_list[$i]} $checker_args                                        | tee -a $logfile
+    status+=${PIPESTATUS[0]}
+    ## in case of running async, save pid and wait later
     local pid=$!
+    echo -e "[DEBUG] Running... ${cmd_list[$i]} pid: ${pid} status: ${status}" | tee -a $logfile_gateway
+    local pids[${i}]=$pid
     popd
-    echo -e "[DEBUG] Running..."                                         | tee -a $logfile
 
     # if the dependency between groups is to be enforced and current group fails, skip remaining groups
     if [[ $dep_policy_between_groups == 1 ]]; then
       wait $pid
-      if [[ $? != 0 ]]; then
+      if [[ $? != 0 || $status != 0 ]]; then
         break
       fi
     fi
   done
+
+  # if checkers are running asynchronously, wait explicitly to check if every thing was successful
+  for pid_ in ${pids[*]}; do
+    echo -e "[DEBUG] waiting... pid: ${pid_}"                         | tee -a $logfile_gateway
+    wait $pid_
+    status+=$?
+  done
+
+  # this means every checker was successful
+  if [[ $status == 0 ]]; then
+    # Let's approve it as a reviewer if this PR passes all CI modules.
+    if [[ $pr_comment_review_activity == 1 ]]; then
+        # Get user ID from the input_repo string
+        set -- "${input_repo}"
+        IFS="\/"; declare -a Array=($*); unset IFS;
+        user_id="@${Array[3]}"
+
+        message=" $user_id, :100: All CI checkers are successfully verified. Thanks."
+        cibot_review $TOKEN "APPROVE" "$message" "$input_commit" "$GITHUB_WEBHOOK_API/pulls/$input_pr/reviews"
+    fi
+  fi
 }
 
 # --------------------------- Create and run checkers -------------------------------------
