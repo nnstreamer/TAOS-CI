@@ -2,7 +2,7 @@
 
 ##
 # Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -163,8 +163,8 @@ done
 
 echo -e "[DEBUG] The current directory: $(pwd)"
 echo -e "[DEBUG] Starting an postbuild module ...."
-echo -e "[DEBUG] dir_ci is '$dir_ci'" 
-echo -e "[DEBUG] dir_worker is '$dir_worker'" 
+echo -e "[DEBUG] dir_ci is '$dir_ci'"
+echo -e "[DEBUG] dir_worker is '$dir_worker'"
 echo -e "[DEBUG] dir_commit is '$dir_commit'"
 
 echo -e "[DEBUG] Let's move to a git repository folder."
@@ -327,12 +327,6 @@ if [[ $global_check_result == "success" ]]; then
     message="Successfully all postbuild modules are passed. Commit number is $input_commit."
     cibot_report $TOKEN "success" "(INFO)${BOT_NAME}/pr-postbuild-group" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "$GITHUB_WEBHOOK_API/statuses/$input_commit"
 
-    # Let's approve it as a reviewer if this PR passes all CI modules.
-    if [[ $pr_comment_review_activity == 1 ]]; then
-        message=" $user_id, :100: All CI checkers are successfully verified. Thanks."
-        cibot_review $TOKEN "APPROVE" "$message" "$input_commit" "$GITHUB_WEBHOOK_API/pulls/$input_pr/reviews"
-    fi
-
     # If contributors want later, let's inform developers of CI test result to go to a review process as a final step before merging a PR
     echo -e "[DEBUG] All postbuild modules are passed."
     echo -e "[DEBUG] It is ready to review! :shipit:."
@@ -353,7 +347,7 @@ fi
 
 # --------------------------- Cleaner:  Remove unnecessary directories --------------------
 # If you have to remove unnecessary directory or files as a final step
-# Please append a command below. 
+# Please append a command below.
 echo -e "[DEBUG] The current directory: $(pwd)."
 
 # Return with exit code
