@@ -140,6 +140,9 @@ BUILD_MODE_UBUNTU=99
 BUILD_MODE_YOCTO=99
 BUILD_MODE_ANDROID=99
 
+# When BUILD_MODE_ANDROID is on, specify ANDROID_NDK_PATH to call ndk
+ANDROID_NDK_PATH=/var/www/html/ndks/android-ndk-r22b
+
 # Tizen: If each git repository must be defined by a different profile (e.g., ~/.gbs.conf),
 # The name of TIZEN_GBS_PROFILE can be given without the "profile." prefix as follows.
 # For example, [profile.tizen40_mobile] has to be declared with TIZEN_GBS_PROFILE="tizen40_mobile".
