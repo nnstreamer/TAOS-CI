@@ -112,12 +112,12 @@ function pr-postbuild-build-android-run-queue(){
     source /etc/environment
 
     # Set the path about Android build tools
-    export ROOT_ANDROID_CI=/var/www/html/android
+    local ROOT_ANDROID_CI=/var/www/html/android
 
     # Android NDK
-    export ANDROID_NDK=$ROOT_ANDROID_CI/android-ndk-r12b
+    export ANDROID_NDK=$ANDROID_NDK_PATH
     export PATH=$ANDROID_NDK:$PATH
-    echo "Exporting an ANDROID_NDK path ..."
+    echo "Exporting an ANDROID_NDK path..."
     echo $PATH
     ndk-build --help
 
