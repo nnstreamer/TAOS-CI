@@ -111,27 +111,6 @@ function pr-postbuild-build-android-run-queue(){
     echo "Running 'source /etc/environment'"
     source /etc/environment
 
-    # Set the path about Android build tools
-    local ROOT_ANDROID_CI=/var/www/html/android
-
-    # Android NDK
-    export ANDROID_NDK=$ANDROID_NDK_PATH
-    export PATH=$ANDROID_NDK:$PATH
-    echo "Exporting an ANDROID_NDK path..."
-    echo $PATH
-    ndk-build --help
-
-    # gst-android prebuilt binary (e.g., .a, .so, .h)
-    export GSTREAMER_ROOT_ANDROID=$ROOT_ANDROID_CI/gst_root_android/
-    echo "Exporting a GSTREMER_ROOT_ANDROID path..."
-    echo $GSTREAMER_ROOT_ANDROID
-
-    # Check if dependent packages are installed. Please add required packages here.
-    check_cmd_dep sudo
-    check_cmd_dep curl
-    check_cmd_dep ndk-build
-    check_cmd_dep sed
-
     echo "[DEBUG] starting ${BOT_NAME}/pr-postbuild-build-android facility"
 
     # BUILD_MODE=0 : run "ndk-build" command without generating debugging information.
@@ -150,6 +129,27 @@ function pr-postbuild-build-android-run-queue(){
         echo -e "Skipping the 'ndk-build' procedure temporarily."
         result=999
     else
+        # Check if dependent packages are installed. Please add required packages here.
+        check_cmd_dep sudo
+        check_cmd_dep curl
+        check_cmd_dep ndk-build
+        check_cmd_dep sed
+
+        # Set the path about Android build tools
+        export ROOT_ANDROID_CI=/var/www/html/android
+
+        # Android NDK
+        export ANDROID_NDK=$ROOT_ANDROID_CI/android-ndk-r12b
+        export PATH=$ANDROID_NDK:$PATH
+        echo "Exporting an ANDROID_NDK path ..."
+        echo $PATH
+        ndk-build --help
+
+        # gst-android prebuilt binary (e.g., .a, .so, .h)
+        export GSTREAMER_ROOT_ANDROID=$ROOT_ANDROID_CI/gst_root_android/
+        echo "Exporting a GSTREMER_ROOT_ANDROID path..."
+        echo $GSTREAMER_ROOT_ANDROID
+
         # Build a package with the 'ndk-build' command.
         # Note that you have to set no-password condition after running 'visudo' command.
         # www-data    ALL=(ALL) NOPASSWD:ALL
