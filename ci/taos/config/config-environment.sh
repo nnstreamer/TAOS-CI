@@ -102,6 +102,13 @@ pr_doxygen_check_level=0
 # Note that in *.h file, function definitions are still checked
 pr_doxygen_check_skip_function_definition=0
 
+### set default doxygen function check flag
+# f means function definition only
+# p means function prototype only
+# f+p means function definition and prototype
+# this will be overriden for non-header files if @a pr_doxygen_check_skip_function_definition is set
+pr_doxygen_check_function_flag=f+p
+
 ### Check level of CPPCheck for a static analysis of C/C++ source code:
 # CPPCheck Level 0: The check level is 'err'.
 # CPPCheck Level 1: 'err' + 'warning,performance,unusedFunction'
