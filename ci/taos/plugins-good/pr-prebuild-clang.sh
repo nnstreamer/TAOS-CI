@@ -55,14 +55,12 @@ function pr-prebuild-clang(){
     AUDITLIST=""
 
     for i in ${FILELIST}; do
-            AUDITLIST+=`echo $i | grep "\.h"`
-            AUDITLIST+=`echo $i | grep "\.hpp"`
-            AUDITLIST+=`echo $i | grep "\.hh"`
-            AUDITLIST+=`echo $i | grep "\.H"`
-            AUDITLIST+=`echo $i | grep "\.c"`
-            AUDITLIST+=`echo $i | grep "\.cpp"`
-            AUDITLIST+=`echo $i | grep "\.cc"`
-            AUDITLIST+=`echo $i | grep "\.C"`
+            AUDITLIST+=`echo $i | grep -i ".*\.h$"`
+            AUDITLIST+=`echo $i | grep -i ".*\.hpp$"`
+            AUDITLIST+=`echo $i | grep -i ".*\.hh$"`
+            AUDITLIST+=`echo $i | grep -i ".*\.c$"`
+            AUDITLIST+=`echo $i | grep -i ".*\.cpp$"`
+            AUDITLIST+=`echo $i | grep -i ".*\.cc$"`
         AUDITLIST+=' '
     done
     echo "[DEBUG] Files of source code: $AUDITLIST"
