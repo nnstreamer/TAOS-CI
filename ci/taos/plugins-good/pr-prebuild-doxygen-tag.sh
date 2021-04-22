@@ -88,7 +88,8 @@ function pr-prebuild-doxygen-tag(){
                         function_positions="" # Line number of functions.
                         structure_positions="" # Line number of structure.
 
-                        local function_check_flag="f+p" # check document for function and prototype of the function
+                        # check document for function and prototype of the function
+                        local function_check_flag=$pr_doxygen_check_function_flag || "f+p"
 
                         if [[ $pr_doxygen_check_skip_function_definition == 1 && $curr_file != *.h ]]; then
                             function_check_flag="p" # check document for only prototypes of the function for non-header file
