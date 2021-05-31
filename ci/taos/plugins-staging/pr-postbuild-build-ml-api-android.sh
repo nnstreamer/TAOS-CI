@@ -88,10 +88,10 @@ function pr-postbuild-build-ml-api-android-run-queue(){
     api_build_log=../report/build_log_${input_pr}_android_api_output.txt
 
     # Build Android library
-    bash ./java/android/build-nnstreamer-android-lib.sh $common_option --build_type=all >> $api_build_log
+    bash $ML_API_ROOT/java/android/build-nnstreamer-android-lib.sh $common_option --build_type=all >> $api_build_log
     result=$(($result+$?))
 
-    bash ./java/android/build-nnstreamer-android-lib.sh $common_option --build_type=single >> $api_build_log
+    bash $ML_API_ROOT/java/android/build-nnstreamer-android-lib.sh $common_option --build_type=single >> $api_build_log
     result=$(($result+$?))
 
     echo "[DEBUG] The result value is '$result'."
