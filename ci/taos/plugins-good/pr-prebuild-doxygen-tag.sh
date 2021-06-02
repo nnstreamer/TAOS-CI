@@ -31,8 +31,8 @@
 function pr-prebuild-doxygen-tag(){
     report_path=../report/doxygen_tag.txt
 
-    echo "########################################################################################"
-    echo "[MODULE] ${BOT_NAME}/pr-prebuild-doxygen-tag: Check if source code includes required Doxygen tags for Doxygen documentation."
+    echo "########################################################################################" >> $report_path
+    echo "[MODULE] ${BOT_NAME}/pr-prebuild-doxygen-tag: Check if source code includes required Doxygen tags for Doxygen documentation." >> $report_path
     # Inspect all *.patch files that are fetched from a commit file
     FILELIST=`git show --pretty="format:" --name-only --diff-filter=AMRC`
     check_result="skip"
@@ -90,8 +90,7 @@ function pr-prebuild-doxygen-tag(){
                         function_positions="" # Line number of functions.
                         structure_positions="" # Line number of structure.
 
-                        # check document for function and prototype of the function
-                        local function_check_flag=$pr_doxygen_check_function_flag || "f+p"
+                        local function_check_flag="f+p" # check document for function and prototype of the function
 
                         if [[ $pr_doxygen_check_skip_function_definition == 1 && $curr_file != *.h ]]; then
                             function_check_flag="p" # check document for only prototypes of the function for non-header file
@@ -133,8 +132,8 @@ function pr-prebuild-doxygen-tag(){
                                 latest_failed_file=$curr_file
                             fi
 
-                            # Find brief tag in the comments between the codes.
-                            if [[ $line =~  "@brief" ]]; then
+                            # Find brief or copydoc tag in the comments between the codes.
+                            if [[ $line =~  "@brief" || $line =~ "@copydoc" ]]; then
                                 brief=1
                             # Doxygen tags become zero in code section.
                             elif [[ $line != *"*"*  && ( $line =~ ";" || $line =~ "}" || $line =~ "#") ]]; then
@@ -202,15 +201,15 @@ function pr-prebuild-doxygen-tag(){
     done
 
     if [[ $check_result == "success" ]]; then
-        echo "[DEBUG] Passed. Doxygen documentation."
+        echo "[DEBUG] Passed. Doxygen documentation." >> $report_path
         message="Successfully the Doxygen checker is passed."
         cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     elif [[ $check_result == "skip" ]]; then
-        echo "[DEBUG] Skipped. Doxygen documentation"
+        echo "[DEBUG] Skipped. Doxygen documentation" >> $report_path
         message="Skipped. Your PR does not include source code(s)."
         cibot_report $TOKEN "success" "${BOT_NAME}/pr-prebuild-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
     else
-        echo "[ERROR] Failed. Doxygen documentation."
+        echo "[ERROR] Failed. Doxygen documentation." >> $report_path
         message="Oooops. The Doxygen checker is failed. Please write a Doxygen document in your code."
         cibot_report $TOKEN "failure" "${BOT_NAME}/pr-prebuild-doxygen-tag" "$message" "${CISERVER}${PRJ_REPO_UPSTREAM_LOCAL}/ci/${dir_commit}/" "${GITHUB_WEBHOOK_API}/statuses/$input_commit"
 
