@@ -103,7 +103,7 @@ function pr-postbuild-bazel-ubuntu-run-queue() {
         echo -e "Starting git clone command to download ./third_party/lib/ ...."
         echo -e "statement (download): $START_DOWNLOAD"
         eval $START_DOWNLOAD
-        $result=$? 
+        $result=$?
         echo -e "[DEBUG] The result value of the download task is $result"
         if [[ $result -ne 0 ]]; then
             echo -e "[DEBUG] The download task is failed."
@@ -116,10 +116,11 @@ function pr-postbuild-bazel-ubuntu-run-queue() {
     fi
 
     # Build a source code of the nnstreamer repository
-    echo -e "Starting a buile task with bazel command ..."
+    echo -e "Starting a build task with bazel command ..."
     pwd
+    build_log=../report/build_log_${input_pr}_ubuntu_bazel_output.txt
     echo -e "statement (build): $START_BUILDTEST"
-    eval $START_BUILDTEST
+    eval $START_BUILDTEST >> $build_log
     result=$?
     echo -e "[DEBUG] The result value of the build-test is $result"
     if [[ $result -ne 0 ]]; then
@@ -133,7 +134,7 @@ function pr-postbuild-bazel-ubuntu-run-queue() {
 
     # The number of test for repeated tests. To skip a run-test, specify "loop_num=0".
     loop_num=1
-    
+
     if [[ $loop_num -ge 1 && $result -eq 0 ]]; then
         # Run an aging test to verify if the output result is correct or not.
         for (( count=1; count<=$loop_num; count++ )) ; do
@@ -155,7 +156,7 @@ function pr-postbuild-bazel-ubuntu-run-queue() {
 
             echo -e "[DEBUG] Execution time: $exec_cost secs"
             echo -e "[DEBUG] The result value of the run-test is $result"
-    
+
             if [[ "$(tail -n1 ./result.txt)" =~ "$eval_data" ]]; then
                 echo -e "## PASSED. The execution result is correct. ##"
                 result=0
@@ -222,4 +223,3 @@ function pr-postbuild-bazel-ubuntu-run-queue() {
         cibot_comment $TOKEN "$message" "$GITHUB_WEBHOOK_API/issues/$input_pr/comments"
     fi
 }
-
