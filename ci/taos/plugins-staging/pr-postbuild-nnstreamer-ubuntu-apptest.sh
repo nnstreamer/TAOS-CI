@@ -50,6 +50,9 @@
 #  arg2: URL         The web address to download a file
 #  arg3: CACHE_PATH  The file path that the file is archived (=cached)
 #  arg4: LINK_PATH   The symbolic link path
+
+apptest_report=../../report/nnstreamer-apptest-output.txt
+
 function func_get_file_cached(){
     echo -e "[DEBUG] ${1} ${2} ${3} ${4}"
     if [[ -f "${3}/${1}" ]]; then
@@ -71,11 +74,11 @@ function func_get_file_cached(){
 # arg1: The return value of a command
 function save_consumer_msg() {
     if [[ $1 -ne 0 ]]; then
-        cat temp.txt >> ../../report/nnstreamer-apptest-error.txt
-        echo "[DEBUG][FAIL] It's failed. Oooops. The consumer application is not executed." >> ../../report/nnstreamer-apptest-output.txt
+        cat temp.txt >> $apptest_report
+        echo "[DEBUG][FAIL] It's failed. Oooops. The consumer application is not executed." >> $apptest_report
     else
-        cat temp.txt >> ../../report/nnstreamer-apptest-output.txt
-        echo "[DEBUG][PASS] It's okay. The consumer application is successfully completed." >> ../../report/nnstreamer-apptest-output.txt
+        cat temp.txt >> $apptest_report
+        echo "[DEBUG][PASS] It's okay. The consumer application is successfully completed." >> $apptest_report
     fi
     echo "save_consumer_msg=$1"
 }
@@ -163,18 +166,18 @@ function pr-postbuild-nnstreamer-ubuntu-apptest-run-queue() {
     fi
 
     # Build a source code of the nnstreamer repository
-    meson --prefix=${NNST_ROOT} --sysconfdir=${NNST_ROOT} --libdir=lib --bindir=bin --includedir=include -Denable-tensorflow-lite=true -Denable-tensorflow=true build
+    meson --prefix=${NNST_ROOT} --sysconfdir=${NNST_ROOT} --libdir=lib --bindir=bin --includedir=include build >> $apptest_report
 
     # Install a nnstreamer library
-    ninja -C build install
+    ninja -C build install >> $apptest_report
 
     # Clone the nnstreamer-example repository
     git clone https://github.com/nnstreamer/nnstreamer-example.git example-tmp
 
     # Build and install nnstreamer examples
     cd example-tmp
-    meson --prefix=${NNST_ROOT} --sysconfdir=${NNST_ROOT} --libdir=lib --bindir=bin --includedir=include build
-    ninja -C build install
+    meson --prefix=${NNST_ROOT} --sysconfdir=${NNST_ROOT} --libdir=lib --bindir=bin --includedir=include build >> $apptest_report
+    ninja -C build install >> $apptest_report
     cd ..
 
     # After installation, binary files are installed to 'bin' folder.
@@ -286,9 +289,9 @@ function pr-postbuild-nnstreamer-ubuntu-apptest-run-queue() {
     export DISPLAY=0.0:${xvnc_port}
     declare -i producer_id=0
 
-    echo -e ""  >> ../../report/nnstreamer-apptest-output.txt
-    echo -e "[DEBUG] ------------------------------------------------------------------"  >> ../../report/nnstreamer-apptest-output.txt
-    echo -e "[DEBUG] App (Producer): Starting 'gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0' test on the VNC environment..."  >> ../../report/nnstreamer-apptest-output.txt
+    echo -e ""  >> $apptest_report
+    echo -e "[DEBUG] ------------------------------------------------------------------"  >> $apptest_report
+    echo -e "[DEBUG] App (Producer): Starting 'gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0' test on the VNC environment..."  >> $apptest_report
     gst-launch-1.0 videotestsrc ! v4l2sink device=/dev/video0 &
     producer_id=$!
 
