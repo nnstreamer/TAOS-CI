@@ -3,10 +3,10 @@
 # Do not append a license statement in the configuration file for a different license-based repository.
 
 ##
-# @file     config-plugins-prebuild.sh
-# @brief    Configuration file to maintain modules of prebuild group (before doing a build procedure)
-# @see      https://github.com/nnstreamer/TAOS-CI
-# @author   Geunsik Lim <geunsik.lim@samsung.com>
+## @file     config-plugins-prebuild.sh
+## @brief    Configuration file to maintain modules of prebuild group (before doing a build procedure)
+## @see      https://github.com/nnstreamer/TAOS-CI
+## @author   Geunsik Lim <geunsik.lim@samsung.com>
 
 
 ##### Set environment for plugin modules of prebuild group

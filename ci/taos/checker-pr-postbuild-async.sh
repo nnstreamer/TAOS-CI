@@ -1,47 +1,45 @@
 #!/usr/bin/env bash
 
+## Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
 ##
-# Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#     http://www.apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##     http://www.apache.org/licenses/LICENSE-2.0
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+##
 
+## @file        checker-pr-postbuild-async.sh
+## @brief       It executes a build test whenever a PR is submitted.
+## @see         https://github.com/nnstreamer/TAOS-CI
+## @author      Geunsik Lim <geunsik.lim@samsung.com>
+## @dependency: gbs, tee, curl, grep, wc, cat, sed, awk, basename
+## @param arguments are received by ci bot
+##  arg1: date(YmdHisu)
+##  arg2: commit number
+##  arg3: repository address of PR
+##  arg4: branch name
+##  arg5: PR number
+##  arg6: delivery id
 ##
-# @file        checker-pr-postbuild-async.sh
-# @brief       It executes a build test whenever a PR is submitted.
-# @see         https://github.com/nnstreamer/TAOS-CI
-# @author      Geunsik Lim <geunsik.lim@samsung.com>
-# @dependency: gbs, tee, curl, grep, wc, cat, sed, awk, basename
-# @param arguments are received by ci bot
-#  arg1: date(YmdHisu)
-#  arg2: commit number
-#  arg3: repository address of PR
-#  arg4: branch name
-#  arg5: PR number
-#  arg6: delivery id
-#
-# @see directory variables
-#  $dir_ci       directory for webhooks (Absolute path)
-#  $dir_worker   directory for PR workers
-#  $dir_commit   directory for commits
-#
-# @modules:
-# [MODULE] ${BOT_NAME}/pr-postbuild-build-tizen-x86_64     Check if 'gbs build -A x86_64' can be successfully passed.
-# [MODULE] ${BOT_NAME}/pr-postbuild-build-tizen-armv7l     Check if 'gbs build -A armv7l' can be successfully passed.
-# [MODULE] ${BOT_NAME}/pr-postbuild-build-ubuntu           Check if 'pdebuild' can be successfully passed.
-# [MODULE] ${BOT_NAME}/pr-postbuild-build-yocto            Check if 'devtool' can be successfully passed.
-# [MODULE] ${BOT_NAME}/pr-postbuild-build-android          Check if 'ndk-build' can be successfully passed.
-# [MODULE] plugins-base                         Plugin group that consist of a well-maintained modules
-# [MODULE] plugins-good                         Plugin group that follow Apache license with good quality
-# [MODULE] plugins-staging                      Plugin group that does not have evaluation and aging test enough
+## @see directory variables
+##  $dir_ci       directory for webhooks (Absolute path)
+##  $dir_worker   directory for PR workers
+##  $dir_commit   directory for commits
+##
+## @modules:
+## [MODULE] ${BOT_NAME}/pr-postbuild-build-tizen-x86_64     Check if 'gbs build -A x86_64' can be successfully passed.
+## [MODULE] ${BOT_NAME}/pr-postbuild-build-tizen-armv7l     Check if 'gbs build -A armv7l' can be successfully passed.
+## [MODULE] ${BOT_NAME}/pr-postbuild-build-ubuntu           Check if 'pdebuild' can be successfully passed.
+## [MODULE] ${BOT_NAME}/pr-postbuild-build-yocto            Check if 'devtool' can be successfully passed.
+## [MODULE] ${BOT_NAME}/pr-postbuild-build-android          Check if 'ndk-build' can be successfully passed.
+## [MODULE] plugins-base                         Plugin group that consist of a well-maintained modules
+## [MODULE] plugins-good                         Plugin group that follow Apache license with good quality
+## [MODULE] plugins-staging                      Plugin group that does not have evaluation and aging test enough
 
 # --------------------------- Pre-setting module ----------------------------------------------------------------------
 input_date=$1

@@ -1,34 +1,32 @@
 #!/usr/bin/env bash
 
+## Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
 ##
-# Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#     http://www.apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##     http://www.apache.org/licenses/LICENSE-2.0
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+##
 
+## @file   out-of-pr-killer.sh
+## @auther Geunsik Lim <geunsik.lim@samsung.com>
+## @brief  Out-of-PR(OOP) Killer
 ##
-# @file   out-of-pr-killer.sh
-# @auther Geunsik Lim <geunsik.lim@samsung.com>
-# @brief  Out-of-PR(OOP) Killer
-#
-# This module runs when there is no available queue to run a PR.
-# It is to kill compulsorily the previous same PRs invoked by
-# checker-pr-gateway.sh when the developers resend same PRs repeatedly.
-# 
+## This module runs when there is no available queue to run a PR.
+## It is to kill compulsorily the previous same PRs invoked by
+## checker-pr-gateway.sh when the developers resend same PRs repeatedly.
+## 
 
 
 # --------------------------- Out-of-PR (OOP) killer: kill previous duplicated PRs  ----------------------------------
 
 ##
-# @brief Run Out-of-PR(OOP) killer
+## @brief Run Out-of-PR(OOP) killer
 function run_oop_killer(){
     # Specify dependent commands for this function.
     check_cmd_dep ps

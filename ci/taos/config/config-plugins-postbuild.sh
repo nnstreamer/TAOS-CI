@@ -3,10 +3,10 @@
 # Do not append a license statement in the configuration file for a differnet license-based repository.
 
 ##
-# @file     config-plugins-postbuild.sh
-# @brief    Configuraiton file to maintain postbuild modules (after completing a build procedure)
-# @see      https://github.com/nnstreamer/TAOS-CI
-# @author   Geunsik Lim <geunsik.lim@samsung.com>
+## @file     config-plugins-postbuild.sh
+## @brief    Configuraiton file to maintain postbuild modules (after completing a build procedure)
+## @see      https://github.com/nnstreamer/TAOS-CI
+## @author   Geunsik Lim <geunsik.lim@samsung.com>
 
 ##### Set environment for plug-in check modules of the postbuild group
 declare -i idx=-1

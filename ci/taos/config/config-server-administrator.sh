@@ -3,11 +3,11 @@
 # Do not append a license statement in the configuration file for a differnet license-based repository.
 
 ##
-# @file config-server-administrator.sh
-# @brief configuration file to declare contents that a server administrator installed.
-# @see      https://github.com/nnstreamer/TAOS-CI
-# @author   Geunsik Lim <geunsik.lim@samsung.com>
-#
+## @file config-server-administrator.sh
+## @brief configuration file to declare contents that a server administrator installed.
+## @see      https://github.com/nnstreamer/TAOS-CI
+## @author   Geunsik Lim <geunsik.lim@samsung.com>
+##
 
 ########### Caution: If you are not server administrator, do not modify this file #################
 

@@ -1,39 +1,37 @@
 #!/usr/bin/env bash
 
+## Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
 ##
-# Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#     http://www.apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##     http://www.apache.org/licenses/LICENSE-2.0
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+##
 
+## @file     checker-pr-gateway.sh
+## @brief    A PR gateway to control two PR checkers such as prebuild and postbuild
+## First of all, it clones a github repository with "git clone" command
+## when a contributor submits a PR. Then, it run prebuild and postbuild module sequentially.
 ##
-# @file     checker-pr-gateway.sh
-# @brief    A PR gateway to control two PR checkers such as prebuild and postbuild
-# First of all, it clones a github repository with "git clone" command
-# when a contributor submits a PR. Then, it run prebuild and postbuild module sequentially.
-#
-# @see      https://github.com/nnstreamer/TAOS-CI
-# @author   Geunsik Lim <geunsik.lim@samsung.com>
-# @param arguments are received from CI manager
-#  arg1: date(Ymdhms)
-#  arg2: commit number
-#  arg3: repository address of PR
-#  arg4: branch name
-#  arg5: PR number
-#  arg6: delivery id
-#
-# @see variables to control the directories
-#  $dir_ci directory is CI folder (Absolute path)
-#  $dir_worker   directory is PR worker folder
-#  $dir_commit   directory is commit folder
+## @see      https://github.com/nnstreamer/TAOS-CI
+## @author   Geunsik Lim <geunsik.lim@samsung.com>
+## @param arguments are received from CI manager
+##  arg1: date(Ymdhms)
+##  arg2: commit number
+##  arg3: repository address of PR
+##  arg4: branch name
+##  arg5: PR number
+##  arg6: delivery id
+##
+## @see variables to control the directories
+##  $dir_ci directory is CI folder (Absolute path)
+##  $dir_worker   directory is PR worker folder
+##  $dir_commit   directory is commit folder
 
 # ------------ Initialize execution environment -------------------------------------
 
@@ -179,13 +177,13 @@ git branch
 pwd
 
 
-# @brief checker runner to run the checkers based on the dependency policy
-# Run the first group, then depending on the dependency policy, run the remaining groups
-# @param arguments received by the function
-#  arg1: list of checkers (like prebuild, postbuild, etc)
-#  arg2: list of checker's name
-#  arg3: list of checker's log file
-#  arg@: all remaining arguments are to be passed to the checkers (common for all the checkers)
+## @brief checker runner to run the checkers based on the dependency policy
+## Run the first group, then depending on the dependency policy, run the remaining groups
+## @param arguments received by the function
+##  arg1: list of checkers (like prebuild, postbuild, etc)
+##  arg2: list of checker's name
+##  arg3: list of checker's log file
+##  arg@: all remaining arguments are to be passed to the checkers (common for all the checkers)
 function run_all_checkers(){
   local -n cmd_list=$1
   local -n name_list=$2
