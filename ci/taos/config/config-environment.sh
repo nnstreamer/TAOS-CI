@@ -4,19 +4,19 @@
 # for a differnet license-based repository.
 
 ##
-# @file     config-environment.sh
-# @brief    The configuration file to maintain all scripts
-# @see      https://github.com/nnstreamer/TAOS-CI
-# @author   Geunsik Lim <geunsik.lim@samsung.com>
-#
-# This script is to maintain consistently all scripts files.
-#
-# If you have to run this CI script at the below environment, Please change
-# the contents appropriately.
-# a. In case that you want to apply this CI script to another repository
-# b. In case that you have to install CI in a new CI server for more high-performance
-# c. In case that you need to create new project
-#
+## @file     config-environment.sh
+## @brief    The configuration file to maintain all scripts
+## @see      https://github.com/nnstreamer/TAOS-CI
+## @author   Geunsik Lim <geunsik.lim@samsung.com>
+##
+## This script is to maintain consistently all scripts files.
+##
+## If you have to run this CI script at the below environment, Please change
+## the contents appropriately.
+## a. In case that you want to apply this CI script to another repository
+## b. In case that you have to install CI in a new CI server for more high-performance
+## c. In case that you need to create new project
+##
 
 ################# Modify the below statements for your server  #######################
 

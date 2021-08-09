@@ -1,37 +1,37 @@
 #!/usr/bin/env bash
 
 ##
-# Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#     http://www.apache.org/licenses/LICENSE-2.0
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+## Copyright (c) 2018 Samsung Electronics Co., Ltd. All Rights Reserved.
+##
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##     http://www.apache.org/licenses/LICENSE-2.0
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+##
 
 
 ##
-# @file   api_collection.sh
-# @author Geunsik Lim <geunsik.lim@samsung.com>
-# @brief  API collection to send webhook messages to a github server and to manage comment functions
-# @note   API list is as follows.
-#           cibot_comment()
-#           cibot_report()
-#           cibot_review()
-#           goto_repodir()
-#           check_dep_cmd()
+## @file   api_collection.sh
+## @author Geunsik Lim <geunsik.lim@samsung.com>
+## @brief  API collection to send webhook messages to a github server and to manage comment functions
+## @note   API list is as follows.
+##           cibot_comment()
+##           cibot_report()
+##           cibot_review()
+##           goto_repodir()
+##           check_dep_cmd()
 
 ##
-# @brief API to write comment to new pull request with curl
-# @param
-# arg1: token key
-# arg2: message
-# arg3: commit address
+## @brief API to write comment to new pull request with curl
+## @param
+## arg1: token key
+## arg2: message
+## arg3: commit address
 function cibot_comment(){
     # check if input argument is correct.
     if [[ $1 == "" || $2 == "" || $3 == "" ]]; then
@@ -69,14 +69,14 @@ function cibot_comment(){
 }
 
 ##
-# @brief API to change a status of the pull request with curl
-# @param
-# arg1: token number
-# arg2: state
-# arg3: context
-# arg4: description
-# arg5: target_url
-# arg5: commit address
+## @brief API to change a status of the pull request with curl
+## @param
+## arg1: token number
+## arg2: state
+## arg3: context
+## arg4: description
+## arg5: target_url
+## arg5: commit address
 function cibot_report(){
     # check if input argument is correct.
     if [[ $1 == "" || $2 == ""  || $3 == ""  || $4 == ""  || $5 == "" || $6 == "" ]]; then
@@ -127,19 +127,19 @@ function cibot_report(){
 }
 
 ##
-# @brief API to do a review result on a pull request with curl
-# @param
-# arg1: token number
-# arg2: event (e.g., APPROVE, REQUEST_CHANGES, or COMMENT)
-# arg3: description
-# arg4: commit ID
-# arg5: API address
-# @note The below statement shows how to use this API.
-#  message="All CI checkers are successfully passed. LGTM."
-#
-#  cibot_review $TOKEN "APPROVE" "$message" "$input_commit" 
-#  "$GITHUB_WEBHOOK_API/$GITHUB_ACCOUNT/${PRJ_REPO_UPSTREAM_SERVER}/pulls/$input_pr/reviews" 
-#
+## @brief API to do a review result on a pull request with curl
+## @param
+## arg1: token number
+## arg2: event (e.g., APPROVE, REQUEST_CHANGES, or COMMENT)
+## arg3: description
+## arg4: commit ID
+## arg5: API address
+## @note The below statement shows how to use this API.
+##  message="All CI checkers are successfully passed. LGTM."
+##
+##  cibot_review $TOKEN "APPROVE" "$message" "$input_commit" 
+##  "$GITHUB_WEBHOOK_API/$GITHUB_ACCOUNT/${PRJ_REPO_UPSTREAM_SERVER}/pulls/$input_pr/reviews" 
+##
 function cibot_review(){
     # check if input argument is correct.
     if [[ $1 == "" || $2 == ""  || $3 == ""  || $4 == ""  || $5 == "" ]]; then
@@ -185,9 +185,9 @@ function cibot_review(){
 }
 
 ##
-# @brief API to move to a git repository folder that imported a specified branch name
-# @param
-# argument: none
+## @brief API to move to a git repository folder that imported a specified branch name
+## @param
+## argument: none
 function goto_repodir(){
     echo -e "[DEBUG] Let's move to a git repository folder."
     cd $dir_ci
@@ -197,9 +197,9 @@ function goto_repodir(){
 }
 
 ##
-#  @brief check if a package is installed
-#  @param
-#   arg1: package name
+##  @brief check if a package is installed
+##  @param
+##   arg1: package name
 function check_cmd_dep() {
     echo "Checking for $1..."
     which "$1" 2>/dev/null || {
