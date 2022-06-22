@@ -153,7 +153,7 @@ function pr-prebuild-doxygen-tag(){
                             # Check the doxygen tag written in upper case beacuase doxygen cannot use upper case tag such as '@TODO'.
 			    # This is a simple (incorrect) method to detect.
 			    # @todo it should be able to know if it is inside a comment or not!
-                            if [[ $line =~ ^[\ \t]*\*[\t \t]*"@"[A-Z] ]]; then
+                            if [[ $line =~ [\ \t]*\*[\t \t]*"@"[A-Z] ]]; then
                                 echo "[ERROR] File name: $curr_file, $idx line, The doxygen tag sholud be written in lower case." >> $report_path
                                 check_result="failure"
                                 global_check_result="failure"
