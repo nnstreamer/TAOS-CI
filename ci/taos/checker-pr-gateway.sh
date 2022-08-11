@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-## SPDX-License-Identifier: APACHE-2.0-only
+## SPDX-License-Identifier: Apache-2.0
 
 ## @file     checker-pr-gateway.sh
 ## @brief    A PR gateway to control two PR checkers such as prebuild and postbuild

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-## SPDX-License-Identifier: APACHE-2.0-only
+## SPDX-License-Identifier: Apache-2.0
 
 ## @file        checker-pr-postbuild-async.sh
 ## @brief       It executes a build test whenever a PR is submitted.

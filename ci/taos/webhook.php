@@ -1,5 +1,5 @@
 <?php
-/** SPDX-License-Identifier: APACHE-2.0-only */
+/** SPDX-License-Identifier: Apache-2.0 */
 
 /**
  *    @file   webhook.php
