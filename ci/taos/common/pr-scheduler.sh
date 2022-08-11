@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-## SPDX-License-Identifier: APACHE-2.0-only
+## SPDX-License-Identifier: Apache-2.0
 
 ## @file  api_collection.sh
 ## @brief API collection to send webhook messages to a github server and to manage comment functions

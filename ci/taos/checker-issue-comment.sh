@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-## SPDX-License-Identifier: APACHE-2.0-only
+## SPDX-License-Identifier: Apache-2.0
 
 ## @file   checker-issue-comment.sh
 ## @brief  An issue facility to comment automatically whenever issue happens .

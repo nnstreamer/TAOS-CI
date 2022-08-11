@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-## SPDX-License-Identifier: APACHE-2.0-only
+## SPDX-License-Identifier: Apache-2.0
 
 ## @file   out-of-pr-killer.sh
 ## @auther Geunsik Lim <geunsik.lim@samsung.com>
