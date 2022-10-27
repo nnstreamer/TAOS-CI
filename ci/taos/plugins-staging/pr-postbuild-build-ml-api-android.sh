@@ -65,8 +65,12 @@ function pr-postbuild-build-ml-api-android-run-queue(){
     git clone https://github.com/nnstreamer/nnstreamer.git nnstreamer-tmp
     export NNSTREAMER_ROOT=$(pwd)/nnstreamer-tmp
 
+    # nnstreamer-edge root directory for build.
+    git clone https://github.com/nnstreamer/nnstreamer-edge.git nnstreamer-edge-tmp
+
     echo -e "[DEBUG] ML_API_ROOT is $ML_API_ROOT"
     echo -e "[DEBUG] NNSTREAMER_ROOT is $NNSTREAMER_ROOT"
+    echo -e "[DEBUG] NNSTREAMER_EDGE_ROOT is $NNSTREAMER_EDGE_ROOT"
 
     # Start to build NNStreamer ML API for Android.
     echo "[DEBUG] Starting gradle build for ML API android library."
@@ -83,7 +87,7 @@ function pr-postbuild-build-ml-api-android-run-queue(){
     gst_android_dir=$ROOT_ANDROID_CI/gstreamer-1.0-android-universal-1.16.2
 
     # Set build option
-    common_option="--gstreamer_dir=$gst_android_dir --nnstreamer_dir=$NNSTREAMER_ROOT --android_sdk_dir=$android_sdk --android_ndk_dir=$android_ndk --result_dir=$android_result_dir"
+    common_option="--gstreamer_dir=$gst_android_dir --nnstreamer_dir=$NNSTREAMER_ROOT --nnstreamer_edge_dir=$NNSTREAMER_EDGE_ROOT --android_sdk_dir=$android_sdk --android_ndk_dir=$android_ndk --result_dir=$android_result_dir"
 
     api_build_log=../report/build_log_${input_pr}_android_api_output.txt
 
