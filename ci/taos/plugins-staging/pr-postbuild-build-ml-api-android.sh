@@ -67,6 +67,7 @@ function pr-postbuild-build-ml-api-android-run-queue(){
 
     # nnstreamer-edge root directory for build.
     git clone https://github.com/nnstreamer/nnstreamer-edge.git nnstreamer-edge-tmp
+    export NNSTREAMER_EDGE_ROOT=$(pwd)/nnstreamer-edge-tmp
 
     echo -e "[DEBUG] ML_API_ROOT is $ML_API_ROOT"
     echo -e "[DEBUG] NNSTREAMER_ROOT is $NNSTREAMER_ROOT"
