@@ -44,7 +44,7 @@ The proposed system supports a light-weight code review automation approach to s
 Please refer [Here](ci/doc/maintenance.md).
 
 ## Publications
-* Geunsik Lim, MyungJoo Ham, Jijoong Moon, Wook Song, Sangjung Woo, and Sewon Oh, "**<a href='https://ieeexplore.ieee.org/document/8662017'>TAOS-CI: Lightweight & Modular Continuous Integration System for Edge Computing,</a>**" 37th IEEE International Conference on Consumer Electronics (ICCE), Las Vegas, USA, Jan. 2019.
+* Geunsik Lim, MyungJoo Ham, Jijoong Moon, Wook Song, Sangjung Woo, and Sewon Oh, "**<a href='https://ieeexplore.ieee.org/document/8662017'>TAOS-CI: Lightweight & Modular Continuous Integration System for Edge Computing,</a>**" 37th IEEE International Conference on Consumer Electronics (ICCE), Las Vegas, USA, Jan. 2019. [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7338593.svg)](https://doi.org/10.5281/zenodo.7338593)
 
 * Geunsik Lim, MyungJoo Ham, and Jaeyun Jung, "**<a href='http://www.riss.kr/link?id=A106329692'>VTB: Cloud-based Testbed for On-Device AI,</a>**" Proc. of KIISE Korea Computer Congress, Jeju, Korea, Jun. 2019. Best Presentation Paper. (**MAJOR** domestic conference in Korea)
 
