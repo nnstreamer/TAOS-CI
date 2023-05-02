@@ -30,14 +30,11 @@
 function pr-prebuild-clang(){
     echo "########################################################################################"
     echo "[MODULE] pr-prebuild-clang: Check the code formatting style with clang-format"
-    # Note that you have to install up-to-date clang-format package from llvm project.
-    # The clang-format-6.0 package includes git-clang-format as well as clang-format.
-    # The clang-format-6.0 is used in Ubuntu 18.04 by default.
-    # It has been included by http://archive.ubuntu.com/ubuntu/ by default since Oct-25-2017.
-    # $ sudo apt install clang-format-6.0
+    # Note that you have to install clang-format package from llvm project.
+    # $ sudo apt install clang-format-12
     # In case that we need to change clang-format with latest version, refer to https://apt.llvm.org
     CLANGFORMAT=NA
-    CLANG_COMMAND="clang-format-6.0"
+    CLANG_COMMAND=${CLANG_FORMAT_VERSION}
 
     which ${CLANG_COMMAND}
     if [[ $? -ne 0 ]]; then

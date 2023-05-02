@@ -197,3 +197,5 @@ _cov_red_card=50
 SELECTIVE_PR_AUDIT=0
 PR_ACTIVATE_DIR="doc/"
 
+# Specify clang-format version
+CLANG_FORMAT_VERSION="clang-format-12"
