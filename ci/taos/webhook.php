@@ -236,6 +236,7 @@ function github_event_handling(){
                 $delivery_id = $_SERVER['HTTP_X_GITHUB_DELIVERY'];
                 $pr_commits=$payload->pull_request->commits;
                 $pr_action=$payload->action;
+                $base_branch=$payload->pull_request->base->ref;
 
                 printf ("[DEBUG] current PR number: $pr_no \n");
                 printf ("[DEBUG] arg1) Date  : $date \n");
@@ -246,6 +247,7 @@ function github_event_handling(){
                 printf ("[DEBUG] arg6) X-GitHub-Delivery: $delivery_id \n");
                 printf ("[DEBUG] arg7) # of commits     : $pr_commits \n"); //TODO: to control "1PR/Many-commits" (e.g., cppcheck module)
                 printf ("[DEBUG] arg8) PR action        : $pr_action \n");  //TODO: to control repeated comments (e.g., same PR number)
+                printf ("[DEBUG] arg9) Base Branch      : $base_branch \n");
 
                 // Run a shell script asynchronously to avoid service timeout generated
                 // due to a long execution time.
@@ -256,7 +258,7 @@ function github_event_handling(){
                 $result=shell_exec($cmd);
                 printf ("[DEBUG] checker: checker-pr-gateway.sh is done asynchronously. \n");
                 printf ("[DEBUG] It means that checker-pr-gateway.sh is still running now.\n");
-                printf ("[DEBUG] ./checker-pr-gateway.sh $date $commit $repo $branch $pr_no $delivery_id \n");
+                printf ("[DEBUG] ./checker-pr-gateway.sh $date $commit $repo $branch $pr_no $delivery_id $base_branch \n");
 
             }
 

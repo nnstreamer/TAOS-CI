@@ -15,6 +15,7 @@
 ##  arg4: branch name
 ##  arg5: PR number
 ##  arg6: delivery id
+##  arg7: base branch name
 ##
 ## @see variables to control the directories
 ##  $dir_ci directory is CI folder (Absolute path)
@@ -30,6 +31,7 @@ input_repo=$3
 input_branch=$4
 input_pr=$5
 input_delivery_id=$6
+input_base_branch=$7
 
 
 # Note the "source ./config/config-environment.sh" file can be called in another script
@@ -258,6 +260,6 @@ echo -e "[DEBUG] Added ${checker_name_list[-1]} module." | tee -a $logfile_gatew
 
 # Run all the modules (both the pre-build and post group) sequentially
 echo -e "[DEBUG] Running all modules" | tee -a $logfile_gateway
-run_all_checkers checker_cmd_list checker_name_list checker_logfile_list $1 $2 $3 $4 $5 $6
+run_all_checkers checker_cmd_list checker_name_list checker_logfile_list $1 $2 $3 $4 $5 $6 $7
 echo -e "[DEBUG] Completed all modules" | tee -a $logfile_gateway
 

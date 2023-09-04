@@ -13,6 +13,7 @@
 ##  arg4: branch name
 ##  arg5: PR number
 ##  arg6: delivery id
+##  arg7: base branch name
 ##
 ## @see directory variables
 ##  $dir_ci       directory for webhooks (Absolute path)
@@ -36,6 +37,7 @@ input_repo=$3
 input_branch=$4
 input_pr=$5
 input_delivery_id=$6
+input_base_branch=$7
 
 # Note that the server administrator must declare variables after installing required packages.
 echo -e "[DEBUG] Importing the config-server-admistrator.sh file.\n"
@@ -271,6 +273,7 @@ echo -e "[DEBUG] Repository       : ${input_repo}"        >> ../report/build_log
 echo -e "[DEBUG] Branch name      : ${input_branch}"      >> ../report/build_log_${input_pr}_output.txt
 echo -e "[DEBUG] PR number        : ${input_pr}"          >> ../report/build_log_${input_pr}_output.txt
 echo -e "[DEBUG] X-GitHub-Delivery: ${input_delivery_id}" >> ../report/build_log_${input_pr}_output.txt
+echo -e "[DEBUG] Base branch      : ${input_base_branch}" >> ../report/build_log_${input_pr}_output.txt
 
 # Optimize size of log file (e.g., from 20MB to 1MB)
 # remove unnecessary contents that are created by resource checker

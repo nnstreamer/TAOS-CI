@@ -12,6 +12,7 @@
 ##  arg4:   branch name
 ##  arg5:   PR number
 ##  arg6:   delivery id
+##  arg7: base branch name
 ##
 ## @see variables to control the directories
 ##  $dir_ci       directory is CI folder (Absolute path)
@@ -32,6 +33,7 @@ input_repo=$3
 input_branch=$4
 input_pr=$5
 input_delivery_id=$6
+input_base_branch=$7
 
 # Note the "source ./config/config-environment.sh" file can be called in another script
 # instead of in this file in order to support asynchronous operation from CI manager
