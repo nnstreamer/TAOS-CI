@@ -339,5 +339,13 @@ fi
 # Please append a command below.
 echo -e "[DEBUG] The current directory: $(pwd)."
 
+echo -e "[DEBUG] Remove the GBS-ROOT folder."
+sudo rm -rf ./GBS-ROOT/
+if [[ $? -eq 0 ]]; then
+    echo -e "[DEBUG] Successfully removed the GBS-ROOT folder."
+else
+    echo -e "[WARN] Failed to remove the GBS-ROOT folder."
+fi
+
 # Return with exit code
 exit $exit_code

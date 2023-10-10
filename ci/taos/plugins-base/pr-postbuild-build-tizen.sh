@@ -172,12 +172,12 @@ function pr-postbuild-build-tizen-run-queue(){
         echo "Archiving .rpm files for $1 ..."
         ls -al  ./GBS-ROOT/local/repos/tizen/$1/RPMS/
         sudo cp -arf ./GBS-ROOT/local/repos/tizen/$1/RPMS ../$PACK_BIN_FOLDER || echo -e "[DEBUG] Can't copy .rpm files."
-        echo "Removing ./GBS-ROOT/ folder..."
-        sudo rm -rf ./GBS-ROOT/
+        echo "Removing ./GBS-ROOT/local/BUILD-ROOTS/ folder..."
+        sudo rm -rf ./GBS-ROOT/local/BUILD-ROOTS/
         if [[ $? -ne 0 ]]; then
-            echo "[DEBUG][FAILED] Tizen/gbs: Oooops!!!!! ./GBS-ROOT folder is not removed."
+            echo "[DEBUG][FAILED] Tizen/gbs: Oooops!!!!! ./GBS-ROOT/local/BUILD-ROOTS/ folder is not removed."
         else
-            echo "[DEBUG][PASSED] Tizen/gbs: It is okay. ./GBS-ROOT folder is successfully removed."
+            echo "[DEBUG][PASSED] Tizen/gbs: It is okay. ./GBS-ROOT/local/BUILD-ROOTS/ folder is successfully removed."
         fi
     fi
     echo "[DEBUG] The current directory: $(pwd)"
